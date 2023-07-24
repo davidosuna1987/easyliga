@@ -9,7 +9,7 @@ const locales: Locale[] = [
   },
   {
     code: 'en',
-    name: 'Enpañol',
+    name: 'English',
     iso: 'en-EN',
     file: 'en.json',
   },
