@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="easy-error-list-component">
+  <div class="easy-error-list">
     <p v-if="errors.length === 1"></p>
     <ul v-else-if="errors.length > 1">
       <li v-for="(error, index) in errors" :key="index">
