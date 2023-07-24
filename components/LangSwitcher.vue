@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import locales from '@/locales'
-import { setAppLocale } from '@/domain/lang/lang'
 
 const i18n = useI18n()
+
+const setAppLocale = (locale: string) => {
+  i18n.locale.value = locale
+  localStorage.setItem('locale', locale)
+}
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const i18n = useI18n()
     <button
       v-for="locale in locales"
       :key="locale.code"
-      @click="setAppLocale(i18n, locale.code)"
+      @click="setAppLocale(locale.code)"
     >
       {{ locale.name }}
     </button>
