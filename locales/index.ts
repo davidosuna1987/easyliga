@@ -1,4 +1,4 @@
-import { Locale } from '@/domain/lang/lang'
+import { Locale } from 'domain/lang'
 
 const locales: Locale[] = [
   {

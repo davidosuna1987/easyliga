@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import locales from '@/locales'
-import { FALLBACK_LOCALE } from '@/domain/lang/lang'
+import { FALLBACK_LOCALE } from '@/domain/lang'
 
 const i18n = useI18n()
 
@@ -30,3 +30,4 @@ const setAppLocale = (selectedLocale: string) => {
     />
   </div>
 </template>
+domain/lang
