@@ -1,0 +1,30 @@
+.p-dialog-bottom {
+  .p-dialog {
+    width: 100vw;
+    max-width: 450px;
+    margin: 0 !important;
+
+    .p-dialog-header {
+      border-top-right-radius: 1rem;
+      border-top-left-radius: 1rem;
+      padding-inline: 1.75rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .p-dialog-content {
+      padding-left: 1.75rem;
+      padding-right: 1.75rem;
+    }
+
+    .p-dialog-footer {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-inline: 1.75rem;
+      padding-bottom: 0.5rem;
+
+      button {
+        margin: 0;
+      }
+    }
+  }
+}
