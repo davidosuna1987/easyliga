@@ -63,6 +63,7 @@ useHead({
   <div>
     <NuxtLayout>
       <NuxtPage />
+      <Alerts />
     </NuxtLayout>
   </div>
 </template>
