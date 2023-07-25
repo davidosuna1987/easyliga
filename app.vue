@@ -56,7 +56,6 @@ useHead({
   bodyAttrs: {
     class: 'easy-body',
   },
-  // script: [{ innerHTML: "console.log('Hello world')" }],
 })
 </script>
 
