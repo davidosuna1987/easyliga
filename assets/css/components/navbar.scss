@@ -1,0 +1,20 @@
+.easy-navbar {
+  background: white;
+  box-shadow: var(--box-shadow);
+  margin: 0;
+  position: fixed;
+  top: var(--app-margin);
+  left: var(--app-margin);
+  width: var(--navbar-width);
+  border: 0;
+  z-index: 1000;
+  // backdrop-filter: blur(4px);
+
+  .p-menubar-start {
+    @apply flex;
+  }
+
+  &__logo {
+    @apply mr-2;
+  }
+}

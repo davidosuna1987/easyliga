@@ -1,0 +1,29 @@
+html {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight);
+  margin: var(--app-margin);
+  background-color: var(--primary-color-light);
+}
+
+.easy-main {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: var(--app-margin);
+  min-height: calc(100vh - var(--container-margin-top) - 2 * var(--app-margin));
+  max-width: 1400px;
+  margin-top: var(--container-margin-top);
+  margin-inline: auto;
+  margin-bottom: var(--footer-height);
+}
+
+.easy-container {
+  @extend %container;
+}
+
+@media (min-width: 769px) {
+  .easy-main {
+    padding: 4rem;
+  }
+}

@@ -19,7 +19,7 @@ const setAppLocale = (selectedLocale: string) => {
 
 <template>
   <div class="easy-lang-switcher">
-    <p>{{ $t('hello', { name: 'David' }) }}</p>
+    <p>{{ $t('forms.salutation', { name: 'David' }) }}</p>
     <Dropdown
       :model-value="lang"
       :options="locales"

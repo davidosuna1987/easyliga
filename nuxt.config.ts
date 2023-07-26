@@ -1,7 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-  modules: ['@pinia/nuxt', '@nuxtjs/i18n', '@vueuse/nuxt'],
+  modules: [
+    '@pinia/nuxt',
+    '@nuxtjs/i18n',
+    '@vueuse/nuxt',
+    '@nuxt/image',
+    '@nuxtjs/tailwindcss',
+  ],
   runtimeConfig: {
     // private keys
     // apiSecret: "123",
@@ -14,7 +20,7 @@ export default defineNuxtConfig({
     },
     devtools: { enabled: true },
   },
-  css: ['@/assets/sass/main.scss'],
+  css: ['@/assets/css/main.scss'],
   build: {
     transpile: ['primevue'],
   },

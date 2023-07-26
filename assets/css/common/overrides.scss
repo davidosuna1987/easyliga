@@ -28,3 +28,11 @@
     }
   }
 }
+
+.p-button-label {
+  font-weight: var(--font-weight);
+}
+
+a:-webkit-any-link {
+  text-decoration: none;
+}
