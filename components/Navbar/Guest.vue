@@ -1,30 +1,18 @@
 <script setup lang="ts">
-import items from '@/domain/navbar/guest'
+import items from '@/domain/navbar/web'
 </script>
 
 <template>
-  <Menubar class="easy-navbar easy-navbar-guest" :model="items">
-    <template #start>
-      <NuxtLink to="/">
-        <NuxtImg
-          class="easy-navbar__logo"
-          src="/logos/easyliga.svg"
-          quality="100"
-          width="38"
-          height="38"
-          fit="contain"
-        />
-      </NuxtLink>
-    </template>
+  <NavbarWeb class="easy-navbar-guest" :items="items">
     <template #end>
       <NuxtLink to="/register">
-        <Button :label="$t('auth.register')" size="small" outlined />
+        <Button :label="$t('navbar.register')" size="small" outlined />
       </NuxtLink>
       <NuxtLink to="/login">
-        <Button :label="$t('auth.login')" size="small" class="ml-3" />
+        <Button :label="$t('navbar.login')" size="small" class="ml-3" />
       </NuxtLink>
     </template>
-  </Menubar>
+  </NavbarWeb>
 </template>
 
 <style scoped></style>

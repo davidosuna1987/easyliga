@@ -8,13 +8,27 @@
   width: var(--navbar-width);
   border: 0;
   z-index: 1000;
-  // backdrop-filter: blur(4px);
+  border-radius: var(--border-radius);
 
-  .p-menubar-start {
-    @apply flex;
+  &__container {
+    @extend %container;
+    border: none;
+    background: white;
   }
 
   &__logo {
     @apply mr-2;
+  }
+
+  &__avatar {
+    width: var(--navbar-avatar-size) !important;
+    height: var(--navbar-avatar-size) !important;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+  }
+
+  .p-menubar-start,
+  .p-menubar-end {
+    @apply flex;
   }
 }

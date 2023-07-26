@@ -36,3 +36,11 @@
 a:-webkit-any-link {
   text-decoration: none;
 }
+
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem:not(.p-highlight):not(.p-disabled)
+  > .p-menuitem-content:hover {
+  background-color: var(--primary-color-light);
+  color: var(--text-color);
+}

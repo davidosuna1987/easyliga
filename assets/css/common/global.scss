@@ -2,6 +2,7 @@ html {
   font-size: var(--font-size);
   font-family: var(--font-family);
   font-weight: var(--font-weight);
+  color: var(--text-color);
   margin: var(--app-margin);
   background-color: var(--primary-color-light);
 }
@@ -22,7 +23,11 @@ html {
   @extend %container;
 }
 
-@media (min-width: 769px) {
+pre {
+  white-space: pre-wrap;
+}
+
+@media (min-width: $min-width-tablet) {
   .easy-main {
     padding: 4rem;
   }

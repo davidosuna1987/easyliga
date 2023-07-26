@@ -109,11 +109,8 @@
     "remember": "Recuérdame",
     "forgot": "¿Has olvidado tu contraseña?",
     "forgot_submit": "Te hemos enviado un correo electrónico a {email} para que puedas cambiar tu contraseña.",
-    "login": "Iniciar sesión",
-    "logout": "Cerrar sesión",
     "logged_out": "Has cerrado sesión correctamente",
     "welcome": "¡Bienvenid{'@'} de nuevo!",
-    "register": "Registrarme",
     "reset": "Restablecer contraseña",
     "code": "Código de acceso",
     "invitation": "Tengo una invitación",
@@ -121,5 +118,18 @@
   },
   "footer": {
     "copyright": "Todos los derechos reservados ®™"
+  },
+  "navbar": {
+    "login": "Iniciar sesión",
+    "register": "Registrarme",
+    "home": "Inicio",
+    "profile": "Perfil",
+    "logout": "Cerrar sesión"
+  },
+  "profiles": {
+    "profile": "Perfiles | Perfil | Perfiles",
+    "update": "Actualizar perfil",
+    "edit": "Editar perfil",
+    "updated": "El perfil ha sido actualizado correctamente"
   }
 }

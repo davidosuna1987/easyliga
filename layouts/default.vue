@@ -7,7 +7,8 @@ const authuser = computed((): User | null => auth.user)
 
 <template>
   <div class="default-layout">
-    <NavbarGuest />
+    <NavbarAuth v-if="authuser" />
+    <NavbarGuest v-else />
 
     <main class="easy-main">
       <section class="easy-container">
