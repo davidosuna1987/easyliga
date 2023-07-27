@@ -16,3 +16,9 @@ const config = useRuntimeConfig()
     <small>{{ config.public.appName }} — {{ $t('footer.copyright') }}</small>
   </footer>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'Footer',
+}
+</script>

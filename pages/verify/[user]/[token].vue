@@ -7,3 +7,9 @@
 </template>
 
 <style scoped></style>
+
+<script lang="ts">
+export default {
+  name: 'VerifyPage',
+}
+</script>

@@ -27,3 +27,9 @@ const props = defineProps({
 </template>
 
 <style scoped></style>
+
+<script lang="ts">
+export default {
+  name: 'FormAuth',
+}
+</script>

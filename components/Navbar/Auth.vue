@@ -26,3 +26,9 @@ const authMenu = ref()
 </template>
 
 <style scoped></style>
+
+<script lang="ts">
+export default {
+  name: 'NavbarAuth',
+}
+</script>

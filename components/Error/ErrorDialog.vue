@@ -39,3 +39,9 @@ watch(
     <template #footer></template>
   </Dialog>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'ErrorDialog',
+}
+</script>

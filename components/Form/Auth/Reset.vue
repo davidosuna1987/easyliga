@@ -75,3 +75,9 @@ const handleReset = async () => {
 </template>
 
 <style lang="scss" scoped></style>
+
+<script lang="ts">
+export default {
+  name: 'FormAuthReset',
+}
+</script>

@@ -30,4 +30,9 @@ const setAppLocale = (selectedLocale: string) => {
     />
   </div>
 </template>
-domain/lang
+
+<script lang="ts">
+export default {
+  name: 'LangSwitcher',
+}
+</script>

@@ -44,3 +44,9 @@ async function handleForgot() {
 </template>
 
 <style scoped></style>
+
+<script lang="ts">
+export default {
+  name: 'FormAuthForgot',
+}
+</script>

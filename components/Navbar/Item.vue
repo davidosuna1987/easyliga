@@ -18,3 +18,9 @@ const props = defineProps({
     {{ item.label }}
   </NuxtLink>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'NavbarItem',
+}
+</script>

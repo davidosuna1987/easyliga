@@ -213,3 +213,9 @@
     impedit aperiam cum veniam, libero vel sint.
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'IndexPage',
+}
+</script>
