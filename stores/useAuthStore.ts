@@ -62,12 +62,18 @@ export type MessageResponse = {
   errors: null
 }
 
+export type ErrorResponseErrors =
+  | {
+      [key: string]: string[]
+    }
+  | {
+      [key: number]: string
+    }
+
 export type ErrorResponse = {
   success: boolean
   data: null
-  errors: {
-    [key: string]: string[]
-  }
+  errors: ErrorResponseErrors
 }
 
 export const useAuthStore = defineStore('auth', () => {
@@ -87,7 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const login = async (loginData: LoginData) => {
-    const response = await useApi<LoginResponse | ErrorResponse>('auth/login', {
+    const response = await useApi<LoginResponse>('auth/login', {
       method: 'POST',
       body: loginData,
     })
@@ -104,19 +110,16 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const register = async (data: RegisterData) => {
-    const response = await useApi<MessageResponse | ErrorResponse>(
-      'auth/register',
-      {
-        method: 'POST',
-        body: data,
-      },
-    )
+    const response = await useApi<MessageResponse>('auth/register', {
+      method: 'POST',
+      body: data,
+    })
 
     return response
   }
 
   const verify = async (data: VerifyData) => {
-    const response = await useApi<MessageResponse | ErrorResponse>(
+    const response = await useApi<MessageResponse>(
       `auth/verify/${data.user}/${data.token}`,
       {
         method: 'POST',
@@ -140,8 +143,6 @@ export const useAuthStore = defineStore('auth', () => {
       method: 'POST',
       body: data,
     })
-
-    navigateTo('/login')
 
     return response
   }

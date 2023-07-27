@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ApiError } from '@/domain/errors'
-
 const props = defineProps({
   errors: {
-    type: Array<ApiError>,
+    type: Object as PropType<string[]>,
     required: true,
   },
 })
@@ -11,7 +9,7 @@ const props = defineProps({
 
 <template>
   <div class="easy-error-list">
-    <p v-if="errors.length === 1">{{ errors.at(0) }}</p>
+    <p v-if="errors.length === 1">{{ errors[0] }}</p>
     <ul v-else-if="errors.length > 1">
       <li v-for="(error, i) in errors" :key="i">
         {{ error }}

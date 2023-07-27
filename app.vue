@@ -64,6 +64,7 @@ useHead({
     <NuxtLayout>
       <NuxtPage />
       <Alerts />
+      <Toast position="top-center" group="app" />
     </NuxtLayout>
   </div>
 </template>

@@ -10,7 +10,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <NuxtLink :to="item.to" class="easy-navbar__link p-menuitem-link">
-    {{ $t(`navbar.${item.label}`) }}
+  <NuxtLink
+    :to="item.to"
+    class="easy-navbar__link p-menuitem-link"
+    @click="item.command"
+  >
+    {{ item.label }}
   </NuxtLink>
 </template>

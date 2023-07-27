@@ -7,7 +7,7 @@
     "email": "Email",
     "code": "Códigos | Código | Códigos",
     "password": "Contraseña",
-    "password_confirmation": "Confirmar contraseña",
+    "password_confirm": "Confirmar contraseña",
     "submit": "Enviar",
     "name": "Nombre",
     "surnames": "Apellidos",
@@ -101,14 +101,40 @@
     "to": "a",
     "validate": "Validar",
     "info": "Información",
-    "info_request": "Solicitudes"
+    "request": "Solicitudes",
+    "token": "Token"
+  },
+  "errors": {
+    "all_required": "Todos los campos son requeridos",
+    "fill_all_fields": "Por favor, rellena todos los campos para continuar",
+    "email_exists": "Ya existe un usuario con el correo electrónico proporcionado",
+    "email_exists_short": "Email ya registrado",
+    "passwords_not_match": "Las contraseñas deben coincidir",
+    "required_field": "Campo requerido",
+    "min_length": "Mínimo {num} caracter | Mínimo {num} caracteres",
+    "max_length": "Máximo {num} caracter | Máximo {num} caracteres",
+    "correct_before_proceed": "Corrige los errores antes de continuar",
+    "access_code_404": "El código proporcionado no existe",
+    "access_code_403": "El código proporcionado pertenece a otro usuario",
+    "access_code_invalid": "El código de acceso proporcionado no es válido",
+    "min_chars": "Al menos {num} caracteres,",
+    "max_chars": "Máximo {num} caracteres,",
+    "max_file_size": "El tamaño máximo de archivo es {mb}mb",
+    "browser_video": "Lo sentimos, tu navegador no soporta el elemento <video>",
+    "file_type": "El formato del archivo que has seleccionado no es compatible",
+    "forbiden": "No puedes realizar esta acción porque no tienes permisos suficientes",
+    "min": "El valor mínimo es {num}",
+    "max": "El valor máximo es {num}"
   },
   "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarme",
+    "logout": "Cerrar sesión",
     "login_as": "Entrar como {name}",
     "access_as": "Acceder como {name}",
     "remember": "Recuérdame",
     "forgot": "¿Has olvidado tu contraseña?",
-    "forgot_submit": "Te hemos enviado un correo electrónico a {email} para que puedas cambiar tu contraseña.",
+    "forgot_submitted": "Te hemos enviado un correo electrónico a {email} para que puedas cambiar tu contraseña.",
     "logged_out": "Has cerrado sesión correctamente",
     "welcome": "¡Bienvenid{'@'} de nuevo!",
     "reset": "Restablecer contraseña",
@@ -117,14 +143,10 @@
     "create_account": "Crear cuenta"
   },
   "footer": {
-    "copyright": "Todos los derechos reservados ®™"
+    "copyright": "Todos los derechos reservados ®"
   },
   "navbar": {
-    "login": "Iniciar sesión",
-    "register": "Registrarme",
-    "home": "Inicio",
-    "profile": "Perfil",
-    "logout": "Cerrar sesión"
+    "home": "Inicio"
   },
   "profiles": {
     "profile": "Perfiles | Perfil | Perfiles",

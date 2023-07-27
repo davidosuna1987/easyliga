@@ -44,3 +44,10 @@ a:-webkit-any-link {
   background-color: var(--primary-color-light);
   color: var(--text-color);
 }
+
+.p-input-icon-left > i,
+.p-input-icon-left > svg,
+.p-input-icon-right > i,
+.p-input-icon-right > svg {
+  margin-top: -0.75rem !important;
+}

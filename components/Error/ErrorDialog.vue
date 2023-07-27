@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ApiError } from 'domain/errors'
+import { ApiErrorList } from '@/domain/errors'
 
 const props = defineProps({
   errors: {
-    type: Array<ApiError>,
+    type: Object as PropType<ApiErrorList>,
     required: true,
   },
   visible: {

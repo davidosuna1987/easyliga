@@ -6,10 +6,10 @@ import items from '@/domain/navbar/web'
   <NavbarWeb class="easy-navbar-guest" :items="items">
     <template #end>
       <NuxtLink to="/register">
-        <Button :label="$t('navbar.register')" size="small" outlined />
+        <Button :label="$t('auth.register')" size="small" outlined />
       </NuxtLink>
       <NuxtLink to="/login">
-        <Button :label="$t('navbar.login')" size="small" class="ml-3" />
+        <Button :label="$t('auth.login')" size="small" class="ml-3" />
       </NuxtLink>
     </template>
   </NavbarWeb>

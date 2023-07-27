@@ -1,47 +1,9 @@
-<script lang="ts" setup>
-import { LoginData, useAuthStore } from '@/stores/useAuthStore'
-
-const { errors, setShow, setErrors } = useErrors()
-
-const auth = useAuthStore()
-
-const form = ref<LoginData>({
-  email: 'david@beeffic.com',
-  password: 'secret',
-})
-
-async function handleLogin() {
-  const { data, error } = await auth.login(form.value)
-
-  if (error.value) {
-    setErrors(error.value.data?.errors)
-  } else {
-    navigateTo('/')
-  }
-}
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <div class="easy-login-page">
-    <pre>{{ errors }}</pre>
-    <form @submit.prevent="handleLogin">
-      <label>
-        Email
-        <input v-model="form.email" type="email" />
-      </label>
-      <label>
-        Password
-        <input v-model="form.password" type="password" />
-      </label>
-
-      <ErrorDialog
-        :visible="errors.show"
-        :errors="errors.list"
-        @hide="setShow(false)"
-      />
-
-      <button>Login</button>
-    </form>
+  <div class="easy-auth-page easy-login-page">
+    <h4 class="text-center mb-5">{{ $t('auth.welcome') }}</h4>
+    <FormAuthLogin />
   </div>
 </template>
 

@@ -1,5 +1,17 @@
 :root {
   color-scheme: light;
+  --primary-color: #fc3c2e;
+  --primary-color-light: #fff6f5;
+  --primary-color-dark: #901632;
+  --primary-color-darkest: #7b0f2b;
+  --secondary-color: #cce1f7;
+  --secondary-color-light: #f4f9fd;
+  --secondary-color-dark: #72add5;
+  --secondary-color-darkest: #69a8db;
+  --tertiary-color: #fdc39b;
+  --tertiary-color-light: #f4f2ec;
+  --tertiary-color-dark: #f9b87b;
+  --link-color: #4c78c4;
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
   --surface-c: #e9ecef;
@@ -8,7 +20,6 @@
   --surface-f: #ffffff;
   --text-color: #495057;
   --text-color-secondary: #b9a7a7;
-  --primary-color: #fc3c2e;
   --primary-color-text: #ffffff;
   --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
     Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
@@ -56,17 +67,6 @@
   --container-margin-top: 60px;
   --min-width-tablet: 769px;
   --min-width-desktop: 1025px;
-  --primary-color: #fc3c2e;
-  --primary-color-light: #fff6f5;
-  --primary-color-dark: #901632;
-  --primary-color-darkest: #7b0f2b;
-  --secondary-color: #cce1f7;
-  --secondary-color-light: #f4f9fd;
-  --secondary-color-dark: #72add5;
-  --secondary-color-darkest: #69a8db;
-  --tertiary-color: #fdc39b;
-  --tertiary-color-light: #f4f2ec;
-  --tertiary-color-dark: #f9b87b;
   --footer-height: 84px;
   --navbar-avatar-size: 38px;
 }

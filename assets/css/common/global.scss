@@ -27,6 +27,10 @@ pre {
   white-space: pre-wrap;
 }
 
+a {
+  color: var(--link-color);
+}
+
 @media (min-width: $min-width-tablet) {
   .easy-main {
     padding: 4rem;

@@ -1,17 +1,12 @@
-import { ApiError } from '@/domain/errors'
+import { ApiErrors, AlertError } from '@/domain/errors'
 
-type Errors = {
-  show: boolean
-  list: ApiError[]
-}
-
-export function useErrors(apiErrors: ApiError[] = []) {
-  const errors = ref<Errors>({
+export function useErrors(apiErrors: ApiErrors = {}) {
+  const errors = ref<AlertError>({
     show: false,
     list: apiErrors,
   })
 
-  const setErrors = (apiErrors: ApiError[]) => {
+  const setErrors = (apiErrors: ApiErrors) => {
     if (apiErrors.length) {
       errors.value.show = true
     }
