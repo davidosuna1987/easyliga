@@ -1,0 +1,9 @@
+.easy-lang-switcher-component {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: var(--box-shadow);
+  border: solid 1px var(--text-color);
+  margin-right: 0.5rem;
+}

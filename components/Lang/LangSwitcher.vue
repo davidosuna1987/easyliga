@@ -1,33 +1,31 @@
 <script setup lang="ts">
-import locales from '@/locales'
-import { FALLBACK_LOCALE } from '@/domain/lang'
+import { MenuItem } from 'primevue/menuitem'
+import {
+  locales,
+  getLocaleIconName,
+  FALLBACK_LOCALE_ICON,
+} from '@/config/locale'
 
-const i18n = useI18n()
+const { locale } = useI18n()
 
-const lang = ref<string>(FALLBACK_LOCALE)
+const langMenu = ref()
 
-onMounted(() => {
-  lang.value = localStorage.getItem('locale') || FALLBACK_LOCALE
+const icon = computed((): string => {
+  const flag =
+    locales.find(item => item.code === locale.value)?.flag ??
+    FALLBACK_LOCALE_ICON
+  return getLocaleIconName(flag)
 })
-
-const setAppLocale = (selectedLocale: string) => {
-  lang.value = selectedLocale
-  i18n.locale.value = selectedLocale
-  localStorage.setItem('locale', selectedLocale)
-}
 </script>
 
 <template>
-  <div class="easy-lang-switcher">
-    <p>{{ $t('forms.salutation', { name: 'David' }) }}</p>
-    <Dropdown
-      :model-value="lang"
-      :options="locales"
-      option-label="name"
-      option-value="code"
-      placeholder="Select a language"
-      @change="setAppLocale($event.value)"
-    />
+  <div class="easy-lang-switcher-component">
+    <LangTrigger :icon="icon" @click="langMenu.toggle($event)" />
+    <TieredMenu ref="langMenu" :model="(locales as MenuItem[])" popup>
+      <template #item="props">
+        <LangItem :item="props.item" />
+      </template>
+    </TieredMenu>
   </div>
 </template>
 

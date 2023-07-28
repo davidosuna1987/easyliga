@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     },
     devtools: { enabled: true },
   },
-  css: ['@/assets/css/main.scss'],
+  css: ['@/assets/css/app.scss'],
   build: {
     transpile: ['primevue'],
   },

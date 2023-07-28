@@ -25,10 +25,11 @@
     height: var(--navbar-avatar-size) !important;
     box-shadow: var(--box-shadow);
     cursor: pointer;
+    border: solid 1px var(--text-color);
   }
 
   .p-menubar-start,
   .p-menubar-end {
-    @apply flex;
+    @apply flex items-center;
   }
 }

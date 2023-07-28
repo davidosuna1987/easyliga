@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/useAuthStore'
 import items from '@/config/navbar/auth'
 
-const auth = useAuthStore()
 const authMenu = ref()
 </script>
 

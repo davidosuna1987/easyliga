@@ -45,6 +45,14 @@ a:-webkit-any-link {
   color: var(--text-color);
 }
 
+.p-menuitem-link {
+  &__active {
+    background-color: var(--primary-color);
+    color: var(--primary-color-text) !important;
+    cursor: default !important;
+  }
+}
+
 .p-input-icon-left > i,
 .p-input-icon-left > svg,
 .p-input-icon-right > i,

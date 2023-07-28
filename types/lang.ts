@@ -3,6 +3,7 @@ export type Locale = {
   name: string
   iso: string
   file: string
+  flag: string
 }
 
 export type I18n = {

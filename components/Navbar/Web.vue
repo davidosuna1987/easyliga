@@ -13,21 +13,13 @@ const props = defineProps({
     <div class="easy-navbar__wrapper">
       <Menubar class="easy-navbar__container" :model="items">
         <template #start>
-          <NuxtLink to="/">
-            <NuxtImg
-              class="easy-navbar__logo"
-              src="/logos/easyliga.svg"
-              quality="100"
-              width="38"
-              height="38"
-              fit="contain"
-            />
-          </NuxtLink>
+          <NavbarLogo />
         </template>
         <template #item="props">
           <NavbarItem :item="props.item" />
         </template>
         <template #end>
+          <LangSwitcher />
           <slot name="end" />
         </template>
       </Menubar>
@@ -39,6 +31,6 @@ const props = defineProps({
 
 <script lang="ts">
 export default {
-  name: 'NavbarWeb',
+  name: 'NavbarItem',
 }
 </script>

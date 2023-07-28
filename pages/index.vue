@@ -1,7 +1,6 @@
 <template>
   <div class="easy-index-page">
     <h1>Index page</h1>
-    <LangSwitcher />
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, eaque.
     Molestias, adipisci quo nostrum corporis reiciendis aut doloribus assumenda
     dolorem qui sunt atque ut sed unde ipsum incidunt nisi voluptatem dolorum

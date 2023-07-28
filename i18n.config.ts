@@ -1,7 +1,6 @@
-import locales from '@/locales'
 import es from '@/locales/es.json'
 import en from '@/locales/en.json'
-import { FALLBACK_LOCALE } from '@/domain/lang'
+import { locales, FALLBACK_LOCALE } from '@/config/locale'
 
 export default defineI18nConfig(() => {
   return {
