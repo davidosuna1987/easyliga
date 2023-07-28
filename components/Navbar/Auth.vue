@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import items from '@/domain/navbar/auth'
+import items from '@/config/navbar/auth'
 
 const auth = useAuthStore()
 const authMenu = ref()
@@ -32,3 +32,4 @@ export default {
   name: 'NavbarAuth',
 }
 </script>
+config/navbar/auth

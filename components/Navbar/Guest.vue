@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import items from '@/domain/navbar/web'
+import items from '@/config/navbar/web'
 </script>
 
 <template>
@@ -22,3 +22,4 @@ export default {
   name: 'NavbarGuest',
 }
 </script>
+config/navbar/web
