@@ -1,15 +1,4 @@
-export type Locale = {
-  code: string
-  name: string
-  iso: string
-  file: string
-}
-
-export type I18n = {
-  locale: {
-    value: string
-  }
-}
+import { I18n } from 'types/lang'
 
 export const FALLBACK_LOCALE = 'es'
 

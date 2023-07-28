@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ResetData } from '@/stores/useAuthStore'
-import { ApiErrorObject } from 'domain/errors'
+import { ApiErrorObject } from 'types/errors'
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -81,3 +81,4 @@ export default {
   name: 'FormAuthReset',
 }
 </script>
+types/errors

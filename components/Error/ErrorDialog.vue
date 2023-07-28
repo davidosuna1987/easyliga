@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ApiErrorList } from '@/domain/errors'
+import { ApiErrorList } from '@/types/errors'
 
 const props = defineProps({
   errors: {
@@ -45,3 +45,4 @@ export default {
   name: 'ErrorDialog',
 }
 </script>
+types/errors

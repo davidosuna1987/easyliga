@@ -1,10 +1,6 @@
-import { ToastMessageOptions } from 'primevue/toast'
+import { ToastOptions } from '@/types/toast'
 
-export type ToastOptions = ToastMessageOptions
-
-export type ToastSeverity = 'success' | 'info' | 'warn' | 'error' | undefined
-
-export const DEFAULT_OPTIONS: ToastMessageOptions = {
+export const DEFAULT_OPTIONS: ToastOptions = {
   severity: undefined,
   life: 3000,
   closable: true,

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { RegisterData, useAuthStore } from '@/stores/useAuthStore'
-import { ApiErrorObject } from 'domain/errors'
+import { ApiErrorObject } from 'types/errors'
 
 const auth = useAuthStore()
 const toast = useEasyToast()
@@ -71,3 +71,4 @@ export default {
   name: 'FormAuthRegister',
 }
 </script>
+types/errors

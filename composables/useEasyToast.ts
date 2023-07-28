@@ -1,5 +1,6 @@
 import { useToast } from 'primevue/usetoast'
-import { ToastOptions, ToastSeverity, DEFAULT_OPTIONS } from '@/domain/toast'
+import { ToastOptions, ToastSeverity } from '@/types/toast'
+import { DEFAULT_OPTIONS } from '@/domain/toast'
 
 export default function useEasyToast(options: ToastOptions = DEFAULT_OPTIONS) {
   const toast = useToast()

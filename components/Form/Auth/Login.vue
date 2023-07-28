@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { LoginData, useAuthStore } from '@/stores/useAuthStore'
-import { ApiErrorObject } from 'domain/errors'
+import { ApiErrorObject } from 'types/errors'
 
 const auth = useAuthStore()
 const toast = useEasyToast()
@@ -68,3 +68,4 @@ export default {
   name: 'FormAuthLogin',
 }
 </script>
+types/errors
