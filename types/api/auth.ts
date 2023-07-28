@@ -1,11 +1,29 @@
 export type User = {
   id: number
   email: string
-  email_verified_at: string
-  created_at: string
-  updated_at: string
-  deleted_at: string
+  email_verified_at: string | null
+  created_at: string | null
+  updated_at: string | null
+  deleted_at: string | null
 }
+
+export type Profile = {
+  id: number
+  user_id: number
+  address_id: number
+  primary: boolean
+  first_name: string
+  last_name: string
+  birthday: string | null
+  gender: string | null
+  avatar: string | null
+  phone: string | null
+  created_at: string | null
+  updated_at: string | null
+  deleted_at: string | null
+}
+
+export type Role = string
 
 export type LoginData = {
   email: string
@@ -46,6 +64,9 @@ export type LoginResponse = {
   success: boolean
   data: {
     user: User
+    profile: Profile
+    profiles: Profile[]
+    roles: Role[]
     token: string
   }
   errors: null

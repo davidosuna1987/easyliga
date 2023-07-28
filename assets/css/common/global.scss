@@ -17,10 +17,12 @@ html {
   margin-top: var(--container-margin-top);
   margin-inline: auto;
   margin-bottom: var(--footer-height);
+  display: grid;
 }
 
 .easy-container {
   @extend %container;
+  height: 100%;
 }
 
 pre {

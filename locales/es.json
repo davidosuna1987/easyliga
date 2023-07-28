@@ -103,7 +103,10 @@
     "validate": "Validar",
     "info": "Información",
     "request": "Solicitudes",
-    "token": "Token"
+    "token": "Token",
+    "date": "Fecha",
+    "time": "Hora",
+    "place": "Lugar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -154,5 +157,23 @@
     "update": "Actualizar perfil",
     "edit": "Editar perfil",
     "updated": "El perfil ha sido actualizado correctamente"
+  },
+  "referees": {
+    "referee": "Árbitro | Árbitros",
+    "welcome": "¡Hola {name}! ¿Es día de partido?",
+    "welcome_no_name": "¡Hola! ¿Es día de partido?"
+  },
+  "games": {
+    "game": "Partidos | Partido | Partidos",
+    "create": "Crear partido",
+    "created": "El partido ha sido creado correctamente",
+    "edit": "Editar partido",
+    "update": "Actualizar partido",
+    "updated": "El partido ha sido actualizado correctamente",
+    "delete": "Eliminar partido",
+    "deleted": "El partido ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el partido?",
+    "delete_alert_text": "Esta acción no se puede deshacer",
+    "referees_assigned": "Árbitros asignados"
   }
 }
