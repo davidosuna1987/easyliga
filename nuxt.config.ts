@@ -8,10 +8,10 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/tailwindcss',
     '@pinia-plugin-persistedstate/nuxt',
+    'nuxt-icon',
   ],
   runtimeConfig: {
     // private keys
-    // apiSecret: "123",
     public: {
       appEnv: process.env.APP_ENV,
       appName: process.env.APP_NAME,
