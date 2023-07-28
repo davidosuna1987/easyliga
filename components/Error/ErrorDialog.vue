@@ -45,4 +45,3 @@ export default {
   name: 'ErrorDialog',
 }
 </script>
-types/errors

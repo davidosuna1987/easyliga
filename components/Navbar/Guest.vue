@@ -22,4 +22,3 @@ export default {
   name: 'NavbarGuest',
 }
 </script>
-config/navbar/web

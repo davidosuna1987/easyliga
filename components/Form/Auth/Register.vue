@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { RegisterData, useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { RegisterData } from 'types/api/auth'
 import { ApiErrorObject } from 'types/errors'
 
 const auth = useAuthStore()
@@ -31,7 +32,7 @@ async function handleRegister() {
 </script>
 
 <template>
-  <FormAuth
+  <FormAuthBase
     class="easy-form-auth-register"
     :buttonLabel="$t('auth.register')"
     @submit="handleRegister"
@@ -61,7 +62,7 @@ async function handleRegister() {
       toggle-mask
       :feedback="false"
     />
-  </FormAuth>
+  </FormAuthBase>
 </template>
 
 <style scoped></style>
@@ -71,4 +72,3 @@ export default {
   name: 'FormAuthRegister',
 }
 </script>
-types/errors

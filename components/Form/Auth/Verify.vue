@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { VerifyData } from '@/stores/useAuthStore'
-import { ApiErrorObject } from 'types/errors'
+import { VerifyData } from '@/types/api/auth'
+import { ApiErrorObject } from '@/types/errors'
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -42,4 +42,3 @@ export default {
   name: 'FormAuthVerify',
 }
 </script>
-types/errors

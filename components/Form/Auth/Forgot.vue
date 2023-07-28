@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ForgotData, useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { ForgotData } from 'types/api/auth'
 import { ApiErrorObject } from 'types/errors'
 
 const auth = useAuthStore()
@@ -29,7 +30,7 @@ async function handleForgot() {
 </script>
 
 <template>
-  <FormAuth
+  <FormAuthBase
     class="easy-form-auth-forgot"
     :buttonLabel="$t('auth.forgot')"
     @submitted="handleForgot"
@@ -40,7 +41,7 @@ async function handleForgot() {
       :error="errors?.email?.[0]"
     />
     <InputText id="email" v-model="form.email" type="email" />
-  </FormAuth>
+  </FormAuthBase>
 </template>
 
 <style scoped></style>
@@ -50,4 +51,3 @@ export default {
   name: 'FormAuthForgot',
 }
 </script>
-types/errors

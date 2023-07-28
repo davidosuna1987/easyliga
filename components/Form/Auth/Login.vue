@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { LoginData, useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { LoginData } from 'types/api/auth'
 import { ApiErrorObject } from 'types/errors'
 
 const auth = useAuthStore()
@@ -29,7 +30,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <FormAuth
+  <FormAuthBase
     class="easy-form-auth-login"
     :buttonLabel="$t('auth.login')"
     @submitted="handleLogin"
@@ -58,7 +59,7 @@ async function handleLogin() {
         {{ $t('auth.forgot') }}
       </NuxtLink>
     </template>
-  </FormAuth>
+  </FormAuthBase>
 </template>
 
 <style scoped></style>
@@ -68,4 +69,3 @@ export default {
   name: 'FormAuthLogin',
 }
 </script>
-types/errors

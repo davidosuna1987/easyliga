@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { ResetData } from '@/stores/useAuthStore'
+import { ResetData } from '@/types/api/auth'
 import { ApiErrorObject } from 'types/errors'
 
 const route = useRoute()
@@ -34,7 +34,7 @@ const handleReset = async () => {
 </script>
 
 <template>
-  <FormAuth
+  <FormAuthBase
     class="easy-form-auth-reset"
     :buttonLabel="$t('auth.reset')"
     @submit="handleReset"
@@ -71,7 +71,7 @@ const handleReset = async () => {
       toggle-mask
       :feedback="false"
     />
-  </FormAuth>
+  </FormAuthBase>
 </template>
 
 <style lang="scss" scoped></style>
@@ -81,4 +81,3 @@ export default {
   name: 'FormAuthReset',
 }
 </script>
-types/errors
