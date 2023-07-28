@@ -2,7 +2,7 @@
 
 <template>
   <div class="easy-auth-page easy-login-page">
-    <h4 class="text-center mb-5">{{ $t('auth.welcome') }}</h4>
+    <Heading class="mb-5" position="center">{{ $t('auth.welcome') }}</Heading>
     <FormAuthLogin />
   </div>
 </template>

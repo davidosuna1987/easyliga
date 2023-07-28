@@ -11,13 +11,13 @@ const auth = useAuthStore()
 
 <template>
   <div class="easy-referee-page">
-    <h4 class="text-center mb-5">
+    <Heading class="mb-5" position="center">
       {{
         auth.profile?.first_name
           ? $t('referees.welcome', { name: auth.profile.first_name })
           : $t('referees.welcome_no_name')
       }}
-    </h4>
+    </Heading>
 
     <div class="easy-referee-create-match-container">
       <Button
@@ -28,27 +28,6 @@ const auth = useAuthStore()
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.easy-referee-page {
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto;
-}
-.create-game-button {
-  width: 80%;
-  max-width: 250px;
-  margin-inline: auto;
-  display: block;
-  padding-block: 2rem;
-  border-radius: 50%;
-  aspect-ratio: 1/1;
-  font-size: 30px;
-}
-.p-button-label {
-  font-weight: 800 !important;
-}
-</style>
 
 <script lang="ts">
 export default {

@@ -2,7 +2,7 @@
 
 <template>
   <div class="easy-auth-page easy-forgot-page">
-    <h4 class="text-center mb-5">{{ $t('auth.forgot') }}</h4>
+    <Heading class="mb-5" position="center">{{ $t('auth.forgot') }}</Heading>
     <FormAuthForgot />
   </div>
 </template>

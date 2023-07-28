@@ -2,7 +2,7 @@
 
 <template>
   <div class="easy-auth-page easy-reset-page">
-    <h4 class="text-center mb-5">{{ $t('auth.reset') }}</h4>
+    <Heading class="mb-5" position="center">{{ $t('auth.reset') }}</Heading>
     <FormAuthReset />
   </div>
 </template>

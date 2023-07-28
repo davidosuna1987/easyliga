@@ -2,7 +2,7 @@
 
 <template>
   <div class="easy-auth-page easy-register-page">
-    <h4 class="text-center mb-5">{{ $t('auth.register') }}</h4>
+    <Heading class="mb-5" position="center">{{ $t('auth.register') }}</Heading>
     <FormAuthRegister />
   </div>
 </template>

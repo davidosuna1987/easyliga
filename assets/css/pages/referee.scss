@@ -1,0 +1,21 @@
+.easy-referee-page {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+}
+.create-game-button {
+  width: 80%;
+  max-width: 250px;
+  margin-inline: auto;
+  padding-block: 2rem;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+
+  &.p-button {
+    display: block;
+    font-size: 30px;
+  }
+}
+.p-button-label {
+  font-weight: 500 !important;
+}
