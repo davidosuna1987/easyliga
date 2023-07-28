@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { FALLBACK_LOCALE } from '@/config/locale'
 import { MenuItem } from 'primevue/menuitem'
+import { getLangIcon } from '@/domain/locale'
 
 const i18n = useI18n()
 const lang = ref<string>(FALLBACK_LOCALE)
@@ -29,7 +30,7 @@ const props = defineProps({
     :class="{ 'p-menuitem-link__active': item.code === lang }"
     @click="setAppLocale(item.code)"
   >
-    {{ item.name }}
+    <LangIcon :icon="getLangIcon(item.code)" size="1.25rem" /> {{ item.name }}
   </NuxtLink>
 </template>
 

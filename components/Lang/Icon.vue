@@ -4,17 +4,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  size: {
+    type: String,
+    required: true,
+  },
 })
 </script>
 
 <template>
-  <div class="easy-lang-trigger-component">
-    <Icon :name="icon" size="2rem" />
+  <div class="easy-lang-icon-component">
+    <Icon :name="icon" :size="size" />
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'LangTrigger',
+  name: 'LangIcon',
 }
 </script>

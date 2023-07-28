@@ -1,26 +1,20 @@
 <script setup lang="ts">
 import { MenuItem } from 'primevue/menuitem'
-import {
-  locales,
-  getLocaleIconName,
-  FALLBACK_LOCALE_ICON,
-} from '@/config/locale'
+import { locales } from '@/config/locale'
+import { getLangIcon } from '@/domain/locale'
 
 const { locale } = useI18n()
 
 const langMenu = ref()
-
-const icon = computed((): string => {
-  const flag =
-    locales.find(item => item.code === locale.value)?.flag ??
-    FALLBACK_LOCALE_ICON
-  return getLocaleIconName(flag)
-})
 </script>
 
 <template>
   <div class="easy-lang-switcher-component">
-    <LangTrigger :icon="icon" @click="langMenu.toggle($event)" />
+    <LangIcon
+      :icon="getLangIcon(locale)"
+      size="2rem"
+      @click="langMenu.toggle($event)"
+    />
     <TieredMenu ref="langMenu" :model="(locales as MenuItem[])" popup>
       <template #item="props">
         <LangItem :item="props.item" />

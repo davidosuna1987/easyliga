@@ -16,6 +16,20 @@ export const locales: Locale[] = [
     flag: 'es',
   },
   {
+    code: 'ct',
+    name: 'Català',
+    iso: 'es-CT',
+    file: 'ct.json',
+    flag: 'es-ct',
+  },
+  {
+    code: 'pv',
+    name: 'Euskera',
+    iso: 'es-PV',
+    file: 'pv.json',
+    flag: 'es-pv',
+  },
+  {
     code: 'en',
     name: 'English',
     iso: 'en-EN',
