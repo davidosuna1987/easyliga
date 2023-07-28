@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
     '@nuxtjs/tailwindcss',
+    '@pinia-plugin-persistedstate/nuxt',
   ],
   runtimeConfig: {
     // private keys

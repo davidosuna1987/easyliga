@@ -83,7 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const logout = async () => {
     await useApi<MessageResponse>('auth/logout', { method: 'POST' })
-    user.value = null
+    setInitialState()
     navigateTo('/login')
   }
 
@@ -145,6 +145,11 @@ export const useAuthStore = defineStore('auth', () => {
     })
 
     return response
+  }
+
+  const setInitialState = () => {
+    user.value = null
+    token.value = null
   }
 
   return {
