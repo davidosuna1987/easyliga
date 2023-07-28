@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { User, useAuthStore } from '@/stores/useAuthStore'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { User } from '@/types/api/auth'
 
 const auth = useAuthStore()
 const authuser = computed((): User | null => auth.user)

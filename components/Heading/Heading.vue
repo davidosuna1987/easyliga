@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { HeadingPosition } from '@/types/heading'
+
 const props = defineProps({
   tag: {
     type: String,

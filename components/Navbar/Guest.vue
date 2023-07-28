@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import items from '@/config/navbar/web'
+import webItems from '@/config/navbar/web'
 </script>
 
 <template>
-  <NavbarWeb class="easy-navbar-guest" :items="items">
+  <NavbarWeb class="easy-navbar-guest" :items="webItems">
     <template #end>
       <NuxtLink to="/register">
         <Button :label="$t('auth.register')" size="small" outlined />

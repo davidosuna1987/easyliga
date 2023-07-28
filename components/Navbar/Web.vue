@@ -31,6 +31,6 @@ const props = defineProps({
 
 <script lang="ts">
 export default {
-  name: 'NavbarItem',
+  name: 'NavbarWeb',
 }
 </script>
