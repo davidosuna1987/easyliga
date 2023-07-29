@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import webItems from '@/config/navbar/web'
+const items = useMenuItems()
 </script>
 
 <template>
-  <NavbarWeb class="easy-navbar-auth" :items="webItems">
+  <NavbarContainer class="easy-navbar-auth" :items="items">
     <template #end>
       <NavbarAvatar />
     </template>
-  </NavbarWeb>
+  </NavbarContainer>
 </template>
 
 <style scoped></style>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import webItems from '@/config/navbar/web'
+const items = useMenuItems()
 </script>
 
 <template>
-  <NavbarWeb class="easy-navbar-guest" :items="webItems">
+  <NavbarContainer class="easy-navbar-guest" :items="items">
     <template #end>
       <NuxtLink to="/register">
         <Button :label="$t('auth.register')" size="small" outlined />
@@ -12,7 +12,7 @@ import webItems from '@/config/navbar/web'
         <Button :label="$t('auth.login')" size="small" class="ml-3" />
       </NuxtLink>
     </template>
-  </NavbarWeb>
+  </NavbarContainer>
 </template>
 
 <style scoped></style>

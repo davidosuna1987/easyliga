@@ -150,7 +150,11 @@
     "copyright": "Todos los derechos reservados ®"
   },
   "navbar": {
-    "home": "Inicio"
+    "home": "Inicio",
+    "games": {
+      "label": "Partidos",
+      "create": "Crear partido"
+    }
   },
   "profiles": {
     "profile": "Perfiles | Perfil | Perfiles",
