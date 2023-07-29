@@ -1,17 +1,8 @@
 <script lang="ts" setup>
-type FormLink = {
-  label: string
-  href: string
-}
-
 const props = defineProps({
   buttonLabel: {
     type: String,
     required: true,
-  },
-  link: {
-    type: Object as PropType<FormLink>,
-    default: null,
   },
 })
 </script>
