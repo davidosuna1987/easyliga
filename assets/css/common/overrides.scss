@@ -47,8 +47,8 @@ a:-webkit-any-link {
 
 .p-menuitem-link {
   &__active {
-    background-color: var(--primary-color);
-    color: var(--primary-color-text) !important;
+    background-color: var(--primary-color-light);
+    color: var(--highlight-text-color) !important;
     cursor: default !important;
   }
 }
