@@ -177,7 +177,22 @@
     "delete": "Eliminar partido",
     "deleted": "El partido ha sido eliminado correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el partido?",
-    "delete_alert_text": "Esta acción no se puede deshacer",
-    "referees_assigned": "Árbitros asignados"
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "referees_assigned": "Árbitros asignados",
+    "referees_not_assigned": "Árbitros no asignados",
+    "select": "Selecciona un partido"
+  },
+  "federations": {
+    "federation": "Federaciones | Federación | Federaciones",
+    "create": "Crear federación",
+    "created": "La federación ha sido creada correctamente",
+    "edit": "Editar federación",
+    "update": "Actualizar federación",
+    "updated": "La federación ha sido actualizada correctamente",
+    "delete": "Eliminar federación",
+    "deleted": "La federación ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la federación?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona una federación"
   }
 }
