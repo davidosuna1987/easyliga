@@ -80,16 +80,27 @@ const submit = async () => {
   }
 }
 
+const getGroupedLeagues = async () => {
+  loadingLeagues.value = true
+
+  const response = await federationService.scope('national', {
+    with: 'leagues',
+    where_has: `leagues:category_id:${selectedCategoryId.value},leagues:gender_id:${selectedGenderId.value}`,
+  })
+  groupedLeagues.value = response.data.value?.data
+    .federations as ApiFederationWithLeagues[]
+  loadingLeagues.value = false
+}
+
+watch(selectedCategoryId, async categoryId => {
+  if (categoryId && selectedGenderId.value) {
+    getGroupedLeagues()
+  }
+})
+
 watch(selectedGenderId, async genderId => {
   if (genderId) {
-    loadingLeagues.value = true
-
-    const response = await federationService.scope('national', {
-      with: 'leagues',
-    })
-    groupedLeagues.value = response.data.value?.data
-      .federations as ApiFederationWithLeagues[]
-    loadingLeagues.value = false
+    getGroupedLeagues()
   }
 })
 
@@ -128,6 +139,7 @@ watch(selectedLocalTeam, async team => {
       <CategorySelector @selected="setCategory" />
       <GenderSelector :disabled="!selectedCategoryId" @selected="setGender" />
       <FederationLeagueSelector
+        :grouped-leagues="groupedLeagues"
         :disabled="!selectedGenderId || loadingLeagues"
         :loading="loadingLeagues"
         @selected="setLeague"
