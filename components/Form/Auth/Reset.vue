@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ResetData } from '@/types/api/auth'
-import { ApiErrorObject } from 'types/errors'
+import { ApiErrorObject } from '@/types/errors'
 
 const route = useRoute()
 const auth = useAuthStore()

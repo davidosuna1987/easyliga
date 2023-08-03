@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
-import { ForgotData } from 'types/api/auth'
-import { ApiErrorObject } from 'types/errors'
+import { ForgotData } from '@/types/api/auth'
+import { ApiErrorObject } from '@/types/errors'
 
 const auth = useAuthStore()
 const toast = useEasyToast()

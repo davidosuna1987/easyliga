@@ -1,4 +1,4 @@
-import { ApiErrors, AlertError } from 'types/errors'
+import { ApiErrors, AlertError } from '@/types/errors'
 
 export function useErrors(apiErrors: ApiErrors = {}) {
   const errors = ref<AlertError>({
