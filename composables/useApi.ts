@@ -19,7 +19,7 @@ export function useApi<T>(path: string, options: UseFetchOptions<T> = {}) {
     }
   }
 
-  return useFetch(`${runtimeConfig.public.apiUrl}/${path}`, {
+  const response = useFetch(`${runtimeConfig.public.apiUrl}/${path}`, {
     credentials: 'include',
     watch: false,
     ...options,
@@ -27,5 +27,19 @@ export function useApi<T>(path: string, options: UseFetchOptions<T> = {}) {
       ...headers,
       ...options?.headers,
     },
+    onResponseError({ response }) {
+      console.log(response.status, response.statusText)
+      if (response.status === 401) {
+        auth.setInitialState()
+        navigateTo('/login')
+      }
+
+      if (response.status === 403) {
+        auth.setInitialState()
+        navigateTo('/login')
+      }
+    },
   })
+
+  return response
 }
