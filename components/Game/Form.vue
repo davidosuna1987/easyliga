@@ -71,6 +71,7 @@ const submit = async () => {
     if (error.value.data?.errors instanceof Array) {
       toast.error(error.value.data?.errors[0])
     } else {
+      loadingStore.value = false
       toast.correctErrors()
     }
     errors.value = error.value.data?.errors
