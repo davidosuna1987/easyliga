@@ -14,7 +14,8 @@
   // --primary-color-light: #c5cae9;
   // --primary-color-dark: #303f9f;
   // --primary-color-darkest: #1a237e;
-  --background-color: #f4f2ec;
+  // --background-color: #f4f2ec;
+  --background-color: #f1f1f1;
   --secondary-color: #cce1f7;
   --secondary-color-light: #f4f9fd;
   --secondary-color-dark: #72add5;
@@ -29,7 +30,7 @@
   --surface-d: #dee2e6;
   --surface-e: #ffffff;
   --surface-f: #ffffff;
-  --text-color: #495057;
+  --text-color: #2e3135;
   --text-color-secondary: #b9a7a7;
   --primary-color-text: #ffffff;
   --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
@@ -70,9 +71,11 @@
   --maskbg: rgba(0, 0, 0, 0.4);
   --highlight-bg: #fff6f5;
   --highlight-text-color: var(--primary-color-dark);
-  --container-max-width: 1110px;
+  --main-max-width: 1400px;
+  --container-max-width: 1400px;
+  // --container-max-width: 1110px;
   --app-margin: 8px;
-  --navbar-width: calc(100vw - 2 * var(--app-margin));
+  --navbar-width: calc(var(--main-max-width) - 2 * var(--app-margin));
   --box-shadow: 0 0 #0000, 0 0 #0000, 0 4px 6px -1px rgb(0 0 0 / 0.1),
     0 2px 4px -2px rgb(0 0 0 / 0.1);
   --container-margin-top: 60px;
@@ -82,7 +85,19 @@
   --navbar-avatar-size: 38px;
   --easy-main-padding: 1rem;
   --easy-main-padding-tablet: 4rem;
+  --layout-sidebar-width: 350px;
 }
 
 $min-width-tablet: 768px;
 $min-width-desktop: 992px;
+$min-width-desktop-big: 1024px;
+
+@media (min-width: $min-width-tablet) {
+  :root {
+    --app-margin: 16px;
+    --navbar-width: calc(var(--main-max-width) - 2 * var(--app-margin));
+    --container-margin-top: calc(52px + var(--app-margin));
+    --easy-main-padding: 2rem;
+    --easy-main-padding-tablet: 4rem;
+  }
+}

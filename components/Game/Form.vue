@@ -181,7 +181,9 @@ watch(onChangeData, data => {
     class="easy-game-form-component grid gap-x-2 gap-y-4"
     @submit.prevent="submit"
   >
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-x-2 gap-y-4 items-end">
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-2 gap-y-4 items-end"
+    >
       <FormLabel :label="$t('categories.category')">
         <CategorySelector @selected="setCategory" />
       </FormLabel>
