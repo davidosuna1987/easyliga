@@ -28,7 +28,6 @@ export function useApi<T>(path: string, options: UseFetchOptions<T> = {}) {
       ...options?.headers,
     },
     onResponseError({ response }) {
-      console.log(response.status, response.statusText)
       if (response.status === 401) {
         auth.setInitialState()
         navigateTo('/login')
