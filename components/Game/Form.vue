@@ -152,7 +152,7 @@ watch(selectedLocalTeam, async team => {
         />
       </FormLabel>
     </div>
-    <div class="grid md:grid-cols-3 gap-2 items-end mt-2">
+    <div class="grid md:grid-cols-3 gap-2 items-end md:mt-2">
       <FormLabel :label="$t('teams.team')">
         <TeamSelector
           :disabled="!selectedLeague || loadingTeams"
