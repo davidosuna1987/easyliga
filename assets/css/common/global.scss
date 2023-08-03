@@ -4,25 +4,7 @@ html {
   font-weight: var(--font-weight);
   color: var(--text-color);
   margin: var(--app-margin);
-  background-color: var(--primary-color-light);
-}
-
-.easy-main {
-  background: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: var(--app-margin);
-  min-height: calc(100vh - var(--container-margin-top) - 2 * var(--app-margin));
-  max-width: 1400px;
-  margin-top: var(--container-margin-top);
-  margin-inline: auto;
-  margin-bottom: var(--footer-height);
-  display: grid;
-}
-
-.easy-container {
-  @extend %container;
-  height: 100%;
+  background-color: var(--background-color);
 }
 
 pre {
@@ -31,10 +13,4 @@ pre {
 
 a {
   color: var(--link-color);
-}
-
-@media (min-width: $min-width-tablet) {
-  .easy-main {
-    padding: 4rem;
-  }
 }

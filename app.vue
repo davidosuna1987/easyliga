@@ -60,11 +60,9 @@ useHead({
 </script>
 
 <template>
-  <div>
-    <NuxtLayout>
-      <NuxtPage />
-      <Alerts />
-      <Toast position="top-center" group="app" />
-    </NuxtLayout>
+  <div id="app">
+    <NuxtPage />
+    <Alerts />
+    <Toast position="top-center" group="app" />
   </div>
 </template>

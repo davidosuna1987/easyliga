@@ -1,0 +1,24 @@
+.easy-main {
+  min-height: calc(100vh - var(--container-margin-top) - 2 * var(--app-margin));
+  max-width: 1400px;
+  margin-top: var(--container-margin-top);
+  margin-inline: auto;
+  margin-bottom: var(--footer-height);
+  display: grid;
+  background-color: var(--background-color);
+}
+
+.easy-container {
+  @extend %container;
+  height: 100%;
+  padding: var(--easy-main-padding);
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+@media (min-width: $min-width-tablet) {
+  .easy-container {
+    padding: var(--easy-main-padding-tablet);
+  }
+}

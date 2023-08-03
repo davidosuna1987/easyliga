@@ -1,0 +1,24 @@
+.sidebar-left-layout {
+  .easy-main {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: var(--app-margin);
+  }
+
+  .easy-sidebar {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--easy-main-padding);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+}
+
+@media (min-width: $min-width-tablet) {
+  .sidebar-left-layout {
+    .easy-sidebar {
+      padding: var(--easy-main-padding-tablet)
+        calc(var(--easy-main-padding-tablet) / 2);
+    }
+  }
+}

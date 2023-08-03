@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  strong: {
+    type: Boolean,
+    default: false,
+  },
   error: {
     type: String,
     default: null,
@@ -14,7 +18,7 @@ const props = defineProps({
 <template>
   <div class="easy-form-label-component">
     <div class="easy-form-label-component__label">
-      <label>{{ label }}</label>
+      <label :class="{ 'font-bold': strong }">{{ label }}</label>
       <small v-if="error" class="text-red-400 ml-2">{{ error }}</small>
     </div>
     <div class="easy-form-label-component__children grid mt-1">

@@ -41,7 +41,6 @@ onMounted(async () => {
     :loading="props.loading || loadingApi"
     :options="options"
     :optionLabel="gender => $t(`genders.${gender.name}`)"
-    optionValue="id"
     scrollHeight="210px"
     :placeholder="$t('genders.select')"
     @update:modelValue="$emit('selected', $event)"

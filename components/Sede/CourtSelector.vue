@@ -24,6 +24,17 @@ const options = computed(
   (): ApiSedeWithCourts[] => props.groupedCourts ?? groupedCourts.value,
 )
 
+const selectedSede = computed(() =>
+  groupedCourts.value.find(sede => sede.id === selectedCourt.value?.sede_id),
+)
+
+const emitData = computed(() => {
+  return {
+    sede: selectedSede.value,
+    court: selectedCourt.value,
+  }
+})
+
 onMounted(async () => {
   if (!props.groupedCourts) {
     loadingApi.value = true
@@ -44,12 +55,11 @@ onMounted(async () => {
     :loading="props.loading || loadingApi"
     :options="options"
     optionLabel="name"
-    :optionValue="court => court"
     optionGroupChildren="courts"
     optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="$t('courts.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="$emit('selected', emitData)"
   />
 </template>
 

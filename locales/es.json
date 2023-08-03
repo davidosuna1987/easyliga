@@ -233,7 +233,9 @@
     "deleted": "El equipo ha sido eliminada correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el equipo?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "select": "Selecciona un equipo"
+    "select": "Selecciona un equipo",
+    "local": "Equipo local",
+    "visitor": "Equipo visitante"
   },
   "courts": {
     "court": "Pistas | Pista | Pistas",

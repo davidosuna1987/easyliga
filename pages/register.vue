@@ -1,10 +1,14 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="easy-auth-page easy-register-page">
-    <Heading class="mb-5" position="center">{{ $t('auth.register') }}</Heading>
-    <FormAuthRegister />
-  </div>
+  <NuxtLayout name="default">
+    <div class="easy-auth-page easy-register-page">
+      <Heading class="mb-5" position="center">{{
+        $t('auth.register')
+      }}</Heading>
+      <FormAuthRegister />
+    </div>
+  </NuxtLayout>
 </template>
 
 <style scoped></style>

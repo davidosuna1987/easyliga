@@ -1,9 +1,11 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="easy-auth-page easy-verify-page">
-    <FormAuthVerify />
-  </div>
+  <NuxtLayout name="default">
+    <div class="easy-auth-page easy-verify-page">
+      <FormAuthVerify />
+    </div>
+  </NuxtLayout>
 </template>
 
 <style scoped></style>

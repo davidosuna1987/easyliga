@@ -1,9 +1,20 @@
 :root {
   color-scheme: light;
-  --primary-color: #fc3c2e;
-  --primary-color-light: #fff6f5;
-  --primary-color-dark: #901632;
-  --primary-color-darkest: #7b0f2b;
+  // --primary-color: #fc3c2e;
+  // --primary-color-light: #fff6f5;
+  // --primary-color-dark: #901632;
+  // --primary-color-darkest: #7b0f2b;
+  --primary-color: #009688;
+  --primary-color-medium: #b2dfdb;
+  --primary-color-light: #dcf4f2;
+  --primary-color-dark: #00695c;
+  --primary-color-darkest: #004d40;
+  // --primary-color: #3f51b5;
+  // --primary-color-medium: #9fa8da;
+  // --primary-color-light: #c5cae9;
+  // --primary-color-dark: #303f9f;
+  // --primary-color-darkest: #1a237e;
+  --background-color: #f4f2ec;
   --secondary-color: #cce1f7;
   --secondary-color-light: #f4f9fd;
   --secondary-color-dark: #72add5;
@@ -58,7 +69,7 @@
   --focus-ring: 0 0 0 0.2rem #fff6f5;
   --maskbg: rgba(0, 0, 0, 0.4);
   --highlight-bg: #fff6f5;
-  --highlight-text-color: #e2382c;
+  --highlight-text-color: var(--primary-color-dark);
   --container-max-width: 1110px;
   --app-margin: 8px;
   --navbar-width: calc(100vw - 2 * var(--app-margin));
@@ -69,6 +80,8 @@
   --min-width-desktop: 1025px;
   --footer-height: 84px;
   --navbar-avatar-size: 38px;
+  --easy-main-padding: 1rem;
+  --easy-main-padding-tablet: 4rem;
 }
 
 $min-width-tablet: 768px;

@@ -1,10 +1,12 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div class="easy-auth-page easy-forgot-page">
-    <Heading class="mb-5" position="center">{{ $t('auth.forgot') }}</Heading>
-    <FormAuthForgot />
-  </div>
+  <NuxtLayout name="default">
+    <div class="easy-auth-page easy-forgot-page">
+      <Heading class="mb-5" position="center">{{ $t('auth.forgot') }}</Heading>
+      <FormAuthForgot />
+    </div>
+  </NuxtLayout>
 </template>
 
 <style scoped></style>
