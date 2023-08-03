@@ -136,33 +136,45 @@ watch(selectedLocalTeam, async team => {
 
 <template>
   <form class="easy-game-form-component grid gap-2" @submit.prevent="submit">
-    <div class="grid md:grid-cols-3 gap-2">
-      <CategorySelector @selected="setCategory" />
-      <GenderSelector :disabled="!selectedCategoryId" @selected="setGender" />
-      <FederationLeagueSelector
-        :grouped-leagues="groupedLeagues"
-        :disabled="!selectedGenderId || loadingLeagues"
-        :loading="loadingLeagues"
-        @selected="setLeague"
-      />
+    <div class="grid md:grid-cols-3 gap-2 items-end">
+      <FormLabel :label="$t('categories.category')">
+        <CategorySelector @selected="setCategory" />
+      </FormLabel>
+      <FormLabel :label="$t('genders.gender')">
+        <GenderSelector :disabled="!selectedCategoryId" @selected="setGender" />
+      </FormLabel>
+      <FormLabel :label="$t('leagues.league')" :error="errors?.league_id?.[0]">
+        <FederationLeagueSelector
+          :grouped-leagues="groupedLeagues"
+          :disabled="!selectedGenderId || loadingLeagues"
+          :loading="loadingLeagues"
+          @selected="setLeague"
+        />
+      </FormLabel>
     </div>
-    <div class="grid md:grid-cols-3 gap-2">
-      <TeamSelector
-        :disabled="!selectedLeague || loadingTeams"
-        :teams="localTeams"
-        :loading="loadingTeams"
-        @selected="setLocalTeam"
-      />
-      <TeamSelector
-        :disabled="!form.local_team_id || loadingTeams"
-        :teams="visitorTeams"
-        :loading="loadingTeams"
-        @selected="team => (form.visitor_team_id = team.id)"
-      />
-      <SedeCourtSelector
-        :disabled="!form.local_team_id"
-        @selected="court => (form.court_id = court.id)"
-      />
+    <div class="grid md:grid-cols-3 gap-2 items-end mt-2">
+      <FormLabel :label="$t('teams.team')">
+        <TeamSelector
+          :disabled="!selectedLeague || loadingTeams"
+          :teams="localTeams"
+          :loading="loadingTeams"
+          @selected="setLocalTeam"
+        />
+      </FormLabel>
+      <FormLabel :label="$t('teams.team')">
+        <TeamSelector
+          :disabled="!form.local_team_id || loadingTeams"
+          :teams="visitorTeams"
+          :loading="loadingTeams"
+          @selected="team => (form.visitor_team_id = team.id)"
+        />
+      </FormLabel>
+      <FormLabel :label="$t('courts.court')" :error="errors?.court_id?.[0]">
+        <SedeCourtSelector
+          :disabled="!form.local_team_id"
+          @selected="court => (form.court_id = court.id)"
+        />
+      </FormLabel>
     </div>
     <div class="grid justify-end">
       <Button
