@@ -25,7 +25,17 @@ const auth = useAuthStore()
         :label="$t('games.create')"
         size="large"
         @click.prevent="navigateTo('/games/create')"
-      />
+      >
+        <NuxtImg
+          class="create-game-button__logo"
+          src="/logos/easyliga.svg"
+          quality="100"
+          width="25"
+          height="25"
+          fit="contain"
+        />
+        <span class="create-game-button__label">{{ $t('games.create') }}</span>
+      </Button>
     </div>
   </div>
 </template>
