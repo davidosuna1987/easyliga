@@ -24,6 +24,7 @@ const auth = useAuthStore()
         class="create-game-button"
         :label="$t('games.create')"
         size="large"
+        @click.prevent="navigateTo('/games/create')"
       />
     </div>
   </div>
