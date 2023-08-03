@@ -135,7 +135,7 @@ watch(selectedLocalTeam, async team => {
 
 <template>
   <form class="easy-game-form-component grid gap-2" @submit.prevent="submit">
-    <div class="grid grid-cols-3 gap-2">
+    <div class="grid md:grid-cols-3 gap-2">
       <CategorySelector @selected="setCategory" />
       <GenderSelector :disabled="!selectedCategoryId" @selected="setGender" />
       <FederationLeagueSelector
@@ -145,7 +145,7 @@ watch(selectedLocalTeam, async team => {
         @selected="setLeague"
       />
     </div>
-    <div class="grid grid-cols-3 gap-2">
+    <div class="grid md:grid-cols-3 gap-2">
       <TeamSelector
         :disabled="!selectedLeague || loadingTeams"
         :teams="localTeams"
