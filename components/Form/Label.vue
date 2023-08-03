@@ -27,7 +27,12 @@ const props = defineProps({
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.easy-form-label-component__children > :first-child {
+  max-width: 100%;
+  overflow: hidden;
+}
+</style>
 
 <script lang="ts">
 export default {
