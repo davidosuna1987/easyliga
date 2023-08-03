@@ -11,7 +11,7 @@ import {
   ResetData,
   User,
   VerifyData,
-} from 'types/api/auth'
+} from '@/types/api/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   const STAFF_ROLES = ['admin', 'staff']
