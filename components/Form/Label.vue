@@ -12,9 +12,14 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="easy-form-label-component flex items-center">
-    <label for="email">{{ label }}</label>
-    <small v-if="error" class="text-red-400 ml-2">{{ error }}</small>
+  <div class="easy-form-label-component">
+    <div class="easy-form-label-component__label">
+      <label>{{ label }}</label>
+      <small v-if="error" class="text-red-400 ml-2">{{ error }}</small>
+    </div>
+    <div class="easy-form-label-component__children grid mt-1">
+      <slot />
+    </div>
   </div>
 </template>
 
