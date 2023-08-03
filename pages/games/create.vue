@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({
+  middleware: ['role'],
+  roles: ['referee'],
+})
+</script>
 
 <template>
   <div class="easy-games-create-page">
