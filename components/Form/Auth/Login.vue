@@ -24,7 +24,7 @@ async function handleLogin() {
     }
     errors.value = error.value.data?.errors
   } else {
-    navigateTo('/')
+    auth.loginRedirect()
   }
 }
 </script>

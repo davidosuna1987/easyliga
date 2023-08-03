@@ -12,6 +12,7 @@ import {
   User,
   VerifyData,
 } from '@/types/api/auth'
+import auth from 'middleware/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   const STAFF_ROLES = ['admin', 'staff']
@@ -130,6 +131,14 @@ export const useAuthStore = defineStore('auth', () => {
   const hasAnyRole = (searchedRoles: string[]) =>
     roles.value.some(role => searchedRoles.includes(role))
 
+  const loginRedirect = () => {
+    if (!isLoggedIn) return navigateTo('/login')
+
+    if (roles.value.includes('referee')) return navigateTo('/referee')
+
+    return navigateTo('/')
+  }
+
   const setInitialState = () => {
     user.value = null
     profile.value = null
@@ -160,5 +169,7 @@ export const useAuthStore = defineStore('auth', () => {
     isStaffOrHasAnyRole,
     hasRole,
     hasAnyRole,
+    loginRedirect,
+    setInitialState,
   }
 })
