@@ -58,14 +58,6 @@
     }
   }
 
-  &.sidebar-closed {
-    .easy-sidebar-toggle {
-      &.close {
-        display: none;
-      }
-    }
-  }
-
   &.sidebar-opened {
     .easy-sidebar {
       transform: translateX(0);
