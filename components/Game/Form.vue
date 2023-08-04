@@ -100,7 +100,7 @@ const submit = async () => {
     errors.value = error.value.data?.errors
   } else {
     toast.success(useNuxtApp().$i18n.t('games.created'))
-    navigateTo(`/games/${data.value?.data.game.id}`)
+    navigateTo(`/referee/games/${data.value?.data.game.id}`)
   }
 }
 
