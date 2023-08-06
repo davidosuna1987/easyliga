@@ -68,17 +68,15 @@ const setGame = (data: GameStorePreviewData) => {
         </p>
       </FormLabel>
     </template>
-    <div class="easy-games-create-page">
+    <div class="easy-referee-game-create-page">
       <Heading class="mb-5" position="center">{{ $t('games.create') }}</Heading>
       <GameForm @changed="setGame" />
     </div>
   </NuxtLayout>
 </template>
 
-<style scoped></style>
-
 <script lang="ts">
 export default {
-  name: 'GamesCreatePage',
+  name: 'RefereeGamesCreatePage',
 }
 </script>
