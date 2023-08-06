@@ -6,27 +6,26 @@ import {
   LoginData,
   LoginResponse,
   MessageResponse,
-  Profile,
+  ApiProfile,
   RegisterData,
   ResetData,
-  User,
+  ApiUser,
   VerifyData,
 } from '@/types/api/auth'
-import auth from 'middleware/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   const STAFF_ROLES = ['admin', 'staff']
 
-  const user = ref<User | null>(null)
-  const profile = ref<Profile | null>(null)
-  const profiles = ref<Profile[]>([])
+  const user = ref<ApiUser | null>(null)
+  const profile = ref<ApiProfile | null>(null)
+  const profiles = ref<ApiProfile[]>([])
   const roles = ref<string[]>([])
   const token = ref<string | null>(null)
   const isLoggedIn = computed(() => !!user.value)
 
   const getAuthUser = async () => {
     const response = await useApi<AuthuserResponse>('auth/user')
-    user.value = response.data.value?.data.user as User
+    user.value = response.data.value?.data.user as ApiUser
   }
 
   const login = async (loginData: LoginData) => {

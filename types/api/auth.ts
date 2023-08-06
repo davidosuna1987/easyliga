@@ -1,4 +1,4 @@
-export type User = {
+export type ApiUser = {
   id: number
   email: string
   email_verified_at: string | null
@@ -7,13 +7,13 @@ export type User = {
   deleted_at: string | null
 }
 
-export type Profile = {
+export type ApiProfile = {
   id: number
   user_id: number
   address_id: number
   primary: boolean
   first_name: string
-  last_name: string
+  last_name: string | null
   birthday: string | null
   gender: string | null
   avatar: string | null
@@ -55,7 +55,7 @@ export type ResetData = {
 export type AuthuserResponse = {
   success: boolean
   data: {
-    user: User
+    user: ApiUser
   }
   errors: null
 }
@@ -63,9 +63,9 @@ export type AuthuserResponse = {
 export type LoginResponse = {
   success: boolean
   data: {
-    user: User
-    profile: Profile
-    profiles: Profile[]
+    user: ApiUser
+    profile: ApiProfile
+    profiles: ApiProfile[]
     roles: Role[]
     token: string
   }
