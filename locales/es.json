@@ -181,7 +181,8 @@
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "referees_assigned": "Árbitros asignados",
     "referees_not_assigned": "Árbitros no asignados",
-    "select": "Selecciona un partido"
+    "select": "Selecciona un partido",
+    "arbitrate": "Arbitrar partido"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",
@@ -235,7 +236,13 @@
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un equipo",
     "local": "Equipo local",
-    "visitor": "Equipo visitante"
+    "visitor": "Equipo visitante",
+    "captain": "Capitán",
+    "captain_select": "Selecciona un capitán",
+    "captain_assign": "Asignar capitán",
+    "libero": "Líbero",
+    "libero_select": "Selecciona un líbero",
+    "libero_assign": "Asignar líbero"
   },
   "courts": {
     "court": "Pistas | Pista | Pistas",
@@ -284,5 +291,26 @@
     "senior": "Senior",
     "veteran": "Veterano | Veteranos",
     "master": "Master"
+  },
+  "calls": {
+    "call": "Convocatorias | Convocatoria | Convocatorias",
+    "create": "Crear convocatoria",
+    "created": "La convocatoria ha sido creada correctamente",
+    "edit": "Editar convocatoria",
+    "update": "Actualizar convocatoria",
+    "updated": "La convocatoria ha sido actualizada correctamente",
+    "delete": "Eliminar convocatoria",
+    "deleted": "La convocatoria ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la convocatoria?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona los jugadores disponibles para este partido",
+    "submit": "Enviar convocatoria",
+    "submitted": "La convocatoria ha sido enviada correctamente",
+    "locked": "La convocatoria está cerrada",
+    "unlock": "Abrir convocatoria",
+    "unlocked": "La convocatoria ha sido abierta correctamente",
+    "lock": "Cerrar convocatoria",
+    "locked_alert": "¿Seguro que quieres cerrar la convocatoria?",
+    "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla"
   }
 }
