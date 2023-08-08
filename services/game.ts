@@ -1,4 +1,6 @@
 import {
+  ApiGameTeamPlayersResponse,
+  ApiGameInitialDataResponse,
   ApiGameResponse,
   ApiGamesResponse,
   ApiGameStoreRequest,
@@ -18,5 +20,20 @@ export default class GameService {
       method: 'POST',
       body: data,
     })
+  }
+
+  initialData(gameId: number, params?: Record<string, string>) {
+    return useApi<ApiGameInitialDataResponse>(`games/${gameId}/initial-data`, {
+      params,
+    })
+  }
+
+  teamPlayers(gameId: number, teamId: number, params?: Record<string, string>) {
+    return useApi<ApiGameTeamPlayersResponse>(
+      `games/${gameId}/teams/${teamId}/players`,
+      {
+        params,
+      },
+    )
   }
 }

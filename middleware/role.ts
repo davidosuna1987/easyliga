@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
 
-  if (!auth.isAdminOrHasRole('referee')) {
+  if (!auth.hasAnyRole(to.meta.roles as string[])) {
     return navigateTo('/')
   }
 })

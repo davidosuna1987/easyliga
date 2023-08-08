@@ -5,7 +5,7 @@ import {
   ForgotData,
   LoginData,
   LoginResponse,
-  MessageResponse,
+  ApiMessageResponse,
   ApiProfile,
   RegisterData,
   ResetData,
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const register = async (data: RegisterData) => {
-    const response = await useApi<MessageResponse>('auth/register', {
+    const response = await useApi<ApiMessageResponse>('auth/register', {
       method: 'POST',
       body: data,
     })
@@ -67,7 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const verify = async (data: VerifyData) => {
-    const response = await useApi<MessageResponse>(
+    const response = await useApi<ApiMessageResponse>(
       `auth/verify/${data.user}/${data.token}`,
       {
         method: 'POST',
@@ -78,13 +78,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const logout = async () => {
-    await useApi<MessageResponse>('auth/logout', { method: 'POST' })
+    await useApi<ApiMessageResponse>('auth/logout', { method: 'POST' })
     setInitialState()
     navigateTo('/login')
   }
 
   const forgot = async (data: ForgotData) => {
-    const response = await useApi<MessageResponse>('auth/forgot', {
+    const response = await useApi<ApiMessageResponse>('auth/forgot', {
       method: 'POST',
       body: data,
     })
@@ -93,7 +93,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const reset = async (data: ResetData) => {
-    const response = await useApi<MessageResponse>('auth/reset', {
+    const response = await useApi<ApiMessageResponse>('auth/reset', {
       method: 'POST',
       body: data,
     })

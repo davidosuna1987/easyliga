@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { User } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/auth'
 
 const auth = useAuthStore()
-const authuser = computed((): User | null => auth.user)
+const authuser = computed((): ApiUser | null => auth.user)
 const toggleClass = ref<string>('closed')
 </script>
 

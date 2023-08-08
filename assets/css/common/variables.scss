@@ -24,6 +24,7 @@
   --tertiary-color-light: #f4f2ec;
   --tertiary-color-dark: #f9b87b;
   --link-color: #4c78c4;
+  --danger-color: #ff9494;
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
   --surface-c: #e9ecef;
@@ -78,6 +79,7 @@
   --navbar-width: calc(var(--main-max-width) - 2 * var(--app-margin));
   --box-shadow: 0 0 #0000, 0 0 #0000, 0 4px 6px -1px rgb(0 0 0 / 0.1),
     0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --box-shadow-focus: 0 0 0 0.2rem var(--primary-color-medium);
   --container-margin-top: 60px;
   --min-width-tablet: 769px;
   --min-width-desktop: 1025px;

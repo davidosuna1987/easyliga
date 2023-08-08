@@ -1,0 +1,21 @@
+.easy-icon-captain-component {
+  background: var(--primary-color);
+  background: linear-gradient(
+    to bottom,
+    var(--primary-color) 35%,
+    var(--primary-color-light) 35%,
+    var(--primary-color-light) 65%,
+    var(--primary-color) 65%
+  );
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--tertiary-color);
+  -webkit-text-stroke: 1px var(--text-color);
+  text-stroke: 1px var(--text-color);
+  border: solid 1px var(--text-color);
+}

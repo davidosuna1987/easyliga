@@ -23,7 +23,6 @@ const options = computed((): ApiTeam[] => props.teams ?? teams.value)
 
 onMounted(async () => {
   if (!props.teams) {
-    console.log('fetching teams')
     loadingApi.value = true
     const response = await teamService.fetch()
     teams.value = response.data.value?.data.teams ?? []

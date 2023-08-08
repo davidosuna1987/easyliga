@@ -72,7 +72,7 @@ export type LoginResponse = {
   errors: null
 }
 
-export type MessageResponse = {
+export type ApiMessageResponse = {
   success: boolean
   data: {
     message: string
