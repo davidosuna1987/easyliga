@@ -4,7 +4,7 @@ import { ApiDivision } from '@/types/api/division'
 import { ApiClub } from '@/types/api/club'
 import { ApiCourt } from '@/types/api/court'
 import { ApiTeam } from '@/types/api/team'
-import { ApiProfile, ApiUser } from '@/types/api/auth'
+import { ApiPlayer, ApiProfile, ApiUser } from '@/types/api/auth'
 import { ApiCall } from './call'
 
 export type ApiGameRelations = {
@@ -86,7 +86,7 @@ export type ApiGameTeamPlayersResponse = {
   data: {
     game: ApiGame
     call: ApiCall
-    players: ApiProfile[]
+    players: ApiPlayer[]
   }
   errors: null
 }

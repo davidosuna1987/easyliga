@@ -106,6 +106,8 @@ export type Player = {
   lastName?: string
   shirtNumber?: number
   avatar?: string
+  captain: boolean
+  libero: boolean
 }
 
 export type ProfileRelations = {
@@ -115,12 +117,12 @@ export type ProfileRelations = {
 
 export type Profile = {
   id: number
-  primary: boolean
+  primary?: boolean
   firstName: string
   lastName?: string
   birthday?: string
   gender?: string
-  avatar?: number
+  avatar?: string
   email?: string
   phone?: string
 } & ProfileRelations
@@ -139,7 +141,7 @@ export type GameInitialData = {
   visitorTeam: Team
   sede: Sede
   court: string
-  referee: Player
+  referee: Profile
 }
 
 export type Court = {

@@ -23,6 +23,16 @@ export type ApiProfile = {
   deleted_at: string | null
 }
 
+export type ApiPlayer = ApiProfile & {
+  pivot: {
+    team_id: number
+    player_id: number
+    shirt_number: number
+    captain: boolean
+    libero: boolean
+  }
+}
+
 export type Role = string
 
 export type LoginData = {
