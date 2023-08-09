@@ -143,7 +143,7 @@ const getTeamPlayers = async () => {
   )
 
   if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
     return
   }
