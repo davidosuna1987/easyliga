@@ -18,14 +18,12 @@ const errors = ref<ApiErrorObject | null>(null)
 
 const getGameInitialData = async () => {
   loadingApi.value = true
-  const { data, error } = await gameService.initialData(Number(route.params.id))
+  const { data, error } = await gameService.initialData(
+    Number(route.params.game_id),
+  )
 
   if (error.value || !data.value) {
-    if (error.value?.data?.errors instanceof Array) {
-      toast.error(error.value.data?.errors[0])
-    } else {
-      toast.correctErrors()
-    }
+    toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value?.data?.errors
     return
   }
@@ -59,6 +57,6 @@ onBeforeMount(() => {
 
 <script lang="ts">
 export default {
-  name: 'RefereeGamesArbitratePage',
+  name: 'RefereeGamesArbitrateGamePage',
 }
 </script>
