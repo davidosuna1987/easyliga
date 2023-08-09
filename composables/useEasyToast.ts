@@ -33,7 +33,18 @@ export default function useEasyToast(options: ToastOptions = DEFAULT_OPTIONS) {
     showToast(message, 'error')
   }
 
-  const mapError = (errorValue: unknown[]) => {
+  const correctErrors = () => {
+    error(app.$i18n.t('errors.correct_before_proceed'))
+  }
+
+  const mapError = (
+    errorValue: unknown[],
+    forceCorrectErrors: boolean = true,
+  ) => {
+    if (forceCorrectErrors) {
+      correctErrors()
+      return
+    }
     if (errorValue instanceof Array) {
       const errors = errorValue[0]
       if (errors instanceof Array) {
@@ -44,10 +55,6 @@ export default function useEasyToast(options: ToastOptions = DEFAULT_OPTIONS) {
     } else {
       correctErrors()
     }
-  }
-
-  const correctErrors = () => {
-    error(app.$i18n.t('errors.correct_before_proceed'))
   }
 
   return {

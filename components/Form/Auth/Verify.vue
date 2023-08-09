@@ -18,11 +18,7 @@ const handleVerify = async () => {
   const { data, error } = await auth.verify(form.value)
 
   if (error.value) {
-    if (error.value.data?.errors instanceof Array) {
-      toast.error(error.value.data?.errors[0])
-    } else {
-      toast.correctErrors()
-    }
+    toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
     if (data.value) toast.success(data.value.data.message)

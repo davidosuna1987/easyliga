@@ -126,7 +126,7 @@ const submit = async () => {
   const { data, error } = await callService.update(call.value.id, form.value)
 
   if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
     return
   }
@@ -143,11 +143,7 @@ const getTeamPlayers = async () => {
   )
 
   if (error.value || !data.value) {
-    if (error.value?.data?.errors instanceof Array) {
-      toast.error(error.value.data?.errors[0])
-    } else {
-      toast.correctErrors()
-    }
+    toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value?.data?.errors
     return
   }

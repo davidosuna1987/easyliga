@@ -18,11 +18,8 @@ async function handleRegister() {
   const { data, error } = await auth.register(form.value)
 
   if (error.value) {
-    if (error.value.data?.errors instanceof Array) {
-      toast.error(error.value.data?.errors[0])
-    } else {
-      toast.correctErrors()
-    }
+    console.log(Object.keys(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
     if (data.value) toast.success(data.value.data.message)
