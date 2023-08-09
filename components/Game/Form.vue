@@ -34,7 +34,7 @@ const selectedCourt = ref<ApiCourt | null>(null)
 const loadingLeagues = ref<boolean>(false)
 const loadingTeams = ref<boolean>(false)
 const loadingCourts = ref<boolean>(false)
-const loadingApi = ref<boolean>(false)
+const loadingStore = ref<boolean>(false)
 
 const groupedLeagues = ref<ApiFederationWithLeagues[]>([])
 const leagueTeams = ref<ApiTeam[]>([])
@@ -87,24 +87,20 @@ const setSedeAndCourt = ({
 }
 
 const submit = async () => {
-  loadingApi.value = true
+  loadingStore.value = true
   const { data, error } = await gameService.store(form.value)
 
   if (error.value) {
     if (error.value.data?.errors instanceof Array) {
       toast.error(error.value.data?.errors[0])
     } else {
-      loadingApi.value = false
+      loadingStore.value = false
       toast.correctErrors()
     }
     errors.value = error.value.data?.errors
   } else {
     toast.success(useNuxtApp().$i18n.t('games.created'))
-<<<<<<< HEAD
-    navigateTo(`/referee/games/${data.value?.data.game.id}`)
-=======
     navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
->>>>>>> d827681 (refactor: change game url)
   }
 }
 
@@ -160,14 +156,6 @@ watch(selectedLocalTeam, async team => {
     groupedCourts.value = response.data.value?.data.sedes as ApiSedeWithCourts[]
     loadingCourts.value = false
   }
-})
-
-watch(selectedVisitorTeam, team => {
-  form.value.visitor_team_id = team?.id ?? null
-})
-
-watch(selectedCourt, court => {
-  form.value.court_id = court?.id ?? null
 })
 
 const onChangeData = computed((): GameStorePreviewData => {
@@ -238,7 +226,7 @@ watch(onChangeData, data => {
         class="mt-3"
         type="submit"
         :label="$t('games.create')"
-        :loading="loadingApi"
+        :loading="loadingStore"
       />
     </div>
   </form>
