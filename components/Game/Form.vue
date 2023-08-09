@@ -95,7 +95,7 @@ const submit = async () => {
     errors.value = error.value.data?.errors
   } else {
     toast.success(useNuxtApp().$i18n.t('games.created'))
-    navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
+    navigateTo(`/referee/games/arbitrate/${data.value?.data.game.id}`)
   }
 }
 
@@ -126,8 +126,6 @@ watch(selectedGender, async gender => {
 })
 
 watch(selectedLeague, async league => {
-  form.value.league_id = league?.id ?? null
-
   if (league) {
     loadingTeams.value = true
     const response = await teamService.fetch({
@@ -139,8 +137,6 @@ watch(selectedLeague, async league => {
 })
 
 watch(selectedLocalTeam, async team => {
-  form.value.local_team_id = team?.id ?? null
-
   if (team && team.club_id) {
     loadingCourts.value = true
     const response = await sedeService.fetch({
@@ -167,6 +163,10 @@ const onChangeData = computed((): GameStorePreviewData => {
 
 watch(onChangeData, data => {
   errors.value = null
+  form.value.league_id = data.league?.id ?? null
+  form.value.court_id = data.court?.id ?? null
+  form.value.local_team_id = data.localTeam?.id ?? null
+  form.value.visitor_team_id = data.visitorTeam?.id ?? null
   emit('changed', data)
 })
 </script>
@@ -211,6 +211,7 @@ watch(onChangeData, data => {
       </FormLabel>
       <FormLabel :label="$t('courts.court')" :error="errors?.court_id?.[0]">
         <SedeCourtSelector
+          :grouped-courts="groupedCourts"
           :disabled="!form.local_team_id"
           @selected="setSedeAndCourt"
         />
