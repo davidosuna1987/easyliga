@@ -21,6 +21,7 @@ const props = defineProps({
   <div class="easy-game-call-item-component">
     <div class="team-player-info">
       <Avatar class="player-avatar" :image="player.avatar" shape="circle" />
+      <IconShirtNumber :shirtNumber="player.shirtNumber" />
       {{ player.firstName }} {{ player.lastName }}
     </div>
     <div class="team-player-captain grid gap-2 grid-cols-2">

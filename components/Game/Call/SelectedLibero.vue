@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { Player } from '@/domain/game'
+import { getFullName } from '@/domain/players'
+import { CallPlayerData } from '@/domain/call'
+
 const props = defineProps({
   player: {
-    type: String,
+    type: Object as PropType<Player | CallPlayerData>,
     required: false,
   },
 })
@@ -13,14 +17,15 @@ const props = defineProps({
     :class="{ 'text-gray-300': !player }"
   >
     <IconLibero />
-    {{ player ?? $t('teams.libero_select') }}
+    <IconShirtNumber v-if="player" :shirtNumber="player.shirtNumber" />
+    {{ player ? getFullName(player) : $t('teams.libero_select') }}
   </div>
 </template>
 
 <style scoped lang="scss">
 .easy-game-call-selected-libero-component {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto 1fr;
   align-items: center;
   gap: 0.5rem;
 

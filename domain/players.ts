@@ -1,5 +1,6 @@
 import { ApiPlayer } from '@/types/api/auth'
-import { Player } from '@/domain//game'
+import { Player } from '@/domain/game'
+import { CallPlayerData } from '@/domain/call'
 
 export const mapApiPlayersToPlayers = (
   apiPlayers: ApiPlayer[] | undefined,
@@ -15,4 +16,9 @@ export const mapApiPlayersToPlayers = (
     captain: apiPlayer.pivot.captain,
     libero: apiPlayer.pivot.libero,
   }))
+}
+
+export const getFullName = (player: Player | CallPlayerData): string => {
+  const { firstName, lastName } = player
+  return lastName ? `${firstName} ${lastName}` : firstName
 }

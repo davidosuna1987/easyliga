@@ -104,7 +104,7 @@ export type Player = {
   id: number
   firstName: string
   lastName?: string
-  shirtNumber?: number
+  shirtNumber: number
   avatar?: string
   captain: boolean
   libero: boolean

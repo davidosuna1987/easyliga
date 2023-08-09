@@ -3,7 +3,7 @@ export type ApiCallPlayersData = {
   first_name: string
   last_name: string | null
   avatar: string | null
-  shirt_number: number | null
+  shirt_number: number
   libero: boolean
   captain: boolean
 }

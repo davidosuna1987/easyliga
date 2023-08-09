@@ -44,12 +44,6 @@ const selectedCaptain = computed(() => {
   )
 })
 
-const selectedLiberoFullName = computed(() => {
-  if (!selectedLibero.value) return undefined
-
-  return `${selectedLibero.value.firstName} ${selectedLibero.value.lastName}`
-})
-
 const selectedLibero = computed(() => {
   if (!libero.value) return undefined
 
@@ -58,12 +52,6 @@ const selectedLibero = computed(() => {
       playerData => playerData.profileId === libero.value,
     ) ?? players.value.find(player => player.id === libero.value)
   )
-})
-
-const selectedCaptainFullName = computed(() => {
-  if (!selectedCaptain.value) return undefined
-
-  return `${selectedCaptain.value.firstName} ${selectedCaptain.value.lastName}`
 })
 
 const showGameLockedToast = () => {
@@ -80,16 +68,30 @@ const togglePlayer = (id: number) => {
 
   if (selectedProfileIds.value?.includes(id)) {
     selectedProfileIds.value?.splice(selectedProfileIds.value?.indexOf(id), 1)
+
+    if (captain.value === id) {
+      captain.value = 0
+    }
+
+    if (libero.value === id) {
+      libero.value = 0
+    }
   } else {
     selectedProfileIds.value?.push(id)
-  }
 
-  if (captain.value === id) {
-    captain.value = 0
-  }
+    if (
+      players.value.find(player => player.id === id)?.captain &&
+      !captain.value
+    ) {
+      captain.value = id
+    }
 
-  if (libero.value === id) {
-    libero.value = 0
+    if (
+      players.value.find(player => player.id === id)?.libero &&
+      !libero.value
+    ) {
+      libero.value = id
+    }
   }
 }
 
@@ -189,11 +191,8 @@ onBeforeMount(() => {
     </FormLabel>
     <div class="grid gap-4 md:grid-cols-2 items-start mt-4">
       <div>
-        <GameCallSelectedCaptain
-          :player="selectedCaptainFullName"
-          class="mb-3"
-        />
-        <GameCallSelectedLibero :player="selectedLiberoFullName" />
+        <GameCallSelectedCaptain :player="selectedCaptain" class="mb-3" />
+        <GameCallSelectedLibero :player="selectedLibero" />
       </div>
       <div class="grid justify-end">
         <Button

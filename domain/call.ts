@@ -5,7 +5,7 @@ export type CallPlayerData = {
   firstName: string
   lastName: string | null
   avatar: string | null
-  shirtNumber: number | null
+  shirtNumber: number
   captain: boolean
   libero: boolean
 }
