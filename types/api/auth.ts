@@ -26,7 +26,7 @@ export type ApiProfile = {
 export type ApiPlayer = ApiProfile & {
   pivot: {
     team_id: number
-    player_id: number
+    profile_id: number
     shirt_number: number
     captain: boolean
     libero: boolean

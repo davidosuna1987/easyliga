@@ -1,4 +1,5 @@
 import { ApiCall, ApiCallPlayersData } from '@/types/api/call'
+import { Player } from '@/domain/game'
 
 export type CallPlayerData = {
   profileId: number
@@ -14,6 +15,22 @@ export type Call = {
   id: number
   playersData: CallPlayerData[]
   locked: boolean
+}
+
+export const mapCallPlayersDataToPlayers = (
+  callPlayersData: CallPlayerData[],
+): Player[] => {
+  return callPlayersData.map(callPlayerData => {
+    return {
+      profileId: callPlayerData.profileId,
+      firstName: callPlayerData.firstName,
+      lastName: callPlayerData.lastName,
+      shirtNumber: callPlayerData.shirtNumber,
+      avatar: callPlayerData.avatar,
+      captain: callPlayerData.captain,
+      libero: callPlayerData.libero,
+    }
+  })
 }
 
 export const mapApiCallPlayersDataToCallPlayersData = (

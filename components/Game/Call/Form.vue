@@ -4,13 +4,12 @@ import CallService from '@/services/call'
 import { Game, Player, mapApiGameToGame } from '@/domain/game'
 import {
   Call,
-  getCaptainIdFromCallPlayersData,
-  getLiberoIdFromCallPlayersData,
-  getProfileIdsFromCallPlayersData,
   mapApiCallToCall,
+  mapCallPlayersDataToPlayers,
 } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
 import { mapApiPlayersToPlayers } from '@/domain/players'
+import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -20,45 +19,49 @@ const callService = new CallService()
 const game = ref<Game>()
 const call = ref<Call>()
 const players = ref<Player[]>([])
-const selectedProfileIds = ref<number[]>([])
-const captain = ref<number>(0)
-const libero = ref<number>(0)
+const selectedPlayers = ref<Player[]>([])
+const shirtNumberUpdatePlayer = ref<Player>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
 
 const form = computed(() => {
   return {
-    profile_ids: selectedProfileIds.value,
-    captain_id: captain.value,
-    libero_id: libero.value,
+    players: mapPlayersToApiCallRequestPlayers(selectedPlayers.value),
   }
 })
 
-const selectedCaptain = computed(() => {
-  if (!captain.value) return undefined
+const selectedCaptain = computed(() =>
+  selectedPlayers.value.find(player => player.captain),
+)
 
-  return (
-    call.value?.playersData.find(
-      playerData => playerData.profileId === captain.value,
-    ) ?? players.value.find(player => player.id === captain.value)
-  )
-})
-
-const selectedLibero = computed(() => {
-  if (!libero.value) return undefined
-
-  return (
-    call.value?.playersData.find(
-      playerData => playerData.profileId === libero.value,
-    ) ?? players.value.find(player => player.id === libero.value)
-  )
-})
+const selectedLibero = computed(() =>
+  selectedPlayers.value.find(player => player.libero),
+)
 
 const showGameLockedToast = () => {
   toast.error(useNuxtApp().$i18n.t('calls.locked_warning'))
 }
 
-const togglePlayer = (id: number) => {
+const removeSelectedPlayer = (player: Player) => {
+  if (typeof player !== 'object') return
+
+  const index = selectedPlayers.value?.findIndex(
+    p => p.profileId === player.profileId,
+  )
+  selectedPlayers.value?.splice(index, 1)
+}
+
+const addSelectedPlayer = (player: Player) => {
+  if (typeof player !== 'object') return
+
+  selectedPlayers.value?.push({
+    ...player,
+    captain: selectedCaptain.value ? false : !!player.captain,
+    libero: selectedLibero.value ? false : !!player.libero,
+  })
+}
+
+const togglePlayer = (player: Player) => {
   if (!call.value) return
 
   if (call.value.locked) {
@@ -66,36 +69,14 @@ const togglePlayer = (id: number) => {
     return
   }
 
-  if (selectedProfileIds.value?.includes(id)) {
-    selectedProfileIds.value?.splice(selectedProfileIds.value?.indexOf(id), 1)
-
-    if (captain.value === id) {
-      captain.value = 0
-    }
-
-    if (libero.value === id) {
-      libero.value = 0
-    }
+  if (selectedPlayers.value?.some(p => p.profileId === player.profileId)) {
+    removeSelectedPlayer(player)
   } else {
-    selectedProfileIds.value?.push(id)
-
-    if (
-      players.value.find(player => player.id === id)?.captain &&
-      !captain.value
-    ) {
-      captain.value = id
-    }
-
-    if (
-      players.value.find(player => player.id === id)?.libero &&
-      !libero.value
-    ) {
-      libero.value = id
-    }
+    addSelectedPlayer(player)
   }
 }
 
-const updateCaptain = (id: number) => {
+const setCaptain = (id: number) => {
   if (!call.value) return
 
   if (call.value.locked) {
@@ -103,10 +84,12 @@ const updateCaptain = (id: number) => {
     return
   }
 
-  captain.value = id
+  selectedPlayers.value.forEach(player => {
+    player.captain = player.profileId === id
+  })
 }
 
-const updateLibero = (id: number) => {
+const setLibero = (id: number) => {
   if (!call.value) return
 
   if (call.value.locked) {
@@ -114,7 +97,44 @@ const updateLibero = (id: number) => {
     return
   }
 
-  libero.value = id
+  selectedPlayers.value.forEach(player => {
+    player.libero = player.profileId === id
+  })
+}
+
+const setShirtNumberUpdatePlayer = (player?: Player) => {
+  if (
+    !player ||
+    !selectedPlayers.value.find(p => p.profileId === player.profileId)
+  ) {
+    shirtNumberUpdatePlayer.value = undefined
+  } else {
+    players.value.map(p => {
+      if (p.profileId === player.profileId) {
+        p.shirtNumber = player.shirtNumber
+      }
+    })
+
+    const selectedPlayer = selectedPlayers.value.find(
+      p => p.profileId === player.profileId,
+    )
+    const removedPlayer = selectedPlayer
+      ? structuredClone(toRaw(selectedPlayer))
+      : undefined
+
+    removeSelectedPlayer(player)
+    addSelectedPlayer(player)
+
+    if (removedPlayer?.captain) {
+      setCaptain(removedPlayer.profileId)
+    }
+
+    if (removedPlayer?.libero) {
+      setLibero(removedPlayer.profileId)
+    }
+
+    shirtNumberUpdatePlayer.value = player
+  }
 }
 
 const submit = async () => {
@@ -135,7 +155,6 @@ const submit = async () => {
 
   toast.success(useNuxtApp().$i18n.t('calls.submitted'))
   call.value = mapApiCallToCall(data.value.data.call)
-  console.log(data.value.data.call.locked, call.value.locked)
 }
 
 const getTeamPlayers = async () => {
@@ -152,11 +171,7 @@ const getTeamPlayers = async () => {
 
   game.value = mapApiGameToGame(data.value.data.game)
   call.value = mapApiCallToCall(data.value.data.call)
-  selectedProfileIds.value = getProfileIdsFromCallPlayersData(
-    call.value.playersData,
-  )
-  captain.value = getCaptainIdFromCallPlayersData(call.value.playersData)
-  libero.value = getLiberoIdFromCallPlayersData(call.value.playersData)
+  selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
   players.value = mapApiPlayersToPlayers(data.value.data.players)
 }
 
@@ -179,14 +194,12 @@ onBeforeMount(() => {
   >
     <FormLabel :label="$t('calls.select')">
       <GameCallList
-        :call="call"
         :players="players"
-        :profileIds="selectedProfileIds"
-        :captain="captain"
-        :libero="libero"
+        :selectedPlayers="selectedPlayers"
         :togglePlayer="togglePlayer"
-        :updateCaptain="updateCaptain"
-        :updateLibero="updateLibero"
+        :setCaptain="setCaptain"
+        :setLibero="setLibero"
+        :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
       />
     </FormLabel>
     <div class="grid gap-4 md:grid-cols-2 items-start mt-4">
@@ -204,6 +217,11 @@ onBeforeMount(() => {
         />
       </div>
     </div>
+    <GameCallShirtNumberDialog
+      :player="shirtNumberUpdatePlayer"
+      @update:player="setShirtNumberUpdatePlayer"
+      @hide="setShirtNumberUpdatePlayer"
+    />
   </form>
 </template>
 

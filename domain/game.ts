@@ -101,11 +101,11 @@ export type User = {
 }
 
 export type Player = {
-  id: number
+  profileId: number
   firstName: string
-  lastName?: string
+  lastName?: string | null
   shirtNumber: number
-  avatar?: string
+  avatar?: string | null
   captain: boolean
   libero: boolean
 }

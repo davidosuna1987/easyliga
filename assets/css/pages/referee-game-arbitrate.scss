@@ -29,6 +29,10 @@
     pointer-events: none;
   }
 
+  .easy-icon-shirt-number-component {
+    pointer-events: none;
+  }
+
   &.is-selected {
     background-color: var(--primary-color-medium);
 
@@ -42,6 +46,10 @@
         opacity: 0.5;
         filter: none;
       }
+    }
+
+    .easy-icon-shirt-number-component {
+      pointer-events: all;
     }
   }
 

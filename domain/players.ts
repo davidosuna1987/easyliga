@@ -8,7 +8,7 @@ export const mapApiPlayersToPlayers = (
   if (!apiPlayers) return []
 
   return apiPlayers.map(apiPlayer => ({
-    id: apiPlayer.id,
+    profileId: apiPlayer.id,
     firstName: apiPlayer.first_name,
     lastName: apiPlayer.last_name ?? undefined,
     avatar: apiPlayer.avatar ?? undefined,

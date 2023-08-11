@@ -1,41 +1,47 @@
 <script setup lang="ts">
 import { Player } from '@/domain/game'
-import { Call } from '@/domain/call'
 
 const props = defineProps({
-  call: {
-    type: Object as PropType<Call>,
-    required: false,
-  },
   players: {
     type: Array as PropType<Player[]>,
     required: true,
   },
-  profileIds: {
-    type: Array as PropType<number[]>,
+  selectedPlayers: {
+    type: Array as PropType<Player[]>,
     default: [],
   },
-  captain: {
-    type: Number as PropType<number | null>,
-    required: true,
-  },
-  libero: {
-    type: Number as PropType<number | null>,
-    required: true,
-  },
   togglePlayer: {
+    type: Function as PropType<(player: Player) => void>,
+    required: true,
+  },
+  setCaptain: {
     type: Function as PropType<(id: number) => void>,
     required: true,
   },
-  updateCaptain: {
+  setLibero: {
     type: Function as PropType<(id: number) => void>,
     required: true,
   },
-  updateLibero: {
-    type: Function as PropType<(id: number) => void>,
+  setShirtNumberUpdatePlayer: {
+    type: Function as PropType<(player: Player) => void>,
     required: true,
   },
 })
+
+const isSelected = (player: Player) =>
+  props.selectedPlayers?.some(p => p.profileId === player.profileId)
+
+const getPlayer = (player: Player) => {
+  const selectedPlayer = props.selectedPlayers?.find(
+    p => p.profileId === player.profileId,
+  )
+
+  if (selectedPlayer) {
+    return selectedPlayer
+  }
+
+  return player
+}
 </script>
 
 <template>
@@ -44,17 +50,22 @@ const props = defineProps({
   >
     <GameCallItem
       v-for="(player, i) in players"
-      :key="player.id"
-      :player="player"
+      :key="player.profileId"
+      :player="getPlayer(player)"
       :class="{
-        'is-selected': profileIds?.includes(player.id),
-        'is-captain': captain === player.id,
-        'is-libero': libero === player.id,
+        'is-selected': isSelected(player),
+        'is-captain': selectedPlayers.find(
+          p => p.profileId === player.profileId,
+        )?.captain,
+        'is-libero': selectedPlayers.find(p => p.profileId === player.profileId)
+          ?.libero,
       }"
       :tabindex="i + 1"
-      @click="togglePlayer(player.id)"
-      :updateCaptain="updateCaptain"
-      :updateLibero="updateLibero"
+      :selected="isSelected(player)"
+      @click="togglePlayer(player)"
+      :setCaptain="setCaptain"
+      :setLibero="setLibero"
+      :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
     />
   </div>
 </template>
