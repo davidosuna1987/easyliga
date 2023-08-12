@@ -48,5 +48,9 @@ export default function useEasyStorage() {
     localStorage.setItem(key, JSON.stringify(value))
   }
 
-  return { get, getNested, set }
+  const remove = (key: string) => {
+    localStorage.removeItem(key)
+  }
+
+  return { get, getNested, set, remove }
 }

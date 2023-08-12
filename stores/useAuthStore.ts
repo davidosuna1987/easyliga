@@ -14,6 +14,8 @@ import {
 } from '@/types/api/auth'
 
 export const useAuthStore = defineStore('auth', () => {
+  const easyStorage = useEasyStorage()
+
   const STAFF_ROLES = ['admin', 'staff']
 
   const user = ref<ApiUser | null>(null)
@@ -132,6 +134,12 @@ export const useAuthStore = defineStore('auth', () => {
 
   const loginRedirect = () => {
     if (!isLoggedIn) return navigateTo('/login')
+
+    const storedLoginRedirect = easyStorage.get('loginRedirect')
+    if (storedLoginRedirect) {
+      easyStorage.remove('loginRedirect')
+      return navigateTo(storedLoginRedirect)
+    }
 
     if (roles.value.includes('referee')) return navigateTo('/referee')
 
