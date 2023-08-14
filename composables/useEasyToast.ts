@@ -2,35 +2,39 @@ import { useToast } from 'primevue/usetoast'
 import { ToastOptions, ToastSeverity } from '@/types/toast'
 import { DEFAULT_OPTIONS } from '@/domain/toast'
 
-export default function useEasyToast(options: ToastOptions = DEFAULT_OPTIONS) {
+export default function useEasyToast() {
   const toast = useToast()
   const app = useNuxtApp()
 
-  const showToast = (message: string, severity: ToastSeverity) => {
+  const showToast = (
+    message: string,
+    severity: ToastSeverity,
+    options: ToastOptions = DEFAULT_OPTIONS,
+  ) => {
     toast.add({
-      ...options,
-      severity: severity,
+      severity,
       detail: message,
       life: 5000,
       closable: true,
       group: 'app',
+      ...options,
     })
   }
 
-  const success = (message: string) => {
-    showToast(message, 'success')
+  const success = (message: string, options?: ToastOptions) => {
+    showToast(message, 'success', options)
   }
 
-  const info = (message: string) => {
-    showToast(message, 'info')
+  const info = (message: string, options?: ToastOptions) => {
+    showToast(message, 'info', options)
   }
 
-  const warn = (message: string) => {
-    showToast(message, 'warn')
+  const warn = (message: string, options?: ToastOptions) => {
+    showToast(message, 'warn', options)
   }
 
-  const error = (message: string) => {
-    showToast(message, 'error')
+  const error = (message: string, options?: ToastOptions) => {
+    showToast(message, 'error', options)
   }
 
   const correctErrors = () => {

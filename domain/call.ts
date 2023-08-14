@@ -1,5 +1,5 @@
 import { ApiCall, ApiCallPlayersData } from '@/types/api/call'
-import { Player } from '@/domain/game'
+import { Game, Player, Team } from '@/domain/game'
 
 export type CallPlayerData = {
   profileId: number
@@ -11,11 +11,18 @@ export type CallPlayerData = {
   libero: boolean
 }
 
+export type CallRelations = {
+  game?: Game
+  team?: Team
+  players?: Player[]
+}
+
 export type Call = {
   id: number
+  teamId: number
   playersData: CallPlayerData[]
   locked: boolean
-}
+} & CallRelations
 
 export const mapCallPlayersDataToPlayers = (
   callPlayersData: CallPlayerData[],
@@ -52,6 +59,7 @@ export const mapApiCallPlayersDataToCallPlayersData = (
 export const mapApiCallToCall = (apiCall: ApiCall): Call => {
   return {
     id: apiCall.id,
+    teamId: apiCall.team_id,
     playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
     locked: apiCall.locked,
   }

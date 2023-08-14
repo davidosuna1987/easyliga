@@ -1,4 +1,7 @@
 import { Player } from '@/domain/game'
+import { ApiTeam } from '@/types/api/team'
+import { ApiGame } from '@/types/api/game'
+import { ApiPlayer } from '@/types/api/auth'
 
 export type ApiCallPlayersData = {
   profile_id: number
@@ -10,6 +13,12 @@ export type ApiCallPlayersData = {
   captain: boolean
 }
 
+export type ApiCallRelations = {
+  game?: ApiGame
+  team?: ApiTeam
+  players?: ApiPlayer[]
+}
+
 export type ApiCall = {
   id: number
   game_id: number
@@ -19,7 +28,7 @@ export type ApiCall = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-}
+} & ApiCallRelations
 
 export type ApiCallRequestPlayer = {
   profile_id: number
@@ -44,6 +53,11 @@ export type ApiCallResponse = {
     call: ApiCall
   }
   errors: null
+}
+
+export type ApiCallUpdatedEventResponse = {
+  call: ApiCall
+  team: ApiTeam
 }
 
 export const mapPlayersToApiCallRequestPlayers = (

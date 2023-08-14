@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { GameInitialData, mapApiGameInitialDataToGame } from '@/domain/game'
+import { Call, mapApiCallToCall } from '@/domain/call'
 import GameService from '@/services/game'
 import { ApiErrorObject } from '@/types/errors'
+import { ApiCallUpdatedEventResponse } from '@/types/api/call'
 
 definePageMeta({
   middleware: ['role'],
@@ -12,9 +14,23 @@ const route = useRoute()
 const toast = useEasyToast()
 const gameService = new GameService()
 
-const loadingApi = ref<boolean>(false)
 const gameInitialData = ref<GameInitialData>()
+const localTeamCall = ref<Call>()
+const visitorTeamCall = ref<Call>()
+const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
+
+// const localTeamCall = computed(() => {
+//   return gameInitialData.value?.calls?.find(
+//     call => call.teamId === gameInitialData.value?.localTeam?.id,
+//   )
+// })
+
+// const visitorTeamCall = computed(() => {
+//   return gameInitialData.value?.calls?.find(
+//     call => call.teamId === gameInitialData.value?.visitorTeam?.id,
+//   )
+// })
 
 const getGameInitialData = async () => {
   loadingApi.value = true
@@ -29,27 +45,51 @@ const getGameInitialData = async () => {
   }
 
   gameInitialData.value = mapApiGameInitialDataToGame(data.value)
+  localTeamCall.value = gameInitialData.value?.calls?.find(
+    call => call.teamId === gameInitialData.value?.localTeam?.id,
+  )
+  visitorTeamCall.value = gameInitialData.value?.calls?.find(
+    call => call.teamId === gameInitialData.value?.visitorTeam?.id,
+  )
   loadingApi.value = false
 }
 
 onBeforeMount(() => {
   getGameInitialData()
 })
+
+onMounted(() => {
+  window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
+    'CallUpdatedEvent',
+    (response: ApiCallUpdatedEventResponse) => {
+      toast.info(`${response.team.name} ha actualizado su convocatoria`, {
+        life: 300000,
+      })
+      if (response.team.id === gameInitialData.value?.localTeam?.id) {
+        localTeamCall.value = mapApiCallToCall(response.call)
+      } else {
+        visitorTeamCall.value = mapApiCallToCall(response.call)
+      }
+    },
+  )
+})
 </script>
 
 <template>
   <NuxtLayout name="default">
     <div class="easy-referee-game-arbitrate-page">
-      <GameTeamSidebar
-        v-if="gameInitialData?.localTeam"
+      <GameCallSidebar
+        v-if="localTeamCall && gameInitialData?.localTeam"
         :team="gameInitialData.localTeam"
+        :call="localTeamCall"
       />
       <div class="easy-referee-game-arbitrate-content">
         <h1 class="text-center">CONTENT</h1>
       </div>
-      <GameTeamSidebar
-        v-if="gameInitialData?.visitorTeam"
+      <GameCallSidebar
+        v-if="visitorTeamCall && gameInitialData?.visitorTeam"
         :team="gameInitialData.visitorTeam"
+        :call="visitorTeamCall"
       />
     </div>
   </NuxtLayout>

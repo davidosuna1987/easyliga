@@ -13,6 +13,7 @@
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.0.0-rc.1",
     "@nuxtjs/i18n": "^8.0.0-beta.13",
+    "@nuxtjs/laravel-echo": "^1.1.0",
     "@nuxtjs/tailwindcss": "^6.8.0",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@types/node": "^18",
@@ -26,6 +27,7 @@
     "@pinia/nuxt": "^0.4.11",
     "pinia": "^2.1.4",
     "primevue": "^3.30.2",
+    "pusher-js": "^8.3.0",
     "vue-router": "^4.0.13"
   }
 }

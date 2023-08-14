@@ -71,6 +71,7 @@ export type ApiGameInitialDataResponse = {
   success: boolean
   data: {
     game: ApiGame
+    calls: ApiCall[]
     league: ApiLeague
     referee: ApiProfile
     local_team: ApiTeam

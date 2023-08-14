@@ -1,5 +1,6 @@
 import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
 import { mapApiPlayersToPlayers } from '@/domain/players'
+import { Call, mapApiCallToCall } from '@/domain/call'
 
 export type Address = {
   line1: string
@@ -129,6 +130,7 @@ export type Profile = {
 
 // TODO: add coach
 export type Team = {
+  id: number
   name: string
   // coach: Player
   players: Player[]
@@ -136,6 +138,7 @@ export type Team = {
 
 export type GameInitialData = {
   id: number
+  calls: Call[]
   league: League
   localTeam: Team
   visitorTeam: Team
@@ -226,10 +229,19 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => {
 export const mapApiGameInitialDataToGame = (
   apiGameInitialData: ApiGameInitialDataResponse,
 ): GameInitialData => {
-  const { game, league, referee, local_team, visitor_team, sede, court } =
-    apiGameInitialData.data
+  const {
+    game,
+    calls,
+    league,
+    referee,
+    local_team,
+    visitor_team,
+    sede,
+    court,
+  } = apiGameInitialData.data
   return {
     id: game.id,
+    calls: calls.map(mapApiCallToCall),
     league: {
       id: league.id,
       name: league.name,
@@ -242,10 +254,12 @@ export const mapApiGameInitialDataToGame = (
       avatar: referee.avatar ?? undefined,
     },
     localTeam: {
+      id: local_team.id,
       name: local_team.name,
       players: mapApiPlayersToPlayers(local_team.players),
     },
     visitorTeam: {
+      id: visitor_team.id,
       name: visitor_team.name,
       players: mapApiPlayersToPlayers(visitor_team.players),
     },
