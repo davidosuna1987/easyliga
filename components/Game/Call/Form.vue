@@ -9,7 +9,10 @@ import {
 } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
 import { mapApiPlayersToPlayers } from '@/domain/players'
-import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
+import {
+  ApiCallUnlockedEventResponse,
+  mapPlayersToApiCallRequestPlayers,
+} from '@/types/api/call'
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -157,7 +160,7 @@ const submit = async () => {
   call.value = mapApiCallToCall(data.value.data.call)
 }
 
-const getTeamPlayers = async () => {
+const getTeamPlayers = async (listenEvent = false) => {
   const { data, error } = await gameService.teamPlayers(
     Number(route.params.game_id),
     Number(route.params.team_id),
@@ -173,10 +176,23 @@ const getTeamPlayers = async () => {
   call.value = mapApiCallToCall(data.value.data.call)
   selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
   players.value = mapApiPlayersToPlayers(data.value.data.players)
+
+  if (listenEvent) {
+    listenCallUnlockedEvent()
+  }
+}
+
+const listenCallUnlockedEvent = () => {
+  window.Echo.channel(
+    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+  ).listen('CallUnlockedEvent', (response: ApiCallUnlockedEventResponse) => {
+    toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
+    getTeamPlayers()
+  })
 }
 
 onBeforeMount(() => {
-  getTeamPlayers()
+  getTeamPlayers(true)
 })
 </script>
 

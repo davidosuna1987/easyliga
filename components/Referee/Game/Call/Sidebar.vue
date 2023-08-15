@@ -22,6 +22,12 @@ const props = defineProps({
       :key="player.profileId"
       :player="player"
     />
+    <div class="call-status-area p-[0.5rem]">
+      <RefereeGameCallStatus
+        :call="props.call"
+        @unlocked="$emit('unlocked', true)"
+      />
+    </div>
   </div>
 </template>
 

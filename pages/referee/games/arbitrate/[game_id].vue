@@ -75,6 +75,7 @@ onMounted(() => {
         v-if="localTeamCall && gameInitialData?.localTeam"
         :team="gameInitialData.localTeam"
         :call="localTeamCall"
+        @unlocked="getGameInitialData"
       />
       <div class="easy-referee-game-arbitrate-content">
         <h1 class="text-center">CONTENT</h1>

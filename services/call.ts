@@ -7,4 +7,9 @@ export default class CallService {
       body: data,
     })
   }
+  unlock(callId: number) {
+    return useApi<ApiCallResponse>(`calls/${callId}/unlock`, {
+      method: 'PUT',
+    })
+  }
 }
