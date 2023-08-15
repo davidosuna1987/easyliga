@@ -16,7 +16,7 @@ const props = defineProps({
 
 <template>
   <div class="easy-game-call-sidebar-component">
-    <h5 class="call-name">{{ props.team.name }}</h5>
+    <h5 class="team-name px-[0.5rem]">{{ props.team.name }}</h5>
     <RefereeGameCallItem
       v-for="player in props.call.playersData"
       :key="player.profileId"
