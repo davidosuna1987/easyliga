@@ -26,7 +26,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="easy-game-call-item-component">
+  <div class="easy-coach-game-call-item-component">
     <div class="team-player-info">
       <Avatar
         class="player-avatar"

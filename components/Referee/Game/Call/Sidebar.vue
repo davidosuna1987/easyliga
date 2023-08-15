@@ -17,19 +17,16 @@ const props = defineProps({
 <template>
   <div class="easy-game-call-sidebar-component">
     <h5 class="call-name">{{ props.team.name }}</h5>
-    <ul class="call-players-list">
-      <li
-        v-for="player in props.call.playersData"
-        class="call-players-list-item"
-      >
-        {{ player.firstName }} {{ player.lastName }}
-      </li>
-    </ul>
+    <RefereeGameCallItem
+      v-for="player in props.call.playersData"
+      :key="player.profileId"
+      :player="player"
+    />
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'GameCallSidebar',
+  name: 'RefereeGameCallSidebar',
 }
 </script>

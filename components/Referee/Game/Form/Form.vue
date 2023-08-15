@@ -82,6 +82,7 @@ const setSedeAndCourt = ({
   sede: ApiSede | null
   court: ApiCourt | null
 }) => {
+  console.log({ sede, court })
   selectedSede.value = sede
   selectedCourt.value = court
 }
@@ -232,6 +233,6 @@ watch(onChangeData, data => {
 
 <script lang="ts">
 export default {
-  name: 'GameForm',
+  name: 'RefereeGameForm',
 }
 </script>

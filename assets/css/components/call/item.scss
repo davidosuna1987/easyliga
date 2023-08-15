@@ -1,0 +1,105 @@
+.easy-coach-game-call-item-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+
+  &:hover {
+    background-color: var(--primary-color-light);
+  }
+
+  .team-player-info {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .easy-icon-captain-component,
+  .easy-icon-libero-component {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .easy-icon-shirt-number-component {
+    pointer-events: none;
+  }
+
+  &.is-selected {
+    background-color: var(--primary-color-medium);
+
+    .easy-icon-captain-component,
+    .easy-icon-libero-component {
+      opacity: 0.25;
+      pointer-events: all;
+      filter: grayscale(1);
+
+      &:hover {
+        opacity: 0.5;
+        filter: none;
+      }
+    }
+
+    .easy-icon-shirt-number-component {
+      pointer-events: all;
+    }
+  }
+
+  &.is-captain {
+    .easy-icon-captain-component {
+      opacity: 1 !important;
+      pointer-events: all;
+      filter: none;
+    }
+  }
+
+  &.is-libero {
+    .easy-icon-libero-component {
+      opacity: 1 !important;
+      pointer-events: all;
+      filter: none;
+    }
+  }
+}
+
+.easy-referee-game-call-item-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+  width: 100%;
+
+  &:hover {
+    background-color: var(--primary-color-medium);
+  }
+
+  .team-player-info {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .easy-icon-shirt-number-component,
+  .easy-icon-captain-component,
+  .easy-icon-libero-component,
+  .p-avatar {
+    pointer-events: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .easy-icon-shirt-number-component {
+    align-items: center;
+    justify-content: start;
+    -webkit-text-stroke: 0;
+    color: var(--text-color);
+    font-weight: 700;
+  }
+}

@@ -20,18 +20,6 @@ const visitorTeamCall = ref<Call>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
-// const localTeamCall = computed(() => {
-//   return gameInitialData.value?.calls?.find(
-//     call => call.teamId === gameInitialData.value?.localTeam?.id,
-//   )
-// })
-
-// const visitorTeamCall = computed(() => {
-//   return gameInitialData.value?.calls?.find(
-//     call => call.teamId === gameInitialData.value?.visitorTeam?.id,
-//   )
-// })
-
 const getGameInitialData = async () => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
@@ -78,7 +66,7 @@ onMounted(() => {
 <template>
   <NuxtLayout name="default">
     <div class="easy-referee-game-arbitrate-page">
-      <GameCallSidebar
+      <RefereeGameCallSidebar
         v-if="localTeamCall && gameInitialData?.localTeam"
         :team="gameInitialData.localTeam"
         :call="localTeamCall"
@@ -86,7 +74,7 @@ onMounted(() => {
       <div class="easy-referee-game-arbitrate-content">
         <h1 class="text-center">CONTENT</h1>
       </div>
-      <GameCallSidebar
+      <RefereeGameCallSidebar
         v-if="visitorTeamCall && gameInitialData?.visitorTeam"
         :team="gameInitialData.visitorTeam"
         :call="visitorTeamCall"

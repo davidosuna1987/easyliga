@@ -19,7 +19,7 @@ const props = defineProps({
 const selectedCourt = ref<ApiCourt | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const groupedCourts = ref<ApiSedeWithCourts[]>([])
+const groupedCourts = ref<ApiSedeWithCourts[]>(props.groupedCourts ?? [])
 const options = computed(
   (): ApiSedeWithCourts[] => props.groupedCourts ?? groupedCourts.value,
 )
