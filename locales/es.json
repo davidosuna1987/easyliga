@@ -336,5 +336,8 @@
     "lock": "Cerrar convocatoria",
     "locked_alert": "¿Seguro que quieres cerrar la convocatoria?",
     "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla"
+  },
+  "events": {
+    "call_updated": "{teamName} ha actualizado su convocatoria"
   }
 }

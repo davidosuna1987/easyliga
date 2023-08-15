@@ -50,9 +50,14 @@ onMounted(() => {
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
     'CallUpdatedEvent',
     (response: ApiCallUpdatedEventResponse) => {
-      toast.info(`${response.team.name} ha actualizado su convocatoria`, {
-        life: 300000,
-      })
+      toast.info(
+        useNuxtApp().$i18n.t('events.call_updated', {
+          teamName: response.team.name,
+        }),
+        {
+          life: 300000,
+        },
+      )
       if (response.team.id === gameInitialData.value?.localTeam?.id) {
         localTeamCall.value = mapApiCallToCall(response.call)
       } else {

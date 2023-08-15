@@ -172,5 +172,8 @@
     "delete_alert": "¿Seguro que quieres eliminar el partido?",
     "delete_alert_text": "Esta acción no se puede deshacer",
     "referees_assigned": "Árbitros asignados"
+  },
+  "events": {
+    "call_updated": "{teamName} has updated their call"
   }
 }
