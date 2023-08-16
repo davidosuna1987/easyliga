@@ -1,0 +1,43 @@
+.easy-referee-game-arbitrate-component {
+  .sidebars-court {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: var(--app-margin);
+  }
+
+  .easy-game-teams-sets-won-component {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 1rem;
+
+    .teams-sets-won-team {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      border-radius: var(--border-radius);
+
+      &:nth-child(2) {
+        direction: rtl;
+      }
+    }
+
+    .team-name {
+      font-size: 1.5rem;
+      font-weight: 500;
+    }
+
+    .sets-count {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: var(--primary-color-medium);
+      border: 2px solid var(--primary-color);
+      border-radius: 0.25rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: grid;
+      place-content: center;
+    }
+  }
+}

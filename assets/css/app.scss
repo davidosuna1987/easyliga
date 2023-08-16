@@ -14,13 +14,13 @@
 
 @import '@/assets/css/pages/auth.scss';
 @import '@/assets/css/pages/referee.scss';
-@import '@/assets/css/pages/referee-game-arbitrate.scss';
 
 @import '@/assets/css/components/navbar.scss';
 @import '@/assets/css/components/lang.scss';
 @import '@/assets/css/components/footer.scss';
 @import '@/assets/css/components/forms.scss';
-@import '@/assets/css/components/game-call-sidebar.scss';
+@import '@/assets/css/components/referee/game/arbitrate.scss';
+@import '@/assets/css/components/game/call-sidebar.scss';
 @import '@/assets/css/components/icon/captain.scss';
 @import '@/assets/css/components/icon/libero.scss';
 @import '@/assets/css/components/icon/shirt-number.scss';
