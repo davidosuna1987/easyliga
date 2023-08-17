@@ -1,0 +1,128 @@
+.easy-game-court-component {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  aspect-ratio: 16 / 9;
+  max-width: 550px;
+  margin: 0 auto;
+
+  .side {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+
+    [class^='position'] {
+      position: relative;
+      background: var(--primary-color-light);
+      display: grid;
+      place-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      width: 100%;
+      height: 100%;
+
+      .shirt-number {
+        position: relative;
+        z-index: 1;
+      }
+
+      .easy-icon-captain-component {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+      }
+
+      .easy-icon-libero-component {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+      }
+
+      .easy-icon-easy-liga-component {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        // opacity: 0.5;
+      }
+
+      &.serving {
+        .shirt-number {
+          -webkit-text-stroke: 1px var(--text-color);
+          color: #ffeb3b;
+          font-weight: 900;
+        }
+      }
+    }
+
+    &.left {
+      grid-template-columns: 55% 45%;
+      grid-template-areas:
+        'position-5 position-4'
+        'position-6 position-3'
+        'position-1 position-2';
+
+      .position-1 {
+        grid-area: position-1;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+      .position-2 {
+        grid-area: position-2;
+      }
+      .position-3 {
+        grid-area: position-3;
+      }
+      .position-4 {
+        grid-area: position-4;
+      }
+      .position-5 {
+        grid-area: position-5;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+      .position-6 {
+        grid-area: position-6;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: -0.5rem;
+        right: -0.5px;
+        width: 0;
+        height: calc(100% + 1rem);
+        border-right: dashed 2px var(--primary-color);
+        z-index: 1;
+      }
+    }
+
+    &.right {
+      grid-template-columns: 45% 55%;
+      grid-template-areas:
+        'position-2 position-1'
+        'position-3 position-6'
+        'position-4 position-5';
+
+      .position-1 {
+        grid-area: position-1;
+      }
+      .position-2 {
+        grid-area: position-2;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+      .position-3 {
+        grid-area: position-3;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+      .position-4 {
+        grid-area: position-4;
+        border-right: solid 1px var(--primary-color-medium);
+      }
+      .position-5 {
+        grid-area: position-5;
+      }
+      .position-6 {
+        grid-area: position-6;
+      }
+    }
+  }
+}

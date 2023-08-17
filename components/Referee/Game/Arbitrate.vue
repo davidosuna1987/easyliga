@@ -71,25 +71,17 @@ onMounted(() => {
   <div class="easy-referee-game-arbitrate-component">
     <RefereeGameTeamSetsWon
       v-if="gameInitialData"
-      :localTeam="gameInitialData?.localTeam"
-      :visitorTeam="gameInitialData?.visitorTeam"
+      :localTeam="gameInitialData.localTeam"
+      :visitorTeam="gameInitialData.visitorTeam"
     />
-    <div class="sidebars-court">
-      <RefereeGameCallSidebar
-        v-if="localTeamCall && gameInitialData?.localTeam"
-        :team="gameInitialData.localTeam"
-        :call="localTeamCall"
-        @unlocked="getGameInitialData"
-      />
-      <div class="easy-referee-game-arbitrate-content">
-        <h1 class="text-center">CONTENT</h1>
-      </div>
-      <RefereeGameCallSidebar
-        v-if="visitorTeamCall && gameInitialData?.visitorTeam"
-        :team="gameInitialData.visitorTeam"
-        :call="visitorTeamCall"
-      />
-    </div>
+    <RefereeGameSidebarsCourt
+      v-if="gameInitialData && localTeamCall && visitorTeamCall"
+      :localTeam="gameInitialData.localTeam"
+      :visitorTeam="gameInitialData.visitorTeam"
+      :localTeamCall="localTeamCall"
+      :visitorTeamCall="visitorTeamCall"
+      @unlocked="getGameInitialData"
+    />
   </div>
 </template>
 

@@ -24,7 +24,7 @@ const playerIconsCount = computed(() => {
         :image="player?.avatar ?? undefined"
         shape="circle"
       /> -->
-      <IconShirtNumber :shirtNumber="player.shirtNumber" />
+      <IconShirtNumber :shirtNumber="player.shirtNumber" size="sm" />
       {{ player.firstName }} {{ player.lastName }}
     </div>
     <div
@@ -32,8 +32,8 @@ const playerIconsCount = computed(() => {
       class="team-player-icons grid gap-2"
       :class="[`grid-cols-${playerIconsCount}`]"
     >
-      <IconLibero v-if="player.libero" />
-      <IconCaptain v-if="player.captain" />
+      <IconLibero v-if="player.libero" size="sm" />
+      <IconCaptain v-if="player.captain" size="sm" />
     </div>
   </div>
 </template>

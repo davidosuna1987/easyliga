@@ -2,7 +2,7 @@
 const props = defineProps({
   size: {
     type: String,
-    required: false,
+    default: '38',
   },
 })
 
@@ -12,11 +12,19 @@ const sizeClass = computed(() => {
 </script>
 
 <template>
-  <div class="easy-icon-captain-component" :class="[sizeClass]">C</div>
+  <div class="easy-icon-easy-liga-component">
+    <NuxtImg
+      src="/logos/easyliga.svg"
+      quality="100"
+      :width="size"
+      :height="size"
+      fit="contain"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'IconCaptain',
+  name: 'IconEasyLiga',
 }
 </script>
