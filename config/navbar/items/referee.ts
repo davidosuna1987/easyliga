@@ -1,7 +1,7 @@
 export default [
   {
-    label: 'navbar.home',
-    to: '/',
+    label: 'navbar.panel',
+    to: '/referee',
   },
   {
     label: 'navbar.games.label',

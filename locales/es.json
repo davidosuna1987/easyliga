@@ -156,6 +156,7 @@
   },
   "navbar": {
     "home": "Inicio",
+    "panel": "Panel",
     "games": {
       "label": "Partidos",
       "create": "Crear partido"
@@ -186,7 +187,13 @@
     "referees_assigned": "Árbitros asignados",
     "referees_not_assigned": "Árbitros no asignados",
     "select": "Selecciona un partido",
-    "arbitrate": "Arbitrar partido"
+    "arbitrate": "Arbitrar partido",
+    "loading": "Cargando partido | Cargando partidos",
+    "status": {
+      "warmup": "Calentamiento",
+      "playing": "En juego",
+      "finished": "Finalizado"
+    }
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",
