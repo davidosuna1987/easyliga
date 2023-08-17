@@ -69,6 +69,7 @@ onMounted(() => {
 
 <template>
   <div class="easy-referee-game-arbitrate-component">
+    <GameStatus v-if="gameInitialData" :status="gameInitialData.game.status" />
     <RefereeGameTeamSetsWon
       v-if="gameInitialData"
       :localTeam="gameInitialData.localTeam"

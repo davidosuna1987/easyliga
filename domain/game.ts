@@ -138,6 +138,7 @@ export type Team = {
 
 export type GameInitialData = {
   id: number
+  game: Game
   calls: Call[]
   league: League
   localTeam: Team
@@ -241,6 +242,7 @@ export const mapApiGameInitialDataToGame = (
   } = apiGameInitialData.data
   return {
     id: game.id,
+    game: mapApiGameToGame(game),
     calls: calls.map(mapApiCallToCall),
     league: {
       id: league.id,
