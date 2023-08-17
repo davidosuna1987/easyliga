@@ -229,8 +229,6 @@ watch(onChangeData, data => {
   </form>
 </template>
 
-<style scoped></style>
-
 <script lang="ts">
 export default {
   name: 'RefereeGameForm',

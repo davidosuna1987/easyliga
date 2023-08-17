@@ -32,7 +32,7 @@ export type ApiGame = {
   end: string | null
   winner_team_id: number | null
   loser_team_id: number | null
-  status: string | null
+  status: string
   comments: string | null
   created_at: string | null
   updated_at: string | null

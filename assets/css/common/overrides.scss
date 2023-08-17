@@ -62,4 +62,9 @@ a:-webkit-any-link {
 
 .p-tooltip {
   font-size: 0.8rem;
+  transition: none !important;
+
+  * {
+    transition: none !important;
+  }
 }

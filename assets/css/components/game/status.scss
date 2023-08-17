@@ -1,0 +1,38 @@
+.easy-game-status-component {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+
+  .icon-wrapper {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .label {
+    margin-left: 0.25rem;
+  }
+
+  &.warmup {
+    color: var(--tertiary-color-dark);
+
+    .stroke {
+      stroke: var(--tertiary-color-dark);
+    }
+
+    .fill {
+      fill: var(--tertiary-color-dark);
+    }
+  }
+
+  &.playing {
+    color: var(--primary-color);
+
+    .stroke {
+      stroke: var(--primary-color);
+    }
+
+    .fill {
+      fill: var(--primary-color);
+    }
+  }
+}

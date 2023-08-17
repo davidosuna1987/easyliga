@@ -181,7 +181,7 @@ export type Game = {
   date: string | null
   start: string | null
   end: string | null
-  status: string | null
+  status: string
   comments: string | null
 }
 
