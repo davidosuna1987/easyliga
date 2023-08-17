@@ -3,7 +3,7 @@
     <NavbarApp />
 
     <main class="easy-main">
-      <section class="easy-container">
+      <section class="easy-container" :class="$route.meta.containerClass">
         <slot />
       </section>
     </main>

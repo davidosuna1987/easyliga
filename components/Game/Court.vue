@@ -14,14 +14,14 @@
         <span class="shirt-number">3</span>
       </div>
       <div class="position-4">
+        <IconCaptain size="sm" />
+        <IconLibero size="sm" />
         <span class="shirt-number">4</span>
       </div>
       <div class="position-5">
         <span class="shirt-number">5</span>
       </div>
       <div class="position-6">
-        <IconCaptain size="sm" />
-        <IconLibero size="sm" />
         <span class="shirt-number">6</span>
       </div>
     </div>

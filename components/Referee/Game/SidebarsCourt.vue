@@ -29,7 +29,10 @@ const props = defineProps({
       :call="localTeamCall"
       @unlocked="$emit('unlocked')"
     />
-    <GameCourt />
+    <div class="score-court relative flex flex-col gap-3">
+      <GameScore />
+      <GameCourt />
+    </div>
     <RefereeGameCallSidebar
       :team="visitorTeam"
       :call="visitorTeamCall"

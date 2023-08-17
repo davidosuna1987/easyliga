@@ -341,6 +341,10 @@
     "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
     "waiting": "Esperando convocatoria"
   },
+  "sets": {
+    "set": "Sets | Set | Sets",
+    "set_number": "Set {num}"
+  },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",
     "call_unlocked": "El árbitro ha desbloqueado la convocatoria"
