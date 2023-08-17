@@ -2,8 +2,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   aspect-ratio: 16 / 9;
+  width: 100%;
   max-width: 550px;
   margin: 0 auto;
+  border: solid 1px var(--primary-color-medium);
+  border-radius: var(--border-radius);
+  overflow: hidden;
 
   .side {
     position: relative;
@@ -28,13 +32,13 @@
       .easy-icon-captain-component {
         position: absolute;
         top: 0.5rem;
-        left: 0.5rem;
+        left: calc(50% - 2rem);
       }
 
       .easy-icon-libero-component {
         position: absolute;
         top: 0.5rem;
-        right: 0.5rem;
+        right: calc(50% - 2rem);
       }
 
       .easy-icon-easy-liga-component {

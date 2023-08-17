@@ -11,8 +11,11 @@
         <span class="shirt-number">2</span>
       </div>
       <div class="position-3">
+<<<<<<< Updated upstream
         <IconCaptain size="sm" />
         <IconLibero size="sm" />
+=======
+>>>>>>> Stashed changes
         <span class="shirt-number">3</span>
       </div>
       <div class="position-4">
@@ -22,6 +25,11 @@
         <span class="shirt-number">5</span>
       </div>
       <div class="position-6">
+<<<<<<< Updated upstream
+=======
+        <IconCaptain size="sm" />
+        <IconLibero size="sm" />
+>>>>>>> Stashed changes
         <span class="shirt-number">6</span>
       </div>
     </div>
