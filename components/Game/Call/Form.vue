@@ -42,7 +42,7 @@ const selectedLibero = computed(() =>
 )
 
 const showGameLockedToast = () => {
-  toast.error(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
 }
 
 const removeSelectedPlayer = (player: Player) => {

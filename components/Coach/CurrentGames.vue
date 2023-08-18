@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 const showGameLockedToast = () => {
-  toast.error(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
 }
 </script>
 
