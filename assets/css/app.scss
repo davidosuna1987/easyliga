@@ -19,13 +19,19 @@
 @import '@/assets/css/components/lang.scss';
 @import '@/assets/css/components/footer.scss';
 @import '@/assets/css/components/forms.scss';
+
 @import '@/assets/css/components/referee/game/arbitrate.scss';
 @import '@/assets/css/components/referee/game/create-button.scss';
 @import '@/assets/css/components/referee/current-games.scss';
+
+@import '@/assets/css/components/coach/current-games.scss';
+
 @import '@/assets/css/components/game/call-sidebar.scss';
 @import '@/assets/css/components/game/court.scss';
 @import '@/assets/css/components/game/status.scss';
+
+@import '@/assets/css/components/call/item.scss';
+
 @import '@/assets/css/components/icon/captain.scss';
 @import '@/assets/css/components/icon/libero.scss';
 @import '@/assets/css/components/icon/shirt-number.scss';
-@import '@/assets/css/components/call/item.scss';

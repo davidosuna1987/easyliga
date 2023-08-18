@@ -173,6 +173,12 @@
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?"
   },
+  "coaches": {
+    "coach": "Entrenador | Entrenadores",
+    "welcome": "¡Hola {name}! ¿Es día de partido?",
+    "welcome_no_name": "¡Hola! ¿Es día de partido?",
+    "no_current_games": "No tienes ningún partido en juego"
+  },
   "games": {
     "game": "Partidos | Partido | Partidos",
     "create": "Crear partido",
@@ -347,6 +353,28 @@
     "locked_alert": "¿Seguro que quieres cerrar la convocatoria?",
     "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
     "waiting": "Esperando convocatoria"
+  },
+  "rotations": {
+    "rotation": "Rotaciones | Rotación | Rotaciones",
+    "create": "Crear rotación",
+    "created": "La rotación ha sido creada correctamente",
+    "edit": "Editar rotación",
+    "update": "Actualizar rotación",
+    "updated": "La rotación ha sido actualizada correctamente",
+    "delete": "Eliminar rotación",
+    "deleted": "La rotación ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la rotación?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona los jugadores disponibles para este partido",
+    "submit": "Enviar rotación",
+    "submitted": "La rotación ha sido enviada correctamente",
+    "locked": "La rotación está cerrada",
+    "unlock": "Abrir rotación",
+    "unlocked": "La rotación ha sido abierta correctamente",
+    "lock": "Cerrar rotación",
+    "locked_alert": "¿Seguro que quieres cerrar la rotación?",
+    "locked_warning": "La rotación está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
+    "waiting": "Esperando rotación"
   },
   "sets": {
     "set": "Sets | Set | Sets",

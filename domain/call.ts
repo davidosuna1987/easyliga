@@ -19,10 +19,21 @@ export type CallRelations = {
 
 export type Call = {
   id: number
+  gameId: number
   teamId: number
   playersData: CallPlayerData[]
   locked: boolean
 } & CallRelations
+
+export const mapApiCallToCall = (apiCall: ApiCall): Call => {
+  return {
+    id: apiCall.id,
+    gameId: apiCall.game_id,
+    teamId: apiCall.team_id,
+    playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
+    locked: apiCall.locked,
+  }
+}
 
 export const mapCallPlayersDataToPlayers = (
   callPlayersData: CallPlayerData[],
@@ -54,15 +65,6 @@ export const mapApiCallPlayersDataToCallPlayersData = (
       libero: apiCallPlayerData.libero,
     }
   })
-}
-
-export const mapApiCallToCall = (apiCall: ApiCall): Call => {
-  return {
-    id: apiCall.id,
-    teamId: apiCall.team_id,
-    playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
-    locked: apiCall.locked,
-  }
 }
 
 export const getProfileIdsFromCallPlayersData = (

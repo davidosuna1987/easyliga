@@ -55,6 +55,14 @@ export type ApiCallResponse = {
   errors: null
 }
 
+export type ApiCallsResponse = {
+  success: boolean
+  data: {
+    calls: ApiCall[]
+  }
+  errors: null
+}
+
 export type ApiCallUpdatedEventResponse = {
   call: ApiCall
   team: ApiTeam

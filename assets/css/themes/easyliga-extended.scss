@@ -2116,8 +2116,8 @@
 .p-buttonset.p-button-warning > .p-button,
 .p-splitbutton.p-button-warning > .p-button {
   color: #fff;
-  background: #fdc39b;
-  border: 1px solid #fdc39b;
+  background: var(--tertiary-color-dark);
+  border: 1px solid var(--tertiary-color-dark);
 }
 .p-button.p-button-warning:enabled:hover,
 .p-buttonset.p-button-warning > .p-button:enabled:hover,
@@ -2142,28 +2142,28 @@
 .p-buttonset.p-button-warning > .p-button.p-button-outlined,
 .p-splitbutton.p-button-warning > .p-button.p-button-outlined {
   background-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border: 1px solid;
 }
 .p-button.p-button-warning.p-button-outlined:enabled:hover,
 .p-buttonset.p-button-warning > .p-button.p-button-outlined:enabled:hover,
 .p-splitbutton.p-button-warning > .p-button.p-button-outlined:enabled:hover {
   background: rgba(253, 195, 155, 0.04);
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border: 1px solid;
 }
 .p-button.p-button-warning.p-button-outlined:enabled:active,
 .p-buttonset.p-button-warning > .p-button.p-button-outlined:enabled:active,
 .p-splitbutton.p-button-warning > .p-button.p-button-outlined:enabled:active {
   background: rgba(253, 195, 155, 0.16);
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border: 1px solid;
 }
 .p-button.p-button-warning.p-button-text,
 .p-buttonset.p-button-warning > .p-button.p-button-text,
 .p-splitbutton.p-button-warning > .p-button.p-button-text {
   background-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border-color: transparent;
 }
 .p-button.p-button-warning.p-button-text:enabled:hover,
@@ -2171,14 +2171,14 @@
 .p-splitbutton.p-button-warning > .p-button.p-button-text:enabled:hover {
   background: rgba(253, 195, 155, 0.04);
   border-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-button.p-button-warning.p-button-text:enabled:active,
 .p-buttonset.p-button-warning > .p-button.p-button-text:enabled:active,
 .p-splitbutton.p-button-warning > .p-button.p-button-text:enabled:active {
   background: rgba(253, 195, 155, 0.16);
   border-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-button.p-button-help,
 .p-buttonset.p-button-help > .p-button,
@@ -2612,24 +2612,24 @@
 }
 .p-splitbutton.p-button-warning.p-button-outlined > .p-button {
   background-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border: 1px solid;
 }
 .p-splitbutton.p-button-warning.p-button-outlined > .p-button:enabled:hover,
 .p-splitbutton.p-button-warning.p-button-outlined
   > .p-button:not(button):not(a):not(.p-disabled):hover {
   background: rgba(253, 195, 155, 0.04);
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-splitbutton.p-button-warning.p-button-outlined > .p-button:enabled:active,
 .p-splitbutton.p-button-warning.p-button-outlined
   > .p-button:not(button):not(a):not(.p-disabled):active {
   background: rgba(253, 195, 155, 0.16);
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-splitbutton.p-button-warning.p-button-text > .p-button {
   background-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
   border-color: transparent;
 }
 .p-splitbutton.p-button-warning.p-button-text > .p-button:enabled:hover,
@@ -2637,14 +2637,14 @@
   > .p-button:not(button):not(a):not(.p-disabled):hover {
   background: rgba(253, 195, 155, 0.04);
   border-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-splitbutton.p-button-warning.p-button-text > .p-button:enabled:active,
 .p-splitbutton.p-button-warning.p-button-text
   > .p-button:not(button):not(a):not(.p-disabled):active {
   background: rgba(253, 195, 155, 0.16);
   border-color: transparent;
-  color: #fdc39b;
+  color: var(--tertiary-color-dark);
 }
 .p-splitbutton.p-button-help.p-button-outlined > .p-button {
   background-color: transparent;
@@ -6572,7 +6572,7 @@
   color: #fff;
 }
 .p-badge.p-badge-warning {
-  background-color: #fdc39b;
+  background-color: var(--tertiary-color-dark);
   color: #fff;
 }
 .p-badge.p-badge-danger {
@@ -6747,7 +6747,7 @@
   color: #fff;
 }
 .p-tag.p-tag-warning {
-  background-color: #fdc39b;
+  background-color: var(--tertiary-color-dark);
   color: #fff;
 }
 .p-tag.p-tag-danger {

@@ -184,7 +184,7 @@ export type Game = {
   end: string | null
   status: string
   comments: string | null
-}
+} & GameRelations
 
 export const mapApiGameToGame = (apiGame: ApiGame): Game => {
   const {
