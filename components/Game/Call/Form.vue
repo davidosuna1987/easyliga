@@ -191,8 +191,18 @@ const listenCallUnlockedEvent = () => {
   })
 }
 
+const leaveCallUnlockedEvent = () => {
+  window.Echo.leaveChannel(
+    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+  )
+}
+
 onBeforeMount(() => {
   getTeamPlayers(true)
+})
+
+onBeforeUnmount(() => {
+  leaveCallUnlockedEvent()
 })
 </script>
 

@@ -58,12 +58,20 @@ const listenCallUpdatedEvent = () => {
   )
 }
 
+const leaveCallUnlockedEvent = () => {
+  window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
+}
+
 onBeforeMount(() => {
   getGameInitialData()
 })
 
 onMounted(() => {
   listenCallUpdatedEvent()
+})
+
+onBeforeUnmount(() => {
+  leaveCallUnlockedEvent()
 })
 </script>
 

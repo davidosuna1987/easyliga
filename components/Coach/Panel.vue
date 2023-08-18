@@ -84,7 +84,16 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
   )
 }
 
+const leaveCallUnlockedEvent = (gameId: number, callId: number) => {
+  window.Echo.leaveChannel(`game.${gameId}.call.${callId}.unlocked`)
+}
+
 onBeforeMount(getCurrentGames)
+onBeforeUnmount(() => {
+  calls.value?.forEach(call => {
+    leaveCallUnlockedEvent(call.gameId, call.id)
+  })
+})
 </script>
 
 <template>
