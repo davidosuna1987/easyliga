@@ -142,6 +142,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     if (roles.value.includes('referee')) return navigateTo('/referee')
+    if (roles.value.includes('coach')) return navigateTo('/coach')
 
     return navigateTo('/')
   }
