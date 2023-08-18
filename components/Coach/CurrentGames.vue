@@ -22,11 +22,7 @@ const showGameLockedToast = () => {
 
 <template>
   <div class="easy-coach-current-games-component">
-    <div
-      v-for="(game, index) in games"
-      v-tooltip.top="$t('games.arbitrate')"
-      class="game"
-    >
+    <div v-for="(game, index) in games" class="game">
       <span class="name">{{ game.name }}</span>
       <GameStatus :status="game.status" />
       <div
