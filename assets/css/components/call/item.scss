@@ -1,4 +1,4 @@
-.easy-coach-game-call-item-component {
+.easy-game-call-item-component {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -98,5 +98,12 @@
     -webkit-text-stroke: 0;
     color: var(--text-color);
     font-weight: 700;
+  }
+}
+
+.easy-coach-rotation-player-component {
+  .easy-icon-captain-component,
+  .easy-icon-libero-component {
+    opacity: 1 !important;
   }
 }

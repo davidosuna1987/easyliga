@@ -140,27 +140,9 @@ const setShirtNumberUpdatePlayer = (player?: Player) => {
   }
 }
 
-const submit = async () => {
-  if (!call.value) return
-
-  if (call.value.locked) {
-    showGameLockedToast()
-    return
-  }
-
-  const { data, error } = await callService.update(call.value.id, form.value)
-
-  if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-    errors.value = error.value?.data?.errors
-    return
-  }
-
-  toast.success(useNuxtApp().$i18n.t('calls.submitted'))
-  call.value = mapApiCallToCall(data.value.data.call)
-}
-
 const getTeamPlayers = async (listenEvent = false) => {
+  loadingApi.value = true
+
   const { data, error } = await gameService.teamPlayers(
     Number(route.params.game_id),
     Number(route.params.team_id),
@@ -177,9 +159,36 @@ const getTeamPlayers = async (listenEvent = false) => {
   selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
   players.value = mapApiPlayersToPlayers(data.value.data.players)
 
+  loadingApi.value = false
+
   if (listenEvent) {
     listenCallUnlockedEvent()
   }
+}
+
+const submit = async () => {
+  if (!call.value) return
+
+  if (call.value.locked) {
+    showGameLockedToast()
+    return
+  }
+
+  loadingApi.value = true
+
+  const { data, error } = await callService.update(call.value.id, form.value)
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    errors.value = error.value?.data?.errors
+    loadingApi.value = false
+    return
+  }
+
+  toast.success(useNuxtApp().$i18n.t('calls.submitted'))
+  call.value = mapApiCallToCall(data.value.data.call)
+
+  loadingApi.value = false
 }
 
 const listenCallUnlockedEvent = () => {
@@ -213,7 +222,9 @@ onBeforeUnmount(() => {
     $t('calls.locked_warning')
   }}</Message>
 
+  <Loading v-if="loadingApi" />
   <form
+    v-if="call"
     class="easy-game-call-form-component"
     :class="{ 'is-locked': call?.locked }"
     @submit.prevent="submit"

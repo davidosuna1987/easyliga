@@ -1,13 +1,28 @@
 .easy-game-court-component {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  aspect-ratio: 16 / 9;
-  width: 100%;
-  max-width: 550px;
-  margin: 0 auto;
-  border: solid 1px var(--primary-color-medium);
-  border-radius: var(--border-radius);
-  overflow: hidden;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: calc(50% - 0.5px);
+    width: 0;
+    height: calc(100% + 1rem);
+    border-right: dashed 2px var(--primary-color);
+    z-index: 1;
+  }
+
+  .wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    border: solid 1px var(--primary-color-medium);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
 
   .side {
     position: relative;
@@ -89,17 +104,6 @@
       .position-6 {
         grid-area: position-6;
         border-right: solid 1px var(--primary-color-medium);
-      }
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: -0.5rem;
-        right: -0.5px;
-        width: 0;
-        height: calc(100% + 1rem);
-        border-right: dashed 2px var(--primary-color);
-        z-index: 1;
       }
     }
 

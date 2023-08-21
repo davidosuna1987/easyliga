@@ -2,6 +2,7 @@ import { Player } from '@/domain/game'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
 import { ApiPlayer } from '@/types/api/auth'
+import { ApiRotation } from '@/types/api/rotation'
 
 export type ApiCallPlayersData = {
   profile_id: number
@@ -17,6 +18,8 @@ export type ApiCallRelations = {
   game?: ApiGame
   team?: ApiTeam
   players?: ApiPlayer[]
+  rotations?: ApiRotation[]
+  current_rotation?: ApiRotation
 }
 
 export type ApiCall = {

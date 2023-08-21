@@ -16,4 +16,16 @@
     height: 1.5rem;
     font-size: 1rem;
   }
+
+  &.size-lg {
+    width: 4rem;
+    height: 4rem;
+    font-size: 2rem;
+  }
+
+  &.size-xl {
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.5rem;
+  }
 }

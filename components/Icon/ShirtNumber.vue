@@ -2,7 +2,7 @@
 const props = defineProps({
   shirtNumber: {
     type: Number,
-    required: true,
+    required: false,
   },
   size: {
     type: String,
@@ -16,7 +16,11 @@ const sizeClass = computed(() => {
 </script>
 
 <template>
-  <div class="easy-icon-shirt-number-component" :class="[sizeClass]">
+  <div
+    v-if="shirtNumber"
+    class="easy-icon-shirt-number-component"
+    :class="[sizeClass]"
+  >
     {{ shirtNumber }}
   </div>
 </template>

@@ -19,11 +19,6 @@ const playerIconsCount = computed(() => {
 <template>
   <div class="easy-referee-game-call-item-component referee-arbitrate-sidebar">
     <div class="team-player-info">
-      <!-- <Avatar
-        class="player-avatar"
-        :image="player?.avatar ?? undefined"
-        shape="circle"
-      /> -->
       <IconShirtNumber :shirtNumber="player.shirtNumber" size="sm" />
       {{ player.firstName }} {{ player.lastName }}
     </div>

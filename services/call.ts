@@ -5,6 +5,10 @@ import {
 } from '@/types/api/call'
 
 export default class CallService {
+  get(callId: number, params?: Record<string, string>) {
+    return useApi<ApiCallResponse>(`calls/${callId}`, { params })
+  }
+
   fetch(params?: Record<string, string>) {
     return useApi<ApiCallsResponse>(`calls/fetch`, { params })
   }

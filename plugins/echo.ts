@@ -10,7 +10,6 @@ declare global {
 
 export default defineNuxtPlugin(() => {
   const app = useNuxtApp()
-  console.log(app)
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'pusher',

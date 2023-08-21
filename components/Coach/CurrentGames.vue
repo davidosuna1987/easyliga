@@ -2,8 +2,6 @@
 import { Game } from '@/domain/game'
 import { Call } from '@/domain/call'
 
-const toast = useEasyToast()
-
 const props = defineProps({
   games: {
     type: Array as PropType<Game[]>,
@@ -15,9 +13,12 @@ const props = defineProps({
   },
 })
 
-const showGameLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
-}
+const callUnlocked = (callIndex: number) =>
+  !props.calls[callIndex]?.locked ||
+  props.calls[callIndex]?.playersData.length < 6
+
+const rotationLocked = (callIndex: number) =>
+  props.calls[callIndex]?.currentRotation?.locked
 </script>
 
 <template>
@@ -29,25 +30,20 @@ const showGameLockedToast = () => {
         class="actions grid gap-2 mt-3"
         :class="[game.status === 'warmup' ? 'grid-cols-3' : 'grid-cols-1']"
       >
-        <Button
+        <CoachButtonCall
           v-if="game.status === 'warmup'"
           class="action"
-          outlined
-          :label="$t('calls.call')"
-          :severity="calls[index].locked ? 'warning' : 'primary'"
-          @click.prevent="
-            calls[index].locked
-              ? showGameLockedToast()
-              : navigateTo(
-                  `/coach/games/${game.id}/teams/${calls[index].teamId}/call`,
-                )
-          "
+          :gameId="game.id"
+          :teamId="calls[index]?.teamId"
+          :locked="!!calls[index]?.locked"
         />
-        <Button
+        <CoachButtonRotation
           v-if="game.status === 'warmup'"
           class="action"
-          outlined
-          :label="$t('rotations.rotation')"
+          :gameId="game.id"
+          :callId="calls[index]?.id"
+          :callUnlocked="!!callUnlocked(index)"
+          :locked="!!rotationLocked(index)"
         />
         <Button class="action" outlined :label="$t('games.game')" />
       </div>

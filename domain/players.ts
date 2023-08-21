@@ -22,3 +22,17 @@ export const getFullName = (player: Player | CallPlayerData): string => {
   const { firstName, lastName } = player
   return lastName ? `${firstName} ${lastName}` : firstName
 }
+
+export const mapCallPlayerDataToPlayers = (
+  callPlayerData: CallPlayerData,
+): Player => {
+  return {
+    profileId: callPlayerData.profileId,
+    firstName: callPlayerData.firstName,
+    lastName: callPlayerData.lastName,
+    shirtNumber: callPlayerData.shirtNumber,
+    avatar: callPlayerData.avatar,
+    captain: callPlayerData.captain,
+    libero: callPlayerData.libero,
+  }
+}

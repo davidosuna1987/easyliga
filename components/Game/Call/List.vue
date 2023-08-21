@@ -60,7 +60,6 @@ const getPlayer = (player: Player) => {
         'is-libero': selectedPlayers.find(p => p.profileId === player.profileId)
           ?.libero,
       }"
-      :tabindex="i + 1"
       :selected="isSelected(player)"
       @click="togglePlayer(player)"
       :setCaptain="setCaptain"

@@ -32,7 +32,7 @@ const getCurrentGames = async () => {
   )
 
   if (currentGames.value?.length) {
-    getCurrentGamesCalls()
+    await getCurrentGamesCalls()
   } else {
     teamType.value = 'visitor'
 
@@ -46,20 +46,22 @@ const getCurrentGames = async () => {
     )
 
     if (currentGames.value?.length) {
-      getCurrentGamesCalls()
+      await getCurrentGamesCalls()
+    } else {
+      loadingApi.value = false
     }
   }
-
-  loadingApi.value = false
 }
 
-const getCurrentGamesCalls = () => {
+const getCurrentGamesCalls = async () => {
+  loadingApi.value = true
   calls.value = []
 
   currentGames.value?.forEach(async game => {
     if (game.status === 'warmup') {
       const { data } = await callService.fetch({
         where: `game_id:${game.id}`,
+        with: 'currentRotation.players',
       })
 
       const apiGameCall = data.value?.data.calls.find(
@@ -71,6 +73,8 @@ const getCurrentGamesCalls = () => {
         listenCallUnlockedEvent(game.id, apiGameCall.id)
       }
     }
+
+    loadingApi.value = false
   })
 }
 
@@ -105,12 +109,7 @@ onBeforeUnmount(() => {
           : $t('coaches.welcome_no_name')
       }}
     </Heading>
-    <LoadingLabel
-      v-if="loadingApi"
-      size="1.25rem"
-      :label="$t('games.loading', 2)"
-      class="flex justify-center"
-    />
+    <Loading v-if="loadingApi" />
     <template v-else>
       <CoachCurrentGames
         v-if="currentGames?.length"

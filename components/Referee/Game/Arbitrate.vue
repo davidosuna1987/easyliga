@@ -4,6 +4,7 @@ import { Call, mapApiCallToCall } from '@/domain/call'
 import GameService from '@/services/game'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiCallUpdatedEventResponse } from '@/types/api/call'
+import { ApiRotationCreatedEventResponse } from '@/types/api/rotation'
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -58,8 +59,43 @@ const listenCallUpdatedEvent = () => {
   )
 }
 
+const listenRotationCreatedEvent = () => {
+  window.Echo.channel(`game.${route.params.game_id}.rotation.created`).listen(
+    'RotationCreatedEvent',
+    (response: ApiRotationCreatedEventResponse) => {
+      toast.info(
+        useNuxtApp().$i18n.t('events.rotation_created', {
+          teamName: response.team.name,
+        }),
+        {
+          life: 300000,
+        },
+      )
+      if (response.team.id === gameInitialData.value?.localTeam?.id) {
+        localTeamCall.value = mapApiCallToCall(response.call)
+      } else {
+        visitorTeamCall.value = mapApiCallToCall(response.call)
+      }
+    },
+  )
+}
+
 const leaveCallUnlockedEvent = () => {
   window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
+}
+
+const leaveRotationCreateddEvent = () => {
+  window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.created`)
+}
+
+const listenEvents = () => {
+  listenCallUpdatedEvent()
+  listenRotationCreatedEvent()
+}
+
+const leaveEvents = () => {
+  leaveCallUnlockedEvent()
+  leaveRotationCreateddEvent()
 }
 
 onBeforeMount(() => {
@@ -67,11 +103,11 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  listenCallUpdatedEvent()
+  listenEvents()
 })
 
 onBeforeUnmount(() => {
-  leaveCallUnlockedEvent()
+  leaveEvents()
 })
 </script>
 
@@ -89,7 +125,7 @@ onBeforeUnmount(() => {
       :visitorTeam="gameInitialData.visitorTeam"
       :localTeamCall="localTeamCall"
       :visitorTeamCall="visitorTeamCall"
-      @unlocked="getGameInitialData"
+      @unlocked:call="getGameInitialData"
     />
   </div>
 </template>

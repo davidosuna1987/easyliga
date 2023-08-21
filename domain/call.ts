@@ -1,5 +1,6 @@
 import { ApiCall, ApiCallPlayersData } from '@/types/api/call'
 import { Game, Player, Team } from '@/domain/game'
+import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 
 export type CallPlayerData = {
   profileId: number
@@ -15,6 +16,8 @@ export type CallRelations = {
   game?: Game
   team?: Team
   players?: Player[]
+  rotations?: Rotation[]
+  currentRotation?: Rotation
 }
 
 export type Call = {
@@ -31,6 +34,9 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => {
     gameId: apiCall.game_id,
     teamId: apiCall.team_id,
     playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
+    currentRotation: apiCall.current_rotation
+      ? mapApiRotationToRotation(apiCall.current_rotation)
+      : undefined,
     locked: apiCall.locked,
   }
 }

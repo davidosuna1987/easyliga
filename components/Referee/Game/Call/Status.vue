@@ -5,7 +5,7 @@ import { emit } from 'process'
 
 const toast = useEasyToast()
 const callService = new CallService()
-const emit = defineEmits(['unlocked'])
+const emit = defineEmits(['unlocked:call'])
 
 const props = defineProps({
   call: {
@@ -24,7 +24,7 @@ const unlock = async () => {
     return
   }
 
-  emit('unlocked', true)
+  emit('unlocked:call', true)
 }
 </script>
 
@@ -34,7 +34,10 @@ const unlock = async () => {
     :class="{ 'justify-between': props.call.locked }"
   >
     <template v-if="props.call.locked">
-      <small></small>
+      <div>
+        <FormSpinner size="0.75rem" />
+        <small>{{ $t('rotations.waiting') }}</small>
+      </div>
       <Button
         class="text-xs px-[0.5rem] py-[0.25rem]"
         :label="$t('forms.unlock')"
