@@ -34,7 +34,7 @@ const unlock = async () => {
     :class="{ 'justify-between': props.call.locked }"
   >
     <template v-if="props.call.locked">
-      <div>
+      <div class="flex items-center">
         <FormSpinner size="0.75rem" />
         <small>{{ $t('rotations.waiting') }}</small>
       </div>

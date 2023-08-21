@@ -31,7 +31,12 @@ const props = defineProps({
     />
     <div class="score-court relative flex flex-col gap-3">
       <GameScore />
-      <GameCourt />
+      <GameCourt
+        :localTeam="localTeam"
+        :visitorTeam="visitorTeam"
+        :localTeamCall="localTeamCall"
+        :visitorTeamCall="visitorTeamCall"
+      />
     </div>
     <RefereeGameCallSidebar
       :team="visitorTeam"

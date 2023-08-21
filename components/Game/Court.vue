@@ -1,52 +1,111 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Call } from '@/domain/call'
+import { Player, Team } from '@/domain/game'
+import { SetSide } from '@/domain/set'
+
+const props = defineProps({
+  localTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  visitorTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  localTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+  visitorTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+})
+
+const getRotationPlayerDataAtPosition = (
+  position: number,
+  side: SetSide,
+): Player | undefined => {
+  const call = side === 'left' ? props.localTeamCall : props.visitorTeamCall
+
+  const profileId = call.currentRotation?.players?.find(
+    rotationPlayer => rotationPlayer.position === position,
+  )?.profileId
+
+  return (
+    call.playersData?.find(player => player.profileId === profileId) ||
+    undefined
+  )
+}
+
+const localTeamRotationPlayersData = computed(() =>
+  Array.from({ length: 6 }, (_, i) => i + 1)
+    .map(position => getRotationPlayerDataAtPosition(position, 'left'))
+    .filter(player => player !== null),
+)
+
+const visitorTeamRotationPlayersData = computed(() =>
+  Array.from({ length: 6 }, (_, i) => i + 1)
+    .map(position => getRotationPlayerDataAtPosition(position, 'right'))
+    .filter(player => player !== null),
+)
+</script>
 
 <template>
   <div class="easy-game-court-component">
     <div class="wrapper">
       <div class="side left">
-        <div class="position-1 serving">
-          <IconEasyLiga />
-          <span class="shirt-number">1</span>
-        </div>
-        <div class="position-2">
-          <span class="shirt-number">2</span>
-        </div>
-        <div class="position-3">
-          <span class="shirt-number">3</span>
-        </div>
-        <div class="position-4">
-          <IconCaptain size="sm" />
-          <IconLibero size="sm" />
-          <span class="shirt-number">4</span>
-        </div>
-        <div class="position-5">
-          <span class="shirt-number">5</span>
-        </div>
-        <div class="position-6">
-          <span class="shirt-number">6</span>
-        </div>
+        <GameCourtPosition
+          :position="1"
+          :player="localTeamRotationPlayersData[0]"
+          serving
+        />
+        <GameCourtPosition
+          :position="2"
+          :player="localTeamRotationPlayersData[1]"
+        />
+        <GameCourtPosition
+          :position="3"
+          :player="localTeamRotationPlayersData[2]"
+        />
+        <GameCourtPosition
+          :position="4"
+          :player="localTeamRotationPlayersData[3]"
+        />
+        <GameCourtPosition
+          :position="5"
+          :player="localTeamRotationPlayersData[4]"
+        />
+        <GameCourtPosition
+          :position="6"
+          :player="localTeamRotationPlayersData[5]"
+        />
       </div>
       <div class="side right">
-        <div class="position-1">
-          <span class="shirt-number">9</span>
-        </div>
-        <div class="position-2">
-          <span class="shirt-number">8</span>
-        </div>
-        <div class="position-3">
-          <IconLibero size="sm" />
-          <span class="shirt-number">7</span>
-        </div>
-        <div class="position-4">
-          <span class="shirt-number">6</span>
-        </div>
-        <div class="position-5">
-          <IconCaptain size="sm" />
-          <span class="shirt-number">5</span>
-        </div>
-        <div class="position-6">
-          <span class="shirt-number">4</span>
-        </div>
+        <GameCourtPosition
+          :position="1"
+          :player="visitorTeamRotationPlayersData[0]"
+        />
+        <GameCourtPosition
+          :position="2"
+          :player="visitorTeamRotationPlayersData[1]"
+        />
+        <GameCourtPosition
+          :position="3"
+          :player="visitorTeamRotationPlayersData[2]"
+        />
+        <GameCourtPosition
+          :position="4"
+          :player="visitorTeamRotationPlayersData[3]"
+        />
+        <GameCourtPosition
+          :position="5"
+          :player="visitorTeamRotationPlayersData[4]"
+        />
+        <GameCourtPosition
+          :position="6"
+          :player="visitorTeamRotationPlayersData[5]"
+        />
       </div>
     </div>
   </div>
