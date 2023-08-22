@@ -7,6 +7,7 @@ import { ApiTeam } from '@/types/api/team'
 import { ApiPlayer, ApiProfile, ApiUser } from '@/types/api/auth'
 import { ApiCall } from '@/types/api/call'
 import { ApiSet } from '@/types/api/set'
+import { GameStatus } from '@/domain/game'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -40,7 +41,7 @@ export type ApiGame = {
   end: string | null
   winner_team_id: number | null
   loser_team_id: number | null
-  status: string
+  status: GameStatus
   comments: string | null
   created_at: string | null
   updated_at: string | null
