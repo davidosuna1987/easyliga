@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Team } from '@/domain/game'
 import { Call } from '@/domain/call'
+import { Set } from '@/domain/set'
 
 const props = defineProps({
   localTeam: {
@@ -19,6 +20,10 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: true,
+  },
 })
 </script>
 
@@ -30,7 +35,7 @@ const props = defineProps({
       @unlocked:call="$emit('unlocked:call')"
     />
     <div class="score-court relative flex flex-col gap-3">
-      <GameScore />
+      <GameScore :currentSet="currentSet" />
       <GameCourt
         :localTeam="localTeam"
         :visitorTeam="visitorTeam"

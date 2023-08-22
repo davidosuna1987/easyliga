@@ -5,7 +5,8 @@ import { ApiClub } from '@/types/api/club'
 import { ApiCourt } from '@/types/api/court'
 import { ApiTeam } from '@/types/api/team'
 import { ApiPlayer, ApiProfile, ApiUser } from '@/types/api/auth'
-import { ApiCall } from './call'
+import { ApiCall } from '@/types/api/call'
+import { ApiSet } from '@/types/api/set'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -14,6 +15,13 @@ export type ApiGameRelations = {
   sede?: ApiSede
   court?: ApiCourt
   referee?: ApiUser
+  local_team?: ApiTeam
+  visitor_team?: ApiTeam
+  winner_team?: ApiTeam
+  loser_team?: ApiTeam
+  teams?: ApiTeam[]
+  sets?: ApiSet[]
+  calls?: ApiCall[]
 }
 
 export type ApiGame = {

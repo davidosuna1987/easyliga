@@ -1,9 +1,18 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { Set } from '@/domain/set'
+
+const props = defineProps({
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: true,
+  },
+})
+</script>
 
 <template>
   <div class="easy-game-score-component">
     <div class="score left">21</div>
-    <div class="set">1</div>
+    <div class="set">{{ currentSet.number }}</div>
     <div class="score right">19</div>
   </div>
 </template>

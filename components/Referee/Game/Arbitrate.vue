@@ -16,10 +16,20 @@ const visitorTeamCall = ref<Call>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
+const currentSet = computed(
+  () =>
+    gameInitialData.value?.game?.sets?.[
+      gameInitialData.value?.game?.sets?.length - 1
+    ],
+)
+
 const getGameInitialData = async () => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
+    {
+      with: 'sets',
+    },
   )
 
   if (error.value || !data.value) {
@@ -120,11 +130,12 @@ onBeforeUnmount(() => {
       :visitorTeam="gameInitialData.visitorTeam"
     />
     <RefereeGameSidebarsCourt
-      v-if="gameInitialData && localTeamCall && visitorTeamCall"
+      v-if="gameInitialData && localTeamCall && visitorTeamCall && currentSet"
       :localTeam="gameInitialData.localTeam"
       :visitorTeam="gameInitialData.visitorTeam"
       :localTeamCall="localTeamCall"
       :visitorTeamCall="visitorTeamCall"
+      :currentSet="currentSet"
       @unlocked:call="getGameInitialData"
     />
   </div>

@@ -1,6 +1,7 @@
 import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
 import { mapApiPlayersToPlayers } from '@/domain/players'
 import { Call, mapApiCallToCall } from '@/domain/call'
+import { Set, mapApiSetToSet } from '@/domain/set'
 
 export type Address = {
   line1: string
@@ -164,6 +165,10 @@ export type GameRelations = {
   visitorTeam?: Team
   winnerTeam?: Team
   loserTeam?: Team
+  teams?: Team[]
+  sets?: Set[]
+  calls?: Call[]
+  // points?: Point[] TODO: add points
 }
 
 export type Game = {
@@ -205,6 +210,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => {
     end,
     status,
     comments,
+    sets,
   } = apiGame
   return {
     id,
@@ -224,6 +230,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => {
     end,
     status,
     comments,
+    sets: sets?.map(mapApiSetToSet),
   }
 }
 
