@@ -199,7 +199,8 @@
       "warmup": "Calentamiento",
       "playing": "En juego",
       "finished": "Finalizado"
-    }
+    },
+    "player_change": "Cambios | Cambio | Cambios"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",

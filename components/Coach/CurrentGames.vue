@@ -28,7 +28,7 @@ const rotationLocked = (callIndex: number) =>
       <GameStatus :status="game.status" />
       <div
         class="actions grid gap-2 mt-3"
-        :class="[game.status === 'warmup' ? 'grid-cols-3' : 'grid-cols-1']"
+        :class="[game.status === 'warmup' ? 'grid-cols-3' : 'grid-cols-2']"
       >
         <CoachButtonCall
           v-if="game.status === 'warmup'"
@@ -45,14 +45,13 @@ const rotationLocked = (callIndex: number) =>
           :callUnlocked="!!callUnlocked(index)"
           :locked="!!rotationLocked(index)"
         />
-        <!-- <CoachButtonPlayerChange
+        <CoachButtonPlayerChange
           v-if="game.status === 'playing'"
           class="action"
           :gameId="game.id"
-          :callId="calls[index]?.id"
-          :callUnlocked="!!callUnlocked(index)"
-          :locked="!!rotationLocked(index)"
-        /> -->
+          :teamId="calls[index]?.teamId"
+          :locked="!!calls[index]?.locked"
+        />
         <Button class="action" outlined :label="$t('games.game')" />
       </div>
     </div>
