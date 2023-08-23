@@ -45,14 +45,14 @@ const rotationLocked = (callIndex: number) =>
           :callUnlocked="!!callUnlocked(index)"
           :locked="!!rotationLocked(index)"
         />
-        <CoachButtonPlayerChange
+        <!-- <CoachButtonPlayerChange
           v-if="game.status === 'playing'"
           class="action"
           :gameId="game.id"
           :callId="calls[index]?.id"
           :callUnlocked="!!callUnlocked(index)"
           :locked="!!rotationLocked(index)"
-        />
+        /> -->
         <Button class="action" outlined :label="$t('games.game')" />
       </div>
     </div>

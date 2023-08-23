@@ -168,6 +168,7 @@ export type GameRelations = {
   teams?: Team[]
   sets?: Set[]
   calls?: Call[]
+  currentSet?: Set
   // points?: Point[] TODO: add points
 }
 
@@ -213,6 +214,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => {
     status,
     comments,
     sets,
+    current_set,
   } = apiGame
   return {
     id,
@@ -233,6 +235,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => {
     status,
     comments,
     sets: sets?.map(mapApiSetToSet),
+    currentSet: current_set ? mapApiSetToSet(current_set) : undefined,
   }
 }
 

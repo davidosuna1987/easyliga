@@ -22,6 +22,7 @@ export type ApiGameRelations = {
   loser_team?: ApiTeam
   teams?: ApiTeam[]
   sets?: ApiSet[]
+  current_set?: ApiSet
   calls?: ApiCall[]
 }
 

@@ -11,9 +11,9 @@ const props = defineProps({
 
 <template>
   <div class="easy-game-score-component">
-    <div class="score left">21</div>
+    <div class="score left">{{ currentSet.localTeamScore }}</div>
     <div class="set">{{ currentSet.number }}</div>
-    <div class="score right">19</div>
+    <div class="score right">{{ currentSet.visitorTeamScore }}</div>
   </div>
 </template>
 
