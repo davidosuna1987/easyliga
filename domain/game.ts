@@ -2,6 +2,7 @@ import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
 import { mapApiPlayersToPlayers } from '@/domain/players'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
+import { Team } from '@/domain/team'
 
 export type Address = {
   line1: string
@@ -102,16 +103,6 @@ export type User = {
   email: string
 }
 
-export type Player = {
-  profileId: number
-  firstName: string
-  lastName?: string | null
-  shirtNumber: number
-  avatar?: string | null
-  captain: boolean
-  libero: boolean
-}
-
 export type ProfileRelations = {
   user?: User
   address?: Address
@@ -128,14 +119,6 @@ export type Profile = {
   email?: string
   phone?: string
 } & ProfileRelations
-
-// TODO: add coach
-export type Team = {
-  id: number
-  name: string
-  // coach: Player
-  players: Player[]
-}
 
 export type GameInitialData = {
   id: number

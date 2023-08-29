@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Team } from '@/domain/game'
+import { Team, TeamType } from '@/domain/team'
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 
@@ -24,7 +24,25 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
+  undoPointButtonDisabled: {
+    type: Boolean,
+    required: true,
+  },
+  undoLastPointCountdown: {
+    type: Number,
+    default: 0,
+  },
 })
+
+const emit = defineEmits(['point:sum', 'point:undo'])
+
+const sumPoint = (type: TeamType) => {
+  emit('point:sum', type)
+}
+
+const undoLastPoint = () => {
+  emit('point:undo')
+}
 </script>
 
 <template>
@@ -41,6 +59,10 @@ const props = defineProps({
         :visitorTeam="visitorTeam"
         :localTeamCall="localTeamCall"
         :visitorTeamCall="visitorTeamCall"
+        :undoPointButtonDisabled="undoPointButtonDisabled"
+        :undoLastPointCountdown="undoLastPointCountdown"
+        @point:sum="sumPoint"
+        @point:undo="undoLastPoint"
       />
     </div>
     <RefereeGameCallSidebar

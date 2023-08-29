@@ -1,5 +1,7 @@
 import { ApiCall, ApiCallPlayersData } from '@/types/api/call'
-import { Game, Player, Team } from '@/domain/game'
+import { Game } from '@/domain/game'
+import { Team } from '@/domain/team'
+import { Player } from '@/domain/player'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 
 export type CallPlayerData = {

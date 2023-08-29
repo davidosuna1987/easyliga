@@ -82,7 +82,6 @@ const setSedeAndCourt = ({
   sede: ApiSede | null
   court: ApiCourt | null
 }) => {
-  console.log({ sede, court })
   selectedSede.value = sede
   selectedCourt.value = court
 }

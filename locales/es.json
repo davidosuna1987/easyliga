@@ -389,6 +389,17 @@
     "set": "Sets | Set | Sets",
     "set_number": "Set {num}"
   },
+  "points": {
+    "point": "Puntos | Punto | Puntos",
+    "point_number": "Punto {num}",
+    "add": "Añadir punto",
+    "added": "El punto ha sido añadido correctamente",
+    "add_error": "No se ha podido añadir el punto",
+    "sum": "Sumar punto",
+    "undo": "Deshacer punto",
+    "deleted": "El punto ha sido eliminado correctamente",
+    "undo_countdown": "Tiempo restante para deshacer el último punto: {seconds} segundos"
+  },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",
     "call_unlocked": "El árbitro ha desbloqueado la convocatoria",

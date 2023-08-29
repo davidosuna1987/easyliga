@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/useAuthStore'
 import { Call } from '@/domain/call'
-import { Player, Team } from '@/domain/game'
+import { Player } from '@/domain/player'
+import { Team, TeamType } from '@/domain/team'
 import { SetSide } from '@/domain/set'
+
+const auth = useAuthStore()
 
 const props = defineProps({
   localTeam: {
@@ -20,7 +24,25 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  undoPointButtonDisabled: {
+    type: Boolean,
+    required: true,
+  },
+  undoLastPointCountdown: {
+    type: Number,
+    default: 0,
+  },
 })
+
+const emit = defineEmits(['point:sum', 'point:undo'])
+
+const sumPoint = (type: TeamType) => {
+  emit('point:sum', type)
+}
+
+const undoLastPoint = () => {
+  emit('point:undo')
+}
 
 const getRotationPlayerDataAtPosition = (
   position: number,
@@ -53,61 +75,71 @@ const visitorTeamRotationPlayersData = computed(() =>
 
 <template>
   <div class="easy-game-court-component">
-    <div class="wrapper">
-      <div class="side left">
-        <GameCourtPosition
-          :position="1"
-          :player="localTeamRotationPlayersData[0]"
-          serving
-        />
-        <GameCourtPosition
-          :position="2"
-          :player="localTeamRotationPlayersData[1]"
-        />
-        <GameCourtPosition
-          :position="3"
-          :player="localTeamRotationPlayersData[2]"
-        />
-        <GameCourtPosition
-          :position="4"
-          :player="localTeamRotationPlayersData[3]"
-        />
-        <GameCourtPosition
-          :position="5"
-          :player="localTeamRotationPlayersData[4]"
-        />
-        <GameCourtPosition
-          :position="6"
-          :player="localTeamRotationPlayersData[5]"
-        />
-      </div>
-      <div class="side right">
-        <GameCourtPosition
-          :position="1"
-          :player="visitorTeamRotationPlayersData[0]"
-        />
-        <GameCourtPosition
-          :position="2"
-          :player="visitorTeamRotationPlayersData[1]"
-        />
-        <GameCourtPosition
-          :position="3"
-          :player="visitorTeamRotationPlayersData[2]"
-        />
-        <GameCourtPosition
-          :position="4"
-          :player="visitorTeamRotationPlayersData[3]"
-        />
-        <GameCourtPosition
-          :position="5"
-          :player="visitorTeamRotationPlayersData[4]"
-        />
-        <GameCourtPosition
-          :position="6"
-          :player="visitorTeamRotationPlayersData[5]"
-        />
+    <div class="wrapper mb-5">
+      <div class="court">
+        <div class="side left">
+          <GameCourtPosition
+            :position="1"
+            :player="localTeamRotationPlayersData[0]"
+            serving
+          />
+          <GameCourtPosition
+            :position="2"
+            :player="localTeamRotationPlayersData[1]"
+          />
+          <GameCourtPosition
+            :position="3"
+            :player="localTeamRotationPlayersData[2]"
+          />
+          <GameCourtPosition
+            :position="4"
+            :player="localTeamRotationPlayersData[3]"
+          />
+          <GameCourtPosition
+            :position="5"
+            :player="localTeamRotationPlayersData[4]"
+          />
+          <GameCourtPosition
+            :position="6"
+            :player="localTeamRotationPlayersData[5]"
+          />
+        </div>
+        <div class="side right">
+          <GameCourtPosition
+            :position="1"
+            :player="visitorTeamRotationPlayersData[0]"
+          />
+          <GameCourtPosition
+            :position="2"
+            :player="visitorTeamRotationPlayersData[1]"
+          />
+          <GameCourtPosition
+            :position="3"
+            :player="visitorTeamRotationPlayersData[2]"
+          />
+          <GameCourtPosition
+            :position="4"
+            :player="visitorTeamRotationPlayersData[3]"
+          />
+          <GameCourtPosition
+            :position="5"
+            :player="visitorTeamRotationPlayersData[4]"
+          />
+          <GameCourtPosition
+            :position="6"
+            :player="visitorTeamRotationPlayersData[5]"
+          />
+        </div>
       </div>
     </div>
+
+    <GamePointActions
+      v-if="auth.hasRole('referee')"
+      :undoPointButtonDisabled="undoPointButtonDisabled"
+      :undoLastPointCountdown="undoLastPointCountdown"
+      @point:sum="sumPoint"
+      @point:undo="undoLastPoint"
+    />
   </div>
 </template>
 

@@ -1,6 +1,12 @@
 import { ApiSet } from '@/types/api/set'
+import { Point, mapApiPointToPoint } from '@/domain/point'
 
 export type SetSide = 'left' | 'right'
+
+export type SetRelations = {
+  lastPoint?: Point
+  lastTwoPoints?: Point[]
+}
 
 export type Set = {
   id: number
@@ -16,7 +22,7 @@ export type Set = {
   start: string | null
   end: string | null
   comments: string | null
-}
+} & SetRelations
 
 export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   id: apiSet.id,
@@ -32,4 +38,12 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   start: apiSet.start,
   end: apiSet.end,
   comments: apiSet.comments,
+
+  lastPoint: apiSet.last_point
+    ? mapApiPointToPoint(apiSet.last_point)
+    : undefined,
+
+  lastTwoPoints: apiSet.last_two_points
+    ? apiSet.last_two_points.map(mapApiPointToPoint)
+    : undefined,
 })

@@ -1,5 +1,5 @@
 import { ApiPlayer } from '@/types/api/auth'
-import { Player } from '@/domain/game'
+import { Player } from '@/domain/player'
 import { CallPlayerData } from '@/domain/call'
 
 export const mapApiPlayersToPlayers = (

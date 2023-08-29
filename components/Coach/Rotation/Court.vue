@@ -65,81 +65,83 @@ watch(players.value, () => {
 <template>
   <div class="easy-game-court-component easy-coach-rotation-court-component">
     <div class="wrapper">
-      <div class="side left">
-        <div class="position-1" @click="selectedPosition = 1">
-          <span v-if="getRotationPlayer(1)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(1)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(1)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(1)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">1</span>
+      <div class="court">
+        <div class="side left">
+          <div class="position-1" @click="selectedPosition = 1">
+            <span v-if="getRotationPlayer(1)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(1)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(1)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(1)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">1</span>
+          </div>
+          <div class="position-2" @click="selectedPosition = 2">
+            <span v-if="getRotationPlayer(2)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(2)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(2)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(2)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">2</span>
+          </div>
+          <div class="position-3" @click="selectedPosition = 3">
+            <span v-if="getRotationPlayer(3)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(3)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(3)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(3)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">3</span>
+          </div>
+          <div class="position-4" @click="selectedPosition = 4">
+            <span v-if="getRotationPlayer(4)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(4)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(4)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(4)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">4</span>
+          </div>
+          <div class="position-5" @click="selectedPosition = 5">
+            <span v-if="getRotationPlayer(5)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(5)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(5)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(5)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">5</span>
+          </div>
+          <div class="position-6" @click="selectedPosition = 6">
+            <span v-if="getRotationPlayer(6)" class="shirt-number">
+              <IconShirtNumber
+                :shirtNumber="getRotationPlayer(6)?.shirtNumber"
+                size="lg"
+              />
+              <IconCaptain v-if="getRotationPlayer(6)?.captain" size="sm" />
+              <IconLibero v-if="getRotationPlayer(6)?.libero" size="sm" />
+            </span>
+            <span v-else class="placeholder">6</span>
+          </div>
         </div>
-        <div class="position-2" @click="selectedPosition = 2">
-          <span v-if="getRotationPlayer(2)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(2)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(2)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(2)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">2</span>
+        <div class="side right">
+          <div class="position-1"></div>
+          <div class="position-2"></div>
+          <div class="position-3"></div>
+          <div class="position-4"></div>
+          <div class="position-5"></div>
+          <div class="position-6"></div>
         </div>
-        <div class="position-3" @click="selectedPosition = 3">
-          <span v-if="getRotationPlayer(3)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(3)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(3)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(3)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">3</span>
-        </div>
-        <div class="position-4" @click="selectedPosition = 4">
-          <span v-if="getRotationPlayer(4)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(4)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(4)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(4)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">4</span>
-        </div>
-        <div class="position-5" @click="selectedPosition = 5">
-          <span v-if="getRotationPlayer(5)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(5)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(5)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(5)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">5</span>
-        </div>
-        <div class="position-6" @click="selectedPosition = 6">
-          <span v-if="getRotationPlayer(6)" class="shirt-number">
-            <IconShirtNumber
-              :shirtNumber="getRotationPlayer(6)?.shirtNumber"
-              size="lg"
-            />
-            <IconCaptain v-if="getRotationPlayer(6)?.captain" size="sm" />
-            <IconLibero v-if="getRotationPlayer(6)?.libero" size="sm" />
-          </span>
-          <span v-else class="placeholder">6</span>
-        </div>
-      </div>
-      <div class="side right">
-        <div class="position-1"></div>
-        <div class="position-2"></div>
-        <div class="position-3"></div>
-        <div class="position-4"></div>
-        <div class="position-5"></div>
-        <div class="position-6"></div>
       </div>
     </div>
   </div>

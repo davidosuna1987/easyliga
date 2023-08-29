@@ -41,6 +41,8 @@ export default {
     padding: 1rem;
     font-size: 1.75rem;
     font-weight: 700;
+    width: 62px;
+    text-align: center;
   }
 
   .set {

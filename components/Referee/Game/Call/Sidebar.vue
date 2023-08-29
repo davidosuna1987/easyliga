@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Team } from '@/domain/game'
+import { Team } from '@/domain/team'
 import { Call } from '@/domain/call'
 
 const props = defineProps({
@@ -18,7 +18,6 @@ const inCourtPlayers = computed(() => {
     rotation => rotation.inCourtProfileId,
   )
 
-  console.log(inCourtPlayerIds)
   return props.call.playersData.filter(player =>
     inCourtPlayerIds?.includes(player.profileId),
   )

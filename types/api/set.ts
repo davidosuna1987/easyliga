@@ -1,4 +1,10 @@
 import { SetSide } from '@/domain/set'
+import { ApiPoint } from '@/types/api/point'
+
+export type ApiSetRelations = {
+  last_point?: ApiPoint
+  last_two_points?: ApiPoint[]
+}
 
 export type ApiSet = {
   id: number
@@ -17,7 +23,7 @@ export type ApiSet = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-}
+} & ApiSetRelations
 
 export type ApiSetResponse = {
   success: boolean

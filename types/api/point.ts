@@ -26,5 +26,27 @@ export type ApiPoint = {
   loser_team_id: number
   local_team_score: number
   visitor_team_score: number
+  start: string | null
+  end: string | null
   comments: string | null
 } & ApiPointRelations
+
+export type ApiPointStoreRequest = {
+  set_id: number
+  previous_point_id: number | null
+  serving_team_id: number
+  serving_profile_id: number | null
+  scoring_profile_id: number | null
+  serve_number?: number
+  winner_team_id: number
+  loser_team_id: number
+  local_team_score: number
+  visitor_team_score: number
+  comments: string | null
+}
+
+export type ApiPointResponse = {
+  success: boolean
+  data: ApiPoint
+  errors: null
+}

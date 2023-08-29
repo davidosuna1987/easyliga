@@ -5,6 +5,7 @@ import CallService from '@/services/call'
 import { Game, mapApiGameToGame } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/call'
+import { TeamType } from '@/domain/team'
 
 const auth = useAuthStore()
 const gameService = new GameService()
@@ -15,8 +16,6 @@ const currentGames = ref<Game[]>()
 const calls = ref<Call[]>([])
 const teamType = ref<TeamType>('local')
 const loadingApi = ref<boolean>(false)
-
-type TeamType = 'local' | 'visitor'
 
 const getCurrentGames = async () => {
   if (!auth.user) return

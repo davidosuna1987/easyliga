@@ -1,4 +1,5 @@
-import { Game, Profile, Team, mapApiGameToGame } from '@/domain/game'
+import { Game, Profile, mapApiGameToGame } from '@/domain/game'
+import { Team } from '@/domain/team'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { ApiPoint } from '@/types/api/point'
 
@@ -25,54 +26,35 @@ export type Point = {
   loserTeamId: number
   localTeamScore: number
   visitorTeamScore: number
+  start: string | null
+  end: string | null
   comments: string | null
 } & PointRelations
 
-export const mapApiPointToPoint = (apiPoint: ApiPoint): Point => {
-  const {
-    id,
-    set_id,
-    previous_point_id,
-    serving_team_id,
-    serving_profile_id,
-    scoring_profile_id,
-    serve_number,
-    winner_team_id,
-    loser_team_id,
-    local_team_score,
-    visitor_team_score,
-    comments,
-    set,
-    game,
-    // serving_player,
-    // scoring_player,
-    // scoring_team,
-    // winner_team,
-    // loser_team,
-    previous_point,
-  } = apiPoint
-  return {
-    id,
-    setId: set_id,
-    previousPointId: previous_point_id,
-    servingTeamId: serving_team_id,
-    servingProfileId: serving_profile_id,
-    scoringProfileId: scoring_profile_id,
-    serveNumber: serve_number,
-    winnerTeamId: winner_team_id,
-    loserTeamId: loser_team_id,
-    localTeamScore: local_team_score,
-    visitorTeamScore: visitor_team_score,
-    comments,
-    set: set ? mapApiSetToSet(set) : undefined,
-    game: game ? mapApiGameToGame(game) : undefined,
-    // servingPlayer: serving_player ? mapApiProfileToProfile(serving_player) : undefined,
-    // scoringPlayer: scoring_player ? mapApiProfileToProfile(scoring_player) : undefined,
-    // scoringTeam: scoring_team ? mapApiTeamToTeam(scoring_team) : undefined,
-    // winnerTeam: winner_team ? mapApiTeamToTeam(winner_team) : undefined,
-    // loserTeam: loser_team ? mapApiTeamToTeam(loser_team) : undefined,
-    previousPoint: previous_point
-      ? mapApiPointToPoint(previous_point)
-      : undefined,
-  }
-}
+export const mapApiPointToPoint = (apiPoint: ApiPoint): Point => ({
+  id: apiPoint.id,
+  setId: apiPoint.set_id,
+  previousPointId: apiPoint.previous_point_id,
+  servingTeamId: apiPoint.serving_team_id,
+  servingProfileId: apiPoint.serving_profile_id,
+  scoringProfileId: apiPoint.scoring_profile_id,
+  serveNumber: apiPoint.serve_number,
+  winnerTeamId: apiPoint.winner_team_id,
+  loserTeamId: apiPoint.loser_team_id,
+  localTeamScore: apiPoint.local_team_score,
+  visitorTeamScore: apiPoint.visitor_team_score,
+  start: apiPoint.start,
+  end: apiPoint.end,
+  comments: apiPoint.comments,
+
+  set: apiPoint.set ? mapApiSetToSet(apiPoint.set) : undefined,
+  game: apiPoint.game ? mapApiGameToGame(apiPoint.game) : undefined,
+  // servingPlayer: serving_player ? mapApiProfileToProfile(serving_player) : undefined,
+  // scoringPlayer: scoring_player ? mapApiProfileToProfile(scoring_player) : undefined,
+  // scoringTeam: scoring_team ? mapApiTeamToTeam(scoring_team) : undefined,
+  // winnerTeam: winner_team ? mapApiTeamToTeam(winner_team) : undefined,
+  // loserTeam: loser_team ? mapApiTeamToTeam(loser_team) : undefined,
+  previousPoint: apiPoint.previous_point
+    ? mapApiPointToPoint(apiPoint.previous_point)
+    : undefined,
+})
