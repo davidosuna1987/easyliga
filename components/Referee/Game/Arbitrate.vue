@@ -25,6 +25,9 @@ const undoLastPointCountdown = ref<number>(0)
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
+const pointTimeout = ref<NodeJS.Timeout>()
+const pointInterval = ref<NodeJS.Timeout>()
+
 const formPoint = ref<ApiPointStoreRequest>()
 
 const servingTeamId = computed(() => {
@@ -74,25 +77,24 @@ const sumPoint = async (type: TeamType) => {
     if (error.value) {
       toast.mapError(Object.values(error.value?.data?.errors))
       loadingApi.value = false
+      return
     } else {
       toast.success(useNuxtApp().$i18n.t('points.added'))
       getGameInitialData()
     }
   }
 
-  const interval = setInterval(() => {
+  pointInterval.value = setInterval(() => {
     if (undoLastPointCountdown.value > 0) {
       undoLastPointCountdown.value = undoLastPointCountdown.value - 1
     }
     if (undoLastPointCountdown.value <= 0) {
-      clearInterval(interval)
+      resetPointInterval()
     }
   }, 1000)
 
-  setTimeout(() => {
-    undoPointButtonDisabled.value = true
-    undoLastPointCountdown.value = 0
-    clearInterval(interval)
+  pointTimeout.value = setTimeout(() => {
+    resetPointInterval()
   }, delay)
 }
 
@@ -108,10 +110,17 @@ const undoLastPoint = async () => {
     loadingApi.value = false
   } else {
     toast.success(useNuxtApp().$i18n.t('points.deleted'))
+    resetPointInterval()
     getGameInitialData()
   }
+}
 
+const resetPointInterval = () => {
   undoPointButtonDisabled.value = true
+  undoLastPointCountdown.value = 0
+  formPoint.value = undefined
+  clearInterval(pointInterval.value)
+  clearTimeout(pointTimeout.value)
 }
 
 const createFormPoint = (type?: TeamType) => {

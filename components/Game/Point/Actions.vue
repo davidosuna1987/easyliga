@@ -24,36 +24,38 @@ const undoLastPoint = () => {
 </script>
 
 <template>
-  <div class="easy-game-point-actions-component grid grid-cols-3 gap-4">
-    <Button
-      class="col-span-3/10"
-      :class="undoPointButtonDisabled ? '' : 'grayscale'"
-      :label="$t('points.sum')"
-      outlined
-      :disabled="!undoPointButtonDisabled"
-      @click="sumPoint('local')"
-    />
-    <Button
-      class="col-span-4/10"
-      :class="undoPointButtonDisabled ? 'grayscale' : ''"
-      :label="$t('points.undo')"
-      outlined
-      severity="danger"
-      :disabled="undoPointButtonDisabled"
-      @click="undoLastPoint"
-    />
-    <Button
-      class="col-span-3/10"
-      :class="undoPointButtonDisabled ? '' : 'grayscale'"
-      :label="$t('points.sum')"
-      outlined
-      :disabled="!undoPointButtonDisabled"
-      @click="sumPoint('visitor')"
-    />
+  <div class="easy-game-point-actions-component">
+    <div class="actions grid grid-cols-3 gap-4">
+      <Button
+        class="col-span-3/10"
+        :class="undoPointButtonDisabled ? '' : 'grayscale'"
+        :label="$t('points.sum')"
+        outlined
+        :disabled="!undoPointButtonDisabled"
+        @click="sumPoint('local')"
+      />
+      <Button
+        class="col-span-4/10"
+        :class="undoPointButtonDisabled ? 'grayscale' : ''"
+        :label="$t('points.undo')"
+        outlined
+        severity="danger"
+        :disabled="undoPointButtonDisabled"
+        @click="undoLastPoint"
+      />
+      <Button
+        class="col-span-3/10"
+        :class="undoPointButtonDisabled ? '' : 'grayscale'"
+        :label="$t('points.sum')"
+        outlined
+        :disabled="!undoPointButtonDisabled"
+        @click="sumPoint('visitor')"
+      />
+    </div>
+    <small v-if="!undoPointButtonDisabled" class="countdown inline-block mt-2">
+      {{ $t('points.undo_countdown', { seconds: undoLastPointCountdown }) }}
+    </small>
   </div>
-  <small v-if="!undoPointButtonDisabled" class="countdown inline-block mt-2">{{
-    $t('points.undo_countdown', { seconds: undoLastPointCountdown })
-  }}</small>
 </template>
 
 <script lang="ts">
@@ -63,6 +65,11 @@ export default {
 </script>
 
 <style lang="scss">
+.easy-game-point-actions-component {
+  max-width: var(--court-max-width);
+  margin: 0 auto;
+}
+
 .countdown {
   color: var(--danger-color);
 }
