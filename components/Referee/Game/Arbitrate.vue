@@ -80,22 +80,21 @@ const sumPoint = async (type: TeamType) => {
       return
     } else {
       toast.success(useNuxtApp().$i18n.t('points.added'))
-      getGameInitialData()
+      await getGameInitialData()
     }
-  }
 
-  pointInterval.value = setInterval(() => {
-    if (undoLastPointCountdown.value > 0) {
-      undoLastPointCountdown.value = undoLastPointCountdown.value - 1
-    }
-    if (undoLastPointCountdown.value <= 0) {
+    pointInterval.value = setInterval(() => {
+      if (undoLastPointCountdown.value > 0) {
+        undoLastPointCountdown.value = undoLastPointCountdown.value - 1
+      } else {
+        resetPointInterval()
+      }
+    }, 1000)
+
+    pointTimeout.value = setTimeout(() => {
       resetPointInterval()
-    }
-  }, 1000)
-
-  pointTimeout.value = setTimeout(() => {
-    resetPointInterval()
-  }, delay)
+    }, delay)
+  }
 }
 
 const undoLastPoint = async () => {
