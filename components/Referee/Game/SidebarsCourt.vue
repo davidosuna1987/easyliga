@@ -4,19 +4,19 @@ import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 
 const props = defineProps({
-  localTeam: {
+  leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  visitorTeam: {
+  rightSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  localTeamCall: {
+  leftSideTeamCall: {
     type: Object as PropType<Call>,
     required: true,
   },
-  visitorTeamCall: {
+  rightSideTeamCall: {
     type: Object as PropType<Call>,
     required: true,
   },
@@ -53,18 +53,18 @@ const undoLastPoint = () => {
 <template>
   <div class="easy-game-sidebars-court-component">
     <RefereeGameCallSidebar
-      :team="localTeam"
-      :call="localTeamCall"
+      :team="leftSideTeam"
+      :call="leftSideTeamCall"
       @unlocked:call="emit('unlocked:call')"
     />
     <div class="score-court relative flex flex-col gap-3">
       <GameScore :currentSet="currentSet" />
       <GameCourt
         :currentSet="currentSet"
-        :localTeam="localTeam"
-        :visitorTeam="visitorTeam"
-        :localTeamCall="localTeamCall"
-        :visitorTeamCall="visitorTeamCall"
+        :leftSideTeam="leftSideTeam"
+        :rightSideTeam="rightSideTeam"
+        :leftSideTeamCall="leftSideTeamCall"
+        :rightSideTeamCall="rightSideTeamCall"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         @point:sum="sumPoint"
@@ -73,8 +73,8 @@ const undoLastPoint = () => {
       />
     </div>
     <RefereeGameCallSidebar
-      :team="visitorTeam"
-      :call="visitorTeamCall"
+      :team="rightSideTeam"
+      :call="rightSideTeamCall"
       @unlocked:call="emit('unlocked:call')"
     />
   </div>

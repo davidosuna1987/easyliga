@@ -7,13 +7,25 @@ const props = defineProps({
     required: true,
   },
 })
+
+const leftSideTeamScore = computed(() => {
+  return props.currentSet.localTeamSide === 'left'
+    ? props.currentSet.localTeamScore
+    : props.currentSet.visitorTeamScore
+})
+
+const rightSideTeamScore = computed(() => {
+  return props.currentSet.localTeamSide === 'right'
+    ? props.currentSet.localTeamScore
+    : props.currentSet.visitorTeamScore
+})
 </script>
 
 <template>
   <div class="easy-game-score-component">
-    <div class="score left">{{ currentSet.localTeamScore }}</div>
+    <div class="score left">{{ leftSideTeamScore }}</div>
     <div class="set">{{ currentSet.number }}</div>
-    <div class="score right">{{ currentSet.visitorTeamScore }}</div>
+    <div class="score right">{{ rightSideTeamScore }}</div>
   </div>
 </template>
 

@@ -36,6 +36,30 @@ const pointInterval = ref<NodeJS.Timeout>()
 
 const formPoint = ref<ApiPointStoreRequest>()
 
+const leftSideTeam = computed(() => {
+  return gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+    ? gameInitialData.value?.localTeam
+    : gameInitialData.value?.visitorTeam
+})
+
+const rightSideTeam = computed(() => {
+  return gameInitialData.value?.game.currentSet?.localTeamSide === 'right'
+    ? gameInitialData.value?.localTeam
+    : gameInitialData.value?.visitorTeam
+})
+
+const leftSideTeamCall = computed(() =>
+  localTeamCall.value?.teamId === leftSideTeam.value?.id
+    ? localTeamCall.value
+    : visitorTeamCall.value,
+)
+
+const rightSideTeamCall = computed(() =>
+  visitorTeamCall.value?.teamId === rightSideTeam.value?.id
+    ? visitorTeamCall.value
+    : localTeamCall.value,
+)
+
 const servingTeamId = computed(() => {
   return lastPoint.value
     ? lastPoint.value?.winnerTeamId
@@ -253,21 +277,23 @@ onBeforeUnmount(() => {
   <div class="easy-referee-game-arbitrate-component">
     <GameStatus v-if="gameInitialData" :status="gameInitialData.game.status" />
     <RefereeGameTeamSetsWon
-      v-if="gameInitialData"
-      :localTeam="gameInitialData.localTeam"
-      :visitorTeam="gameInitialData.visitorTeam"
+      v-if="leftSideTeam && rightSideTeam"
+      :leftSideTeam="leftSideTeam"
+      :rightSideTeam="rightSideTeam"
     />
     <RefereeGameSidebarsCourt
       v-if="
+        leftSideTeam &&
+        rightSideTeam &&
+        leftSideTeamCall &&
+        rightSideTeamCall &&
         gameInitialData &&
-        localTeamCall &&
-        visitorTeamCall &&
         gameInitialData.game.currentSet
       "
-      :localTeam="gameInitialData.localTeam"
-      :visitorTeam="gameInitialData.visitorTeam"
-      :localTeamCall="localTeamCall"
-      :visitorTeamCall="visitorTeamCall"
+      :leftSideTeam="leftSideTeam"
+      :rightSideTeam="rightSideTeam"
+      :leftSideTeamCall="leftSideTeamCall"
+      :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
       :undoPointButtonDisabled="undoPointButtonDisabled"
       :undoLastPointCountdown="undoLastPointCountdown"

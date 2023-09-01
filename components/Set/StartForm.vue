@@ -3,11 +3,11 @@ import { Team } from '@/domain/team'
 import { SetStartRequest } from '@/domain/set'
 
 const props = defineProps({
-  localTeam: {
+  leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  visitorTeam: {
+  rightSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
@@ -24,14 +24,14 @@ const firstServeTeam = ref<Team>()
 
 const leftSideTeam = computed(() => {
   return form.value.localTeamSide === 'left'
-    ? props.localTeam
-    : props.visitorTeam
+    ? props.leftSideTeam
+    : props.rightSideTeam
 })
 
 const rightSideTeam = computed(() => {
   return form.value.localTeamSide === 'right'
-    ? props.localTeam
-    : props.visitorTeam
+    ? props.leftSideTeam
+    : props.rightSideTeam
 })
 
 const switchTeamSides = () => {
@@ -68,7 +68,7 @@ const setFirstServeTeam = () => {
     <Dropdown
       class="easy-teams-selector-component"
       v-model="firstServeTeam"
-      :options="[localTeam, visitorTeam]"
+      :options="[leftSideTeam, rightSideTeam]"
       optionLabel="name"
       :optionValue="team => team"
       scrollHeight="210px"

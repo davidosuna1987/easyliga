@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { Team } from '@/domain/game'
+import { Team } from '@/domain/team'
 
 const props = defineProps({
-  localTeam: {
+  leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  visitorTeam: {
+  rightSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
@@ -17,13 +17,13 @@ const props = defineProps({
   <div class="easy-game-teams-sets-won-component">
     <div class="teams-sets-won-team">
       <div class="team-name">
-        {{ localTeam.name }}
+        {{ leftSideTeam.name }}
       </div>
       <div class="sets-count">0</div>
     </div>
     <div class="teams-sets-won-team">
       <div class="team-name">
-        {{ visitorTeam.name }}
+        {{ rightSideTeam.name }}
       </div>
       <div class="sets-count">0</div>
     </div>

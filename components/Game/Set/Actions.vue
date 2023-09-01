@@ -7,11 +7,11 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
-  localTeam: {
+  leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  visitorTeam: {
+  rightSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
@@ -49,8 +49,8 @@ const startSet = (setStartRequest: SetStartRequest) => {
 
       <SetStartForm
         class="mt-8"
-        :localTeam="localTeam"
-        :visitorTeam="visitorTeam"
+        :leftSideTeam="leftSideTeam"
+        :rightSideTeam="rightSideTeam"
         @set:start="startSet"
       />
     </DialogBottom>

@@ -12,19 +12,19 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
-  localTeam: {
+  leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  visitorTeam: {
+  rightSideTeam: {
     type: Object as PropType<Team>,
     required: true,
   },
-  localTeamCall: {
+  leftSideTeamCall: {
     type: Object as PropType<Call>,
     required: true,
   },
-  visitorTeamCall: {
+  rightSideTeamCall: {
     type: Object as PropType<Call>,
     required: true,
   },
@@ -52,7 +52,8 @@ const getRotationPlayerDataAtPosition = (
   position: number,
   side: SetSide,
 ): Player | undefined => {
-  const call = side === 'left' ? props.localTeamCall : props.visitorTeamCall
+  const call =
+    side === 'left' ? props.leftSideTeamCall : props.rightSideTeamCall
 
   const profileId = call.currentRotation?.players?.find(
     rotationPlayer => rotationPlayer.position === position,
@@ -64,13 +65,13 @@ const getRotationPlayerDataAtPosition = (
   )
 }
 
-const localTeamRotationPlayersData = computed(() =>
+const leftSideTeamRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
     .map(position => getRotationPlayerDataAtPosition(position, 'left'))
     .filter(player => player !== null),
 )
 
-const visitorTeamRotationPlayersData = computed(() =>
+const rightSideTeamRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
     .map(position => getRotationPlayerDataAtPosition(position, 'right'))
     .filter(player => player !== null),
@@ -84,54 +85,54 @@ const visitorTeamRotationPlayersData = computed(() =>
         <div class="side left">
           <GameCourtPosition
             :position="1"
-            :player="localTeamRotationPlayersData[0]"
+            :player="leftSideTeamRotationPlayersData[0]"
             serving
           />
           <GameCourtPosition
             :position="2"
-            :player="localTeamRotationPlayersData[1]"
+            :player="leftSideTeamRotationPlayersData[1]"
           />
           <GameCourtPosition
             :position="3"
-            :player="localTeamRotationPlayersData[2]"
+            :player="leftSideTeamRotationPlayersData[2]"
           />
           <GameCourtPosition
             :position="4"
-            :player="localTeamRotationPlayersData[3]"
+            :player="leftSideTeamRotationPlayersData[3]"
           />
           <GameCourtPosition
             :position="5"
-            :player="localTeamRotationPlayersData[4]"
+            :player="leftSideTeamRotationPlayersData[4]"
           />
           <GameCourtPosition
             :position="6"
-            :player="localTeamRotationPlayersData[5]"
+            :player="leftSideTeamRotationPlayersData[5]"
           />
         </div>
         <div class="side right">
           <GameCourtPosition
             :position="1"
-            :player="visitorTeamRotationPlayersData[0]"
+            :player="rightSideTeamRotationPlayersData[0]"
           />
           <GameCourtPosition
             :position="2"
-            :player="visitorTeamRotationPlayersData[1]"
+            :player="rightSideTeamRotationPlayersData[1]"
           />
           <GameCourtPosition
             :position="3"
-            :player="visitorTeamRotationPlayersData[2]"
+            :player="rightSideTeamRotationPlayersData[2]"
           />
           <GameCourtPosition
             :position="4"
-            :player="visitorTeamRotationPlayersData[3]"
+            :player="rightSideTeamRotationPlayersData[3]"
           />
           <GameCourtPosition
             :position="5"
-            :player="visitorTeamRotationPlayersData[4]"
+            :player="rightSideTeamRotationPlayersData[4]"
           />
           <GameCourtPosition
             :position="6"
-            :player="visitorTeamRotationPlayersData[5]"
+            :player="rightSideTeamRotationPlayersData[5]"
           />
         </div>
       </div>
@@ -141,12 +142,13 @@ const visitorTeamRotationPlayersData = computed(() =>
       <GameSetActions
         v-if="!currentSet.start || !currentSet.firstServeTeamId"
         :currentSet="currentSet"
-        :localTeam="localTeam"
-        :visitorTeam="visitorTeam"
+        :leftSideTeam="leftSideTeam"
+        :rightSideTeam="rightSideTeam"
         @set:start="emit('set:start', $event)"
       />
       <GamePointActions
         v-else
+        :currentSet="currentSet"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         @point:sum="sumPoint"

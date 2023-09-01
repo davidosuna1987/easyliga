@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { TeamType } from '@/domain/team'
+import { Set } from '@/domain/set'
 
 const props = defineProps({
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: true,
+  },
   undoPointButtonDisabled: {
     type: Boolean,
     required: true,
@@ -32,7 +37,9 @@ const undoLastPoint = () => {
         :label="$t('points.sum')"
         outlined
         :disabled="!undoPointButtonDisabled"
-        @click="sumPoint('local')"
+        @click="
+          sumPoint(currentSet.localTeamSide === 'left' ? 'local' : 'visitor')
+        "
       />
       <Button
         class="col-span-4/10"
@@ -49,7 +56,9 @@ const undoLastPoint = () => {
         :label="$t('points.sum')"
         outlined
         :disabled="!undoPointButtonDisabled"
-        @click="sumPoint('visitor')"
+        @click="
+          sumPoint(currentSet.localTeamSide === 'left' ? 'visitor' : 'local')
+        "
       />
     </div>
     <small v-if="!undoPointButtonDisabled" class="countdown inline-block mt-2">
