@@ -95,9 +95,9 @@ const getGameInitialData = async () => {
 const sumPoint = async (type: TeamType) => {
   loadingApi.value = true
 
-  const delay = 10000
-  undoPointButtonDisabled.value = false
-  undoLastPointCountdown.value = delay / 1000
+  // const delay = 10000
+  // undoPointButtonDisabled.value = false
+  // undoLastPointCountdown.value = delay / 1000
 
   createFormPoint(type)
 
@@ -113,17 +113,17 @@ const sumPoint = async (type: TeamType) => {
       await getGameInitialData()
     }
 
-    pointInterval.value = setInterval(() => {
-      if (undoLastPointCountdown.value > 0) {
-        undoLastPointCountdown.value = undoLastPointCountdown.value - 1
-      } else {
-        resetPointInterval()
-      }
-    }, 1000)
+    // pointInterval.value = setInterval(() => {
+    //   if (undoLastPointCountdown.value > 0) {
+    //     undoLastPointCountdown.value = undoLastPointCountdown.value - 1
+    //   } else {
+    //     resetPointInterval()
+    //   }
+    // }, 1000)
 
-    pointTimeout.value = setTimeout(() => {
-      resetPointInterval()
-    }, delay)
+    // pointTimeout.value = setTimeout(() => {
+    //   resetPointInterval()
+    // }, delay)
   }
 }
 

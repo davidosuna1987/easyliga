@@ -8,6 +8,7 @@ import { ApiPlayer, ApiProfile, ApiUser } from '@/types/api/auth'
 import { ApiCall } from '@/types/api/call'
 import { ApiSet } from '@/types/api/set'
 import { GameStatus } from '@/domain/game'
+import { ApiCurrentRotations } from '@/types/api/rotation'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -82,6 +83,7 @@ export type ApiGameInitialDataResponse = {
   data: {
     game: ApiGame
     calls: ApiCall[]
+    current_rotations: ApiCurrentRotations
     league: ApiLeague
     referee: ApiProfile
     local_team: ApiTeam

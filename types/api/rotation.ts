@@ -65,3 +65,9 @@ export type ApiRotationCreatedEventResponse = {
   call: ApiCall
   team: ApiTeam
 }
+
+export type ApiCurrentRotations = {
+  [teamId: string]: {
+    [profileId: string]: number
+  }
+}
