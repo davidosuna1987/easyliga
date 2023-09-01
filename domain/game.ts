@@ -1,5 +1,5 @@
 import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
-import { mapApiPlayersToPlayers } from '@/domain/players'
+import { mapApiPlayersToPlayers } from '@/domain/player'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { Team } from '@/domain/team'

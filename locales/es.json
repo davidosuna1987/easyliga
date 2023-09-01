@@ -387,7 +387,13 @@
   },
   "sets": {
     "set": "Sets | Set | Sets",
-    "set_number": "Set {num}"
+    "set_number": "Set {num}",
+    "start": "Iniciar set",
+    "started": "El set ha sido iniciado correctamente",
+    "select_team_sides": "Establece la posición de los equipos en el campo",
+    "select_left_side_team": "Selecciona el equipo que jugará en el lado izquierdo",
+    "select_right_side_team": "Selecciona el equipo que jugará en el lado derecho",
+    "select_first_serve_team": "Selecciona el equipo que sacará primero"
   },
   "points": {
     "point": "Puntos | Punto | Puntos",

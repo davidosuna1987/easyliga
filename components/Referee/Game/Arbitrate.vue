@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import GameService from '@/services/game'
 import PointService from '@/services/point'
+import SetService from '@/services/set'
 import { GameInitialData, mapApiGameInitialDataToGame } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
@@ -9,12 +10,17 @@ import { ApiRotationCreatedEventResponse } from '@/types/api/rotation'
 import { TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
+import {
+  SetStartRequest,
+  mapSetStartRequestToApiSetStartRequest,
+} from '@/domain/set'
 
 const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
 const gameService = new GameService()
 const pointService = new PointService()
+const setService = new SetService()
 
 const gameInitialData = ref<GameInitialData>()
 const localTeamCall = ref<Call>()
@@ -151,6 +157,25 @@ const createFormPoint = (type?: TeamType) => {
   }
 }
 
+const startSet = async (setStartRequest: SetStartRequest) => {
+  if (!gameInitialData.value?.game?.currentSet?.id) return
+
+  loadingApi.value = true
+
+  const { error } = await setService.start(
+    gameInitialData.value.game.currentSet.id,
+    mapSetStartRequestToApiSetStartRequest(setStartRequest),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors))
+    loadingApi.value = false
+  } else {
+    toast.success(useNuxtApp().$i18n.t('sets.started'))
+    getGameInitialData()
+  }
+}
+
 const listenCallUpdatedEvent = () => {
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
     'CallUpdatedEvent',
@@ -249,6 +274,7 @@ onBeforeUnmount(() => {
       @unlocked:call="getGameInitialData"
       @point:sum="sumPoint"
       @point:undo="undoLastPoint"
+      @set:start="startSet"
     />
   </div>
 </template>

@@ -34,7 +34,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['point:sum', 'point:undo'])
+const emit = defineEmits([
+  'unlocked:call',
+  'point:sum',
+  'point:undo',
+  'set:start',
+])
 
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
@@ -50,11 +55,12 @@ const undoLastPoint = () => {
     <RefereeGameCallSidebar
       :team="localTeam"
       :call="localTeamCall"
-      @unlocked:call="$emit('unlocked:call')"
+      @unlocked:call="emit('unlocked:call')"
     />
     <div class="score-court relative flex flex-col gap-3">
       <GameScore :currentSet="currentSet" />
       <GameCourt
+        :currentSet="currentSet"
         :localTeam="localTeam"
         :visitorTeam="visitorTeam"
         :localTeamCall="localTeamCall"
@@ -63,12 +69,13 @@ const undoLastPoint = () => {
         :undoLastPointCountdown="undoLastPointCountdown"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
+        @set:start="emit('set:start', $event)"
       />
     </div>
     <RefereeGameCallSidebar
       :team="visitorTeam"
       :call="visitorTeamCall"
-      @unlocked:call="$emit('unlocked:call')"
+      @unlocked:call="emit('unlocked:call')"
     />
   </div>
 </template>

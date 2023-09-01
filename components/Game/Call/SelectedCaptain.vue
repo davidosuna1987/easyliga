@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Player } from '@/domain/game'
-import { getFullName } from '@/domain/players'
+import { Player, getFullName } from '@/domain/player'
 import { CallPlayerData } from '@/domain/call'
 
 const props = defineProps({

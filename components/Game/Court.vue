@@ -3,11 +3,15 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
-import { SetSide } from '@/domain/set'
+import { Set, SetSide } from '@/domain/set'
 
 const auth = useAuthStore()
 
 const props = defineProps({
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: true,
+  },
   localTeam: {
     type: Object as PropType<Team>,
     required: true,
@@ -34,7 +38,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['point:sum', 'point:undo'])
+const emit = defineEmits(['point:sum', 'point:undo', 'set:start'])
 
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
@@ -133,13 +137,22 @@ const visitorTeamRotationPlayersData = computed(() =>
       </div>
     </div>
 
-    <GamePointActions
-      v-if="auth.hasRole('referee')"
-      :undoPointButtonDisabled="undoPointButtonDisabled"
-      :undoLastPointCountdown="undoLastPointCountdown"
-      @point:sum="sumPoint"
-      @point:undo="undoLastPoint"
-    />
+    <template v-if="auth.hasRole('referee')">
+      <GameSetActions
+        v-if="!currentSet.start || !currentSet.firstServeTeamId"
+        :currentSet="currentSet"
+        :localTeam="localTeam"
+        :visitorTeam="visitorTeam"
+        @set:start="emit('set:start', $event)"
+      />
+      <GamePointActions
+        v-else
+        :undoPointButtonDisabled="undoPointButtonDisabled"
+        :undoLastPointCountdown="undoLastPointCountdown"
+        @point:sum="sumPoint"
+        @point:undo="undoLastPoint"
+      />
+    </template>
   </div>
 </template>
 

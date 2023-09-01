@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import GameService from '@/services/game'
 import CallService from '@/services/call'
-import { Game, Player, mapApiGameToGame } from '@/domain/game'
+import { Game, mapApiGameToGame } from '@/domain/game'
+import { Player, mapApiPlayersToPlayers } from '@/domain/player'
 import {
   Call,
   mapApiCallToCall,
   mapCallPlayersDataToPlayers,
 } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
-import { mapApiPlayersToPlayers } from '@/domain/players'
 import {
   ApiCallUnlockedEventResponse,
   mapPlayersToApiCallRequestPlayers,

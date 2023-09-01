@@ -40,3 +40,9 @@ export type ApiSetsResponse = {
   }
   errors: null
 }
+
+export type ApiSetStartRequest = {
+  local_team_side: SetSide
+  visitor_team_side: SetSide
+  first_serve_team_id: number
+}

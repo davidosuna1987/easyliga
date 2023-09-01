@@ -1,4 +1,4 @@
-import { ApiSet } from '@/types/api/set'
+import { ApiSet, ApiSetStartRequest } from '@/types/api/set'
 import { Point, mapApiPointToPoint } from '@/domain/point'
 
 export type SetSide = 'left' | 'right'
@@ -24,6 +24,12 @@ export type Set = {
   comments: string | null
 } & SetRelations
 
+export type SetStartRequest = {
+  localTeamSide: SetSide
+  visitorTeamSide: SetSide
+  firstServeTeamId: number
+}
+
 export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   id: apiSet.id,
   gameId: apiSet.game_id,
@@ -46,4 +52,12 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   lastTwoPoints: apiSet.last_two_points
     ? apiSet.last_two_points.map(mapApiPointToPoint)
     : undefined,
+})
+
+export const mapSetStartRequestToApiSetStartRequest = (
+  setStartRequest: SetStartRequest,
+): ApiSetStartRequest => ({
+  local_team_side: setStartRequest.localTeamSide,
+  visitor_team_side: setStartRequest.visitorTeamSide,
+  first_serve_team_id: setStartRequest.firstServeTeamId,
 })

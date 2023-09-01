@@ -131,7 +131,7 @@ watch(selectedLeague, async league => {
     const response = await teamService.fetch({
       where: `division_id:${league?.division_id}`,
     })
-    leagueTeams.value = response.data.value?.data.teams as ApiTeam[]
+    leagueTeams.value = response.data.value?.data.teams ?? []
     loadingTeams.value = false
   }
 })
