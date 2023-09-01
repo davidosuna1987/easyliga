@@ -42,8 +42,9 @@ const switchTeamSides = () => {
   form.value.visitorTeamSide = localTeamSide
 }
 
-const setFirstServeTeam = (firstServeTeam: Team) => {
-  form.value.firstServeTeamId = firstServeTeam.id
+const setFirstServeTeam = () => {
+  if (!firstServeTeam.value) return
+  form.value.firstServeTeamId = firstServeTeam.value?.id
 }
 </script>
 
