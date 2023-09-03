@@ -95,6 +95,7 @@ const getGameInitialData = async () => {
 const sumPoint = async (type: TeamType) => {
   loadingApi.value = true
 
+  // TODO: uncomment this
   // const delay = 10000
   // undoPointButtonDisabled.value = false
   // undoLastPointCountdown.value = delay / 1000
@@ -113,6 +114,7 @@ const sumPoint = async (type: TeamType) => {
       await getGameInitialData()
     }
 
+    // TODO: uncomment this
     // pointInterval.value = setInterval(() => {
     //   if (undoLastPointCountdown.value > 0) {
     //     undoLastPointCountdown.value = undoLastPointCountdown.value - 1
@@ -153,6 +155,7 @@ const resetPointInterval = () => {
 }
 
 const createFormPoint = (type?: TeamType) => {
+  console.log(type)
   if (!gameInitialData.value?.game.currentSet) return
 
   formPoint.value = {
@@ -288,15 +291,19 @@ onBeforeUnmount(() => {
         leftSideTeamCall &&
         rightSideTeamCall &&
         gameInitialData &&
-        gameInitialData.game.currentSet
+        gameInitialData.game.currentSet &&
+        gameInitialData.currentRotations &&
+        servingTeamId
       "
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
+      :currentRotations="gameInitialData.currentRotations"
       :undoPointButtonDisabled="undoPointButtonDisabled"
       :undoLastPointCountdown="undoLastPointCountdown"
+      :servingTeamId="servingTeamId"
       @unlocked:call="getGameInitialData"
       @point:sum="sumPoint"
       @point:undo="undoLastPoint"

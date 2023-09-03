@@ -4,6 +4,7 @@ import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
+import { CurrentRotations } from '@/domain/rotation'
 
 const auth = useAuthStore()
 
@@ -28,6 +29,10 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  currentRotations: {
+    type: Array as PropType<CurrentRotations>,
+    required: true,
+  },
   undoPointButtonDisabled: {
     type: Boolean,
     required: true,
@@ -35,6 +40,10 @@ const props = defineProps({
   undoLastPointCountdown: {
     type: Number,
     default: 0,
+  },
+  servingTeamId: {
+    type: Number,
+    required: true,
   },
 })
 
@@ -55,12 +64,18 @@ const getRotationPlayerDataAtPosition = (
   const call =
     side === 'left' ? props.leftSideTeamCall : props.rightSideTeamCall
 
-  const profileId = call.currentRotation?.players?.find(
-    rotationPlayer => rotationPlayer.position === position,
-  )?.profileId
+  const currentRotation = props.currentRotations[call.teamId]
+
+  const profileId = Number(
+    Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],
+  )
+
+  // const profileId = call.currentRotation?.players?.find(
+  //   rotationPlayer => rotationPlayer.position === position,
+  // )?.profileId
 
   return (
-    call.playersData?.find(player => player.profileId === profileId) ||
+    call.playersData?.find(player => player.profileId === profileId) ??
     undefined
   )
 }
@@ -86,7 +101,7 @@ const rightSideTeamRotationPlayersData = computed(() =>
           <GameCourtPosition
             :position="1"
             :player="leftSideTeamRotationPlayersData[0]"
-            serving
+            :serving="servingTeamId === leftSideTeam.id"
           />
           <GameCourtPosition
             :position="2"
@@ -113,6 +128,7 @@ const rightSideTeamRotationPlayersData = computed(() =>
           <GameCourtPosition
             :position="1"
             :player="rightSideTeamRotationPlayersData[0]"
+            :serving="servingTeamId === rightSideTeam.id"
           />
           <GameCourtPosition
             :position="2"
