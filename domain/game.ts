@@ -3,8 +3,8 @@ import { mapApiPlayersToPlayers } from '@/domain/player'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import {
-  CurrentRotations,
-  mapApiCurrentRotationsToCurrentRotations,
+  CurrentRotation,
+  mapApiCurrentRotationToCurrentRotation,
 } from '@/domain/rotation'
 import { Team } from '@/domain/team'
 
@@ -128,7 +128,8 @@ export type GameInitialData = {
   id: number
   game: Game
   calls: Call[]
-  currentRotations: CurrentRotations
+  localTeamRotation: CurrentRotation
+  visitorTeamRotation: CurrentRotation
   league: League
   localTeam: Team
   visitorTeam: Team
@@ -233,7 +234,8 @@ export const mapApiGameInitialDataToGame = (
   const {
     game,
     calls,
-    current_rotations,
+    local_team_rotation,
+    visitor_team_rotation,
     league,
     referee,
     local_team,
@@ -245,8 +247,11 @@ export const mapApiGameInitialDataToGame = (
     id: game.id,
     game: mapApiGameToGame(game),
     calls: calls.map(mapApiCallToCall),
-    currentRotations:
-      mapApiCurrentRotationsToCurrentRotations(current_rotations),
+    localTeamRotation:
+      mapApiCurrentRotationToCurrentRotation(local_team_rotation),
+    visitorTeamRotation: mapApiCurrentRotationToCurrentRotation(
+      visitor_team_rotation,
+    ),
     league: {
       id: league.id,
       name: league.name,

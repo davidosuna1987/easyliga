@@ -60,10 +60,22 @@ const rightSideTeamCall = computed(() =>
     : localTeamCall.value,
 )
 
+const leftSideTeamRotation = computed(() => {
+  return gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+    ? gameInitialData.value?.localTeamRotation
+    : gameInitialData.value?.visitorTeamRotation
+})
+
+const rightSideTeamRotation = computed(() => {
+  return gameInitialData.value?.game.currentSet?.localTeamSide === 'right'
+    ? gameInitialData.value?.localTeamRotation
+    : gameInitialData.value?.visitorTeamRotation
+})
+
 const servingTeamId = computed(() => {
   return lastPoint.value
     ? lastPoint.value?.winnerTeamId
-    : gameInitialData.value?.game?.currentSet?.firstServeTeamId
+    : gameInitialData.value?.game?.currentSet?.firstServeTeamId ?? undefined
 })
 
 const getGameInitialData = async () => {
@@ -290,15 +302,16 @@ onBeforeUnmount(() => {
         rightSideTeamCall &&
         gameInitialData &&
         gameInitialData.game.currentSet &&
-        gameInitialData.currentRotations &&
-        servingTeamId
+        leftSideTeamRotation &&
+        rightSideTeamRotation
       "
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
-      :currentRotations="gameInitialData.currentRotations"
+      :leftSideTeamRotation="leftSideTeamRotation"
+      :rightSideTeamRotation="rightSideTeamRotation"
       :undoPointButtonDisabled="undoPointButtonDisabled"
       :undoLastPointCountdown="undoLastPointCountdown"
       :servingTeamId="servingTeamId"

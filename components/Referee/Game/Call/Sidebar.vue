@@ -13,6 +13,8 @@ const props = defineProps({
   },
 })
 
+const showMessage = true
+
 const inCourtPlayers = computed(() => {
   const inCourtPlayerIds = props.call.currentRotation?.players.map(
     rotation => rotation.inCourtProfileId,

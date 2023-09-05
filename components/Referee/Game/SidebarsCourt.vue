@@ -2,7 +2,7 @@
 import { Team, TeamType } from '@/domain/team'
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
-import { CurrentRotations } from '@/domain/rotation'
+import { CurrentRotation } from '@/domain/rotation'
 
 const props = defineProps({
   leftSideTeam: {
@@ -25,8 +25,12 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
-  currentRotations: {
-    type: Array as PropType<CurrentRotations>,
+  leftSideTeamRotation: {
+    type: Array as PropType<CurrentRotation>,
+    required: true,
+  },
+  rightSideTeamRotation: {
+    type: Array as PropType<CurrentRotation>,
     required: true,
   },
   undoPointButtonDisabled: {
@@ -39,7 +43,7 @@ const props = defineProps({
   },
   servingTeamId: {
     type: Number,
-    required: true,
+    required: false,
   },
 })
 
@@ -74,7 +78,8 @@ const undoLastPoint = () => {
         :rightSideTeam="rightSideTeam"
         :leftSideTeamCall="leftSideTeamCall"
         :rightSideTeamCall="rightSideTeamCall"
-        :currentRotations="currentRotations"
+        :leftSideTeamRotation="leftSideTeamRotation"
+        :rightSideTeamRotation="rightSideTeamRotation"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         :servingTeamId="servingTeamId"

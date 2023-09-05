@@ -1,5 +1,5 @@
 import {
-  ApiCurrentRotations,
+  ApiCurrentRotation,
   ApiRotation,
   ApiRotationPlayer,
 } from '@/types/api/rotation'
@@ -22,10 +22,8 @@ export type Rotation = {
   players: RotationPlayer[]
 }
 
-export type CurrentRotations = {
-  [teamId: number]: {
-    [profileId: number]: number
-  }
+export type CurrentRotation = {
+  [profileId: number]: number
 }
 
 export const mapRotationPlayerToApiRotationPlayer = (
@@ -67,21 +65,14 @@ export const mapApiRotationToRotation = (
   }
 }
 
-export const mapApiCurrentRotationsToCurrentRotations = (
-  apiCurrentRotations: ApiCurrentRotations,
-): CurrentRotations => {
-  const currentRotation: CurrentRotations = {}
+export const mapApiCurrentRotationToCurrentRotation = (
+  apiCurrentRotation: ApiCurrentRotation,
+): CurrentRotation => {
+  const currentRotation: CurrentRotation = {}
 
-  Object.keys(apiCurrentRotations).forEach(teamId => {
-    const teamRotation = apiCurrentRotations[teamId]
-    const parsedTeamId = parseInt(teamId, 10)
-
-    currentRotation[parsedTeamId] = {}
-
-    Object.keys(teamRotation).forEach(profileId => {
-      const parsedProfileId = parseInt(profileId, 10)
-      currentRotation[parsedTeamId][parsedProfileId] = teamRotation[profileId]
-    })
+  Object.keys(apiCurrentRotation).forEach(profileId => {
+    const parsedProfileId = Number(profileId)
+    currentRotation[parsedProfileId] = apiCurrentRotation[profileId]
   })
 
   return currentRotation

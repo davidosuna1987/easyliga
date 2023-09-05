@@ -4,7 +4,7 @@ import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
-import { CurrentRotations } from '@/domain/rotation'
+import { CurrentRotation } from '@/domain/rotation'
 
 const auth = useAuthStore()
 
@@ -29,8 +29,12 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
-  currentRotations: {
-    type: Array as PropType<CurrentRotations>,
+  leftSideTeamRotation: {
+    type: Array as PropType<CurrentRotation>,
+    required: true,
+  },
+  rightSideTeamRotation: {
+    type: Array as PropType<CurrentRotation>,
     required: true,
   },
   undoPointButtonDisabled: {
@@ -43,7 +47,7 @@ const props = defineProps({
   },
   servingTeamId: {
     type: Number,
-    required: true,
+    required: false,
   },
 })
 
@@ -64,15 +68,12 @@ const getRotationPlayerDataAtPosition = (
   const call =
     side === 'left' ? props.leftSideTeamCall : props.rightSideTeamCall
 
-  const currentRotation = props.currentRotations[call.teamId]
+  const currentRotation =
+    side === 'left' ? props.leftSideTeamRotation : props.rightSideTeamRotation
 
   const profileId = Number(
     Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],
   )
-
-  // const profileId = call.currentRotation?.players?.find(
-  //   rotationPlayer => rotationPlayer.position === position,
-  // )?.profileId
 
   return (
     call.playersData?.find(player => player.profileId === profileId) ??
@@ -156,7 +157,11 @@ const rightSideTeamRotationPlayersData = computed(() =>
 
     <template v-if="auth.hasRole('referee')">
       <GameSetActions
-        v-if="!currentSet.start || !currentSet.firstServeTeamId"
+        v-if="
+          !currentSet.localTeamSide ||
+          !currentSet.visitorTeamSide ||
+          !currentSet.firstServeTeamId
+        "
         :currentSet="currentSet"
         :leftSideTeam="leftSideTeam"
         :rightSideTeam="rightSideTeam"
