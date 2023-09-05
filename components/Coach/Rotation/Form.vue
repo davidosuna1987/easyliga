@@ -6,9 +6,7 @@ import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { ApiRotationStoreRequest } from '@/types/api/rotation'
 import {
-  Rotation,
   RotationPlayer,
-  mapApiRotationPlayerToRotationPlayer,
   mapRotationPlayerToApiRotationPlayer,
 } from '@/domain/rotation'
 
@@ -61,6 +59,8 @@ const getGameSets = async () => {
   })
 
   gameSets.value = data.value?.data.sets.map(mapApiSetToSet) ?? []
+
+  createInitialRotation()
 }
 
 const getCall = async () => {
@@ -102,7 +102,6 @@ watch(currentSetRotation, () => {
 })
 
 onBeforeMount(() => {
-  createInitialRotation()
   getInitialData()
 })
 </script>
@@ -116,7 +115,7 @@ onBeforeMount(() => {
     }}</Message>
 
     <template v-if="call?.locked">
-      <p class="text-center mb-8">
+      <p v-if="!currentSetHasRotation" class="text-center mb-8">
         {{ $t('rotations.assign_howto') }}
       </p>
       <form @submit.prevent="handleSubmit">

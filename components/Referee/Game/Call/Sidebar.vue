@@ -49,12 +49,14 @@ const benchPlayers = computed(() => {
         :key="player.profileId"
         :player="player"
       />
-      <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
-      <RefereeGameCallItem
-        v-for="player in benchPlayers"
-        :key="player.profileId"
-        :player="player"
-      />
+      <template v-if="benchPlayers.length">
+        <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
+        <RefereeGameCallItem
+          v-for="player in benchPlayers"
+          :key="player.profileId"
+          :player="player"
+        />
+      </template>
     </template>
     <template v-else>
       <Heading tag="h6">{{ $t('calls.call') }}</Heading>

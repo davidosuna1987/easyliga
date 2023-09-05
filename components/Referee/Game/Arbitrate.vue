@@ -45,7 +45,7 @@ const leftSideTeam = computed(() => {
 
 const rightSideTeam = computed(() => {
   return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'left'
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'right'
     ? gameInitialData.value?.visitorTeam
     : gameInitialData.value?.localTeam
 })
@@ -71,7 +71,7 @@ const leftSideTeamRotation = computed(() => {
 
 const rightSideTeamRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'left'
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'right'
     ? gameInitialData.value?.visitorTeamRotation
     : gameInitialData.value?.localTeamRotation
 })

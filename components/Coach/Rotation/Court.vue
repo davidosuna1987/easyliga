@@ -58,9 +58,7 @@ const getRotationPlayer = (position: number): CallPlayerData | undefined =>
       players.value.find(rp => rp.position === position)?.profileId,
   )
 
-watch(players.value, () => {
-  emit('update:players', players.value)
-})
+watch(players.value, newVal => emit('update:players', newVal))
 
 watch(
   () => props.rotation,
@@ -159,6 +157,7 @@ watch(
   <DialogBottom
     class="easy-game-call-shirt-number-dialog-component"
     :visible="!!selectedPosition"
+    @hide="selectedPosition = null"
   >
     <template #header>
       <Heading tag="h6">{{ $t('players.select') }}</Heading>
