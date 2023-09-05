@@ -205,7 +205,7 @@ const startSet = async (setStartRequest: SetStartRequest) => {
   )
 
   if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
     toast.success(useNuxtApp().$i18n.t('sets.started'))
