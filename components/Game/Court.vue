@@ -92,6 +92,15 @@ const rightSideTeamRotationPlayersData = computed(() =>
     .map(position => getRotationPlayerDataAtPosition(position, 'right'))
     .filter(player => player !== null),
 )
+
+const setActionsDisabled = computed(() => {
+  return (
+    !props.leftSideTeamCall.currentRotation?.players?.length ||
+    props.leftSideTeamCall.currentRotation?.players?.length < 6 ||
+    !props.rightSideTeamCall.currentRotation?.players?.length ||
+    props.rightSideTeamCall.currentRotation?.players?.length < 6
+  )
+})
 </script>
 
 <template>
@@ -165,6 +174,7 @@ const rightSideTeamRotationPlayersData = computed(() =>
         :currentSet="currentSet"
         :leftSideTeam="leftSideTeam"
         :rightSideTeam="rightSideTeam"
+        :disabled="setActionsDisabled"
         @set:start="emit('set:start', $event)"
       />
       <GamePointActions

@@ -15,11 +15,19 @@ const props = defineProps({
     type: Object as PropType<Team>,
     required: true,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['set:start'])
 
 const showStartSetDialog = ref<boolean>(false)
+
+const actionLabel = computed(() =>
+  useNuxtApp().$i18n.t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
+)
 
 const startSet = (setStartRequest: SetStartRequest) => {
   showStartSetDialog.value = false
@@ -32,8 +40,10 @@ const startSet = (setStartRequest: SetStartRequest) => {
     <div class="actions grid place-content-center">
       <Button
         class="px-12"
-        :label="$t('sets.start')"
+        :label="actionLabel"
         outlined
+        :loading="disabled"
+        :disabled="disabled"
         @click="showStartSetDialog = true"
       />
     </div>
