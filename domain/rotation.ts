@@ -61,7 +61,9 @@ export const mapApiRotationToRotation = (
     setId: apiRotation.set_id,
     number: apiRotation.number,
     locked: apiRotation.locked,
-    players: apiRotation.players.map(mapApiRotationPlayerToRotationPlayer),
+    players: apiRotation.players
+      ? apiRotation.players.map(mapApiRotationPlayerToRotationPlayer)
+      : [],
   }
 }
 

@@ -1,9 +1,11 @@
 import { SetSide } from '@/domain/set'
 import { ApiPoint } from '@/types/api/point'
+import { ApiRotation } from '@/types/api/rotation'
 
 export type ApiSetRelations = {
   last_point?: ApiPoint
   last_two_points?: ApiPoint[]
+  rotations?: ApiRotation[]
 }
 
 export type ApiSet = {

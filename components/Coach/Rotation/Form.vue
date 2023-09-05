@@ -6,7 +6,9 @@ import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { ApiRotationStoreRequest } from '@/types/api/rotation'
 import {
+  Rotation,
   RotationPlayer,
+  mapApiRotationPlayerToRotationPlayer,
   mapRotationPlayerToApiRotationPlayer,
 } from '@/domain/rotation'
 
@@ -26,6 +28,16 @@ const form = ref<ApiRotationStoreRequest>()
 
 const currentSet = computed(() => gameSets.value[gameSets.value.length - 1])
 
+const currentSetRotation = computed(() =>
+  currentSet.value?.rotations?.find(
+    rotation => rotation.callId === call.value?.id,
+  ),
+)
+
+const currentSetHasRotation = computed(() =>
+  currentSetRotation.value ? true : false,
+)
+
 const createInitialRotation = () => {
   if (!call.value || !currentSet.value) return
   form.value = {
@@ -39,13 +51,13 @@ const createInitialRotation = () => {
 const getInitialData = async () => {
   loadingApi.value = true
   await Promise.all([getGameSets(), getCall()])
-  createInitialRotation()
   loadingApi.value = false
 }
 
 const getGameSets = async () => {
   const { data } = await setService.fetch({
     where: `game_id:${route.params.game_id}`,
+    with: 'rotations.players',
   })
 
   gameSets.value = data.value?.data.sets.map(mapApiSetToSet) ?? []
@@ -72,7 +84,7 @@ const handleSubmit = async () => {
   const { data, error } = await rotationService.store(form.value)
 
   if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
     toast.success(useNuxtApp().$i18n.t('rotations.assign_success'))
@@ -82,7 +94,15 @@ const handleSubmit = async () => {
 
 watch(currentSet, () => emit('update:set', currentSet.value))
 
+watch(currentSetRotation, () => {
+  console.log(currentSetRotation.value?.players)
+  if (currentSetRotation.value?.players) {
+    setRotationPlayers(currentSetRotation.value?.players)
+  }
+})
+
 onBeforeMount(() => {
+  createInitialRotation()
   getInitialData()
 })
 </script>
@@ -91,6 +111,10 @@ onBeforeMount(() => {
   <div class="easy-coach-rotation-form-component">
     <Loading v-if="loadingApi" />
 
+    <Message v-if="currentSetHasRotation" :closable="false">{{
+      $t('rotations.created_warning')
+    }}</Message>
+
     <template v-if="call?.locked">
       <p class="text-center mb-8">
         {{ $t('rotations.assign_howto') }}
@@ -98,11 +122,14 @@ onBeforeMount(() => {
       <form @submit.prevent="handleSubmit">
         <CoachRotationCourt
           :call="call"
-          :set="currentSet"
+          :rotation="currentSetRotation"
           @update:players="setRotationPlayers"
         />
 
-        <div class="grid place-content-center mt-8">
+        <div
+          v-if="!currentSetRotation?.players?.length"
+          class="grid place-content-center mt-8"
+        >
           <Button
             type="submit"
             class="easy-coach-rotation-court-component__button"

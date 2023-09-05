@@ -375,6 +375,7 @@
     "lock": "Cerrar rotación",
     "locked_alert": "¿Seguro que quieres cerrar la rotación?",
     "locked_warning": "La rotación está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
+    "created_warning": "La rotación para este set está creada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
     "waiting": "Esperando rotación | Esperando rotaciones",
     "unable_to_set_rotation": "Para asignar la rotación antes debes crear la convocatoria",
     "assign": "Asignar rotación",

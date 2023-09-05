@@ -182,13 +182,10 @@ const submit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
     loadingApi.value = false
-    return
+  } else {
+    toast.success(useNuxtApp().$i18n.t('calls.submitted'))
+    navigateTo(`/coach`)
   }
-
-  toast.success(useNuxtApp().$i18n.t('calls.submitted'))
-  call.value = mapApiCallToCall(data.value.data.call)
-
-  loadingApi.value = false
 }
 
 const listenCallUnlockedEvent = () => {
@@ -244,7 +241,7 @@ onBeforeUnmount(() => {
         <GameCallSelectedCaptain :player="selectedCaptain" class="mb-3" />
         <GameCallSelectedLibero :player="selectedLibero" />
       </div>
-      <div class="grid justify-end">
+      <div v-if="!call?.locked" class="grid justify-end">
         <Button
           class="mt-3"
           type="submit"

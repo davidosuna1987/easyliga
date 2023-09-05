@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Call, CallPlayerData } from '@/domain/call'
 import { RotationPlayer } from '@/domain/rotation'
-import { Set } from '@/domain/set'
+import { Rotation } from '@/domain/rotation'
 
 const props = defineProps({
   call: {
     type: Object as PropType<Call>,
     required: true,
   },
-  set: {
-    type: Object as PropType<Set>,
-    required: true,
+  rotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
   },
 })
 
@@ -27,6 +27,7 @@ const availablePlayers = computed(() =>
 
 const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   if (!selectedPosition.value) return
+  if (props.rotation?.players) return
 
   const existingPlayer = players.value.find(
     rp => rp.position === selectedPosition.value,
@@ -60,12 +61,21 @@ const getRotationPlayer = (position: number): CallPlayerData | undefined =>
 watch(players.value, () => {
   emit('update:players', players.value)
 })
+
+watch(
+  () => props.rotation,
+  () => {
+    if (props.rotation?.players) {
+      players.value = props.rotation.players
+    }
+  },
+)
 </script>
 
 <template>
   <div class="easy-game-court-component easy-coach-rotation-court-component">
     <div class="wrapper">
-      <div class="court">
+      <div class="court" :class="{ 'is-disabled': !!props.rotation?.players }">
         <div class="side left">
           <div class="position-1" @click="selectedPosition = 1">
             <span v-if="getRotationPlayer(1)" class="shirt-number">
@@ -207,6 +217,17 @@ watch(players.value, () => {
 
   &:hover {
     background-color: var(--primary-color-light);
+  }
+}
+
+.court {
+  &.is-disabled {
+    .left {
+      [class^='position-'] {
+        filter: grayscale(100%);
+        pointer-events: none;
+      }
+    }
   }
 }
 </style>

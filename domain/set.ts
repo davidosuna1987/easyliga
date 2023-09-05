@@ -1,11 +1,13 @@
 import { ApiSet, ApiSetStartRequest } from '@/types/api/set'
 import { Point, mapApiPointToPoint } from '@/domain/point'
+import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 
 export type SetSide = 'left' | 'right'
 
 export type SetRelations = {
   lastPoint?: Point
   lastTwoPoints?: Point[]
+  rotations?: Rotation[]
 }
 
 export type Set = {
@@ -51,6 +53,10 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
 
   lastTwoPoints: apiSet.last_two_points
     ? apiSet.last_two_points.map(mapApiPointToPoint)
+    : undefined,
+
+  rotations: apiSet.rotations
+    ? apiSet.rotations.map(mapApiRotationToRotation)
     : undefined,
 })
 
