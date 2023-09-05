@@ -37,15 +37,17 @@ const pointInterval = ref<NodeJS.Timeout>()
 const formPoint = ref<ApiPointStoreRequest>()
 
 const leftSideTeam = computed(() => {
-  return gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+  return !gameInitialData.value?.game.currentSet?.localTeamSide ||
+    gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
     ? gameInitialData.value?.localTeam
     : gameInitialData.value?.visitorTeam
 })
 
 const rightSideTeam = computed(() => {
-  return gameInitialData.value?.game.currentSet?.localTeamSide === 'right'
-    ? gameInitialData.value?.localTeam
-    : gameInitialData.value?.visitorTeam
+  return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'left'
+    ? gameInitialData.value?.visitorTeam
+    : gameInitialData.value?.localTeam
 })
 
 const leftSideTeamCall = computed(() =>
@@ -61,15 +63,17 @@ const rightSideTeamCall = computed(() =>
 )
 
 const leftSideTeamRotation = computed(() => {
-  return gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+  return !gameInitialData.value?.game.currentSet?.localTeamSide ||
+    gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
     ? gameInitialData.value?.localTeamRotation
     : gameInitialData.value?.visitorTeamRotation
 })
 
 const rightSideTeamRotation = computed(() => {
-  return gameInitialData.value?.game.currentSet?.localTeamSide === 'right'
-    ? gameInitialData.value?.localTeamRotation
-    : gameInitialData.value?.visitorTeamRotation
+  return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'left'
+    ? gameInitialData.value?.visitorTeamRotation
+    : gameInitialData.value?.localTeamRotation
 })
 
 const servingTeamId = computed(() => {
