@@ -14,7 +14,9 @@ import {
   SetStartRequest,
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
+import { useAuthStore } from '@/stores/useAuthStore'
 
+const auth = useAuthStore()
 const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
@@ -30,6 +32,8 @@ const undoPointButtonDisabled = ref<boolean>(true)
 const undoLastPointCountdown = ref<number>(0)
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
+
+const disablePointTimeout = ref<boolean>(true)
 
 const pointTimeout = ref<NodeJS.Timeout>()
 const pointInterval = ref<NodeJS.Timeout>()
@@ -111,10 +115,6 @@ const getGameInitialData = async () => {
 const sumPoint = async (type: TeamType) => {
   loadingApi.value = true
 
-  const delay = 10000
-  undoPointButtonDisabled.value = false
-  undoLastPointCountdown.value = delay / 1000
-
   createFormPoint(type)
 
   if (formPoint.value) {
@@ -129,17 +129,23 @@ const sumPoint = async (type: TeamType) => {
       await getGameInitialData()
     }
 
-    pointInterval.value = setInterval(() => {
-      if (undoLastPointCountdown.value > 0) {
-        undoLastPointCountdown.value = undoLastPointCountdown.value - 1
-      } else {
-        resetPointInterval()
-      }
-    }, 1000)
+    if (!disablePointTimeout.value) {
+      const delay = 10000
+      undoPointButtonDisabled.value = false
+      undoLastPointCountdown.value = delay / 1000
 
-    pointTimeout.value = setTimeout(() => {
-      resetPointInterval()
-    }, delay)
+      pointInterval.value = setInterval(() => {
+        if (undoLastPointCountdown.value > 0) {
+          undoLastPointCountdown.value = undoLastPointCountdown.value - 1
+        } else {
+          resetPointInterval()
+        }
+      }, 1000)
+
+      pointTimeout.value = setTimeout(() => {
+        resetPointInterval()
+      }, delay)
+    }
   }
 }
 
@@ -324,6 +330,17 @@ onBeforeUnmount(() => {
       @point:undo="undoLastPoint"
       @set:start="startSet"
     />
+
+    <div v-if="auth.hasRole('staff')" class="flex items-center mt-5">
+      <label for="disablePointTimeout" class="mr-2 cursor-pointer">
+        Deshabilitar tiempo de deshabilitar punto:
+      </label>
+      <Checkbox
+        v-model="disablePointTimeout"
+        binary
+        inputId="disablePointTimeout"
+      />
+    </div>
   </div>
 </template>
 

@@ -13,6 +13,7 @@ import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
 import Message from 'primevue/message'
 import Tooltip from 'primevue/tooltip'
+import Checkbox from 'primevue/checkbox'
 
 export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(PrimeVue, config)
@@ -27,6 +28,7 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('Password', Password)
   nuxtApp.vueApp.component('Toast', Toast)
   nuxtApp.vueApp.component('Message', Message)
+  nuxtApp.vueApp.component('Checkbox', Checkbox)
 
   nuxtApp.vueApp.use(ToastService)
 
