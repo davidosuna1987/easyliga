@@ -175,7 +175,6 @@ const resetPointInterval = () => {
 }
 
 const createFormPoint = (type?: TeamType) => {
-  console.log(type)
   if (!gameInitialData.value?.game.currentSet) return
 
   formPoint.value = {
