@@ -198,6 +198,7 @@
     "status": {
       "warmup": "Calentamiento",
       "playing": "En juego",
+      "resting": "Descanso",
       "finished": "Finalizado"
     },
     "player_change": "Cambios | Cambio | Cambios"

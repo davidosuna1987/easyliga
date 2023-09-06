@@ -161,7 +161,7 @@ export type GameRelations = {
   // points?: Point[] TODO: add points
 }
 
-export type GameStatus = 'warmup' | 'playing' | 'finished'
+export type GameStatus = 'warmup' | 'playing' | 'resting' | 'finished'
 
 export type Game = {
   id: number
