@@ -30,11 +30,11 @@ const props = defineProps({
     required: true,
   },
   leftSideTeamRotation: {
-    type: Array as PropType<CurrentRotation>,
+    type: Object as PropType<CurrentRotation>,
     required: true,
   },
   rightSideTeamRotation: {
-    type: Array as PropType<CurrentRotation>,
+    type: Object as PropType<CurrentRotation>,
     required: true,
   },
   undoPointButtonDisabled: {
