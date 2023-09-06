@@ -37,6 +37,11 @@ const currentSetHasRotation = computed(() =>
 )
 
 const createInitialRotation = () => {
+  console.log(
+    'createInitialRotation',
+    { call: call.value },
+    { currentSet: currentSet.value },
+  )
   if (!call.value || !currentSet.value) return
   form.value = {
     call_id: call.value.id,
@@ -49,6 +54,7 @@ const createInitialRotation = () => {
 const getInitialData = async () => {
   loadingApi.value = true
   await Promise.all([getGameSets(), getCall()])
+  createInitialRotation()
   loadingApi.value = false
 }
 
@@ -59,8 +65,6 @@ const getGameSets = async () => {
   })
 
   gameSets.value = data.value?.data.sets.map(mapApiSetToSet) ?? []
-
-  createInitialRotation()
 }
 
 const getCall = async () => {
@@ -95,7 +99,6 @@ const handleSubmit = async () => {
 watch(currentSet, () => emit('update:set', currentSet.value))
 
 watch(currentSetRotation, () => {
-  console.log(currentSetRotation.value?.players)
   if (currentSetRotation.value?.players) {
     setRotationPlayers(currentSetRotation.value?.players)
   }
