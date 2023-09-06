@@ -37,11 +37,6 @@ const currentSetHasRotation = computed(() =>
 )
 
 const createInitialRotation = () => {
-  console.log(
-    'createInitialRotation',
-    { call: call.value },
-    { currentSet: currentSet.value },
-  )
   if (!call.value || !currentSet.value) return
   form.value = {
     call_id: call.value.id,
