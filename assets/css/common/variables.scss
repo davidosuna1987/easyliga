@@ -5,7 +5,7 @@
   --primary-color-light: #dcf4f2;
   --primary-color-dark: #00695c;
   --primary-color-darkest: #004d40;
-  --background-color: #f4f2ec;
+  // --background-color: #f4f2ec;
   --background-color: #f1f1f1;
   --secondary-color: #cce1f7;
   --secondary-color-light: #f4f9fd;
@@ -84,6 +84,7 @@
   --easy-main-padding-tablet: 4rem;
   --layout-sidebar-width: 350px;
   --court-max-width: 550px;
+  --background-image: url('/images/background.svg');
 }
 
 $min-width-tablet: 768px;
