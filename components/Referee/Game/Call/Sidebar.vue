@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Team } from '@/domain/team'
+import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
 
 const props = defineProps({
@@ -9,6 +10,10 @@ const props = defineProps({
   },
   call: {
     type: Object as PropType<Call>,
+    required: true,
+  },
+  currentSet: {
+    type: Object as PropType<Set>,
     required: true,
   },
 })
@@ -68,6 +73,7 @@ const benchPlayers = computed(() => {
       <div class="call-status-area p-[0.5rem]">
         <RefereeGameCallStatus
           :call="props.call"
+          :currentSet="props.currentSet"
           @unlocked:call="$emit('unlocked:call', true)"
         />
       </div>

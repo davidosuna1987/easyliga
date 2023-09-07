@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CallService from '@/services/call'
 import { Call } from '@/domain/call'
-import { emit } from 'process'
+import { Set } from '@/domain/set'
 
 const toast = useEasyToast()
 const callService = new CallService()
@@ -10,6 +10,10 @@ const emit = defineEmits(['unlocked:call'])
 const props = defineProps({
   call: {
     type: Object as PropType<Call>,
+    required: true,
+  },
+  currentSet: {
+    type: Object as PropType<Set>,
     required: true,
   },
 })
@@ -39,6 +43,7 @@ const unlock = async () => {
         <small>{{ $t('rotations.waiting') }}</small>
       </div>
       <Button
+        v-if="props.currentSet.number === 1"
         class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
         :label="$t('forms.unlock')"
         @click="unlock()"

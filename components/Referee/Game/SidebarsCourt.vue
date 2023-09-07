@@ -91,6 +91,7 @@ const undoLastPoint = () => {
     <RefereeGameCallSidebar
       :team="rightSideTeam"
       :call="rightSideTeamCall"
+      :currentSet="currentSet"
       @unlocked:call="emit('unlocked:call')"
     />
   </div>
