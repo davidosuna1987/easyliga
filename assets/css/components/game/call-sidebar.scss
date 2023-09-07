@@ -1,5 +1,6 @@
 .easy-game-call-sidebar-component {
   // background-color: var(--primary-color-light);
+  position: relative;
   box-shadow: var(--box-shadow-hard);
   padding: var(--app-margin);
   border-radius: var(--border-radius);
@@ -7,4 +8,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  .easy-game-call-status-component {
+    .unlock-button {
+      position: absolute;
+      top: var(--app-margin);
+      right: var(--app-margin);
+    }
+  }
 }

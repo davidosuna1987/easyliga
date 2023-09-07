@@ -39,7 +39,7 @@ const unlock = async () => {
         <small>{{ $t('rotations.waiting') }}</small>
       </div>
       <Button
-        class="text-xs px-[0.5rem] py-[0.25rem]"
+        class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
         :label="$t('forms.unlock')"
         @click="unlock()"
       />
