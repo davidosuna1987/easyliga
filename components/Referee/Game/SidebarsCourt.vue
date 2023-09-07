@@ -2,7 +2,8 @@
 import { Team, TeamType } from '@/domain/team'
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
-import { CurrentRotation } from '@/domain/rotation'
+import { CurrentRotation, Rotation } from '@/domain/rotation'
+import { GameStatus } from '@/domain/game'
 
 const props = defineProps({
   leftSideTeam: {
@@ -25,11 +26,11 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
-  leftSideTeamRotation: {
+  leftSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
-  rightSideTeamRotation: {
+  rightSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
@@ -45,6 +46,14 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  rotations: {
+    type: Array as PropType<Rotation[]>,
+    required: true,
+  },
+  gameStatus: {
+    type: String as PropType<GameStatus>,
+    required: true,
+  },
 })
 
 const emit = defineEmits([
@@ -53,6 +62,18 @@ const emit = defineEmits([
   'point:undo',
   'set:start',
 ])
+
+const leftSideTeamRotation = computed(() =>
+  props.rotations.find(
+    rotation => rotation.callId === props.leftSideTeamCall.id,
+  ),
+)
+
+const rightSideTeamRotation = computed(() =>
+  props.rotations.find(
+    rotation => rotation.callId === props.rightSideTeamCall.id,
+  ),
+)
 
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
@@ -68,6 +89,8 @@ const undoLastPoint = () => {
     <RefereeGameCallSidebar
       :team="leftSideTeam"
       :call="leftSideTeamCall"
+      :rotation="leftSideTeamRotation"
+      :currentSet="currentSet"
       @unlocked:call="emit('unlocked:call')"
     />
     <div class="score-court relative flex flex-col gap-3">
@@ -78,11 +101,13 @@ const undoLastPoint = () => {
         :rightSideTeam="rightSideTeam"
         :leftSideTeamCall="leftSideTeamCall"
         :rightSideTeamCall="rightSideTeamCall"
-        :leftSideTeamRotation="leftSideTeamRotation"
-        :rightSideTeamRotation="rightSideTeamRotation"
+        :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
+        :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         :servingTeamId="servingTeamId"
+        :rotations="rotations"
+        :gameStatus="gameStatus"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"
@@ -91,6 +116,7 @@ const undoLastPoint = () => {
     <RefereeGameCallSidebar
       :team="rightSideTeam"
       :call="rightSideTeamCall"
+      :rotation="rightSideTeamRotation"
       :currentSet="currentSet"
       @unlocked:call="emit('unlocked:call')"
     />

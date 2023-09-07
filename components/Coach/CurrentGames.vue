@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Game } from '@/domain/game'
 import { Call } from '@/domain/call'
+import { Rotation } from '@/domain/rotation'
 
 const props = defineProps({
   games: {
@@ -13,12 +14,18 @@ const props = defineProps({
   },
 })
 
-const callUnlocked = (callIndex: number) =>
+const currentSetRotation = (
+  game: Game,
+  callId: number,
+): Rotation | undefined => {
+  return game.currentSet?.rotations?.find(
+    rotation => rotation.callId === callId,
+  )
+}
+
+const callUnlocked = (callIndex: number): boolean | undefined =>
   !props.calls[callIndex]?.locked ||
   props.calls[callIndex]?.playersData.length < 6
-
-const rotationLocked = (callIndex: number) =>
-  props.calls[callIndex]?.currentRotation?.locked
 </script>
 
 <template>
@@ -38,12 +45,12 @@ const rotationLocked = (callIndex: number) =>
           :locked="!!calls[index]?.locked"
         />
         <CoachButtonRotation
-          v-if="game.status === 'warmup'"
+          v-if="['warmup', 'resting'].includes(game.status)"
           class="action"
           :gameId="game.id"
           :callId="calls[index]?.id"
           :callUnlocked="!!callUnlocked(index)"
-          :locked="!!rotationLocked(index)"
+          :locked="!!currentSetRotation(game, calls[index]?.id)?.locked"
         />
         <CoachButtonPlayerChange
           v-if="game.status === 'playing'"

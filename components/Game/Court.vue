@@ -29,11 +29,11 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
-  leftSideTeamRotation: {
+  leftSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
-  rightSideTeamRotation: {
+  rightSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
@@ -69,7 +69,9 @@ const getRotationPlayerDataAtPosition = (
     side === 'left' ? props.leftSideTeamCall : props.rightSideTeamCall
 
   const currentRotation =
-    side === 'left' ? props.leftSideTeamRotation : props.rightSideTeamRotation
+    side === 'left'
+      ? props.leftSideTeamCurrentRotation
+      : props.rightSideTeamCurrentRotation
 
   const profileId = Number(
     Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],

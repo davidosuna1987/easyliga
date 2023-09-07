@@ -15,6 +15,7 @@ import {
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { mapApiRotationToRotation } from '@/domain/rotation'
 
 const auth = useAuthStore()
 const app = useNuxtApp()
@@ -66,14 +67,14 @@ const rightSideTeamCall = computed(() =>
     : localTeamCall.value,
 )
 
-const leftSideTeamRotation = computed(() => {
+const leftSideTeamCurrentRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.localTeamSide ||
     gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
     ? gameInitialData.value?.localTeamRotation
     : gameInitialData.value?.visitorTeamRotation
 })
 
-const rightSideTeamRotation = computed(() => {
+const rightSideTeamCurrentRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
     gameInitialData.value?.game.currentSet?.visitorTeamSide === 'right'
     ? gameInitialData.value?.visitorTeamRotation
@@ -91,12 +92,12 @@ const getGameInitialData = async () => {
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
     {
-      with: 'currentSet',
+      with: 'currentSet.rotations.players',
     },
   )
 
   if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
     return
   }
@@ -255,11 +256,23 @@ const listenRotationCreatedEvent = () => {
           life: 300000,
         },
       )
-      if (response.team.id === gameInitialData.value?.localTeam?.id) {
-        localTeamCall.value = mapApiCallToCall(response.call)
-      } else {
-        visitorTeamCall.value = mapApiCallToCall(response.call)
+
+      const oldRotation =
+        gameInitialData.value?.game.currentSet?.rotations?.find(
+          rotation => rotation.callId === response.call.id,
+        )
+
+      if (oldRotation) {
+        gameInitialData.value?.game.currentSet?.rotations?.splice(
+          gameInitialData.value?.game.currentSet?.rotations
+            ?.map(rotation => rotation.id)
+            .indexOf(oldRotation.id),
+          1,
+        )
       }
+
+      const newRotation = mapApiRotationToRotation(response.rotation)
+      gameInitialData.value?.game.currentSet?.rotations?.push(newRotation)
     },
   )
 }
@@ -311,19 +324,22 @@ onBeforeUnmount(() => {
         rightSideTeamCall &&
         gameInitialData &&
         gameInitialData.game.currentSet &&
-        leftSideTeamRotation &&
-        rightSideTeamRotation
+        leftSideTeamCurrentRotation &&
+        rightSideTeamCurrentRotation &&
+        gameInitialData.game.currentSet.rotations
       "
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
-      :leftSideTeamRotation="leftSideTeamRotation"
-      :rightSideTeamRotation="rightSideTeamRotation"
+      :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
+      :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
       :undoPointButtonDisabled="undoPointButtonDisabled"
       :undoLastPointCountdown="undoLastPointCountdown"
       :servingTeamId="servingTeamId"
+      :rotations="gameInitialData.game.currentSet.rotations"
+      :gameStatus="gameInitialData.game.status"
       @unlocked:call="getGameInitialData"
       @point:sum="sumPoint"
       @point:undo="undoLastPoint"

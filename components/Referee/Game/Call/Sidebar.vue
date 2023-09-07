@@ -2,6 +2,7 @@
 import { Team } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
+import { Rotation } from '@/domain/rotation'
 
 const props = defineProps({
   team: {
@@ -12,16 +13,18 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  rotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
   currentSet: {
     type: Object as PropType<Set>,
     required: true,
   },
 })
 
-const showMessage = true
-
 const inCourtPlayers = computed(() => {
-  const inCourtPlayerIds = props.call.currentRotation?.players.map(
+  const inCourtPlayerIds = props.rotation?.players.map(
     rotation => rotation.inCourtProfileId,
   )
 
@@ -31,7 +34,7 @@ const inCourtPlayers = computed(() => {
 })
 
 const benchPlayers = computed(() => {
-  const inCourtPlayerIds = props.call.currentRotation?.players.map(
+  const inCourtPlayerIds = props.rotation?.players.map(
     rotation => rotation.inCourtProfileId,
   )
   return props.call.playersData.filter(
@@ -42,12 +45,7 @@ const benchPlayers = computed(() => {
 
 <template>
   <div class="easy-game-call-sidebar-component">
-    <template
-      v-if="
-        props.call.currentRotation &&
-        props.call.currentRotation.players.length === 6
-      "
-    >
+    <template v-if="props.rotation && props.rotation.players.length === 6">
       <Heading tag="h6">{{ $t('rotations.in_court') }}</Heading>
       <RefereeGameCallItem
         v-for="player in inCourtPlayers"

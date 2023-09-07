@@ -29,6 +29,21 @@ const actionLabel = computed(() =>
   useNuxtApp().$i18n.t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
 )
 
+const handleClick = () => {
+  if (props.disabled) return
+
+  if (props.currentSet.number === 1) {
+    showStartSetDialog.value = true
+  } else {
+    const { localTeamSide, visitorTeamSide, firstServeTeamId } =
+      props.currentSet
+
+    if (!localTeamSide || !visitorTeamSide || !firstServeTeamId) return
+
+    startSet({ localTeamSide, visitorTeamSide, firstServeTeamId })
+  }
+}
+
 const startSet = (setStartRequest: SetStartRequest) => {
   showStartSetDialog.value = false
   emit('set:start', setStartRequest)
@@ -44,7 +59,7 @@ const startSet = (setStartRequest: SetStartRequest) => {
         outlined
         :loading="disabled"
         :disabled="disabled"
-        @click="showStartSetDialog = true"
+        @click="handleClick"
       />
     </div>
 

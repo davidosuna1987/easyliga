@@ -21,9 +21,15 @@ const getCurrentGames = async () => {
   if (!auth.user) return
 
   loadingApi.value = true
+
+  const commonParams = {
+    where: `status:!=:finished`,
+    with: `currentSet.rotations.players`,
+  }
+
   const { data } = await gameService.fetch({
     where_has: `localTeam:coach_id:${auth.user.id}`,
-    where: `status:!=:finished`,
+    ...commonParams,
   })
 
   currentGames.value = data.value?.data.games.map(game =>
@@ -37,7 +43,7 @@ const getCurrentGames = async () => {
 
     const { data } = await gameService.fetch({
       where_has: `visitorTeam:coach_id:${auth.user.id}`,
-      where: `status:!=:finished`,
+      ...commonParams,
     })
 
     currentGames.value = data.value?.data.games.map(game =>
@@ -57,7 +63,7 @@ const getCurrentGamesCalls = async () => {
   calls.value = []
 
   currentGames.value?.forEach(async game => {
-    if (game.status === 'warmup') {
+    if (['warmup', 'resting'].includes(game.status)) {
       const { data } = await callService.fetch({
         where: `game_id:${game.id}`,
         with: 'currentRotation.players',

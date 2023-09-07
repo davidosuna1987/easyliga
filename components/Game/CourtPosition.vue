@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Player } from '@/domain/game'
+import { Player } from '@/domain/player'
 
 const props = defineProps({
   position: {
