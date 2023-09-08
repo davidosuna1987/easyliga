@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-icon',
+    '@kevinmarrec/nuxt-pwa',
   ],
   runtimeConfig: {
     // private keys
@@ -24,5 +25,17 @@ export default defineNuxtConfig({
   css: ['@/assets/css/app.scss'],
   build: {
     transpile: ['primevue'],
+  },
+  pwa: {
+    workbox: {
+      enabled: true,
+    },
+    manifest: {
+      name: process.env.APP_NAME,
+      short_name: process.env.APP_NAME,
+      description: process.env.APP_DESCRIPTION,
+      theme_color: '#ffffff',
+      lang: 'es',
+    },
   },
 })
