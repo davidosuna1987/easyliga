@@ -188,13 +188,24 @@ const setActionsDisabled = computed(() => {
         @set:start="emit('set:start', $event)"
       />
       <GamePointActions
-        v-else
+        v-else-if="gameStatus === 'playing'"
         :currentSet="currentSet"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
       />
+      <div
+        v-else-if="gameStatus === 'finished'"
+        class="actions grid place-content-center"
+      >
+        <Button
+          class="px-12"
+          :label="$t('games.status.finished')"
+          outlined
+          disabled
+        />
+      </div>
     </template>
   </div>
 </template>
