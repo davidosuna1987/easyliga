@@ -1,4 +1,9 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({
+  middleware: ['guest'],
+  mainClass: 'no-background',
+})
+</script>
 
 <template>
   <NuxtLayout name="default">
