@@ -81,9 +81,21 @@ const rightSideTeamCurrentRotation = computed(() => {
     : gameInitialData.value?.localTeamRotation
 })
 
+const leftSideTeamSetsWonCount = computed(() =>
+  localTeamCall.value?.teamId === leftSideTeam.value?.id
+    ? gameInitialData.value?.game.localTeamSetsWonCount
+    : gameInitialData.value?.game.visitorTeamSetsWonCount,
+)
+
+const rightSideTeamSetsWonCount = computed(() =>
+  visitorTeamCall.value?.teamId === rightSideTeam.value?.id
+    ? gameInitialData.value?.game.visitorTeamSetsWonCount
+    : gameInitialData.value?.game.localTeamSetsWonCount,
+)
+
 const servingTeamId = computed(() => {
   return lastPoint.value
-    ? lastPoint.value?.winnerTeamId
+    ? lastPoint.value?.winnerTeamId ?? undefined
     : gameInitialData.value?.game?.currentSet?.firstServeTeamId ?? undefined
 })
 
@@ -93,6 +105,7 @@ const getGameInitialData = async () => {
     Number(route.params.game_id),
     {
       with: 'currentSet.rotations.players',
+      with_count: 'localTeamSetsWon,visitorTeamSetsWon',
     },
   )
 
@@ -315,6 +328,8 @@ onBeforeUnmount(() => {
       v-if="leftSideTeam && rightSideTeam"
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
+      :leftSideTeamSetsWonCount="leftSideTeamSetsWonCount"
+      :rightSideTeamSetsWonCount="rightSideTeamSetsWonCount"
     />
     <RefereeGameSidebarsCourt
       v-if="

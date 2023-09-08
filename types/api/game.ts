@@ -27,6 +27,11 @@ export type ApiGameRelations = {
   calls?: ApiCall[]
 }
 
+export type ApiGameRelationsCount = {
+  local_team_sets_won_count?: number
+  visitor_team_sets_won_count?: number
+}
+
 export type ApiGame = {
   id: number
   name: string
@@ -48,7 +53,8 @@ export type ApiGame = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-} & ApiGameRelations
+} & ApiGameRelations &
+  ApiGameRelationsCount
 
 export type ApiGameWithSedes = ApiGame & {
   sedes: ApiSede[]

@@ -161,6 +161,12 @@ export type GameRelations = {
   // points?: Point[] TODO: add points
 }
 
+export type GameRelationsCount = {
+  localTeamSetsWonCount?: number
+  visitorTeamSetsWonCount?: number
+  // points?: Point[] TODO: add points
+}
+
 export type GameStatus = 'warmup' | 'playing' | 'resting' | 'finished'
 
 export type Game = {
@@ -181,52 +187,34 @@ export type Game = {
   end: string | null
   status: GameStatus
   comments: string | null
-} & GameRelations
+} & GameRelations &
+  GameRelationsCount
 
-export const mapApiGameToGame = (apiGame: ApiGame): Game => {
-  const {
-    id,
-    name,
-    league_id,
-    division_id,
-    club_id,
-    sede_id,
-    court_id,
-    referee_id,
-    local_team_id,
-    visitor_team_id,
-    winner_team_id,
-    loser_team_id,
-    date,
-    start,
-    end,
-    status,
-    comments,
-    sets,
-    current_set,
-  } = apiGame
-  return {
-    id,
-    name,
-    leagueId: league_id,
-    divisionId: division_id,
-    clubId: club_id,
-    sedeId: sede_id,
-    courtId: court_id,
-    refereeId: referee_id,
-    localTeamId: local_team_id,
-    visitorTeamId: visitor_team_id,
-    winnerTeamId: winner_team_id,
-    loserTeamId: loser_team_id,
-    date,
-    start,
-    end,
-    status,
-    comments,
-    sets: sets?.map(mapApiSetToSet),
-    currentSet: current_set ? mapApiSetToSet(current_set) : undefined,
-  }
-}
+export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
+  id: apiGame.id,
+  name: apiGame.name,
+  leagueId: apiGame.league_id,
+  divisionId: apiGame.division_id,
+  clubId: apiGame.club_id,
+  sedeId: apiGame.sede_id,
+  courtId: apiGame.court_id,
+  refereeId: apiGame.referee_id,
+  localTeamId: apiGame.local_team_id,
+  visitorTeamId: apiGame.visitor_team_id,
+  winnerTeamId: apiGame.winner_team_id,
+  loserTeamId: apiGame.loser_team_id,
+  date: apiGame.date,
+  start: apiGame.start,
+  end: apiGame.end,
+  status: apiGame.status,
+  comments: apiGame.comments,
+  sets: apiGame.sets?.map(mapApiSetToSet),
+  currentSet: apiGame.current_set
+    ? mapApiSetToSet(apiGame.current_set)
+    : undefined,
+  localTeamSetsWonCount: apiGame.local_team_sets_won_count,
+  visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count,
+})
 
 export const mapApiGameInitialDataToGame = (
   apiGameInitialData: ApiGameInitialDataResponse,
