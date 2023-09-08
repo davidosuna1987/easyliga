@@ -7,21 +7,27 @@
   margin-inline: auto;
   margin-bottom: var(--footer-height);
   display: grid;
-  background-color: white;
   border-radius: var(--border-radius);
-}
 
-.easy-container {
-  @extend %container;
-  height: 100%;
-  padding: var(--easy-main-padding);
-  background: white;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-}
-
-@media (min-width: $min-width-tablet) {
   .easy-container {
-    padding: var(--easy-main-padding-tablet);
+    @extend %container;
+    height: 100%;
+    padding: var(--easy-main-padding);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+
+  &.no-background {
+    .easy-container {
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+
+  @media (min-width: $min-width-tablet) {
+    .easy-container {
+      padding: var(--easy-main-padding-tablet);
+    }
   }
 }

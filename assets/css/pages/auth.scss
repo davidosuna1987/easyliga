@@ -2,10 +2,20 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 10vh;
+  align-items: center;
+  margin-top: 10vh;
   width: 100%;
-  max-width: 450px;
-  margin: 0 auto;
+  max-width: 650px;
+  margin: 0 auto 0;
+  box-shadow: var(--box-shadow);
+  padding: 4rem 2rem 7rem;
+  background: white;
+  border-radius: var(--border-radius);
+
+  .easy-form-component {
+    width: 100%;
+    max-width: 450px;
+  }
 
   .p-inputtext {
     width: 100%;
