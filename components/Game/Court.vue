@@ -4,7 +4,8 @@ import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
-import { CurrentRotation } from '@/domain/rotation'
+import { CurrentRotation, Rotation } from '@/domain/rotation'
+import { GameStatus } from '@/domain/game'
 
 const auth = useAuthStore()
 
@@ -49,6 +50,14 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  rotations: {
+    type: Array as PropType<Rotation[]>,
+    required: true,
+  },
+  gameStatus: {
+    type: String as PropType<GameStatus>,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['point:sum', 'point:undo', 'set:start'])
@@ -83,13 +92,13 @@ const getRotationPlayerDataAtPosition = (
   )
 }
 
-const leftSideTeamRotationPlayersData = computed(() =>
+const leftSideTeamCurrentRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
     .map(position => getRotationPlayerDataAtPosition(position, 'left'))
     .filter(player => player !== null),
 )
 
-const rightSideTeamRotationPlayersData = computed(() =>
+const rightSideTeamCurrentRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
     .map(position => getRotationPlayerDataAtPosition(position, 'right'))
     .filter(player => player !== null),
@@ -97,10 +106,8 @@ const rightSideTeamRotationPlayersData = computed(() =>
 
 const setActionsDisabled = computed(() => {
   return (
-    !props.leftSideTeamCall.currentRotation?.players?.length ||
-    props.leftSideTeamCall.currentRotation?.players?.length < 6 ||
-    !props.rightSideTeamCall.currentRotation?.players?.length ||
-    props.rightSideTeamCall.currentRotation?.players?.length < 6
+    props.rotations?.length !== 2 ||
+    props.rotations?.some(rotation => rotation.players.length < 6)
   )
 })
 </script>
@@ -112,55 +119,55 @@ const setActionsDisabled = computed(() => {
         <div class="side left">
           <GameCourtPosition
             :position="1"
-            :player="leftSideTeamRotationPlayersData[0]"
+            :player="leftSideTeamCurrentRotationPlayersData[0]"
             :serving="servingTeamId === leftSideTeam.id"
           />
           <GameCourtPosition
             :position="2"
-            :player="leftSideTeamRotationPlayersData[1]"
+            :player="leftSideTeamCurrentRotationPlayersData[1]"
           />
           <GameCourtPosition
             :position="3"
-            :player="leftSideTeamRotationPlayersData[2]"
+            :player="leftSideTeamCurrentRotationPlayersData[2]"
           />
           <GameCourtPosition
             :position="4"
-            :player="leftSideTeamRotationPlayersData[3]"
+            :player="leftSideTeamCurrentRotationPlayersData[3]"
           />
           <GameCourtPosition
             :position="5"
-            :player="leftSideTeamRotationPlayersData[4]"
+            :player="leftSideTeamCurrentRotationPlayersData[4]"
           />
           <GameCourtPosition
             :position="6"
-            :player="leftSideTeamRotationPlayersData[5]"
+            :player="leftSideTeamCurrentRotationPlayersData[5]"
           />
         </div>
         <div class="side right">
           <GameCourtPosition
             :position="1"
-            :player="rightSideTeamRotationPlayersData[0]"
+            :player="rightSideTeamCurrentRotationPlayersData[0]"
             :serving="servingTeamId === rightSideTeam.id"
           />
           <GameCourtPosition
             :position="2"
-            :player="rightSideTeamRotationPlayersData[1]"
+            :player="rightSideTeamCurrentRotationPlayersData[1]"
           />
           <GameCourtPosition
             :position="3"
-            :player="rightSideTeamRotationPlayersData[2]"
+            :player="rightSideTeamCurrentRotationPlayersData[2]"
           />
           <GameCourtPosition
             :position="4"
-            :player="rightSideTeamRotationPlayersData[3]"
+            :player="rightSideTeamCurrentRotationPlayersData[3]"
           />
           <GameCourtPosition
             :position="5"
-            :player="rightSideTeamRotationPlayersData[4]"
+            :player="rightSideTeamCurrentRotationPlayersData[4]"
           />
           <GameCourtPosition
             :position="6"
-            :player="rightSideTeamRotationPlayersData[5]"
+            :player="rightSideTeamCurrentRotationPlayersData[5]"
           />
         </div>
       </div>
@@ -171,7 +178,8 @@ const setActionsDisabled = computed(() => {
         v-if="
           !currentSet.localTeamSide ||
           !currentSet.visitorTeamSide ||
-          !currentSet.firstServeTeamId
+          !currentSet.firstServeTeamId ||
+          ['warmup', 'resting'].includes(gameStatus)
         "
         :currentSet="currentSet"
         :leftSideTeam="leftSideTeam"
