@@ -1,5 +1,5 @@
 <template>
-  <div class="default-layout" :class="$route.meta.layoutClass">
+  <div class="mini-layout" :class="$route.meta.layoutClass">
     <NavbarApp />
 
     <main class="easy-main" :class="$route.meta.mainClass">

@@ -8,11 +8,14 @@ const toggleClass = ref<string>('closed')
 </script>
 
 <template>
-  <div class="sidebar-left-layout" :class="[`sidebar-${toggleClass}`]">
+  <div
+    class="sidebar-left-layout"
+    :class="[`sidebar-${toggleClass}`, $route.meta.layoutClass]"
+  >
     <NavbarAuth v-if="authuser" />
     <NavbarGuest v-else />
 
-    <main class="easy-main">
+    <main class="easy-main" :class="$route.meta.mainClass">
       <aside class="easy-sidebar easy-sidebar-left">
         <a
           role="button"
@@ -32,7 +35,8 @@ const toggleClass = ref<string>('closed')
         </a>
         <slot name="sidebar" />
       </aside>
-      <section class="easy-container">
+
+      <section class="easy-container" :class="$route.meta.containerClass">
         <slot />
       </section>
     </main>

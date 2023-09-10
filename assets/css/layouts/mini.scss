@@ -1,0 +1,12 @@
+.mini-layout {
+  .easy-main {
+    max-width: 650px;
+    min-height: fit-content;
+    margin-top: 15vh;
+  }
+
+  .easy-container {
+    padding: var(--easy-main-padding-tablet);
+    padding-bottom: calc(var(--easy-main-padding-tablet) + 3rem);
+  }
+}

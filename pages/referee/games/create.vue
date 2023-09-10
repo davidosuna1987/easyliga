@@ -32,9 +32,3 @@ const setGame = (data: GameStorePreviewData) => {
     </div>
   </NuxtLayout>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'RefereeGamesCreatePage',
-}
-</script>
