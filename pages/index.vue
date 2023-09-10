@@ -1,5 +1,9 @@
+<script setup lang="ts">
+onBeforeMount(() => navigateTo('/login'))
+</script>
+
 <template>
-  <NuxtLayout name="default">
+  <!-- <NuxtLayout name="default">
     <div class="easy-index-page">
       <h1>Index page</h1>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, eaque.
@@ -217,11 +221,5 @@
       mollitia dolorum, hic nesciunt velit! Aperiam, doloribus voluptas. Sit
       impedit aperiam cum veniam, libero vel sint.
     </div>
-  </NuxtLayout>
+  </NuxtLayout> -->
 </template>
-
-<script lang="ts">
-export default {
-  name: 'IndexPage',
-}
-</script>
