@@ -1,12 +1,44 @@
 .mini-layout {
+  position: relative;
+
+  // Used to set the footer visible
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(
+      100% + var(--extra-mini-layout-margin) * 2 - var(--app-margin) - 30px
+    );
+  }
+
   .easy-main {
     max-width: 650px;
     min-height: fit-content;
-    margin-top: 15vh;
+    margin-top: calc(
+      var(--container-margin-top) + var(--extra-mini-layout-margin)
+    );
+    margin-bottom: calc(var(--footer-height) - var(--app-margin));
   }
 
   .easy-container {
     padding: var(--easy-main-padding-tablet);
     padding-bottom: calc(var(--easy-main-padding-tablet) + 3rem);
+  }
+
+  @media (min-width: $min-width-tablet) {
+    &:before {
+      height: calc(
+        100% + var(--extra-mini-layout-margin) * 2 - var(--app-margin)
+      );
+    }
+
+    .easy-main {
+      margin-bottom: calc(
+        var(--footer-height) - var(--app-margin) +
+          var(--extra-mini-layout-margin)
+      );
+    }
   }
 }
