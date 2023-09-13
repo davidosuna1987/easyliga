@@ -4,10 +4,10 @@ export default [
     to: '/referee',
   },
   {
-    label: 'navbar.games.label',
+    label: 'navbar.referee.games.label',
     items: [
       {
-        label: 'navbar.games.create',
+        label: 'navbar.referee.games.create',
         to: '/referee/games/create',
       },
     ],
