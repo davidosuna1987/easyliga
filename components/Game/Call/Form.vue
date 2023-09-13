@@ -16,6 +16,8 @@ import {
 
 const route = useRoute()
 const toast = useEasyToast()
+const { t } = useI18n()
+
 const gameService = new GameService()
 const callService = new CallService()
 
@@ -42,7 +44,7 @@ const selectedLibero = computed(() =>
 )
 
 const showGameLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(t('calls.locked_warning'))
 }
 
 const removeSelectedPlayer = (player: Player) => {
@@ -183,7 +185,7 @@ const submit = async () => {
     errors.value = error.value?.data?.errors
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('calls.submitted'))
+    toast.success(t('calls.submitted'))
     navigateTo(`/coach`)
   }
 }
@@ -192,7 +194,7 @@ const listenCallUnlockedEvent = () => {
   window.Echo.channel(
     `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
   ).listen('CallUnlockedEvent', (response: ApiCallUnlockedEventResponse) => {
-    toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
+    toast.info(t('events.call_unlocked'))
     getTeamPlayers()
   })
 }

@@ -21,6 +21,8 @@ const auth = useAuthStore()
 const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
+const { t } = useI18n()
+
 const gameService = new GameService()
 const pointService = new PointService()
 const setService = new SetService()
@@ -139,7 +141,7 @@ const sumPoint = async (type: TeamType) => {
       loadingApi.value = false
       return
     } else {
-      toast.success(useNuxtApp().$i18n.t('points.added'))
+      toast.success(t('points.added'))
       await getGameInitialData()
     }
 
@@ -174,7 +176,7 @@ const undoLastPoint = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('points.deleted'))
+    toast.success(t('points.deleted'))
     resetPointInterval()
     getGameInitialData()
   }
@@ -231,7 +233,7 @@ const startSet = async (setStartRequest: SetStartRequest) => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('sets.started'))
+    toast.success(t('sets.started'))
     getGameInitialData()
   }
 }

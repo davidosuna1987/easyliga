@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const toast = useEasyToast()
+const { t } = useI18n()
 
 const props = defineProps({
   gameId: {
@@ -20,12 +21,12 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('games.player_change', 2),
+    default: () => t('games.player_change', 2),
   },
 })
 
 const showCallLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(t('calls.locked_warning'))
 }
 </script>
 

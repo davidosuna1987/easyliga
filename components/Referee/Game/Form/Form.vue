@@ -15,9 +15,12 @@ import { ApiGender } from '@/types/api/gender'
 import { ApiCourt } from 'types/api/court'
 import { GameStorePreviewData } from '@/types/game'
 
+const emit = defineEmits(['changed'])
+
 const auth = useAuthStore()
 const toast = useEasyToast()
-const emit = defineEmits(['changed'])
+const { t } = useI18n()
+
 const teamService = new TeamService()
 const federationService = new FederationService()
 const sedeService = new SedeService()
@@ -94,7 +97,7 @@ const submit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
-    toast.success(useNuxtApp().$i18n.t('games.created'))
+    toast.success(t('games.created'))
     navigateTo(`/referee/games/arbitrate/${data.value?.data.game.id}`)
   }
 }

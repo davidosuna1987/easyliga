@@ -11,6 +11,7 @@ const auth = useAuthStore()
 const gameService = new GameService()
 const callService = new CallService()
 const toast = useEasyToast()
+const { t } = useI18n()
 
 const currentGames = ref<Game[]>()
 const calls = ref<Call[]>([])
@@ -87,7 +88,7 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
     'CallUnlockedEvent',
     (response: ApiCallUnlockedEventResponse) => {
-      toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
+      toast.info(t('events.call_unlocked'))
       getCurrentGamesCalls()
     },
   )
