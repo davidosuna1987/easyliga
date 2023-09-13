@@ -28,3 +28,39 @@ pre {
 a {
   color: var(--link-color);
 }
+
+.bg-img {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-primary,
+.background-primary {
+  background-color: var(--primary-color);
+}
+
+.bg-danger,
+.background-danger {
+  background-color: var(--danger-color);
+}
+
+.bg-success,
+.background-success {
+  background-color: var(--primary-color);
+}
+
+.color-primary,
+.text-primary {
+  color: var(--primary-color);
+}
+
+.color-danger,
+.text-danger {
+  color: var(--danger-color);
+}
+
+.color-success,
+.text-success {
+  color: var(--primary-color);
+}
