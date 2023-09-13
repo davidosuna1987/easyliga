@@ -1,0 +1,42 @@
+import { ApiFreshData, ApiUser } from '@/types/api/auth'
+import { ApiAddress, ApiAddressUpdateRequest } from '@/types/api/address'
+
+export type ProfileRelations = {
+  user?: ApiUser
+  address?: ApiAddress
+}
+
+export type ApiProfileGender = 'male' | 'female' | 'other'
+
+export type ApiProfile = {
+  id: number
+  user_id: number
+  address_id: number
+  primary: boolean
+  first_name: string
+  last_name: string
+  birth_date: string | null
+  gender: ApiProfileGender | null
+  avatar: string | null
+  phone: string | null
+  email: string
+  created_at: string | null
+  updated_at: string | null
+  deleted_at: string | null
+} & ProfileRelations
+
+export type ApiProfileResponse = {
+  success: boolean
+  data: ApiFreshData
+  errors: null
+}
+
+export type ApiProfileUpdateRequest = {
+  email: string | null
+  first_name: string
+  last_name: string
+  birth_date: string | null
+  gender: ApiProfileGender | null
+  avatar: File | null
+  phone: string | null
+} & ApiAddressUpdateRequest

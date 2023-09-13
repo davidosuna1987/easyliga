@@ -1,23 +1,9 @@
+import { ApiProfile } from '@/types/api/profile'
+
 export type ApiUser = {
   id: number
   email: string
   email_verified_at: string | null
-  created_at: string | null
-  updated_at: string | null
-  deleted_at: string | null
-}
-
-export type ApiProfile = {
-  id: number
-  user_id: number
-  address_id: number
-  primary: boolean
-  first_name: string
-  last_name: string | null
-  birthday: string | null
-  gender: string | null
-  avatar: string | null
-  phone: string | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
@@ -70,15 +56,20 @@ export type AuthuserResponse = {
   errors: null
 }
 
-export type LoginResponse = {
+export type ApiFreshData = {
+  user: ApiUser
+  profile: ApiProfile
+  profiles: ApiProfile[]
+  roles: Role[]
+}
+
+export type ApiLoginData = ApiFreshData & {
+  token: string
+}
+
+export type ApiLoginResponse = {
   success: boolean
-  data: {
-    user: ApiUser
-    profile: ApiProfile
-    profiles: ApiProfile[]
-    roles: Role[]
-    token: string
-  }
+  data: ApiLoginData
   errors: null
 }
 

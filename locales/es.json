@@ -9,6 +9,7 @@
     "password": "Contraseña",
     "password_confirm": "Confirmar contraseña",
     "submit": "Enviar",
+    "personal_data": "Datos personales",
     "name": "Nombre",
     "surnames": "Apellidos",
     "page_not_found": "Página no encontrada",
@@ -407,6 +408,17 @@
     "undo": "Deshacer punto",
     "deleted": "El punto ha sido eliminado correctamente",
     "undo_countdown": "Tiempo restante para deshacer el último punto: {seconds} segundos"
+  },
+  "addresses": {
+    "address": "Direcciones | Dirección | Direcciones",
+    "company": "Nombre o razón social",
+    "line1": "Dirección",
+    "line2": "Puerta, apartamento, local...",
+    "city": "Ciudad",
+    "state": "Provincia",
+    "country": "País",
+    "postal_code": "Código postal",
+    "postal": "CP"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

@@ -109,8 +109,8 @@ onBeforeUnmount(() => {
   <div class="easy-coach-panel-component flex flex-col">
     <Heading class="mb-5" position="center">
       {{
-        auth.profile?.first_name
-          ? $t('coaches.welcome', { name: auth.profile.first_name })
+        auth.profile?.firstName
+          ? $t('coaches.welcome', { name: auth.profile.firstName })
           : $t('coaches.welcome_no_name')
       }}
     </Heading>

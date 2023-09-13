@@ -4,23 +4,27 @@ import {
   AuthuserResponse,
   ForgotData,
   LoginData,
-  LoginResponse,
+  ApiLoginResponse,
   ApiMessageResponse,
-  ApiProfile,
   RegisterData,
   ResetData,
   ApiUser,
   VerifyData,
+  ApiFreshData,
+  ApiLoginData,
 } from '@/types/api/auth'
+import { Profile } from '@/domain/profile'
+import { mapApiProfileToProfile } from '@/domain/profile'
 
 export const useAuthStore = defineStore('auth', () => {
+  const app = useNuxtApp()
   const easyStorage = useEasyStorage()
 
   const STAFF_ROLES = ['admin', 'staff']
 
   const user = ref<ApiUser | null>(null)
-  const profile = ref<ApiProfile | null>(null)
-  const profiles = ref<ApiProfile[]>([])
+  const profile = ref<Profile | null>(null)
+  const profiles = ref<Profile[]>([])
   const roles = ref<string[]>([])
   const token = ref<string | null>(null)
   const isLoggedIn = computed(() => !!user.value)
@@ -31,29 +35,14 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   const login = async (loginData: LoginData) => {
-    const response = await useApi<LoginResponse>('auth/login', {
+    const response = await useApi<ApiLoginResponse>('auth/login', {
       method: 'POST',
       body: loginData,
     })
 
-    if (response.data.value?.data?.user) {
-      user.value = response.data.value?.data.user
-    }
-
-    if (response.data.value?.data?.profile) {
-      profile.value = response.data.value?.data.profile
-    }
-
-    if (response.data.value?.data?.profiles) {
-      profiles.value = response.data.value?.data.profiles
-    }
-
-    if (response.data.value?.data?.roles) {
-      roles.value = response.data.value?.data.roles
-    }
-
-    if (response.data.value?.data?.token) {
-      token.value = response.data.value?.data.token
+    if (response.data?.value?.data) {
+      refreshData(response.data.value.data)
+      refreshToken(response.data.value.data)
     }
 
     return response
@@ -102,6 +91,15 @@ export const useAuthStore = defineStore('auth', () => {
 
     return response
   }
+
+  const refreshData = (data: ApiFreshData) => {
+    user.value = data.user
+    profile.value = mapApiProfileToProfile(data.profile)
+    profiles.value = data.profiles.map(mapApiProfileToProfile)
+    roles.value = data.roles
+  }
+
+  const refreshToken = (data: ApiLoginData) => (token.value = data.token)
 
   const isAdmin = () => roles.value.includes('admin')
 
@@ -168,6 +166,8 @@ export const useAuthStore = defineStore('auth', () => {
     verify,
     forgot,
     reset,
+    refreshData,
+    refreshToken,
     getAuthUser,
     isAdmin,
     isStaff,

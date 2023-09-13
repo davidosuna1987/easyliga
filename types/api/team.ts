@@ -1,9 +1,10 @@
 import { ApiClub } from '@/types/api/club'
 import { ApiSede } from '@/types/api/sede'
-import { ApiPlayer, ApiProfile } from '@/types/api/auth'
+import { ApiPlayer } from '@/types/api/auth'
 import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
 import { ApiGender } from '@/types/api/gender'
+import { ApiProfile } from '@/types/api/profile'
 
 export type ApiTeamRelations = {
   club?: ApiClub

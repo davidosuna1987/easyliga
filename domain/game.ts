@@ -2,20 +2,13 @@ import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
 import { mapApiPlayersToPlayers } from '@/domain/player'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
+import { Address } from '@/domain/address'
 import {
   CurrentRotation,
   mapApiCurrentRotationToCurrentRotation,
 } from '@/domain/rotation'
 import { Team } from '@/domain/team'
-
-export type Address = {
-  line1: string
-  line2?: string
-  city: string
-  state: string
-  country: string
-  postalCode: string
-}
+import { Profile } from '@/domain/profile'
 
 export type Responsible = {
   id: number
@@ -106,23 +99,6 @@ export type User = {
   id: number
   email: string
 }
-
-export type ProfileRelations = {
-  user?: User
-  address?: Address
-}
-
-export type Profile = {
-  id: number
-  primary?: boolean
-  firstName: string
-  lastName?: string
-  birthday?: string
-  gender?: string
-  avatar?: string
-  email?: string
-  phone?: string
-} & ProfileRelations
 
 export type GameInitialData = {
   id: number
@@ -247,6 +223,7 @@ export const mapApiGameInitialDataToGame = (
     },
     referee: {
       id: referee.id,
+      userId: referee.user_id,
       firstName: referee.first_name,
       lastName: referee.last_name ?? undefined,
       avatar: referee.avatar ?? undefined,

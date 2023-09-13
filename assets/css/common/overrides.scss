@@ -68,3 +68,11 @@ a:-webkit-any-link {
     transition: none !important;
   }
 }
+
+.p-datepicker {
+  &:not(.p-datepicker-inline) {
+    width: 90%;
+    min-width: auto;
+    max-width: 400px;
+  }
+}

@@ -4,11 +4,12 @@ import { ApiDivision } from '@/types/api/division'
 import { ApiClub } from '@/types/api/club'
 import { ApiCourt } from '@/types/api/court'
 import { ApiTeam } from '@/types/api/team'
-import { ApiPlayer, ApiProfile, ApiUser } from '@/types/api/auth'
+import { ApiPlayer, ApiUser } from '@/types/api/auth'
 import { ApiCall } from '@/types/api/call'
 import { ApiSet } from '@/types/api/set'
 import { GameStatus } from '@/domain/game'
 import { ApiCurrentRotation } from '@/types/api/rotation'
+import { ApiProfile } from '@/types/api/profile'
 
 export type ApiGameRelations = {
   league?: ApiLeague

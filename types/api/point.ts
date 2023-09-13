@@ -1,4 +1,4 @@
-import { ApiProfile } from '@/types/api/auth'
+import { ApiProfile } from '@/types/api/profile'
 import { ApiGame } from '@/types/api/game'
 import { ApiSet } from '@/types/api/set'
 import { ApiTeam } from '@/types/api/team'
