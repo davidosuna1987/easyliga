@@ -4,7 +4,7 @@
 
 <template>
   <NuxtLayout name="default">
-    <!-- <div class="easy-index-page">
+    <div class="easy-index-page">
       <h1>Index page</h1>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, eaque.
       Molestias, adipisci quo nostrum corporis reiciendis aut doloribus
@@ -220,6 +220,6 @@
       deleniti cumque quisquam nobis porro delectus quis minus consectetur dicta
       mollitia dolorum, hic nesciunt velit! Aperiam, doloribus voluptas. Sit
       impedit aperiam cum veniam, libero vel sint.
-    </div> -->
+    </div>
   </NuxtLayout>
 </template>
