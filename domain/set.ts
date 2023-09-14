@@ -2,7 +2,10 @@ import { ApiSet, ApiSetStartRequest } from '@/types/api/set'
 import { Point, mapApiPointToPoint } from '@/domain/point'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 
-export type SetSide = 'left' | 'right'
+export enum SetSide {
+  LEFT = 'left',
+  RIGHT = 'right',
+}
 
 export type SetRelations = {
   lastPoint?: Point
@@ -14,16 +17,16 @@ export type Set = {
   id: number
   gameId: number
   number: number
-  localTeamSide: SetSide | null
-  visitorTeamSide: SetSide | null
-  firstServeTeamId: number | null
-  localTeamScore: number | null
-  visitorTeamScore: number | null
-  winnerTeamId: number | null
-  loserTeamId: number | null
-  start: string | null
-  end: string | null
-  comments: string | null
+  localTeamSide?: SetSide
+  visitorTeamSide?: SetSide
+  firstServeTeamId?: number
+  localTeamScore?: number
+  visitorTeamScore?: number
+  winnerTeamId?: number
+  loserTeamId?: number
+  start?: string
+  end?: string
+  comments?: string
 } & SetRelations
 
 export type SetStartRequest = {
@@ -36,16 +39,16 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   id: apiSet.id,
   gameId: apiSet.game_id,
   number: apiSet.number,
-  localTeamSide: apiSet.local_team_side,
-  visitorTeamSide: apiSet.visitor_team_side,
-  firstServeTeamId: apiSet.first_serve_team_id,
-  localTeamScore: apiSet.local_team_score,
-  visitorTeamScore: apiSet.visitor_team_score,
-  winnerTeamId: apiSet.winner_team_id,
-  loserTeamId: apiSet.loser_team_id,
-  start: apiSet.start,
-  end: apiSet.end,
-  comments: apiSet.comments,
+  localTeamSide: apiSet.local_team_side ?? undefined,
+  visitorTeamSide: apiSet.visitor_team_side ?? undefined,
+  firstServeTeamId: apiSet.first_serve_team_id ?? undefined,
+  localTeamScore: apiSet.local_team_score ?? undefined,
+  visitorTeamScore: apiSet.visitor_team_score ?? undefined,
+  winnerTeamId: apiSet.winner_team_id ?? undefined,
+  loserTeamId: apiSet.loser_team_id ?? undefined,
+  start: apiSet.start ?? undefined,
+  end: apiSet.end ?? undefined,
+  comments: apiSet.comments ?? undefined,
 
   lastPoint: apiSet.last_point
     ? mapApiPointToPoint(apiSet.last_point)

@@ -1,18 +1,37 @@
 import { Player, mapApiPlayersToPlayers } from '@/domain/player'
 import { ApiTeam } from '@/types/api/team'
+import {
+  Category,
+  Gender,
+  mapApiCategoryToCategory,
+  mapApiGenderToGender,
+} from '@/domain/game'
 
-export type TeamType = 'local' | 'visitor'
+export enum TeamType {
+  LOCAL = 'local',
+  VISITOR = 'visitor',
+}
+
+export type TeamRelations = {
+  players?: Player[]
+  category?: Category
+  gender?: Gender
+}
 
 // TODO: add coach
 export type Team = {
   id: number
   name: string
-  // coach: Player
-  players: Player[]
-}
+} & TeamRelations
 
 export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
   id: apiTeam.id,
   name: apiTeam.name,
-  players: mapApiPlayersToPlayers(apiTeam.players),
+  players: apiTeam.players?.length
+    ? mapApiPlayersToPlayers(apiTeam.players)
+    : undefined,
+  category: apiTeam.category
+    ? mapApiCategoryToCategory(apiTeam.category)
+    : undefined,
+  gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
 })

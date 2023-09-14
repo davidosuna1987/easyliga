@@ -4,6 +4,7 @@ import {
   ApiFederationWithFederations,
 } from '@/types/api/federation'
 import FederationService from '@/services/federation'
+import { FederationScope } from '@/domain/game'
 
 const federationService = new FederationService()
 
@@ -25,7 +26,9 @@ export const useFederationStore = defineStore('federations', () => {
   const getNationalFederations = (
     federations: ApiFederation[],
   ): ApiFederation[] =>
-    federations.filter(federation => federation.scope === 'national')
+    federations.filter(
+      federation => federation.scope === FederationScope.NATIONAL,
+    )
 
   const groupFederationsById = (
     federations: ApiFederation[],

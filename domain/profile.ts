@@ -1,10 +1,11 @@
 import { ApiProfile, ApiProfileUpdateRequest } from '@/types/api/profile'
-import { User } from '@/domain/game'
+import { User } from '@/domain/user'
 import {
   Address,
   mapAddressToApiAddress,
   mapApiAddressToAddress,
 } from '@/domain/address'
+import { GenderType } from '@/domain/game'
 
 export type Image = {
   preview: string | null
@@ -18,8 +19,6 @@ export type ProfileRelations = {
   address?: Address
 }
 
-export type ProfileGender = 'male' | 'female' | 'other'
-
 export type Profile = {
   id: number
   userId: number
@@ -27,7 +26,7 @@ export type Profile = {
   firstName: string
   lastName: string
   birthDate?: string
-  gender?: ProfileGender
+  gender?: GenderType
   avatar?: string
   email: string
   phone?: string
@@ -38,10 +37,19 @@ export type ProfileUpdateRequest = {
   firstName: string
   lastName: string
   birthDate?: Date
-  gender?: ProfileGender
+  gender?: GenderType
   avatar?: Image
   phone?: string
   address?: Address
+}
+
+export type Responsible = {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  avatar?: string
 }
 
 export const mapApiProfileToProfile = (apiProfile: ApiProfile): Profile => ({
@@ -118,3 +126,14 @@ export const mapApiProfileUpdateRequestToFormData = (
 
   return formData
 }
+
+export const mapApiProfileToResponsible = (
+  apiProfile: ApiProfile,
+): Responsible => ({
+  id: apiProfile.id,
+  firstName: apiProfile.first_name,
+  lastName: apiProfile.last_name,
+  email: apiProfile.email,
+  phone: apiProfile.phone || undefined,
+  avatar: apiProfile.avatar || undefined,
+})

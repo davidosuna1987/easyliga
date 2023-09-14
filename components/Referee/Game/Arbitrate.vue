@@ -11,6 +11,7 @@ import { TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
 import {
+  SetSide,
   SetStartRequest,
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
@@ -21,7 +22,6 @@ const auth = useAuthStore()
 const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const gameService = new GameService()
 const pointService = new PointService()
@@ -45,14 +45,14 @@ const formPoint = ref<ApiPointStoreRequest>()
 
 const leftSideTeam = computed(() => {
   return !gameInitialData.value?.game.currentSet?.localTeamSide ||
-    gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+    gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
     ? gameInitialData.value?.localTeam
     : gameInitialData.value?.visitorTeam
 })
 
 const rightSideTeam = computed(() => {
   return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'right'
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
     ? gameInitialData.value?.visitorTeam
     : gameInitialData.value?.localTeam
 })
@@ -71,14 +71,14 @@ const rightSideTeamCall = computed(() =>
 
 const leftSideTeamCurrentRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.localTeamSide ||
-    gameInitialData.value?.game.currentSet?.localTeamSide === 'left'
+    gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
     ? gameInitialData.value?.localTeamRotation
     : gameInitialData.value?.visitorTeamRotation
 })
 
 const rightSideTeamCurrentRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === 'right'
+    gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
     ? gameInitialData.value?.visitorTeamRotation
     : gameInitialData.value?.localTeamRotation
 })
@@ -141,7 +141,7 @@ const sumPoint = async (type: TeamType) => {
       loadingApi.value = false
       return
     } else {
-      toast.success(t('points.added'))
+      toast.success(useNuxtApp().$i18n.t('points.added'))
       await getGameInitialData()
     }
 
@@ -176,7 +176,7 @@ const undoLastPoint = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     loadingApi.value = false
   } else {
-    toast.success(t('points.deleted'))
+    toast.success(useNuxtApp().$i18n.t('points.deleted'))
     resetPointInterval()
     getGameInitialData()
   }
@@ -200,19 +200,19 @@ const createFormPoint = (type?: TeamType) => {
     serving_profile_id: null,
     scoring_profile_id: null,
     winner_team_id:
-      type === 'local'
+      type === TeamType.LOCAL
         ? gameInitialData.value.localTeam.id
         : gameInitialData.value.visitorTeam.id,
     loser_team_id:
-      type === 'local'
+      type === TeamType.LOCAL
         ? gameInitialData.value.visitorTeam.id
         : gameInitialData.value.localTeam.id,
     local_team_score:
-      type === 'local'
+      type === TeamType.LOCAL
         ? Number(lastPoint.value?.localTeamScore ?? 0) + 1
         : Number(lastPoint.value?.localTeamScore ?? 0),
     visitor_team_score:
-      type === 'visitor'
+      type === TeamType.VISITOR
         ? Number(lastPoint.value?.visitorTeamScore ?? 0) + 1
         : Number(lastPoint.value?.visitorTeamScore ?? 0),
     comments: null,
@@ -233,7 +233,7 @@ const startSet = async (setStartRequest: SetStartRequest) => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(t('sets.started'))
+    toast.success(useNuxtApp().$i18n.t('sets.started'))
     getGameInitialData()
   }
 }

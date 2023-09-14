@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TeamType } from '@/domain/team'
-import { Set } from '@/domain/set'
+import { Set, SetSide } from '@/domain/set'
 
 const props = defineProps({
   currentSet: {
@@ -38,7 +38,11 @@ const undoLastPoint = () => {
         outlined
         :disabled="!undoPointButtonDisabled"
         @click="
-          sumPoint(currentSet.localTeamSide === 'left' ? 'local' : 'visitor')
+          sumPoint(
+            currentSet.localTeamSide === SetSide.LEFT
+              ? TeamType.LOCAL
+              : TeamType.VISITOR,
+          )
         "
       />
       <Button
@@ -57,7 +61,11 @@ const undoLastPoint = () => {
         outlined
         :disabled="!undoPointButtonDisabled"
         @click="
-          sumPoint(currentSet.localTeamSide === 'left' ? 'visitor' : 'local')
+          sumPoint(
+            currentSet.localTeamSide === SetSide.LEFT
+              ? TeamType.VISITOR
+              : TeamType.LOCAL,
+          )
         "
       />
     </div>

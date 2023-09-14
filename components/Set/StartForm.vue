@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Team } from '@/domain/team'
-import { SetStartRequest } from '@/domain/set'
+import { SetSide, SetStartRequest } from '@/domain/set'
 
 const props = defineProps({
   leftSideTeam: {
@@ -16,20 +16,20 @@ const props = defineProps({
 const emit = defineEmits(['set:start'])
 
 const form = ref<SetStartRequest>({
-  localTeamSide: 'left',
-  visitorTeamSide: 'right',
+  localTeamSide: SetSide.LEFT,
+  visitorTeamSide: SetSide.RIGHT,
   firstServeTeamId: 0,
 })
 const firstServeTeam = ref<Team>()
 
 const leftSideTeam = computed(() => {
-  return form.value.localTeamSide === 'left'
+  return form.value.localTeamSide === SetSide.LEFT
     ? props.leftSideTeam
     : props.rightSideTeam
 })
 
 const rightSideTeam = computed(() => {
-  return form.value.localTeamSide === 'right'
+  return form.value.localTeamSide === SetSide.RIGHT
     ? props.leftSideTeam
     : props.rightSideTeam
 })

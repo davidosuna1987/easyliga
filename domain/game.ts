@@ -1,5 +1,4 @@
 import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
-import { mapApiPlayersToPlayers } from '@/domain/player'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { Address } from '@/domain/address'
@@ -7,26 +6,35 @@ import {
   CurrentRotation,
   mapApiCurrentRotationToCurrentRotation,
 } from '@/domain/rotation'
-import { Team } from '@/domain/team'
-import { Profile } from '@/domain/profile'
+import { Team, mapApiTeamToTeam } from '@/domain/team'
+import { Profile, mapApiProfileToProfile } from '@/domain/profile'
+import { Responsible } from '@/domain/profile'
+import { Sede, mapApiSedeToSede } from '@/domain/sede'
+import { Club } from '@/domain/club'
+import { Court } from '@/domain/court'
+import { ApiCategory } from '@/types/api/category'
+import { ApiGender } from '@/types/api/gender'
 
-export type Responsible = {
-  id: number
-  firstName: string
-  lastName?: string
-  email: string
-  phone?: string
-  avatar?: string
+export enum CategoryType {
+  MASCULINE = 'masculine',
+  FEMININE = 'feminine',
+  MIXED = 'mixed',
 }
 
 export type Category = {
   id: number
-  name: string
+  name: CategoryType
+}
+
+export enum GenderType {
+  MALE = 'male',
+  FEMALE = 'female',
+  OTHER = 'other',
 }
 
 export type Gender = {
   id: number
-  name: string
+  name: GenderType
 }
 
 export enum FederationScope {
@@ -69,37 +77,6 @@ export type League = {
   end?: string
 }
 
-export type Club = {
-  id: number
-  name: string
-  shortName?: string
-  slug: string
-  federation?: Federation
-  responsible?: Responsible
-  address?: Address
-  email?: string
-  phone?: string
-  website?: string
-}
-
-export type Sede = {
-  id: number
-  name: string
-  shortName?: string
-  slug: string
-  club?: Club
-  responsible?: Responsible
-  address?: Address
-  email?: string
-  phone?: string
-  website?: string
-}
-
-export type User = {
-  id: number
-  email: string
-}
-
 export type GameInitialData = {
   id: number
   game: Game
@@ -112,11 +89,6 @@ export type GameInitialData = {
   sede: Sede
   court: string
   referee: Profile
-}
-
-export type Court = {
-  id: number
-  name: string
 }
 
 export type GameRelations = {
@@ -221,29 +193,22 @@ export const mapApiGameInitialDataToGame = (
       name: league.name,
       season: league.season,
     },
-    referee: {
-      id: referee.id,
-      userId: referee.user_id,
-      firstName: referee.first_name,
-      lastName: referee.last_name ?? undefined,
-      avatar: referee.avatar ?? undefined,
-    },
-    localTeam: {
-      id: local_team.id,
-      name: local_team.name,
-      players: mapApiPlayersToPlayers(local_team.players),
-    },
-    visitorTeam: {
-      id: visitor_team.id,
-      name: visitor_team.name,
-      players: mapApiPlayersToPlayers(visitor_team.players),
-    },
-    sede: {
-      id: sede.id,
-      name: sede.name,
-      shortName: sede.short_name ?? undefined,
-      slug: sede.slug,
-    },
+    referee: mapApiProfileToProfile(referee),
+    localTeam: mapApiTeamToTeam(local_team),
+    visitorTeam: mapApiTeamToTeam(visitor_team),
+    sede: mapApiSedeToSede(sede),
     court: court.name,
   }
 }
+
+export const mapApiCategoryToCategory = (
+  apiCategory: ApiCategory,
+): Category => ({
+  id: apiCategory.id,
+  name: apiCategory.name as CategoryType,
+})
+
+export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
+  id: apiGender.id,
+  name: apiGender.name as GenderType,
+})

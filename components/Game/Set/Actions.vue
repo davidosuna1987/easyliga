@@ -2,8 +2,6 @@
 import { Set, SetStartRequest } from '@/domain/set'
 import { Team } from '@/domain/team'
 
-const { t } = useI18n()
-
 const props = defineProps({
   currentSet: {
     type: Object as PropType<Set>,
@@ -28,7 +26,7 @@ const emit = defineEmits(['set:start'])
 const showStartSetDialog = ref<boolean>(false)
 
 const actionLabel = computed(() =>
-  t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
+  useNuxtApp().$i18n.t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
 )
 
 const handleClick = () => {

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const props = defineProps({
   gameId: {
@@ -25,14 +24,15 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: () => t('rotations.rotation'),
+    default: () => useNuxtApp().$i18n.t('rotations.rotation'),
   },
 })
 
-const showRotationLockedToast = () => toast.warn(t('rotations.locked'))
+const showRotationLockedToast = () =>
+  toast.warn(useNuxtApp().$i18n.t('rotations.locked'))
 
 const showCallUnlockedLockedToast = () =>
-  toast.warn(t('rotations.unable_to_set_rotation'))
+  toast.warn(useNuxtApp().$i18n.t('rotations.unable_to_set_rotation'))
 </script>
 
 <template>

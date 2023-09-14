@@ -11,11 +11,10 @@ const auth = useAuthStore()
 const gameService = new GameService()
 const callService = new CallService()
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const currentGames = ref<Game[]>()
 const calls = ref<Call[]>([])
-const teamType = ref<TeamType>('local')
+const teamType = ref<TeamType>(TeamType.LOCAL)
 const loadingApi = ref<boolean>(false)
 
 const getCurrentGames = async () => {
@@ -40,7 +39,7 @@ const getCurrentGames = async () => {
   if (currentGames.value?.length) {
     await getCurrentGamesCalls()
   } else {
-    teamType.value = 'visitor'
+    teamType.value = TeamType.VISITOR
 
     const { data } = await gameService.fetch({
       where_has: `visitorTeam:coach_id:${auth.user.id}`,
@@ -88,7 +87,7 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
     'CallUnlockedEvent',
     (response: ApiCallUnlockedEventResponse) => {
-      toast.info(t('events.call_unlocked'))
+      toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
       getCurrentGamesCalls()
     },
   )

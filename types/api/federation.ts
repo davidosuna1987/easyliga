@@ -32,10 +32,3 @@ export type ApiFederationResponse = {
   }
   errors: null
 }
-
-export type FederationScope =
-  | 'national'
-  | 'regional'
-  | 'provincial'
-  | 'district'
-  | 'local'

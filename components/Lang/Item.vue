@@ -3,7 +3,7 @@ import { FALLBACK_LOCALE } from '@/config/locale'
 import { MenuItem } from 'primevue/menuitem'
 import { getLangIcon } from '@/domain/locale'
 
-const i18n = useI18n()
+const { locale } = useI18n()
 const lang = ref<string>(FALLBACK_LOCALE)
 
 onMounted(() => {
@@ -12,7 +12,7 @@ onMounted(() => {
 
 const setAppLocale = (selectedLocale: string) => {
   lang.value = selectedLocale
-  i18n.locale.value = selectedLocale
+  locale.value = selectedLocale
   localStorage.setItem('locale', selectedLocale)
 }
 

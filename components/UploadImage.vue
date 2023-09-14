@@ -1,5 +1,4 @@
 <script setup>
-const { t } = useI18n()
 const emit = defineEmits()
 
 const props = defineProps({
@@ -40,7 +39,7 @@ const imageChange = e => {
     let size = files[0].size
 
     if (size > maxMB.value * 1000000) {
-      alert(t('errors.max_file_size', { mb: maxMB.value }))
+      alert(useNuxtApp().$i18n.t('errors.max_file_size', { mb: maxMB.value }))
       return
     }
 
@@ -81,7 +80,7 @@ watch(image.value, () => emit('image', image.value))
     >
       <div
         v-tooltip.top="
-          image.file ? t('forms.remove_image') : t('forms.change_image')
+          image.file ? $t('forms.remove_image') : $t('forms.change_image')
         "
         :style="avatarStyle"
         class="preview w-full h-full rounded-full inline-block bg-img"

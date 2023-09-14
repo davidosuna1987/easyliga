@@ -1,5 +1,6 @@
-import { ApiFederationResponse, FederationScope } from '@/types/api/federation'
+import { ApiFederationResponse } from '@/types/api/federation'
 import { ApiTeamResponse } from '@/types/api/team'
+import { FederationScope } from '@/domain/game'
 
 export default class FederationService {
   fetch(params?: Record<string, string>) {

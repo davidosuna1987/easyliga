@@ -1,12 +1,11 @@
 import { ApiFreshData, ApiUser } from '@/types/api/auth'
 import { ApiAddress, ApiAddressUpdateRequest } from '@/types/api/address'
+import { GenderType } from '@/domain/game'
 
 export type ProfileRelations = {
   user?: ApiUser
   address?: ApiAddress
 }
-
-export type ApiProfileGender = 'male' | 'female' | 'other'
 
 export type ApiProfile = {
   id: number
@@ -16,7 +15,7 @@ export type ApiProfile = {
   first_name: string
   last_name: string
   birth_date: string | null
-  gender: ApiProfileGender | null
+  gender: GenderType | null
   avatar: string | null
   phone: string | null
   email: string
@@ -36,7 +35,7 @@ export type ApiProfileUpdateRequest = {
   first_name: string
   last_name: string
   birth_date: string | null
-  gender: ApiProfileGender | null
+  gender: GenderType | null
   avatar: File | null
   phone: string | null
 } & ApiAddressUpdateRequest

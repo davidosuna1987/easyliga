@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ApiCourt } from '@/types/api/court'
-import { ApiSedeWithCourts } from '@/types/api/sede'
+import { ApiSede } from '@/types/api/sede'
 import SedeService from '@/services/sede'
 
 const sedeService = new SedeService()
 
 const props = defineProps({
   groupedCourts: {
-    type: Array as PropType<ApiSedeWithCourts[]>,
+    type: Array as PropType<ApiSede[]>,
     default: null,
   },
   loading: {
@@ -19,9 +19,9 @@ const props = defineProps({
 const selectedCourt = ref<ApiCourt | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const groupedCourts = ref<ApiSedeWithCourts[]>(props.groupedCourts ?? [])
+const groupedCourts = ref<ApiSede[]>(props.groupedCourts ?? [])
 const options = computed(
-  (): ApiSedeWithCourts[] => props.groupedCourts ?? groupedCourts.value,
+  (): ApiSede[] => props.groupedCourts ?? groupedCourts.value,
 )
 
 const selectedSede = computed(() =>
@@ -42,7 +42,7 @@ onMounted(async () => {
       where_has: 'courts',
       with: 'courts',
     })
-    groupedCourts.value = response.data.value?.data.sedes as ApiSedeWithCourts[]
+    groupedCourts.value = response.data.value?.data.sedes as ApiSede[]
     loadingApi.value = false
   }
 })

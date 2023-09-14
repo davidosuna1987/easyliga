@@ -285,7 +285,8 @@
     "deleted": "El jugador ha sido eliminada correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el jugador?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "select": "Selecciona un jugador"
+    "select": "Selecciona un jugador",
+    "count": "{num} jugadores | {num} jugador | {num} jugadores"
   },
   "shirts": {
     "shirt": "Camisetas | Camiseta | Camisetas",
@@ -429,6 +430,20 @@
     "country": "País",
     "postal_code": "Código postal",
     "postal": "CP"
+  },
+  "clubs": {
+    "club": "Clubs | Club | Clubs",
+    "create": "Crear club",
+    "created": "El club ha sido creada correctamente",
+    "edit": "Editar club",
+    "update": "Actualizar club",
+    "updated": "El club ha sido actualizada correctamente",
+    "delete": "Eliminar club",
+    "deleted": "El club ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el club?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona un club",
+    "no_managed_teams": "El club no gestiona ningún equipo"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

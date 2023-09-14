@@ -34,8 +34,8 @@ onBeforeMount(getCurrentGames)
   >
     <Heading class="mb-5" position="center">
       {{
-        auth.profile?.first_name
-          ? $t('referees.welcome', { name: auth.profile.first_name })
+        auth.profile?.firstName
+          ? $t('referees.welcome', { name: auth.profile.firstName })
           : $t('referees.welcome_no_name')
       }}
     </Heading>

@@ -7,12 +7,12 @@ import {
   mapProfileUpdateRequestToApiProfileUpdateRequest,
 } from '@/domain/profile'
 import { ApiErrorObject } from '@/types/errors'
-import { Address } from 'domain/address'
+import { Address } from '@/domain/address'
 import ProfileService from '@/services/profile'
+import { GenderType } from '@/domain/game'
 
 const profileService = new ProfileService()
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const props = defineProps({
   profile: {
@@ -63,7 +63,7 @@ const avatarChange = (newAvatar: Image) => {
   }
 }
 
-const genderLabel = (gender: string) => t(`forms.${gender}`)
+const genderLabel = (gender: string) => useNuxtApp().$i18n.t(`forms.${gender}`)
 
 const handleSubmit = async () => {
   if (!form.value) return
@@ -79,7 +79,7 @@ const handleSubmit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
     resetAvatar()
-    toast.success(t('profiles.updated'))
+    toast.success(useNuxtApp().$i18n.t('profiles.updated'))
     emit('updated', data.value.data)
   }
   loadingApi.value = false
@@ -145,7 +145,7 @@ watch(avatar, () => (form.value.avatar = avatar.value ?? undefined))
         <Dropdown
           v-model="form.gender"
           class="w-full"
-          :options="['male', 'female', 'other']"
+          :options="[GenderType.MALE, GenderType.FEMALE, GenderType.OTHER]"
           :optionLabel="genderLabel"
           :disabled="!!loadingApi || !props.profile"
         />

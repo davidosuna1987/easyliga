@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Set } from '@/domain/set'
+import { Set, SetSide } from '@/domain/set'
 
 const props = defineProps({
   currentSet: {
@@ -9,13 +9,13 @@ const props = defineProps({
 })
 
 const leftSideTeamScore = computed(() => {
-  return props.currentSet.localTeamSide === 'left'
+  return props.currentSet.localTeamSide === SetSide.LEFT
     ? props.currentSet.localTeamScore
     : props.currentSet.visitorTeamScore
 })
 
 const rightSideTeamScore = computed(() => {
-  return props.currentSet.localTeamSide === 'right'
+  return props.currentSet.localTeamSide === SetSide.RIGHT
     ? props.currentSet.localTeamScore
     : props.currentSet.visitorTeamScore
 })

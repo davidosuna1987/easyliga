@@ -34,6 +34,14 @@ export type ApiTeam = {
 export type ApiTeamResponse = {
   success: boolean
   data: {
+    team: ApiTeam
+  }
+  errors: null
+}
+
+export type ApiTeamsResponse = {
+  success: boolean
+  data: {
     teams: ApiTeam[]
   }
   errors: null

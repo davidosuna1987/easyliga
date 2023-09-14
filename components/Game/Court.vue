@@ -75,10 +75,10 @@ const getRotationPlayerDataAtPosition = (
   side: SetSide,
 ): Player | undefined => {
   const call =
-    side === 'left' ? props.leftSideTeamCall : props.rightSideTeamCall
+    side === SetSide.LEFT ? props.leftSideTeamCall : props.rightSideTeamCall
 
   const currentRotation =
-    side === 'left'
+    side === SetSide.LEFT
       ? props.leftSideTeamCurrentRotation
       : props.rightSideTeamCurrentRotation
 
@@ -94,13 +94,13 @@ const getRotationPlayerDataAtPosition = (
 
 const leftSideTeamCurrentRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
-    .map(position => getRotationPlayerDataAtPosition(position, 'left'))
+    .map(position => getRotationPlayerDataAtPosition(position, SetSide.LEFT))
     .filter(player => player !== null),
 )
 
 const rightSideTeamCurrentRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
-    .map(position => getRotationPlayerDataAtPosition(position, 'right'))
+    .map(position => getRotationPlayerDataAtPosition(position, SetSide.RIGHT))
     .filter(player => player !== null),
 )
 

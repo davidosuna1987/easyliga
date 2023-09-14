@@ -14,7 +14,6 @@ const emit = defineEmits(['update:set'])
 
 const route = useRoute()
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const callService = new CallService()
 const setService = new SetService()
@@ -88,7 +87,7 @@ const handleSubmit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(t('rotations.assign_success'))
+    toast.success(useNuxtApp().$i18n.t('rotations.assign_success'))
     navigateTo(`/coach`)
   }
 }

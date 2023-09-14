@@ -2,6 +2,7 @@
 import { ApiLeague } from '@/types/api/league'
 import { ApiFederationWithLeagues } from '@/types/api/federation'
 import FederationService from '@/services/federation'
+import { FederationScope } from '@/domain/game'
 
 const federationService = new FederationService()
 
@@ -28,7 +29,7 @@ const options = computed(
 onMounted(async () => {
   if (!props.groupedLeagues) {
     loadingApi.value = true
-    const response = await federationService.scope('national', {
+    const response = await federationService.scope(FederationScope.NATIONAL, {
       with: 'leagues',
     })
     groupedLeagues.value = response.data.value?.data

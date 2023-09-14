@@ -8,18 +8,18 @@ import { ApiGameStoreRequest } from '@/types/api/game'
 import { ApiLeague } from '@/types/api/league'
 import { ApiTeam } from '@/types/api/team'
 import { ApiFederationWithLeagues } from '@/types/api/federation'
-import { ApiSede, ApiSedeWithCourts } from '@/types/api/sede'
+import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { ApiCourt } from 'types/api/court'
 import { GameStorePreviewData } from '@/types/game'
+import { FederationScope } from '@/domain/game'
 
 const emit = defineEmits(['changed'])
 
 const auth = useAuthStore()
 const toast = useEasyToast()
-const { t } = useI18n()
 
 const teamService = new TeamService()
 const federationService = new FederationService()
@@ -41,7 +41,7 @@ const loadingStore = ref<boolean>(false)
 
 const groupedLeagues = ref<ApiFederationWithLeagues[]>([])
 const leagueTeams = ref<ApiTeam[]>([])
-const groupedCourts = ref<ApiSedeWithCourts[]>([])
+const groupedCourts = ref<ApiSede[]>([])
 
 const localTeams = computed((): ApiTeam[] => leagueTeams.value)
 const visitorTeams = computed((): ApiTeam[] =>
@@ -97,7 +97,7 @@ const submit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
-    toast.success(t('games.created'))
+    toast.success(useNuxtApp().$i18n.t('games.created'))
     navigateTo(`/referee/games/arbitrate/${data.value?.data.game.id}`)
   }
 }
@@ -107,7 +107,7 @@ const getGroupedLeagues = async () => {
 
   loadingLeagues.value = true
 
-  const response = await federationService.scope('national', {
+  const response = await federationService.scope(FederationScope.NATIONAL, {
     with: 'leagues',
     where_has: `leagues:category_id:${selectedCategory.value.id},leagues:gender_id:${selectedGender.value.id}`,
   })
@@ -147,7 +147,7 @@ watch(selectedLocalTeam, async team => {
       where: `club_id:${team.club_id}`,
       with: 'courts',
     })
-    groupedCourts.value = response.data.value?.data.sedes as ApiSedeWithCourts[]
+    groupedCourts.value = response.data.value?.data.sedes as ApiSede[]
     loadingCourts.value = false
   }
 })
