@@ -1,4 +1,18 @@
 import { ApiSede } from '@/types/api/sede'
+import { ApiAddress } from '@/types/api/address'
+import { ApiFederation } from '@/types/api/federation'
+import { ApiProfile } from '@/types/api/profile'
+import { ApiTeam } from '@/types/api/team'
+import { ApiGame } from '@/types/api/game'
+
+export type ApiClubRelations = {
+  address?: ApiAddress
+  sedes?: ApiSede[]
+  federation?: ApiFederation
+  responsible?: ApiProfile
+  teams?: ApiTeam[]
+  games?: ApiGame[]
+}
 
 export type ApiClub = {
   id: number
@@ -14,12 +28,17 @@ export type ApiClub = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-}
-export type ApiClubWithSedes = ApiClub & {
-  sedes: ApiSede[]
-}
+} & ApiClubRelations
 
 export type ApiClubResponse = {
+  success: boolean
+  data: {
+    club: ApiClub
+  }
+  errors: null
+}
+
+export type ApiClubsResponse = {
   success: boolean
   data: {
     clubs: ApiClub[]
