@@ -1,15 +1,10 @@
-.easy-icon-libero-component {
-  background: white;
-  color: var(--danger-color-light);
+.easy-player-item-icon-component {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
   display: grid;
   place-content: center;
-  font-weight: 900;
   font-size: 1.5rem;
-  -webkit-text-stroke: 1px var(--text-color);
-  border: solid 1px var(--text-color);
   // text-shadow: 0 0 2px black;
 
   &.size-sm {

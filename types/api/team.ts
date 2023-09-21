@@ -5,6 +5,7 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
 import { ApiGender } from '@/types/api/gender'
 import { ApiProfile } from '@/types/api/profile'
+import { ApiPlayerRequest } from '@/types/api/player'
 
 export type ApiTeamRelations = {
   club?: ApiClub
@@ -45,4 +46,13 @@ export type ApiTeamsResponse = {
     teams: ApiTeam[]
   }
   errors: null
+}
+
+export type ApiTeamRequest = {
+  name: string
+  division_id: number | null
+  category_id: number | null
+  gender_id: number | null
+  coach_id: number | null
+  players: ApiPlayerRequest[] | null
 }

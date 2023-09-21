@@ -134,7 +134,10 @@
     "file_type": "El formato del archivo que has seleccionado no es compatible",
     "forbiden": "No puedes realizar esta acción porque no tienes permisos suficientes",
     "min": "El valor mínimo es {num}",
-    "max": "El valor máximo es {num}"
+    "max": "El valor máximo es {num}",
+    "assign_in_court_captain": "Tienes que asignar al capitán en el campo",
+    "max_liberos": "No puedes asignar más de {max} líberos en una convocatoria",
+    "assign_min_rotation_players": "Tienes que alinear a {num} jugadores de campo"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -258,6 +261,7 @@
     "create": "Crear equipo",
     "created": "El equipo ha sido creada correctamente",
     "edit": "Editar equipo",
+    "edit_name": "Editar equipo {name}",
     "update": "Actualizar equipo",
     "updated": "El equipo ha sido actualizada correctamente",
     "delete": "Eliminar equipo",
@@ -270,9 +274,11 @@
     "captain": "Capitán",
     "captain_select": "Selecciona un capitán",
     "captain_assign": "Asignar capitán",
+    "captain_remove": "Quitar capitán",
     "libero": "Líbero",
     "libero_select": "Selecciona un líbero",
-    "libero_assign": "Asignar líbero"
+    "libero_assign": "Asignar líbero",
+    "libero_remove": "Quitar líbero"
   },
   "players": {
     "player": "Jugadores | Jugador | Jugadores",
@@ -286,7 +292,9 @@
     "delete_alert": "¿Seguro que quieres eliminar el jugador?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un jugador",
-    "count": "{num} jugadores | {num} jugador | {num} jugadores"
+    "count": "{num} jugadores | {num} jugador | {num} jugadores",
+    "shirt_number_taken": "El número de camiseta {shirtNumber} ya está asignado a otro jugador",
+    "replace_player": "Sustituir a {name}"
   },
   "shirts": {
     "shirt": "Camisetas | Camiseta | Camisetas",
@@ -397,7 +405,8 @@
     "assign_howto": "Haz click en una de las posiciones para asignar un jugador",
     "assign_call": "La convocatoria no está creada, para assignar una rotación primero tienes que crear la convocatoria",
     "in_court": "En pista",
-    "bench": "Banquillo"
+    "bench": "Banquillo",
+    "libero_not_allowed_in_initial_rotation": "No puedes alinear un líbero en la rotación inicial"
   },
   "sets": {
     "set": "Sets | Set | Sets",

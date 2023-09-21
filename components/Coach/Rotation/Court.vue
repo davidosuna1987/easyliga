@@ -2,6 +2,7 @@
 import { Call, CallPlayerData } from '@/domain/call'
 import { RotationPlayer } from '@/domain/rotation'
 import { Rotation } from '@/domain/rotation'
+import { Player, getFullName } from '@/domain/player'
 
 const props = defineProps({
   call: {
@@ -12,59 +13,149 @@ const props = defineProps({
     type: Object as PropType<Rotation>,
     required: false,
   },
+  initialRotation: {
+    type: Boolean,
+    required: true,
+  },
 })
 
-const emit = defineEmits(['update:players'])
+const emit = defineEmits(['update:players', 'update:captain'])
 
-const players = ref<RotationPlayer[]>([])
+const toast = useEasyToast()
+
+const rotationPlayers = ref<RotationPlayer[]>([])
 const selectedPosition = ref<number | null>(null)
+const selectedRotationInCourtCaptain = ref<RotationPlayer>()
+const showCaptainSelector = ref(false)
 
 const availablePlayers = computed(() =>
   props.call.playersData.filter(
-    player => !players.value.map(p => p.profileId).includes(player.profileId),
+    player =>
+      !rotationPlayers.value.map(p => p.profileId).includes(player.profileId),
   ),
 )
 
+const selectableCaptainPlayers = computed(() =>
+  props.call.playersData.filter(
+    player =>
+      // player.captain &&
+      rotationPlayers.value
+        .map(rp => rp.profileId)
+        .includes(player.profileId) &&
+      player.profileId !== selectedRotationInCourtCaptain.value?.profileId,
+  ),
+)
+
+const selectedCaptain = computed(() =>
+  props.call.playersData.find(
+    player =>
+      player.profileId === selectedRotationInCourtCaptain.value?.profileId,
+  ),
+)
+
+const playerToReplace = computed(() => {
+  const rotationPlayer = rotationPlayers.value.find(
+    rp => rp.position === selectedPosition.value,
+  )
+  return props.call.playersData.find(
+    p => p.profileId === rotationPlayer?.profileId,
+  )
+})
+
+const setRotationCaptain = (player: Player) => {
+  selectedRotationInCourtCaptain.value = rotationPlayers.value.find(
+    rp => rp.profileId === player.profileId,
+  )
+
+  showCaptainSelector.value = false
+}
+
 const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   if (!selectedPosition.value) return
-  if (props.rotation?.players) return
+  if (!!props.rotation?.players) return
 
-  const existingPlayer = players.value.find(
+  if (!!props.initialRotation && !!player.libero) {
+    toast.warn(
+      useNuxtApp().$i18n.t('rotations.libero_not_allowed_in_initial_rotation'),
+    )
+    return
+  }
+
+  const existingPlayer = rotationPlayers.value.find(
     rp => rp.position === selectedPosition.value,
   )
 
   if (existingPlayer) {
-    players.value = players.value.filter(
+    if (
+      selectedRotationInCourtCaptain.value?.profileId ===
+      existingPlayer.profileId
+    ) {
+      selectedRotationInCourtCaptain.value = undefined
+    }
+
+    rotationPlayers.value = rotationPlayers.value.filter(
       rp => rp.position !== selectedPosition.value,
     )
   }
 
-  players.value.push({
+  rotationPlayers.value.push({
     profileId: player.profileId,
     rotationId: 0,
     replacementProfileId: null,
     inCourtProfileId: player.profileId,
     position: selectedPosition.value,
-    libero: player.libero,
+    libero: false,
   })
+
+  if (!selectedRotationInCourtCaptain.value) {
+    selectedRotationInCourtCaptain.value = rotationPlayers.value.find(
+      rp => player.captain && rp.profileId === player.profileId,
+    )
+  }
 
   selectedPosition.value = null
 }
 
-const getRotationPlayer = (position: number): CallPlayerData | undefined =>
-  props.call.playersData.find(
+const getRotationPlayer = (position: number): CallPlayerData | undefined => {
+  const playerData = props.call.playersData.find(
     p =>
       p.profileId ===
-      players.value.find(rp => rp.position === position)?.profileId,
+      rotationPlayers.value.find(rp => rp.position === position)?.profileId,
   )
 
-watch(players.value, newVal => emit('update:players', newVal))
+  return playerData
+}
+
+const isCaptainInCourtPlayerAtPosition = (position: number): boolean => {
+  const player = getRotationPlayer(position)
+  if (!player || !selectedRotationInCourtCaptain.value) return false
+
+  return (
+    selectedRotationInCourtCaptain.value.profileId === player.profileId ?? false
+  )
+}
+
+watch(rotationPlayers, newVal => emit('update:players', newVal), {
+  deep: true,
+})
+
+watch(
+  () => selectedRotationInCourtCaptain.value,
+  newVal => emit('update:captain', newVal),
+  {
+    immediate: true,
+  },
+)
 
 watch(
   () => props.rotation,
   () => {
     if (props.rotation?.players) {
-      players.value = props.rotation.players
+      rotationPlayers.value = props.rotation.players
+
+      selectedRotationInCourtCaptain.value = props.rotation.players.find(
+        rp => rp.profileId === props.rotation?.inCourtCaptainProfileId,
+      )
     }
   },
 )
@@ -81,8 +172,10 @@ watch(
                 :shirtNumber="getRotationPlayer(1)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(1)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(1)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(1)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">1</span>
           </div>
@@ -92,8 +185,10 @@ watch(
                 :shirtNumber="getRotationPlayer(2)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(2)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(2)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(2)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">2</span>
           </div>
@@ -103,8 +198,10 @@ watch(
                 :shirtNumber="getRotationPlayer(3)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(3)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(3)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(3)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">3</span>
           </div>
@@ -114,8 +211,10 @@ watch(
                 :shirtNumber="getRotationPlayer(4)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(4)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(4)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(4)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">4</span>
           </div>
@@ -125,8 +224,10 @@ watch(
                 :shirtNumber="getRotationPlayer(5)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(5)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(5)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(5)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">5</span>
           </div>
@@ -136,8 +237,10 @@ watch(
                 :shirtNumber="getRotationPlayer(6)?.shirtNumber"
                 size="lg"
               />
-              <IconCaptain v-if="getRotationPlayer(6)?.captain" size="sm" />
-              <IconLibero v-if="getRotationPlayer(6)?.libero" size="sm" />
+              <IconCaptain
+                v-if="isCaptainInCourtPlayerAtPosition(6)"
+                size="sm"
+              />
             </span>
             <span v-else class="placeholder">6</span>
           </div>
@@ -152,21 +255,66 @@ watch(
         </div>
       </div>
     </div>
+
+    <div
+      class="inline-flex items-center justify-center mt-10 mb-3"
+      @click="
+        !!selectableCaptainPlayers.length &&
+          !rotation?.locked &&
+          (showCaptainSelector = true)
+      "
+    >
+      <GameCallSelectedCaptain
+        class="cursor-pointer"
+        :class="{ 'grayscale pointer-events-none': rotation?.locked }"
+        :player="selectedCaptain"
+      />
+      <Button
+        v-if="
+          selectedRotationInCourtCaptain &&
+          !!selectableCaptainPlayers.length &&
+          !rotation?.locked
+        "
+        class="change-captain-button ml-3"
+        :label="$t('forms.change')"
+        size="small"
+      />
+    </div>
   </div>
 
   <DialogBottom
-    class="easy-game-call-shirt-number-dialog-component"
+    class="easy-coach-rotation-players-dialog-component"
     :visible="!!selectedPosition"
     @hide="selectedPosition = null"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('players.select') }}</Heading>
+      <Heading tag="h6">{{
+        playerToReplace
+          ? $t('players.replace_player', { name: getFullName(playerToReplace) })
+          : $t('players.select')
+      }}</Heading>
     </template>
 
     <CoachRotationPlayer
       v-for="player in availablePlayers"
       :player="player"
       @click="addOrReplaceRotationPlayer(player)"
+    />
+  </DialogBottom>
+
+  <DialogBottom
+    class="easy-coach-rotation-captain-selector-dialog-component"
+    :visible="showCaptainSelector"
+    @hide="showCaptainSelector = false"
+  >
+    <template #header>
+      <Heading tag="h6">{{ $t('teams.captain_select') }}</Heading>
+    </template>
+
+    <CoachRotationPlayer
+      v-for="player in selectableCaptainPlayers"
+      :player="player"
+      @click="setRotationCaptain(player)"
     />
   </DialogBottom>
 </template>
@@ -209,8 +357,7 @@ watch(
 }
 
 .easy-game-rotation-player-component {
-  .easy-icon-captain-component,
-  .easy-icon-libero-component {
+  .easy-icon-captain-component {
     opacity: 1 !important;
   }
 
@@ -228,6 +375,11 @@ watch(
       }
     }
   }
+}
+
+.change-captain-button {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.5rem 0.325rem;
 }
 </style>
 

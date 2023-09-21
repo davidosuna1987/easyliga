@@ -4,6 +4,10 @@ import { Team } from '@/domain/team'
 import { Player } from '@/domain/player'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 
+export const MIN_CALL_PLAYERS = 6
+export const MAX_CALL_PLAYERS = 12
+export const MAX_CALL_LIBERO_PLAYERS = 2
+
 export type CallPlayerData = {
   profileId: number
   firstName: string

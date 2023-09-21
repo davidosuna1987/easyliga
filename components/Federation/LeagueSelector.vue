@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ApiLeague } from '@/types/api/league'
-import { ApiFederationWithLeagues } from '@/types/api/federation'
+import { ApiFederation } from '@/types/api/federation'
 import FederationService from '@/services/federation'
-import { FederationScope } from '@/domain/game'
+import { FederationScope } from '@/domain/federation'
 
 const federationService = new FederationService()
 
 const props = defineProps({
   groupedLeagues: {
-    type: Array as PropType<ApiFederationWithLeagues[]>,
+    type: Array as PropType<ApiFederation[]>,
     default: null,
   },
   loading: {
@@ -20,10 +20,9 @@ const props = defineProps({
 const selectedLeague = ref<ApiLeague | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const groupedLeagues = ref<ApiFederationWithLeagues[]>([])
+const groupedLeagues = ref<ApiFederation[]>([])
 const options = computed(
-  (): ApiFederationWithLeagues[] =>
-    props.groupedLeagues ?? groupedLeagues.value,
+  (): ApiFederation[] => props.groupedLeagues ?? groupedLeagues.value,
 )
 
 onMounted(async () => {
@@ -33,7 +32,7 @@ onMounted(async () => {
       with: 'leagues',
     })
     groupedLeagues.value = response.data.value?.data
-      .federations as ApiFederationWithLeagues[]
+      .federations as ApiFederation[]
     loadingApi.value = false
   }
 })

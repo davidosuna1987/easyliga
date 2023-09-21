@@ -7,14 +7,14 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiGameStoreRequest } from '@/types/api/game'
 import { ApiLeague } from '@/types/api/league'
 import { ApiTeam } from '@/types/api/team'
-import { ApiFederationWithLeagues } from '@/types/api/federation'
+import { ApiFederation } from '@/types/api/federation'
 import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { ApiCourt } from 'types/api/court'
 import { GameStorePreviewData } from '@/types/game'
-import { FederationScope } from '@/domain/game'
+import { FederationScope } from '@/domain/federation'
 
 const emit = defineEmits(['changed'])
 
@@ -39,7 +39,7 @@ const loadingTeams = ref<boolean>(false)
 const loadingCourts = ref<boolean>(false)
 const loadingStore = ref<boolean>(false)
 
-const groupedLeagues = ref<ApiFederationWithLeagues[]>([])
+const groupedLeagues = ref<ApiFederation[]>([])
 const leagueTeams = ref<ApiTeam[]>([])
 const groupedCourts = ref<ApiSede[]>([])
 
@@ -112,7 +112,7 @@ const getGroupedLeagues = async () => {
     where_has: `leagues:category_id:${selectedCategory.value.id},leagues:gender_id:${selectedGender.value.id}`,
   })
   groupedLeagues.value = response.data.value?.data
-    .federations as ApiFederationWithLeagues[]
+    .federations as ApiFederation[]
   loadingLeagues.value = false
 }
 

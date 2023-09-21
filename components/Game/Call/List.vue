@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Player } from '@/domain/game'
+import { Player } from '@/domain/player'
 
 const props = defineProps({
   players: {
@@ -26,6 +26,14 @@ const props = defineProps({
     type: Function as PropType<(player: Player) => void>,
     required: true,
   },
+  setCaptainToggleDisabledProfileId: {
+    type: Number,
+    required: false,
+  },
+  tooltipsDisabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const isSelected = (player: Player) =>
@@ -35,12 +43,7 @@ const getPlayer = (player: Player) => {
   const selectedPlayer = props.selectedPlayers?.find(
     p => p.profileId === player.profileId,
   )
-
-  if (selectedPlayer) {
-    return selectedPlayer
-  }
-
-  return player
+  return selectedPlayer ?? player
 }
 </script>
 
@@ -48,23 +51,18 @@ const getPlayer = (player: Player) => {
   <div
     class="easy-game-call-list-component grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mt-2"
   >
-    <GameCallItem
+    <PlayerItem
       v-for="(player, i) in players"
       :key="player.profileId"
       :player="getPlayer(player)"
-      :class="{
-        'is-selected': isSelected(player),
-        'is-captain': selectedPlayers.find(
-          p => p.profileId === player.profileId,
-        )?.captain,
-        'is-libero': selectedPlayers.find(p => p.profileId === player.profileId)
-          ?.libero,
-      }"
+      selectable
       :selected="isSelected(player)"
       @click="togglePlayer(player)"
       :setCaptain="setCaptain"
       :setLibero="setLibero"
       :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
+      :setCaptainToggleDisabledProfileId="setCaptainToggleDisabledProfileId"
+      :tooltipsDisabled="tooltipsDisabled"
     />
   </div>
 </template>

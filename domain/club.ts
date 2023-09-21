@@ -1,8 +1,9 @@
-import { Address, mapApiAddressToAddress } from '@/domain/address'
+import { Federation } from '@/domain/federation'
+import { Game } from '@/domain/game'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
-import { Federation, Game } from '@/domain/game'
-import { Responsible } from '@/domain/profile'
 import { Team } from '@/domain/team'
+import { Responsible } from '@/domain/profile'
+import { Address, mapApiAddressToAddress } from '@/domain/address'
 import { ApiClub } from '@/types/api/club'
 
 export type ClubRelations = {

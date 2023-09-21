@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useCategoryStore } from '@/stores/useCategoryStore'
-import { ApiCategory } from '@/types/api/category'
+import { Category, mapApiCategoryToCategory } from '@/domain/game'
 
 const easyStorage = useEasyStorage()
 const catagoryStore = useCategoryStore()
 
 const props = defineProps({
   categories: {
-    type: Array as PropType<ApiCategory[]>,
+    type: Array as PropType<Category[]>,
     default: null,
   },
   loading: {
@@ -16,21 +16,20 @@ const props = defineProps({
   },
 })
 
-const selectedCategory = ref<ApiCategory | null>(null)
+const selectedCategory = ref<Category | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const categories = ref<ApiCategory[]>(
+const categories = ref<Category[]>(
   props.categories ?? easyStorage.getNested('categories.categories', []),
 )
-const options = computed(
-  (): ApiCategory[] => props.categories ?? categories.value,
-)
+const options = computed((): Category[] => props.categories ?? categories.value)
 
 onMounted(async () => {
   if (!props.categories) {
     loadingApi.value = true
     const response = await catagoryStore.fetch()
-    categories.value = response.data.value?.data.categories ?? []
+    categories.value =
+      response.data.value?.data.categories.map(mapApiCategoryToCategory) ?? []
     loadingApi.value = false
   }
 })

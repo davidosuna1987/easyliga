@@ -1,5 +1,6 @@
 import { ApiPlayer } from '@/types/api/auth'
 import { CallPlayerData } from '@/domain/call'
+import { ApiPlayerRequest } from '@/types/api/player'
 
 export type Player = {
   profileId: number
@@ -45,3 +46,12 @@ export const mapCallPlayerDataToPlayers = (
     libero: callPlayerData.libero,
   }
 }
+
+export const mapPlayerToApiPlayerRequest = (
+  player: Player,
+): ApiPlayerRequest => ({
+  profile_id: player.profileId,
+  shirt_number: player.shirtNumber,
+  captain: player.captain,
+  libero: player.libero,
+})

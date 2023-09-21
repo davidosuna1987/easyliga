@@ -1,19 +1,19 @@
 import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
-import { Address } from '@/domain/address'
 import {
   CurrentRotation,
   mapApiCurrentRotationToCurrentRotation,
 } from '@/domain/rotation'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
-import { Responsible } from '@/domain/profile'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Club } from '@/domain/club'
 import { Court } from '@/domain/court'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
+import { Division } from '@/domain/division'
+import { League } from '@/domain/league'
 
 export enum CategoryType {
   MASCULINE = 'masculine',
@@ -35,46 +35,6 @@ export enum GenderType {
 export type Gender = {
   id: number
   name: GenderType
-}
-
-export enum FederationScope {
-  NATIONAL = 'national',
-  REGIONAL = 'regional',
-  PROVINCIAL = 'provincial',
-  DISTRICT = 'district',
-  LOCAL = 'local',
-}
-
-export type Federation = {
-  id: number
-  name: string
-  shortName: string
-  slug: string
-  scope: FederationScope
-  email?: string
-  phone?: string
-  website?: string
-  responsible?: Responsible
-  address?: Address
-  federation?: Federation
-}
-
-export type Division = {
-  id: number
-  name: string
-  priority: number
-  federation?: Federation
-}
-
-export type League = {
-  id: number
-  name: string
-  season: number
-  division?: Division
-  category?: Category
-  gender?: Gender
-  start?: string
-  end?: string
 }
 
 export type GameInitialData = {

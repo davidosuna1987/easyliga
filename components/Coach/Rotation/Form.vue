@@ -2,15 +2,23 @@
 import CallService from '@/services/call'
 import SetService from '@/services/set'
 import RotationService from '@/services/rotation'
-import { Call, mapApiCallToCall } from '@/domain/call'
+import { Call, mapApiCallToCall, MIN_CALL_PLAYERS } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { ApiRotationStoreRequest } from '@/types/api/rotation'
 import {
+  ROTATION_PLAYERS_LENGTH,
   RotationPlayer,
   mapRotationPlayerToApiRotationPlayer,
 } from '@/domain/rotation'
 
 const emit = defineEmits(['update:set'])
+
+const props = defineProps({
+  initialRotation: {
+    type: Boolean,
+    required: true,
+  },
+})
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -37,11 +45,19 @@ const currentSetHasRotation = computed(() =>
   currentSetRotation.value ? true : false,
 )
 
+// const submitButtonDisabled = computed(
+//   () =>
+//     !form.value ||
+//     form.value.players.length < ROTATION_PLAYERS_LENGTH ||
+//     !form.value.in_court_captain_profile_id,
+// )
+
 const createInitialRotation = () => {
   if (!call.value || !currentSet.value) return
   form.value = {
     call_id: call.value.id,
     set_id: currentSet.value.id,
+    in_court_captain_profile_id: 0,
     number: 1,
     players: [],
   }
@@ -76,8 +92,27 @@ const setRotationPlayers = (players: RotationPlayer[]) => {
   form.value.players = players.map(mapRotationPlayerToApiRotationPlayer)
 }
 
+const setRotationInCourtCaptain = (player: RotationPlayer) => {
+  if (!form.value) return
+  form.value.in_court_captain_profile_id = player?.profileId ?? 0
+}
+
 const handleSubmit = async () => {
   if (!form.value) return
+
+  if (form.value.players.length < ROTATION_PLAYERS_LENGTH) {
+    toast.error(
+      useNuxtApp().$i18n.t('errors.assign_min_rotation_players', {
+        num: MIN_CALL_PLAYERS,
+      }),
+    )
+    return
+  }
+
+  if (!form.value.in_court_captain_profile_id) {
+    toast.error(useNuxtApp().$i18n.t('errors.assign_in_court_captain'))
+    return
+  }
 
   loadingApi.value = true
 
@@ -121,7 +156,9 @@ onBeforeMount(() => {
         <CoachRotationCourt
           :call="call"
           :rotation="currentSetRotation"
+          :initialRotation="initialRotation"
           @update:players="setRotationPlayers"
+          @update:captain="setRotationInCourtCaptain"
         />
 
         <div
@@ -131,7 +168,6 @@ onBeforeMount(() => {
           <Button
             type="submit"
             class="easy-coach-rotation-court-component__button"
-            :disabled="!form || form.players.length < 6"
           >
             {{ $t('rotations.assign') }}
           </Button>

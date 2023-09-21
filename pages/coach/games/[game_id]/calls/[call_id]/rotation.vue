@@ -14,6 +14,6 @@ const set = ref<Set>()
     <Heading tag="h3" position="center">{{
       $t('rotations.assign_set_rotation', { num: set?.number })
     }}</Heading>
-    <CoachRotationForm @update:set="set = $event" />
+    <CoachRotationForm initialRotation @update:set="set = $event" />
   </NuxtLayout>
 </template>

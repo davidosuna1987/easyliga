@@ -57,10 +57,6 @@ export type ApiGame = {
 } & ApiGameRelations &
   ApiGameRelationsCount
 
-export type ApiGameWithSedes = ApiGame & {
-  sedes: ApiSede[]
-}
-
 export type ApiGameResponse = {
   success: boolean
   data: {

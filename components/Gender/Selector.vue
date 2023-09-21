@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useGenderStore } from '@/stores/useGenderStore'
-import { ApiGender } from '@/types/api/gender'
+import { Gender, mapApiGenderToGender } from '@/domain/game'
 
 const easyStorage = useEasyStorage()
 const genderStore = useGenderStore()
 
 const props = defineProps({
   genders: {
-    type: Array as PropType<ApiGender[]>,
+    type: Array as PropType<Gender[]>,
     default: null,
   },
   loading: {
@@ -16,19 +16,20 @@ const props = defineProps({
   },
 })
 
-const selectedGender = ref<ApiGender | null>(null)
+const selectedGender = ref<Gender | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const genders = ref<ApiGender[]>(
+const genders = ref<Gender[]>(
   props.genders ?? easyStorage.getNested('genders.genders', []),
 )
-const options = computed((): ApiGender[] => props.genders ?? genders.value)
+const options = computed((): Gender[] => props.genders ?? genders.value)
 
 onMounted(async () => {
   if (!props.genders) {
     loadingApi.value = true
     const response = await genderStore.fetch()
-    genders.value = response.data.value?.data.genders ?? []
+    genders.value =
+      response.data.value?.data.genders.map(mapApiGenderToGender) ?? []
     loadingApi.value = false
   }
 })

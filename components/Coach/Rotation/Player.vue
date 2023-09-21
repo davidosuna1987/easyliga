@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CallPlayerData } from '@/domain/call'
+import { getFullName } from '@/domain/player'
 
 const props = defineProps({
   player: {
@@ -17,12 +18,10 @@ const countPlayerCaptainIcons = (player: CallPlayerData) => {
 </script>
 
 <template>
-  <div
-    class="easy-game-call-item-component easy-coach-rotation-player-component"
-  >
+  <div class="easy-game-player-item easy-coach-rotation-player-component">
     <div class="team-player-info">
       <IconShirtNumber :shirtNumber="player.shirtNumber" />
-      {{ player.firstName }} {{ player.lastName }}
+      {{ getFullName(player) }}
     </div>
     <div
       class="team-player-captain grid gap-2"

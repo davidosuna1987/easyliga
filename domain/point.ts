@@ -1,6 +1,7 @@
-import { Game, Profile, mapApiGameToGame } from '@/domain/game'
-import { Team } from '@/domain/team'
+import { Game, mapApiGameToGame } from '@/domain/game'
 import { Set, mapApiSetToSet } from '@/domain/set'
+import { Team } from '@/domain/team'
+import { Profile } from '@/domain/profile'
 import { ApiPoint } from '@/types/api/point'
 
 export type PointRelations = {

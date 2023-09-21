@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import { Player, getFullName } from '@/domain/player'
+import { Call } from '@/domain/call'
+
+const emit = defineEmits(['update:player', 'hide'])
 
 const props = defineProps({
   player: {
     type: Object as PropType<Player>,
+    default: null,
+  },
+  call: {
+    type: Object as PropType<Call>,
     default: null,
   },
 })
@@ -30,7 +37,7 @@ watch(
       <Heading tag="h5">{{ getFullName(player) }}</Heading>
     </template>
     <Heading tag="h6">{{ $t('shirts.number_select') }}</Heading>
-    <Message :closable="false" :icon="undefined">
+    <Message v-if="call" :closable="false" :icon="undefined">
       <small>{{ $t('shirts.call_number_update_disclaimer') }}</small>
     </Message>
 
@@ -42,7 +49,6 @@ watch(
         class="mt-4"
         inputClass="text-4xl text-center w-[100px]"
         :min="1"
-        @update:modelValue="$emit('update:player', { ...player, shirtNumber })"
       >
         <template #incrementbuttonicon>
           <Icon name="ic:round-plus" />
@@ -59,7 +65,7 @@ watch(
         type="button"
         :label="$t('shirts.number_change_short')"
         :loading="false"
-        @click="$emit('hide', true)"
+        @click="emit('update:player', { ...player, shirtNumber })"
       />
     </template>
   </DialogBottom>

@@ -69,6 +69,18 @@ const rightSideTeamCall = computed(() =>
     : localTeamCall.value,
 )
 
+const leftSideTeamRotation = computed(() =>
+  gameInitialData.value?.game.currentSet?.rotations?.find(
+    rotation => rotation.callId === leftSideTeamCall.value?.id,
+  ),
+)
+
+const rightSideTeamRotation = computed(() =>
+  gameInitialData.value?.game.currentSet?.rotations?.find(
+    rotation => rotation.callId === rightSideTeamCall.value?.id,
+  ),
+)
+
 const leftSideTeamCurrentRotation = computed(() => {
   return !gameInitialData.value?.game.currentSet?.localTeamSide ||
     gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
@@ -350,6 +362,8 @@ onBeforeUnmount(() => {
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
+      :leftSideTeamRotation="leftSideTeamRotation"
+      :rightSideTeamRotation="rightSideTeamRotation"
       :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
       :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
       :undoPointButtonDisabled="undoPointButtonDisabled"

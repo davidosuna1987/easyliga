@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia'
-import {
-  ApiFederation,
-  ApiFederationWithFederations,
-} from '@/types/api/federation'
+import { ApiFederation } from '@/types/api/federation'
 import FederationService from '@/services/federation'
-import { FederationScope } from '@/domain/game'
+import { FederationScope } from '@/domain/federation'
 
 const federationService = new FederationService()
 
 export const useFederationStore = defineStore('federations', () => {
   const federations = ref<ApiFederation[]>([])
   const nationalFederations = ref<ApiFederation[]>([])
-  const groupedFederations = ref<ApiFederationWithFederations[]>([])
+  const groupedFederations = ref<ApiFederation[]>([])
 
   const fetch = async () => {
     const response = await federationService.fetch()
@@ -32,11 +29,15 @@ export const useFederationStore = defineStore('federations', () => {
 
   const groupFederationsById = (
     federations: ApiFederation[],
-  ): ApiFederationWithFederations[] => {
-    return federations.reduce<ApiFederationWithFederations[]>((acc, obj) => {
+  ): ApiFederation[] => {
+    return federations.reduce<ApiFederation[]>((acc, obj) => {
       const parent = acc.find(item => item.id === obj.federation_id)
 
       if (parent) {
+        if (!parent.federations) {
+          parent.federations = []
+        }
+
         parent.federations.push(obj)
       } else {
         acc.push({

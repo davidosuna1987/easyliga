@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Player } from '@/domain/game'
+import { Player } from '@/domain/player'
 
 const props = defineProps({
   player: {
@@ -22,11 +22,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  selectable: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
-  <div class="easy-game-call-item-component">
+  <div class="easy-game-player-item">
     <div class="team-player-info">
       <Avatar
         class="player-avatar"
@@ -36,7 +40,7 @@ const props = defineProps({
       <IconShirtNumber
         v-tooltip.top="{
           value: $t('shirts.number_change'),
-          disabled: !selected,
+          disabled: !selectable && !selected,
         }"
         :shirtNumber="player.shirtNumber"
         @click.stop="setShirtNumberUpdatePlayer(player)"

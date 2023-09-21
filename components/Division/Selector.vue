@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import DivisionService from '@/services/division'
-import { ApiDivision } from '@/types/api/division'
+import { Division, mapApiDivisionToDivision } from '@/domain/division'
 
 const divisionService = new DivisionService()
 
 const props = defineProps({
   divisions: {
-    type: Array as PropType<ApiDivision[]>,
-    default: null,
+    type: Array as PropType<Division[]>,
+    required: false,
   },
   loading: {
     type: Boolean,
@@ -15,19 +15,18 @@ const props = defineProps({
   },
 })
 
-const selectedDivision = ref<ApiDivision | null>(null)
+const selectedDivision = ref<Division>()
 const loadingApi = ref<boolean>(false)
 
-const divisions = ref<ApiDivision[]>(props.divisions ?? [])
-const options = computed(
-  (): ApiDivision[] => props.divisions ?? divisions.value,
-)
+const divisions = ref<Division[]>(props.divisions ?? [])
+const options = computed((): Division[] => props.divisions ?? divisions.value)
 
 onMounted(async () => {
   if (!props.divisions) {
     loadingApi.value = true
     const response = await divisionService.fetch()
-    divisions.value = response.data.value?.data.divisions ?? []
+    divisions.value =
+      response.data.value?.data.divisions?.map(mapApiDivisionToDivision) ?? []
     loadingApi.value = false
   }
 })
@@ -40,7 +39,6 @@ onMounted(async () => {
     :loading="props.loading || loadingApi"
     :options="options"
     optionLabel="name"
-    optionValue="id"
     scrollHeight="210px"
     :placeholder="$t('divisions.select')"
     @update:modelValue="$emit('selected', $event)"

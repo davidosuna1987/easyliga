@@ -30,6 +30,14 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  leftSideTeamRotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
+  rightSideTeamRotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
   leftSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
@@ -121,26 +129,32 @@ const setActionsDisabled = computed(() => {
             :position="1"
             :player="leftSideTeamCurrentRotationPlayersData[0]"
             :serving="servingTeamId === leftSideTeam.id"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="2"
             :player="leftSideTeamCurrentRotationPlayersData[1]"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="3"
             :player="leftSideTeamCurrentRotationPlayersData[2]"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="4"
             :player="leftSideTeamCurrentRotationPlayersData[3]"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="5"
             :player="leftSideTeamCurrentRotationPlayersData[4]"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="6"
             :player="leftSideTeamCurrentRotationPlayersData[5]"
+            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
         </div>
         <div class="side right">
@@ -148,26 +162,32 @@ const setActionsDisabled = computed(() => {
             :position="1"
             :player="rightSideTeamCurrentRotationPlayersData[0]"
             :serving="servingTeamId === rightSideTeam.id"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="2"
             :player="rightSideTeamCurrentRotationPlayersData[1]"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="3"
             :player="rightSideTeamCurrentRotationPlayersData[2]"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="4"
             :player="rightSideTeamCurrentRotationPlayersData[3]"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="5"
             :player="rightSideTeamCurrentRotationPlayersData[4]"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
           <GameCourtPosition
             :position="6"
             :player="rightSideTeamCurrentRotationPlayersData[5]"
+            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
         </div>
       </div>

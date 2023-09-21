@@ -5,6 +5,7 @@ import { Game, mapApiGameToGame } from '@/domain/game'
 import { Player, mapApiPlayersToPlayers } from '@/domain/player'
 import {
   Call,
+  MAX_CALL_LIBERO_PLAYERS,
   mapApiCallToCall,
   mapCallPlayersDataToPlayers,
 } from '@/domain/call'
@@ -24,6 +25,7 @@ const game = ref<Game>()
 const call = ref<Call>()
 const players = ref<Player[]>([])
 const selectedPlayers = ref<Player[]>([])
+const selectedCaptain = ref<Player>()
 const shirtNumberUpdatePlayer = ref<Player>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
@@ -34,12 +36,8 @@ const form = computed(() => {
   }
 })
 
-const selectedCaptain = computed(() =>
-  selectedPlayers.value.find(player => player.captain),
-)
-
-const selectedLibero = computed(() =>
-  selectedPlayers.value.find(player => player.libero),
+const selectedLiberos = computed(() =>
+  selectedPlayers.value.filter(player => player.libero),
 )
 
 const showGameLockedToast = () => {
@@ -53,16 +51,31 @@ const removeSelectedPlayer = (player: Player) => {
     p => p.profileId === player.profileId,
   )
   selectedPlayers.value?.splice(index, 1)
+
+  if (selectedCaptain.value?.profileId === player.profileId) {
+    selectedCaptain.value = undefined
+  }
+
+  if (selectedLiberos.value?.find(p => p.profileId === player.profileId)) {
+    selectedLiberos.value?.map(p => p.profileId !== player.profileId)
+  }
 }
 
 const addSelectedPlayer = (player: Player) => {
   if (typeof player !== 'object') return
 
+  // selectedPlayers.value?.push(player)
+
+  // ADD PLAYER REMOVING WITHOUT LIBERO OR CAPTAIN IF ARE SET
   selectedPlayers.value?.push({
     ...player,
     captain: selectedCaptain.value ? false : !!player.captain,
-    libero: selectedLibero.value ? false : !!player.libero,
+    // libero: selectedLibero.value ? false : !!player.libero,
   })
+
+  if (!selectedCaptain.value && !!player.captain) {
+    selectedCaptain.value = player
+  }
 }
 
 const togglePlayer = (player: Player) => {
@@ -80,33 +93,60 @@ const togglePlayer = (player: Player) => {
   }
 }
 
-const setCaptain = (id: number) => {
+const setCaptain = (profileId: number) => {
   if (!call.value) return
 
   if (call.value.locked) {
-    showGameLockedToast()
+    // showGameLockedToast()
     return
   }
 
-  selectedPlayers.value.forEach(player => {
-    player.captain = player.profileId === id
-  })
+  selectedPlayers.value.map(player => (player.captain = false))
+
+  const player = selectedPlayers.value?.find(
+    player => player.profileId === profileId,
+  )
+  if (player) {
+    player.captain = !player.captain
+  }
+
+  selectedCaptain.value = player
 }
 
-const setLibero = (id: number) => {
+const setLibero = (profileId: number) => {
   if (!call.value) return
 
   if (call.value.locked) {
-    showGameLockedToast()
+    // showGameLockedToast()
     return
   }
 
-  selectedPlayers.value.forEach(player => {
-    player.libero = player.profileId === id
-  })
+  const player = selectedPlayers.value?.find(
+    player => player.profileId === profileId,
+  )
+
+  if (
+    !player?.libero &&
+    selectedLiberos.value.length >= MAX_CALL_LIBERO_PLAYERS
+  ) {
+    toast.error(
+      useNuxtApp().$i18n.t('errors.max_liberos', {
+        max: MAX_CALL_LIBERO_PLAYERS,
+      }),
+    )
+    return
+  }
+
+  if (player) {
+    player.libero = !player.libero
+  }
 }
 
-const setShirtNumberUpdatePlayer = (player?: Player) => {
+const setShirtNumberUpdatePlayer = (player: Player) => {
+  shirtNumberUpdatePlayer.value = player
+}
+
+const changePlayerShirtNumber = (player?: Player) => {
   if (
     !player ||
     !selectedPlayers.value.find(p => p.profileId === player.profileId)
@@ -137,7 +177,7 @@ const setShirtNumberUpdatePlayer = (player?: Player) => {
       setLibero(removedPlayer.profileId)
     }
 
-    shirtNumberUpdatePlayer.value = player
+    shirtNumberUpdatePlayer.value = undefined
   }
 }
 
@@ -235,12 +275,18 @@ onBeforeUnmount(() => {
         :setCaptain="setCaptain"
         :setLibero="setLibero"
         :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
+        :setCaptainToggleDisabledProfileId="selectedCaptain?.profileId"
+        :tooltipsDisabled="call?.locked"
       />
     </FormLabel>
     <div class="grid gap-4 md:grid-cols-2 items-start mt-4">
       <div>
-        <GameCallSelectedCaptain :player="selectedCaptain" class="mb-3" />
-        <GameCallSelectedLibero :player="selectedLibero" />
+        <!-- <GameCallSelectedCaptain :player="selectedCaptain" class="mb-3" /> -->
+        <GameCallSelectedLibero
+          v-for="libero in selectedLiberos"
+          class="mb-3"
+          :player="libero"
+        />
       </div>
       <div v-if="!call?.locked" class="grid justify-end">
         <Button
@@ -253,12 +299,22 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <GameCallShirtNumberDialog
+      :call="call"
       :player="shirtNumberUpdatePlayer"
-      @update:player="setShirtNumberUpdatePlayer"
-      @hide="setShirtNumberUpdatePlayer"
+      @update:player="changePlayerShirtNumber"
+      @hide="shirtNumberUpdatePlayer = undefined"
     />
   </form>
 </template>
+
+<style scoped lang="scss">
+.easy-game-call-form-component {
+  &.is-locked {
+    pointer-events: none !important;
+    filter: grayscale(1);
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

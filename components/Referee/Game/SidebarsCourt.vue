@@ -26,6 +26,14 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
+  leftSideTeamRotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
+  rightSideTeamRotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
   leftSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
     required: true,
@@ -101,6 +109,8 @@ const undoLastPoint = () => {
         :rightSideTeam="rightSideTeam"
         :leftSideTeamCall="leftSideTeamCall"
         :rightSideTeamCall="rightSideTeamCall"
+        :leftSideTeamRotation="leftSideTeamRotation"
+        :rightSideTeamRotation="rightSideTeamRotation"
         :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
         :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
         :undoPointButtonDisabled="undoPointButtonDisabled"

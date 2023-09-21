@@ -8,7 +8,7 @@ const federationStore = useFederationStore()
 const props = defineProps({
   federations: {
     type: Array as PropType<ApiFederation[]>,
-    default: null,
+    required: false,
   },
   loading: {
     type: Boolean,
@@ -16,7 +16,7 @@ const props = defineProps({
   },
 })
 
-const selectedFederation = ref<ApiFederation | null>(null)
+const selectedFederation = ref<ApiFederation>()
 const loadingApi = ref<boolean>(false)
 
 const nationalFederations = ref<ApiFederation[]>(

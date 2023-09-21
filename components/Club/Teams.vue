@@ -6,7 +6,7 @@ import { Sede } from '@/domain/sede'
 import { Team } from '@/domain/team'
 
 const auth = useAuthStore()
-const storage = useEasyStorage()
+const easyProps = useEasyProps()
 const clubService = new ClubService()
 
 const clubs = ref<Club[]>()
@@ -37,7 +37,7 @@ const clubManagesAnyTeam = computed(() => !!clubsWithTeams.value?.length)
 const sedeContainsTeams = (sede: Sede) => !!sede.teams?.length
 
 const goToEditTeam = (team: Team) => {
-  storage.set(`team.${team.id}.edit`, team)
+  easyProps.set(`team.${team.id}.edit`, team)
   navigateTo(`/club/teams/${team.id}/edit`)
 }
 

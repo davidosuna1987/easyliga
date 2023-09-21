@@ -1,4 +1,4 @@
-.easy-game-call-item-component {
+.easy-game-player-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -19,12 +19,34 @@
 
   .easy-icon-captain-component,
   .easy-icon-libero-component {
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0.5;
+    filter: grayscale(1);
   }
 
-  .easy-icon-shirt-number-component {
-    pointer-events: none;
+  &.is-captain {
+    .easy-icon-captain-component {
+      opacity: 1;
+      filter: none;
+    }
+  }
+
+  &.is-libero {
+    .easy-icon-libero-component {
+      opacity: 1;
+      filter: none;
+    }
+  }
+
+  &.is-selectable {
+    .easy-icon-captain-component,
+    .easy-icon-libero-component {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .easy-icon-shirt-number-component {
+      pointer-events: none;
+    }
   }
 
   &.is-selected {
@@ -36,30 +58,24 @@
       pointer-events: all;
       filter: grayscale(1);
 
-      &:hover {
+      &:hover:not(.cursor-default.pointer-events-auto) {
         opacity: 0.5;
         filter: none;
       }
     }
 
-    .easy-icon-shirt-number-component {
-      pointer-events: all;
+    &.is-captain {
+      .easy-icon-captain-component {
+        opacity: 1;
+        filter: none;
+      }
     }
-  }
 
-  &.is-captain {
-    .easy-icon-captain-component {
-      opacity: 1 !important;
-      pointer-events: all;
-      filter: none;
-    }
-  }
-
-  &.is-libero {
-    .easy-icon-libero-component {
-      opacity: 1 !important;
-      pointer-events: all;
-      filter: none;
+    &.is-libero {
+      .easy-icon-libero-component {
+        opacity: 1;
+        filter: none;
+      }
     }
   }
 }
@@ -105,5 +121,12 @@
   .easy-icon-captain-component,
   .easy-icon-libero-component {
     opacity: 1 !important;
+  }
+}
+
+.easy-coach-rotation-players-dialog-component {
+  .easy-icon-captain-component,
+  .easy-icon-libero-component {
+    filter: none;
   }
 }
