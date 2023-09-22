@@ -5,6 +5,7 @@ import {
 } from '@/types/api/rotation'
 
 export const ROTATION_PLAYERS_LENGTH = 6
+export const MAX_ROTATION_PLAYER_CHANGES = 6
 
 export type RotationPlayer = {
   profileId: number
@@ -21,6 +22,7 @@ export type Rotation = {
   setId: number
   number: number
   inCourtCaptainProfileId: number
+  playerChangesCount: number
   locked: boolean
   players: RotationPlayer[]
 }
@@ -63,6 +65,7 @@ export const mapApiRotationToRotation = (
     callId: apiRotation.call_id,
     setId: apiRotation.set_id,
     inCourtCaptainProfileId: apiRotation.in_court_captain_profile_id,
+    playerChangesCount: apiRotation.player_changes_count,
     number: apiRotation.number,
     locked: apiRotation.locked,
     players: apiRotation.players

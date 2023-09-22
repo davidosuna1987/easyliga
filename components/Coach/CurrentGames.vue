@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Game } from '@/domain/game'
-import { Call } from '@/domain/call'
-import { Rotation } from '@/domain/rotation'
+import { Call, MAX_CALL_PLAYERS } from '@/domain/call'
+import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
 
 const props = defineProps({
   games: {
@@ -25,7 +25,18 @@ const currentSetRotation = (
 
 const callUnlocked = (callIndex: number): boolean | undefined =>
   !props.calls[callIndex]?.locked ||
-  props.calls[callIndex]?.playersData.length < 6
+  props.calls[callIndex]?.playersData.length < MAX_CALL_PLAYERS
+
+const maxSetPlayerChangesReached = (
+  game: Game,
+  callId: number,
+): boolean | undefined => {
+  const rotation = currentSetRotation(game, callId)
+
+  if (!rotation) return
+
+  return rotation.playerChangesCount >= MAX_ROTATION_PLAYER_CHANGES
+}
 </script>
 
 <template>
@@ -57,7 +68,8 @@ const callUnlocked = (callIndex: number): boolean | undefined =>
           class="action"
           :gameId="game.id"
           :teamId="calls[index]?.teamId"
-          :locked="!!calls[index]?.locked"
+          :rotation="currentSetRotation(game, calls[index]?.id)"
+          :locked="!!maxSetPlayerChangesReached(game, calls[index]?.id)"
         />
         <Button class="action" outlined :label="$t('games.game')" />
       </div>

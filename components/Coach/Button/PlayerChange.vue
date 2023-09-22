@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Rotation } from '@/domain/rotation'
+
 const toast = useEasyToast()
 
 const props = defineProps({
@@ -9,6 +11,10 @@ const props = defineProps({
   teamId: {
     type: Number,
     required: true,
+  },
+  rotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
   },
   severity: {
     type: String,

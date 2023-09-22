@@ -25,6 +25,7 @@ export type ApiRotation = {
   call_id: number
   set_id: number
   in_court_captain_profile_id: number
+  player_changes_count: number
   number: number
   locked: boolean
   players: ApiRotationPlayer[]
