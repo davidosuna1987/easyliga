@@ -406,7 +406,8 @@
     "assign_call": "La convocatoria no está creada, para assignar una rotación primero tienes que crear la convocatoria",
     "in_court": "En pista",
     "bench": "Banquillo",
-    "libero_not_allowed_in_initial_rotation": "No puedes alinear un líbero en la rotación inicial"
+    "libero_not_allowed_in_initial_rotation": "No puedes alinear un líbero en la rotación inicial",
+    "max_player_changes_reached": "No puedes hacer más cambios en este set"
   },
   "sets": {
     "set": "Sets | Set | Sets",

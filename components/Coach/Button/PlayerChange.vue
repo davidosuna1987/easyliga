@@ -30,8 +30,8 @@ const props = defineProps({
   },
 })
 
-const showCallLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
+const showMaxPlayerChangesReachedToast = () => {
+  toast.warn(useNuxtApp().$i18n.t('rotations.max_player_changes_reached'))
 }
 </script>
 
@@ -45,7 +45,7 @@ const showCallLockedToast = () => {
     "
     @click.prevent="
       props.locked
-        ? showCallLockedToast()
+        ? showMaxPlayerChangesReachedToast()
         : navigateTo(
             `/coach/games/${props.gameId}/teams/${props.teamId}/player-change`,
           )
