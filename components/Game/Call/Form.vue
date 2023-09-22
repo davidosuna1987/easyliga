@@ -153,6 +153,17 @@ const changePlayerShirtNumber = (player?: Player) => {
   ) {
     shirtNumberUpdatePlayer.value = undefined
   } else {
+    if (
+      selectedPlayers.value.find(
+        p =>
+          p.shirtNumber === player.shirtNumber &&
+          p.profileId !== player.profileId,
+      )
+    ) {
+      toast.error(useNuxtApp().$i18n.t('shirts.already_in_use'))
+      return
+    }
+
     players.value.map(p => {
       if (p.profileId === player.profileId) {
         p.shirtNumber = player.shirtNumber

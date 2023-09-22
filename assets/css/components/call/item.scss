@@ -64,6 +64,10 @@
       }
     }
 
+    .easy-icon-shirt-number-component {
+      pointer-events: all !important;
+    }
+
     &.is-captain {
       .easy-icon-captain-component {
         opacity: 1;
@@ -73,7 +77,7 @@
 
     &.is-libero {
       .easy-icon-libero-component {
-        opacity: 1;
+        opacity: 1 !important;
         filter: none;
       }
     }
