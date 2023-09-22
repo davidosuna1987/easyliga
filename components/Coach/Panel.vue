@@ -63,7 +63,7 @@ const getCurrentGamesCalls = async () => {
   calls.value = []
 
   currentGames.value?.forEach(async game => {
-    if (['warmup', 'resting'].includes(game.status)) {
+    if (['warmup', 'resting', 'playing'].includes(game.status)) {
       const { data } = await callService.fetch({
         where: `game_id:${game.id}`,
         with: 'currentRotation.players',
