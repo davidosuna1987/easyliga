@@ -4,7 +4,7 @@ import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
-import { CurrentRotation, Rotation } from '@/domain/rotation'
+import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
 import { GameStatus } from '@/domain/game'
 
 const auth = useAuthStore()
@@ -85,17 +85,26 @@ const getRotationPlayerDataAtPosition = (
   const call =
     side === SetSide.LEFT ? props.leftSideTeamCall : props.rightSideTeamCall
 
-  const currentRotation =
-    side === SetSide.LEFT
-      ? props.leftSideTeamCurrentRotation
-      : props.rightSideTeamCurrentRotation
+  // const currentRotation =
+  //   side === SetSide.LEFT
+  //     ? props.leftSideTeamCurrentRotation
+  //     : props.rightSideTeamCurrentRotation
 
-  const profileId = Number(
-    Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],
-  )
+  // const profileId = Number(
+  //   Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],
+  // )
+
+  const sideRotation =
+    side === SetSide.LEFT
+      ? props.leftSideTeamRotation
+      : props.rightSideTeamRotation
+
+  const inCourtProfileId = sideRotation?.players.find(
+    player => player.currentPosition === position,
+  )?.inCourtProfileId
 
   return (
-    call.playersData?.find(player => player.profileId === profileId) ??
+    call.playersData?.find(player => player.profileId === inCourtProfileId) ??
     undefined
   )
 }
@@ -126,67 +135,21 @@ const setActionsDisabled = computed(() => {
       <div class="court">
         <div class="side left">
           <GameCourtPosition
-            :position="1"
-            :player="leftSideTeamCurrentRotationPlayersData[0]"
-            :serving="servingTeamId === leftSideTeam.id"
-            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="2"
-            :player="leftSideTeamCurrentRotationPlayersData[1]"
-            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="3"
-            :player="leftSideTeamCurrentRotationPlayersData[2]"
-            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="4"
-            :player="leftSideTeamCurrentRotationPlayersData[3]"
-            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="5"
-            :player="leftSideTeamCurrentRotationPlayersData[4]"
-            :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="6"
-            :player="leftSideTeamCurrentRotationPlayersData[5]"
+            v-for="position in POSITIONS"
+            :key="position"
+            :position="position"
+            :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
+            :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
           />
         </div>
         <div class="side right">
           <GameCourtPosition
-            :position="1"
-            :player="rightSideTeamCurrentRotationPlayersData[0]"
-            :serving="servingTeamId === rightSideTeam.id"
-            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="2"
-            :player="rightSideTeamCurrentRotationPlayersData[1]"
-            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="3"
-            :player="rightSideTeamCurrentRotationPlayersData[2]"
-            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="4"
-            :player="rightSideTeamCurrentRotationPlayersData[3]"
-            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="5"
-            :player="rightSideTeamCurrentRotationPlayersData[4]"
-            :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-          />
-          <GameCourtPosition
-            :position="6"
-            :player="rightSideTeamCurrentRotationPlayersData[5]"
+            v-for="position in POSITIONS"
+            :key="position"
+            :position="position"
+            :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
+            :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
           />
         </div>
@@ -207,14 +170,21 @@ const setActionsDisabled = computed(() => {
         :disabled="setActionsDisabled"
         @set:start="emit('set:start', $event)"
       />
-      <GamePointActions
-        v-else-if="gameStatus === 'playing'"
-        :currentSet="currentSet"
-        :undoPointButtonDisabled="undoPointButtonDisabled"
-        :undoLastPointCountdown="undoLastPointCountdown"
-        @point:sum="sumPoint"
-        @point:undo="undoLastPoint"
-      />
+      <div v-else-if="gameStatus === 'playing'" class="flex flex-col gap-8">
+        <GameChangesActions
+          class="w-full"
+          :leftSideTeamRotation="leftSideTeamRotation"
+          :rightSideTeamRotation="rightSideTeamRotation"
+        />
+        <GamePointActions
+          class="w-full"
+          :currentSet="currentSet"
+          :undoPointButtonDisabled="undoPointButtonDisabled"
+          :undoLastPointCountdown="undoLastPointCountdown"
+          @point:sum="sumPoint"
+          @point:undo="undoLastPoint"
+        />
+      </div>
       <div
         v-else-if="gameStatus === 'finished'"
         class="actions grid place-content-center"

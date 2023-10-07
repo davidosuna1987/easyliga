@@ -32,10 +32,9 @@ const undoLastPoint = () => {
   <div class="easy-game-point-actions-component">
     <div class="actions grid grid-cols-3 gap-4">
       <Button
-        class="col-span-3/10"
-        :class="undoPointButtonDisabled ? '' : 'grayscale'"
+        class="col-span-3/10 transition-none"
+        :class="undoPointButtonDisabled ? '' : 'grayscale p-button-outlined'"
         :label="$t('points.sum')"
-        outlined
         :disabled="!undoPointButtonDisabled"
         @click="
           sumPoint(
@@ -55,10 +54,9 @@ const undoLastPoint = () => {
         @click="undoLastPoint"
       />
       <Button
-        class="col-span-3/10"
-        :class="undoPointButtonDisabled ? '' : 'grayscale'"
+        class="col-span-3/10 transition-none"
+        :class="undoPointButtonDisabled ? '' : 'grayscale p-button-outlined'"
         :label="$t('points.sum')"
-        outlined
         :disabled="!undoPointButtonDisabled"
         @click="
           sumPoint(

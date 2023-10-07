@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { Player } from '@/domain/player'
+import { Player, getFullName } from '@/domain/player'
+import { CallPlayerData } from '@/domain/call'
 
 const props = defineProps({
   player: {
-    type: Object as PropType<Player>,
+    type: Object as PropType<Player | CallPlayerData>,
     required: true,
   },
   setCaptain: {
@@ -71,8 +72,8 @@ const iconsGap = computed(() => {
     :class="{
       'is-selectable': selectable,
       'is-selected': selected,
-      'is-captain': player.captain,
-      'is-libero': player.libero,
+      'is-captain': showCaptain,
+      'is-libero': showLibero,
     }"
   >
     <div class="team-player-info">
@@ -89,14 +90,12 @@ const iconsGap = computed(() => {
         :shirtNumber="player.shirtNumber"
         @click.stop="setShirtNumberUpdatePlayer(player)"
       />
-      {{ player.firstName }} {{ player.lastName }}
+      <span class="player-name">{{ getFullName(player) }}</span>
     </div>
     <div
       v-if="showIcons || showCaptain || showLibero"
       class="team-player-captain grid gap-2"
-      :class="[
-        /* !!removePlayer ? 'grid-cols-3' : 'grid-cols-2' */ `grid-cols-${iconsGap}`,
-      ]"
+      :class="[`grid-cols-${iconsGap}`]"
     >
       <IconLibero
         v-if="showIcons || showLibero"

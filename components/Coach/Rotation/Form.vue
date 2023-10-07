@@ -92,9 +92,9 @@ const setRotationPlayers = (players: RotationPlayer[]) => {
   form.value.players = players.map(mapRotationPlayerToApiRotationPlayer)
 }
 
-const setRotationInCourtCaptain = (player: RotationPlayer) => {
+const setRotationInCourtCaptain = (profileId: number) => {
   if (!form.value) return
-  form.value.in_court_captain_profile_id = player?.profileId ?? 0
+  form.value.in_court_captain_profile_id = profileId
 }
 
 const handleSubmit = async () => {
@@ -156,7 +156,7 @@ onBeforeMount(() => {
         <CoachRotationCourt
           :call="call"
           :rotation="currentSetRotation"
-          :initialRotation="initialRotation"
+          :isInitialRotationAssignment="initialRotation"
           @update:players="setRotationPlayers"
           @update:captain="setRotationInCourtCaptain"
         />

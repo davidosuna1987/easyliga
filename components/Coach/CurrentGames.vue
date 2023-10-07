@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Game } from '@/domain/game'
-import { Call, MAX_CALL_PLAYERS } from '@/domain/call'
+import { Call, MIN_CALL_PLAYERS } from '@/domain/call'
 import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
 
 const props = defineProps({
@@ -25,7 +25,7 @@ const currentSetRotation = (
 
 const callUnlocked = (callIndex: number): boolean | undefined =>
   !props.calls[callIndex]?.locked ||
-  props.calls[callIndex]?.playersData.length < MAX_CALL_PLAYERS
+  props.calls[callIndex]?.playersData.length < MIN_CALL_PLAYERS
 
 const maxSetPlayerChangesReached = (
   game: Game,

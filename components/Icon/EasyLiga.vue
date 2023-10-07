@@ -5,10 +5,6 @@ const props = defineProps({
     default: '38',
   },
 })
-
-const sizeClass = computed(() => {
-  return props.size ? `size-${props.size}` : ''
-})
 </script>
 
 <template>

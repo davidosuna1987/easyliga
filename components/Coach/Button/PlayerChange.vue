@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Rotation } from '@/domain/rotation'
 
+const router = useRouter()
 const toast = useEasyToast()
 
 const props = defineProps({
@@ -33,6 +34,10 @@ const props = defineProps({
 const showMaxPlayerChangesReachedToast = () => {
   toast.warn(useNuxtApp().$i18n.t('rotations.max_player_changes_reached'))
 }
+
+const showNoRotationToast = () => {
+  toast.warn(useNuxtApp().$i18n.t('rotations.no_rotation'))
+}
 </script>
 
 <template>
@@ -41,14 +46,20 @@ const showMaxPlayerChangesReachedToast = () => {
     outlined
     :label="props.label"
     :severity="
-      props.severity ? props.severity : props.locked ? 'warning' : 'primary'
+      props.severity
+        ? props.severity
+        : props.locked || !props.rotation
+        ? 'warning'
+        : 'primary'
     "
     @click.prevent="
       props.locked
         ? showMaxPlayerChangesReachedToast()
-        : navigateTo(
-            `/coach/games/${props.gameId}/teams/${props.teamId}/player-change`,
+        : !!props.rotation
+        ? navigateTo(
+            `/coach/games/${props.gameId}/teams/${props.teamId}/rotations/${props.rotation?.id}/player-change`,
           )
+        : showNoRotationToast()
     "
   />
 </template>

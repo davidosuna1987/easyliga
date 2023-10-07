@@ -7,6 +7,9 @@ const props = defineProps({
     type: Object as PropType<Player | CallPlayerData>,
     required: false,
   },
+  inCourtCaptain: {
+    type: Boolean,
+  },
 })
 </script>
 
@@ -17,7 +20,13 @@ const props = defineProps({
   >
     <IconCaptain />
     <IconShirtNumber v-if="player" :shirtNumber="player.shirtNumber" />
-    {{ player ? getFullName(player) : $t('teams.captain_select') }}
+    {{
+      player
+        ? getFullName(player)
+        : props.inCourtCaptain
+        ? $t('teams.in_court_captain_select')
+        : $t('teams.captain_select')
+    }}
   </div>
 </template>
 

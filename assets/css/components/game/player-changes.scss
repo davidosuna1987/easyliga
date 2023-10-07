@@ -1,0 +1,86 @@
+.easy-player-changes-component {
+  .actions {
+    .action {
+      height: 100%;
+
+      &.action-done {
+        color: var(--primary-color);
+      }
+
+      &.action-undo {
+        cursor: pointer;
+        color: var(--tertiary-color-dark);
+
+        &:hover {
+          color: var(--tertiary-color-dark);
+        }
+      }
+
+      &.action-remove {
+        cursor: pointer;
+        color: var(--danger-color);
+
+        &:hover {
+          color: var(--danger-color);
+        }
+      }
+    }
+  }
+}
+
+.easy-player-change-item-component {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+
+  &.has-actions {
+    grid-template-columns: 1fr auto 1fr auto;
+  }
+
+  .player-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: var(--border-radius);
+    pointer-events: none;
+
+    &:nth-child(1) {
+      background-color: var(--primary-color-light);
+    }
+
+    &:nth-child(3) {
+      background-color: var(--danger-color-lightest);
+    }
+
+    .easy-game-player-item {
+      .player-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &.is-block {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'replacement icon'
+      'replaced icon';
+    align-items: center;
+
+    .player-container {
+      &:nth-child(1) {
+        grid-area: replacement;
+      }
+
+      &:nth-child(3) {
+        grid-area: replaced;
+      }
+    }
+
+    .arrows-icon {
+      grid-area: icon;
+      place-self: center;
+      transform: rotate(90deg);
+    }
+  }
+}

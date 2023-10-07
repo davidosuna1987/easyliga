@@ -1,5 +1,4 @@
 .easy-game-call-sidebar-component {
-  // background-color: var(--primary-color-light);
   position: relative;
   box-shadow: var(--box-shadow-hard);
   padding: var(--app-margin);
@@ -14,6 +13,13 @@
       position: absolute;
       top: var(--app-margin);
       right: var(--app-margin);
+    }
+  }
+
+  .easy-game-player-item {
+    .easy-icon-captain-component,
+    .easy-icon-libero-component {
+      pointer-events: none;
     }
   }
 }

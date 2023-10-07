@@ -52,7 +52,7 @@ const benchPlayers = computed(() => {
         :key="player.profileId"
         :player="player"
         :showIcons="false"
-        :showCaptain="player.captain"
+        :showCaptain="rotation?.inCourtCaptainProfileId === player.profileId"
         :showLibero="player.libero"
       />
       <template v-if="benchPlayers.length">

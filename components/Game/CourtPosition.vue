@@ -23,10 +23,12 @@ const props = defineProps({
 
 <template>
   <div :class="[`position-${position}`, { serving: serving }]">
-    <IconEasyLiga v-if="serving" />
+    <span class="shirt-number">
+      <IconShirtNumber :shirtNumber="player?.shirtNumber" size="lg" />
+    </span>
+    <IconEasyLiga v-if="serving" size="54" />
     <IconCaptain v-if="player?.profileId === captainProfileId" size="sm" />
     <IconLibero v-if="player?.libero" size="sm" />
-    <span class="shirt-number">{{ player?.shirtNumber }}</span>
   </div>
 </template>
 

@@ -99,6 +99,7 @@ watch(image.value, () => emit('image', image.value))
         class="upload-file-input"
         type="file"
         name="image"
+        accept="image/*"
         @change="imageChange"
         style="display: none"
       />
