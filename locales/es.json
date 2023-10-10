@@ -138,7 +138,8 @@
     "max": "El valor máximo es {num}",
     "assign_in_court_captain": "Tienes que asignar al capitán en el campo",
     "max_liberos": "No puedes asignar más de {max} líberos en una convocatoria",
-    "assign_min_rotation_players": "Tienes que alinear a {num} jugadores de campo"
+    "assign_min_rotation_players": "Tienes que alinear a {num} jugadores de campo",
+    "libero_cannot_be_captain": "El líbero no puede ser capitán"
   },
   "auth": {
     "login": "Iniciar sesión",

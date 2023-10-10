@@ -94,17 +94,19 @@ const togglePlayer = (player: Player) => {
 
 const setCaptain = (profileId: number) => {
   if (!call.value) return
+  if (call.value.locked) return
 
-  if (call.value.locked) {
-    // showGameLockedToast()
+  const player = selectedPlayers.value?.find(
+    player => player.profileId === profileId,
+  )
+
+  if (!player?.captain && player?.libero) {
+    toast.error(useNuxtApp().$i18n.t('errors.libero_cannot_be_captain'))
     return
   }
 
   selectedPlayers.value.map(player => (player.captain = false))
 
-  const player = selectedPlayers.value?.find(
-    player => player.profileId === profileId,
-  )
   if (player) {
     player.captain = !player.captain
   }
@@ -114,11 +116,7 @@ const setCaptain = (profileId: number) => {
 
 const setLibero = (profileId: number) => {
   if (!call.value) return
-
-  if (call.value.locked) {
-    // showGameLockedToast()
-    return
-  }
+  if (call.value.locked) return
 
   const player = selectedPlayers.value?.find(
     player => player.profileId === profileId,
@@ -133,6 +131,11 @@ const setLibero = (profileId: number) => {
         max: MAX_CALL_LIBERO_PLAYERS,
       }),
     )
+    return
+  }
+
+  if (!player?.libero && player?.captain) {
+    toast.error(useNuxtApp().$i18n.t('errors.libero_cannot_be_captain'))
     return
   }
 
