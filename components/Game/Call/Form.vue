@@ -10,10 +10,9 @@ import {
   mapCallPlayersDataToPlayers,
 } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
-import {
-  ApiCallUnlockedEventResponse,
-  mapPlayersToApiCallRequestPlayers,
-} from '@/types/api/call'
+import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
+import { ApiCallUnlockedEventResponse } from '@/types/api/event'
+import { ApiEvents } from '@/types/api/event'
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -243,10 +242,13 @@ const submit = async () => {
 const listenCallUnlockedEvent = () => {
   window.Echo.channel(
     `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
-  ).listen('CallUnlockedEvent', (response: ApiCallUnlockedEventResponse) => {
-    toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
-    getTeamPlayers()
-  })
+  ).listen(
+    ApiEvents.CALL_UNLOCKED,
+    (response: ApiCallUnlockedEventResponse) => {
+      toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
+      getTeamPlayers()
+    },
+  )
 }
 
 const leaveCallUnlockedEvent = () => {
@@ -287,7 +289,7 @@ onBeforeUnmount(() => {
         :setLibero="setLibero"
         :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
         :setCaptainToggleDisabledProfileId="selectedCaptain?.profileId"
-        :tooltipsDisabled="call?.locked"
+        :tooltipsDisabled="!!call?.locked"
       />
     </FormLabel>
     <div class="grid gap-4 md:grid-cols-2 items-start mt-4">

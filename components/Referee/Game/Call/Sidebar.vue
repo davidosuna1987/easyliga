@@ -4,6 +4,8 @@ import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
 
+const emit = defineEmits(['call:unlocked', 'rotation:lock-toggled'])
+
 const props = defineProps({
   team: {
     type: Object as PropType<Team>,
@@ -53,7 +55,7 @@ const benchPlayers = computed(() => {
         :player="player"
         :showIcons="false"
         :showCaptain="rotation?.inCourtCaptainProfileId === player.profileId"
-        :showLibero="player.libero"
+        :showLibero="!!player.libero"
       />
       <template v-if="benchPlayers.length">
         <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
@@ -62,10 +64,16 @@ const benchPlayers = computed(() => {
           :key="player.profileId"
           :player="player"
           :showIcons="false"
-          :showCaptain="player.captain"
-          :showLibero="player.libero"
+          :showCaptain="!!player.captain"
+          :showLibero="!!player.libero"
         />
       </template>
+      <div class="rotation-status-area p-[0.5rem]">
+        <RefereeGameRotationStatus
+          :rotation="props.rotation"
+          @rotation:lock-toggled="emit('rotation:lock-toggled', true)"
+        />
+      </div>
     </template>
     <template v-else>
       <Heading tag="h6">{{ $t('calls.call') }}</Heading>
@@ -74,14 +82,14 @@ const benchPlayers = computed(() => {
         :key="player.profileId"
         :player="player"
         :showIcons="false"
-        :showCaptain="player.captain"
-        :showLibero="player.libero"
+        :showCaptain="!!player.captain"
+        :showLibero="!!player.libero"
       />
       <div class="call-status-area p-[0.5rem]">
         <RefereeGameCallStatus
           :call="props.call"
           :currentSet="props.currentSet"
-          @unlocked:call="$emit('unlocked:call', true)"
+          @call:unlocked="emit('call:unlocked', true)"
         />
       </div>
     </template>

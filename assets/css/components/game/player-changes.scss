@@ -83,4 +83,14 @@
       transform: rotate(90deg);
     }
   }
+
+  &.is-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .player-container {
+      border-radius: 50%;
+    }
+  }
 }

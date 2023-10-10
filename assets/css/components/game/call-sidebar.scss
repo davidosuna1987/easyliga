@@ -1,4 +1,5 @@
-.easy-game-call-sidebar-component {
+.easy-game-call-sidebar-component,
+.easy-game-rotation-sidebar-component {
   position: relative;
   box-shadow: var(--box-shadow-hard);
   padding: var(--app-margin);
@@ -8,7 +9,8 @@
   flex-direction: column;
   justify-content: space-between;
 
-  .easy-game-call-status-component {
+  .easy-game-call-status-component,
+  .easy-game-rotation-status-component {
     .unlock-button {
       position: absolute;
       top: var(--app-margin);
@@ -18,7 +20,8 @@
 
   .easy-game-player-item {
     .easy-icon-captain-component,
-    .easy-icon-libero-component {
+    .easy-icon-libero-component,
+    .easy-icon-shirt-number-component {
       pointer-events: none;
     }
   }

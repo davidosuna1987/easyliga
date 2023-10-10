@@ -72,12 +72,6 @@ export type ApiRotationStoreRequest = {
   players: ApiRotationPlayerStoreRequest[]
 }
 
-export type ApiRotationCreatedEventResponse = {
-  rotation: ApiRotation
-  call: ApiCall
-  team: ApiTeam
-}
-
 export type ApiCurrentRotation = {
   [profileId: string]: number
 }

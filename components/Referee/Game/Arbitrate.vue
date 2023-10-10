@@ -5,8 +5,11 @@ import SetService from '@/services/set'
 import { GameInitialData, mapApiGameInitialDataToGame } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
-import { ApiCallUpdatedEventResponse } from '@/types/api/call'
-import { ApiRotationCreatedEventResponse } from '@/types/api/rotation'
+import {
+  ApiCallUpdatedEventResponse,
+  ApiRotationCreatedEventResponse,
+  ApiRotationUpdatedEventResponse,
+} from '@/types/api/event'
 import { TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
@@ -16,7 +19,11 @@ import {
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
 import { useAuthStore } from '@/stores/useAuthStore'
-import { mapApiRotationToRotation } from '@/domain/rotation'
+import {
+  mapApiRotationToRotation,
+  mapRotationToRotationPlayerChanges,
+} from '@/domain/rotation'
+import { ApiEvents } from '@/types/api/event'
 
 const auth = useAuthStore()
 const app = useNuxtApp()
@@ -252,14 +259,14 @@ const startSet = async (setStartRequest: SetStartRequest) => {
 
 const listenCallUpdatedEvent = () => {
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
-    'CallUpdatedEvent',
+    ApiEvents.CALL_UPDATED,
     (response: ApiCallUpdatedEventResponse) => {
       toast.info(
         app.$i18n.t('events.call_updated', {
           teamName: response.team.name,
         }),
         {
-          life: 300000,
+          life: 30000,
         },
       )
       if (response.team.id === gameInitialData.value?.localTeam?.id) {
@@ -273,20 +280,53 @@ const listenCallUpdatedEvent = () => {
 
 const listenRotationCreatedEvent = () => {
   window.Echo.channel(`game.${route.params.game_id}.rotation.created`).listen(
-    'RotationCreatedEvent',
+    ApiEvents.ROTATION_CREATED,
     (response: ApiRotationCreatedEventResponse) => {
       toast.info(
         app.$i18n.t('events.rotation_created', {
           teamName: response.team.name,
         }),
         {
-          life: 300000,
+          life: 30000,
         },
       )
 
       const oldRotation =
         gameInitialData.value?.game.currentSet?.rotations?.find(
           rotation => rotation.callId === response.call.id,
+        )
+
+      if (oldRotation) {
+        gameInitialData.value?.game.currentSet?.rotations?.splice(
+          gameInitialData.value?.game.currentSet?.rotations
+            ?.map(rotation => rotation.id)
+            .indexOf(oldRotation.id),
+          1,
+        )
+      }
+
+      const newRotation = mapApiRotationToRotation(response.rotation)
+      gameInitialData.value?.game.currentSet?.rotations?.push(newRotation)
+    },
+  )
+}
+
+const listenRotationUpdatedEvent = () => {
+  window.Echo.channel(`game.${route.params.game_id}.rotation.updated`).listen(
+    ApiEvents.ROTATION_UPDATED,
+    (response: ApiRotationUpdatedEventResponse) => {
+      toast.info(
+        app.$i18n.t('events.rotation_updated', {
+          teamName: response.team.name,
+        }),
+        {
+          life: 30000,
+        },
+      )
+
+      const oldRotation =
+        gameInitialData.value?.game.currentSet?.rotations?.find(
+          rotation => rotation.id === response.rotation.id,
         )
 
       if (oldRotation) {
@@ -312,14 +352,20 @@ const leaveRotationCreateddEvent = () => {
   window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.created`)
 }
 
+const leaveRotationUpdateddEvent = () => {
+  window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.updated`)
+}
+
 const listenEvents = () => {
   listenCallUpdatedEvent()
   listenRotationCreatedEvent()
+  listenRotationUpdatedEvent()
 }
 
 const leaveEvents = () => {
   leaveCallUnlockedEvent()
   leaveRotationCreateddEvent()
+  leaveRotationUpdateddEvent()
 }
 
 onBeforeMount(() => {
@@ -337,6 +383,8 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="easy-referee-game-arbitrate-component">
+    <Loading v-if="loadingApi" />
+
     <GameStatus v-if="gameInitialData" :status="gameInitialData.game.status" />
     <RefereeGameTeamSetsWon
       v-if="leftSideTeam && rightSideTeam"
@@ -371,12 +419,14 @@ onBeforeUnmount(() => {
       :servingTeamId="servingTeamId"
       :rotations="gameInitialData.game.currentSet.rotations"
       :gameStatus="gameInitialData.game.status"
-      @unlocked:call="getGameInitialData"
+      @call:unlocked="getGameInitialData"
+      @rotation:lock-toggled="getGameInitialData"
       @point:sum="sumPoint"
       @point:undo="undoLastPoint"
       @set:start="startSet"
     />
 
+    <!-- TODO: remove in production -->
     <div v-if="auth.hasRole('staff')" class="flex items-center mt-5">
       <label for="disablePointTimeout" class="mr-2 cursor-pointer">
         Deshabilitar tiempo de deshabilitar punto:

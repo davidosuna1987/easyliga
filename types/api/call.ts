@@ -66,15 +66,6 @@ export type ApiCallsResponse = {
   errors: null
 }
 
-export type ApiCallUpdatedEventResponse = {
-  call: ApiCall
-  team: ApiTeam
-}
-
-export type ApiCallUnlockedEventResponse = {
-  call: ApiCall
-}
-
 export const mapPlayersToApiCallRequestPlayers = (
   players: Player[],
 ): ApiCallRequestPlayer[] => {

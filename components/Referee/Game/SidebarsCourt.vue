@@ -65,7 +65,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'unlocked:call',
+  'call:unlocked',
+  'rotation:lock-toggled',
   'point:sum',
   'point:undo',
   'set:start',
@@ -99,7 +100,8 @@ const undoLastPoint = () => {
       :call="leftSideTeamCall"
       :rotation="leftSideTeamRotation"
       :currentSet="currentSet"
-      @unlocked:call="emit('unlocked:call')"
+      @call:unlocked="emit('call:unlocked')"
+      @rotation:lock-toggled="emit('rotation:lock-toggled')"
     />
     <div class="score-court relative flex flex-col gap-3">
       <GameScore :currentSet="currentSet" />
@@ -128,7 +130,8 @@ const undoLastPoint = () => {
       :call="rightSideTeamCall"
       :rotation="rightSideTeamRotation"
       :currentSet="currentSet"
-      @unlocked:call="emit('unlocked:call')"
+      @call:unlocked="emit('call:unlocked')"
+      @rotation:lock-toggled="emit('rotation:lock-toggled')"
     />
   </div>
 </template>

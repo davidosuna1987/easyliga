@@ -4,8 +4,12 @@ import GameService from '@/services/game'
 import CallService from '@/services/call'
 import { Game, mapApiGameToGame } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
-import { ApiCallUnlockedEventResponse } from '@/types/api/call'
+import {
+  ApiCallUnlockedEventResponse,
+  ApiRotationLockToggledEventResponse,
+} from '@/types/api/event'
 import { TeamType } from '@/domain/team'
+import { ApiEvents, ApiGameStatusUpdatedEventResponse } from '@/types/api/event'
 
 const auth = useAuthStore()
 const gameService = new GameService()
@@ -76,6 +80,11 @@ const getCurrentGamesCalls = async () => {
       if (apiGameCall) {
         calls.value?.push(mapApiCallToCall(apiGameCall))
         listenCallUnlockedEvent(game.id, apiGameCall.id)
+        listenGameStatusUpdatedEvent(game.id)
+        calls.value?.forEach(call => {
+          call.currentRotation &&
+            listenRotationLockToggledEvent(game.id, call.currentRotation.id)
+        })
       }
     }
 
@@ -85,10 +94,53 @@ const getCurrentGamesCalls = async () => {
 
 const listenCallUnlockedEvent = (gameId: number, callId: number) => {
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
-    'CallUnlockedEvent',
+    ApiEvents.CALL_UNLOCKED,
     (response: ApiCallUnlockedEventResponse) => {
       toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
       getCurrentGamesCalls()
+    },
+  )
+}
+
+const listenRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+  window.Echo.channel(
+    `game.${gameId}.rotation.${rotationId}.lock-toggled`,
+  ).listen(
+    ApiEvents.ROTATION_LOCK_TOGGLED,
+    (response: ApiRotationLockToggledEventResponse) => {
+      toast.info(useNuxtApp().$i18n.t('events.rotation_unlocked'))
+      getCurrentGamesCalls()
+    },
+  )
+}
+
+const listenGameStatusUpdatedEvent = (gameId: number) => {
+  window.Echo.channel(`game.${gameId}.status.updated`).listen(
+    ApiEvents.GAME_STATUS_UPDATED,
+    (response: ApiGameStatusUpdatedEventResponse) => {
+      const game = currentGames.value?.find(game => game.id === gameId)
+      if (game) {
+        toast.info(
+          useNuxtApp().$i18n.t('events.game_status_updated', {
+            gameName: game.name,
+            status: useNuxtApp().$i18n.t(`games.status.${response.status}`),
+          }),
+          {
+            life: 30000,
+          },
+        )
+
+        getCurrentGamesCalls()
+
+        if (response.status === 'finished') {
+          currentGames.value?.splice(
+            currentGames.value?.findIndex(game => game.id === gameId),
+            1,
+          )
+        } else {
+          game.status = response.status
+        }
+      }
     },
   )
 }
@@ -97,10 +149,21 @@ const leaveCallUnlockedEvent = (gameId: number, callId: number) => {
   window.Echo.leaveChannel(`game.${gameId}.call.${callId}.unlocked`)
 }
 
+const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+  window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
+}
+
+const leaveGameStatusUpdatedEvent = (gameId: number) => {
+  window.Echo.leaveChannel(`game.${gameId}.status.updated`)
+}
+
 onBeforeMount(getCurrentGames)
 onBeforeUnmount(() => {
   calls.value?.forEach(call => {
     leaveCallUnlockedEvent(call.gameId, call.id)
+    leaveGameStatusUpdatedEvent(call.gameId)
+    call.currentRotation &&
+      leaveRotationLockToggledEvent(call.gameId, call.currentRotation.id)
   })
 })
 </script>

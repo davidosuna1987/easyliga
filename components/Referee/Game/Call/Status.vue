@@ -5,7 +5,7 @@ import { Set } from '@/domain/set'
 
 const toast = useEasyToast()
 const callService = new CallService()
-const emit = defineEmits(['unlocked:call'])
+const emit = defineEmits(['call:unlocked'])
 
 const props = defineProps({
   call: {
@@ -28,7 +28,7 @@ const unlock = async () => {
     return
   }
 
-  emit('unlocked:call', true)
+  emit('call:unlocked', true)
 }
 </script>
 

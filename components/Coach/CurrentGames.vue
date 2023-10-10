@@ -27,6 +27,9 @@ const callUnlocked = (callIndex: number): boolean | undefined =>
   !props.calls[callIndex]?.locked ||
   props.calls[callIndex]?.playersData.length < MIN_CALL_PLAYERS
 
+const rotationLocked = (callIndex: number): boolean | undefined =>
+  props.calls[callIndex]?.currentRotation?.locked
+
 const maxSetPlayerChangesReached = (
   game: Game,
   callId: number,
@@ -46,7 +49,13 @@ const maxSetPlayerChangesReached = (
       <GameStatus :status="game.status" />
       <div
         class="actions grid gap-2 mt-3"
-        :class="[game.status === 'warmup' ? 'grid-cols-3' : 'grid-cols-2']"
+        :class="[
+          game.status === 'finished'
+            ? 'grid-cols-1'
+            : game.status === 'warmup'
+            ? 'grid-cols-3'
+            : 'grid-cols-2',
+        ]"
       >
         <CoachButtonCall
           v-if="game.status === 'warmup'"
@@ -69,7 +78,10 @@ const maxSetPlayerChangesReached = (
           :gameId="game.id"
           :teamId="calls[index]?.teamId"
           :rotation="currentSetRotation(game, calls[index]?.id)"
-          :locked="!!maxSetPlayerChangesReached(game, calls[index]?.id)"
+          :locked="
+            !!rotationLocked(index) ||
+            !!maxSetPlayerChangesReached(game, calls[index]?.id)
+          "
         />
         <Button class="action" outlined :label="$t('games.game')" />
       </div>

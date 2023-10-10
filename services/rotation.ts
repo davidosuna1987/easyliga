@@ -23,4 +23,16 @@ export default class RotationService {
       body: data,
     })
   }
+
+  unlock(rotationId: number) {
+    return useApi<ApiRotationResponse>(`rotations/${rotationId}/unlock`, {
+      method: 'PUT',
+    })
+  }
+
+  lock(rotationId: number) {
+    return useApi<ApiRotationResponse>(`rotations/${rotationId}/lock`, {
+      method: 'PUT',
+    })
+  }
 }

@@ -31,6 +31,18 @@ const props = defineProps({
   },
 })
 
+const handleLockedToast = () => {
+  props.rotation?.locked
+    ? showLockedToast()
+    : showMaxPlayerChangesReachedToast()
+}
+
+const showLockedToast = () => {
+  toast.warn(useNuxtApp().$i18n.t('rotations.locked_changes'), {
+    life: 10000,
+  })
+}
+
 const showMaxPlayerChangesReachedToast = () => {
   toast.warn(useNuxtApp().$i18n.t('rotations.max_player_changes_reached'))
 }
@@ -54,7 +66,7 @@ const showNoRotationToast = () => {
     "
     @click.prevent="
       props.locked
-        ? showMaxPlayerChangesReachedToast()
+        ? handleLockedToast()
         : !!props.rotation
         ? navigateTo(
             `/coach/games/${props.gameId}/teams/${props.teamId}/rotations/${props.rotation?.id}/player-change`,

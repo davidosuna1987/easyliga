@@ -70,6 +70,10 @@ const props = defineProps({
 
 const emit = defineEmits(['point:sum', 'point:undo', 'set:start'])
 
+const waitingForPlayerChanges = computed(() =>
+  props.rotations.some(rotation => !rotation.locked),
+)
+
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
 }
@@ -170,9 +174,23 @@ const setActionsDisabled = computed(() => {
         :disabled="setActionsDisabled"
         @set:start="emit('set:start', $event)"
       />
+      <div
+        v-else-if="waitingForPlayerChanges"
+        class="actions grid place-content-center"
+      >
+        <Button
+          class="px-12"
+          :label="$t('rotations.waiting_player_changes')"
+          outlined
+          :loading="true"
+          :disabled="true"
+        />
+      </div>
       <div v-else-if="gameStatus === 'playing'" class="flex flex-col gap-8">
         <GameChangesActions
           class="w-full"
+          :leftSideTeamCall="leftSideTeamCall"
+          :rightSideTeamCall="rightSideTeamCall"
           :leftSideTeamRotation="leftSideTeamRotation"
           :rightSideTeamRotation="rightSideTeamRotation"
         />

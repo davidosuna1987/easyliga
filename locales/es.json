@@ -396,6 +396,7 @@
     "submit": "Enviar rotación",
     "submitted": "La rotación ha sido enviada correctamente",
     "locked": "La rotación está cerrada",
+    "locked_changes": "La rotación está cerrada, tienes que pedir al árbitro del partido que la abra para poder realizar cambios",
     "unlock": "Abrir rotación",
     "unlocked": "La rotación ha sido abierta correctamente",
     "lock": "Cerrar rotación",
@@ -414,12 +415,14 @@
     "libero_not_allowed_in_initial_rotation": "No puedes alinear un líbero en la rotación inicial",
     "max_player_changes_reached": "No puedes hacer más cambios en este set",
     "player_change": "Cambiar jugador | Cambiar jugadores",
+    "player_change_done": "No se ha realizado ningún cambio | Cambio realizado | Cambios realizados",
     "request_player_change": "Solicitar cambio de jugador | Solicitar cambio de jugadores",
     "do_player_change": "Realizar cambio | Realizar cambios",
     "undo_player_change": "Deshacer cambio | Deshacer cambios",
     "cancel_player_change": "Cancelar cambio | Cancelar cambios",
     "player_changed": "El jugador ha sido cambiado correctamente",
     "player_change_requested": "El cambio de jugador ha sido solicitado correctamente",
+    "waiting_player_changes": "Esperando cambio | Esperando cambios",
     "no_rotation": "No se ha establecido una rotación",
     "replacement_taken": "El jugador seleccionado sólo puede ser reemplazado por {name}",
     "libero_not_allowed_in_attack_positions": "El líbero no puede jugar en posiciones de ataque",
@@ -475,6 +478,10 @@
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",
     "call_unlocked": "El árbitro ha desbloqueado la convocatoria",
-    "rotation_created": "{teamName} ha asignado su rotación"
+    "rotation_created": "{teamName} ha asignado su rotación",
+    "rotation_updated": "{teamName} ha actualizado su rotación",
+    "rotation_locked": "El árbitro ha bloqueado la rotación",
+    "rotation_unlocked": "El árbitro ha desbloqueado la rotación",
+    "game_status_updated": "El estado del partido {gameName} ha cambiado a \"{status}\""
   }
 }

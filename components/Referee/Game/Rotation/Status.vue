@@ -1,0 +1,76 @@
+import LoadingVue from 'components/Loading.vue'; import { log } from 'console';
+import rotationVue from
+'pages/coach/games/[game_id]/calls/[call_id]/rotation.vue';
+<script setup lang="ts">
+import RotationService from '@/services/rotation'
+import { Rotation } from '@/domain/rotation'
+import { Set } from '@/domain/set'
+
+const toast = useEasyToast()
+const rotationService = new RotationService()
+const emit = defineEmits(['rotation:lock-toggled'])
+
+const props = defineProps({
+  rotation: {
+    type: Object as PropType<Rotation>,
+    required: true,
+  },
+})
+
+const loadingApi = ref<boolean>(false)
+
+const unlock = async () => {
+  if (!props.rotation || !props.rotation.locked) return
+
+  loadingApi.value = true
+  const { data, error } = await rotationService.unlock(props.rotation.id)
+  loadingApi.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  emit('rotation:lock-toggled', true)
+}
+
+const lock = async () => {
+  if (!props.rotation || props.rotation.locked) return
+
+  loadingApi.value = true
+  const { data, error } = await rotationService.lock(props.rotation.id)
+  loadingApi.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  emit('rotation:lock-toggled', true)
+}
+</script>
+
+<template>
+  <div
+    class="easy-game-rotation-status-component flex items-center"
+    :class="{ 'justify-between': props.rotation.locked }"
+  >
+    <Loading v-if="loadingApi" />
+    <Button
+      class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
+      :severity="props.rotation.locked ? 'primary' : 'danger'"
+      :label="props.rotation.locked ? $t('forms.unlock') : $t('forms.lock')"
+      @click="props.rotation.locked ? unlock() : lock()"
+    />
+    <template v-if="!props.rotation.locked">
+      <FormSpinner size="0.75rem" />
+      <small>{{ $t('rotations.waiting_player_changes', 2) }}</small>
+    </template>
+  </div>
+</template>
+
+<script lang="ts">
+export default {
+  name: 'RefereeGameRotationStatus',
+}
+</script>

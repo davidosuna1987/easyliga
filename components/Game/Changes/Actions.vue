@@ -1,7 +1,21 @@
 <script setup lang="ts">
-import { Rotation } from '@/domain/rotation'
+import {
+  Rotation,
+  RotationPlayerChange,
+  mapRotationToRotationPlayerChanges,
+} from '@/domain/rotation'
+import { Call } from '@/domain/call'
+import { getFullName } from '@/domain/player'
 
 const props = defineProps({
+  leftSideTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+  rightSideTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
   leftSideTeamRotation: {
     type: Object as PropType<Rotation>,
     required: false,
@@ -11,6 +25,26 @@ const props = defineProps({
     required: false,
   },
 })
+
+const playerChanges = ref<RotationPlayerChange[]>()
+
+const leftSideTeamPlayerChanges = computed(
+  () =>
+    props.leftSideTeamRotation &&
+    mapRotationToRotationPlayerChanges(
+      props.leftSideTeamRotation,
+      props.leftSideTeamCall.playersData,
+    ),
+)
+
+const rightSideTeamPlayerChanges = computed(
+  () =>
+    props.rightSideTeamRotation &&
+    mapRotationToRotationPlayerChanges(
+      props.rightSideTeamRotation,
+      props.rightSideTeamCall.playersData,
+    ),
+)
 
 const numberToString = (playerChangesCount: number = 0) =>
   playerChangesCount.toString()
@@ -25,6 +59,7 @@ const numberToString = (playerChangesCount: number = 0) =>
         :badge="numberToString(leftSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
+        @click.prevent="playerChanges = leftSideTeamPlayerChanges"
       />
       <Button
         class="col-span-5/10"
@@ -32,8 +67,31 @@ const numberToString = (playerChangesCount: number = 0) =>
         :badge="numberToString(rightSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
+        @click.prevent="playerChanges = rightSideTeamPlayerChanges"
       />
     </div>
+
+    <DialogBottom
+      class="easy-coach-rotation-captain-selector-dialog-component"
+      :visible="!!playerChanges"
+      @hide="playerChanges = undefined"
+    >
+      <template #header>
+        <Heading tag="h6">{{ $t('rotations.player_change_done', 2) }}</Heading>
+      </template>
+
+      <Message v-if="playerChanges?.length === 0" :closable="false">{{
+        $t('rotations.player_change_done', 0)
+      }}</Message>
+
+      <RotationPlayerChangeItem
+        v-for="(change, index) in playerChanges"
+        :key="index"
+        class="mt-4"
+        :playerIn="change.in"
+        :playerOut="change.out"
+      />
+    </DialogBottom>
   </div>
 </template>
 

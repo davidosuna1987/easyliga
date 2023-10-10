@@ -39,6 +39,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showAvatar: {
+    type: Boolean,
+    default: true,
+  },
   showIcons: {
     type: Boolean,
     default: true,
@@ -72,12 +76,13 @@ const iconsGap = computed(() => {
     :class="{
       'is-selectable': selectable,
       'is-selected': selected,
-      'is-captain': showCaptain,
-      'is-libero': showLibero,
+      'is-captain': player.captain,
+      'is-libero': player.libero,
     }"
   >
     <div class="team-player-info">
       <Avatar
+        v-if="showAvatar"
         class="player-avatar"
         :image="player?.avatar ?? undefined"
         shape="circle"

@@ -8,7 +8,7 @@ import {
 import { Game, mapApiGameToGame } from '@/domain/game'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
-import { Call, mapApiCallToCall } from '@/domain/call'
+import { Call, CallPlayerData, mapApiCallToCall } from '@/domain/call'
 
 export const ROTATION_PLAYERS_LENGTH = 6
 export const MAX_ROTATION_PLAYER_CHANGES = 6
@@ -79,6 +79,11 @@ export type RotationPlayerChangeRequest = {
 export type RotationPlayerChangeForm = {
   rotation: Rotation
   changes: RotationPlayerChangeRequest[]
+}
+
+export type RotationPlayerChange = {
+  in: CallPlayerData
+  out: CallPlayerData
 }
 
 export const mapRotationPlayerToApiRotationPlayer = (
@@ -191,3 +196,50 @@ export const mapPlayerChangeToChangeType = (
       ? ChangeType.SECOND
       : ChangeType.FIRST
     : ChangeType.NONE
+
+export const mapRotationToRotationPlayerChanges = (
+  rotation: Rotation,
+  callPlayersData: CallPlayerData[],
+): RotationPlayerChange[] => {
+  const playerChanges: RotationPlayerChange[] = []
+
+  for (let i in rotation.players) {
+    const player = rotation.players[i]
+
+    if (!player.replacementProfileId) continue
+
+    const playerIn = callPlayersData.find(
+      callPlayerData =>
+        callPlayerData.profileId === player.replacementProfileId,
+    )
+    const playerOut = callPlayersData.find(
+      callPlayerData => callPlayerData.profileId === player.profileId,
+    )
+
+    if (!playerIn || !playerOut) continue
+
+    playerChanges.push({
+      in: playerIn,
+      out: playerOut,
+    })
+
+    if (player.inCourtProfileId === player.profileId) {
+      const playerIn = callPlayersData.find(
+        callPlayerData => callPlayerData.profileId === player.profileId,
+      )
+      const playerOut = callPlayersData.find(
+        callPlayerData =>
+          callPlayerData.profileId === player.replacementProfileId,
+      )
+
+      if (!playerIn || !playerOut) continue
+
+      playerChanges.push({
+        in: playerIn,
+        out: playerOut,
+      })
+    }
+  }
+
+  return playerChanges
+}

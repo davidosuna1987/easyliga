@@ -10,6 +10,10 @@ import {
   mapRotationUpdateRequestToApiRotationUpdateRequest,
 } from '@/domain/rotation'
 import RotationService from '@/services/rotation'
+import {
+  ApiEvents,
+  ApiRotationLockToggledEventResponse,
+} from '@/types/api/event'
 
 const route = useRoute()
 const toast = useEasyToast()
@@ -24,7 +28,7 @@ const errors = ref<ApiErrorObject>()
 const form = ref<Rotation>()
 const requestedPlayerChanges = ref<RotationPlayerChangeRequest[]>([])
 
-const getRotation = async () => {
+const getRotation = async (firstCall: boolean = false) => {
   loadingApi.value = true
 
   const { data, error } = await rotationService.get(
@@ -46,6 +50,10 @@ const getRotation = async () => {
   rotation.value = mapApiRotationToRotation(data.value.data.rotation)
   game.value = rotation.value.game
   form.value = rotation.value
+
+  if (firstCall && game.value) {
+    listenRotationLockToggledEvent(game.value?.id, rotation.value.id)
+  }
 
   loadingApi.value = false
 }
@@ -100,15 +108,18 @@ const setFormPlayerChanges = (playerChanges: RotationPlayerChangeRequest[]) => {
 }
 
 const handleSubmit = async () => {
-  loadingApi.value = true
-
   if (!form.value) return
+
+  if (form.value.locked) {
+    toast.warn(useNuxtApp().$i18n.t('rotations.locked_warning'))
+    return
+  }
 
   if (!form.value.inCourtCaptainProfileId) {
     toast.error(useNuxtApp().$i18n.t('errors.assign_in_court_captain'))
-    loadingApi.value = false
     return
   }
+  loadingApi.value = true
 
   const rotationUpdateRequest: RotationUpdateRequest = {
     inCourtCaptainProfileId: form.value.inCourtCaptainProfileId,
@@ -135,7 +146,33 @@ const handleSubmit = async () => {
   await getRotation()
 }
 
-onBeforeMount(getRotation)
+const listenRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+  window.Echo.channel(
+    `game.${gameId}.rotation.${rotationId}.lock-toggled`,
+  ).listen(
+    ApiEvents.ROTATION_LOCK_TOGGLED,
+    (response: ApiRotationLockToggledEventResponse) => {
+      toast.info(
+        response.rotation.locked
+          ? useNuxtApp().$i18n.t('events.rotation_locked')
+          : useNuxtApp().$i18n.t('events.rotation_unlocked'),
+      )
+      getRotation()
+    },
+  )
+}
+
+const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+  window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
+}
+
+onBeforeMount(() => getRotation(true))
+onBeforeUnmount(
+  () =>
+    game.value &&
+    rotation.value &&
+    leaveRotationLockToggledEvent(game.value?.id, rotation.value.id),
+)
 </script>
 
 <template>
@@ -146,25 +183,51 @@ onBeforeMount(getRotation)
     @submit.prevent="handleSubmit"
   >
     <Heading tag="h5" position="center" class="mb-5">{{ game?.name }}</Heading>
-    <CoachRotationCourt
-      v-if="form && rotation && rotation.call"
-      :call="rotation.call"
-      :rotation="form"
-      :initialRotation="initialRotation"
-      :isInitialRotationAssignment="false"
-      @change:players="setFormPlayerChanges"
-      @update:captain="setRotationCaptain"
-    />
 
-    <footer class="flex justify-end items-center mt-8">
-      <Button type="submit" :disabled="!requestedPlayerChanges.length">
-        {{
-          $t('rotations.request_player_change', requestedPlayerChanges.length)
-        }}
-      </Button>
-    </footer>
+    <Message v-if="rotation?.locked" :closable="false">{{
+      $t('rotations.locked_warning')
+    }}</Message>
+
+    <div
+      class="form-lockable-section"
+      :class="{ 'is-locked': rotation?.locked }"
+    >
+      <CoachRotationCourt
+        v-if="form && rotation && rotation.call"
+        :call="rotation.call"
+        :rotation="form"
+        :initialRotation="initialRotation"
+        :isInitialRotationAssignment="false"
+        @change:players="setFormPlayerChanges"
+        @update:captain="setRotationCaptain"
+      />
+
+      <footer class="flex justify-end items-center mt-8">
+        <Button
+          type="submit"
+          :disabled="!requestedPlayerChanges.length"
+          :label="
+            form?.locked
+              ? $t('rotations.locked')
+              : $t(
+                  'rotations.request_player_change',
+                  requestedPlayerChanges.length,
+                )
+          "
+        />
+      </footer>
+    </div>
   </form>
 </template>
+
+<style scoped lang="scss">
+.form-lockable-section {
+  &.is-locked {
+    pointer-events: none !important;
+    filter: grayscale(1);
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

@@ -12,12 +12,12 @@ export default function useEasyToast() {
     options: ToastOptions = DEFAULT_OPTIONS,
   ) => {
     toast.add({
-      ...options,
-      severity,
       detail: message,
       life: 5000,
       closable: true,
       group: 'app',
+      ...options,
+      severity,
     })
   }
 
