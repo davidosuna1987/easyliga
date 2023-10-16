@@ -163,7 +163,7 @@ onBeforeMount(() => {
 
         <div
           v-if="!currentSetRotation?.players?.length"
-          class="grid place-content-center mt-8"
+          class="flex items-center justify-end mt-24 md:mt-8"
         >
           <Button
             type="submit"

@@ -106,3 +106,9 @@ watch(image.value, () => emit('image', image.value))
     </a>
   </section>
 </template>
+
+<script>
+export default {
+  name: 'UploadImage',
+}
+</script>

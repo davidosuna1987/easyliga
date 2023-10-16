@@ -13,7 +13,7 @@ export default function useEasyToast() {
   ) => {
     toast.add({
       detail: message,
-      life: 5000,
+      life: 7500,
       closable: true,
       group: 'app',
       ...options,

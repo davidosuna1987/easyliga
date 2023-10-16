@@ -21,3 +21,6 @@ export default defineNuxtPlugin(() => {
     forceTLS: true,
   })
 })
+
+export const channelExists = (channel: string): boolean =>
+  Object.keys(window.Echo.connector.channel).includes(channel)

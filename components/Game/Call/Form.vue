@@ -14,6 +14,7 @@ import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/event'
 import { ApiEvents } from '@/types/api/event'
 
+const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
 
@@ -40,7 +41,7 @@ const selectedLiberos = computed(() =>
 )
 
 const showGameLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(app.$i18n.t('calls.locked_warning'))
 }
 
 const removeSelectedPlayer = (player: Player) => {
@@ -62,6 +63,14 @@ const removeSelectedPlayer = (player: Player) => {
 
 const addSelectedPlayer = (player: Player) => {
   if (typeof player !== 'object') return
+
+  const shirtNumberExists = selectedPlayers.value.some(
+    selectedPlayer => selectedPlayer.shirtNumber === player.shirtNumber,
+  )
+  if (shirtNumberExists) {
+    toast.error(app.$i18n.t('shirts.already_in_use'))
+    return
+  }
 
   // selectedPlayers.value?.push(player)
 
@@ -101,7 +110,7 @@ const setCaptain = (profileId: number) => {
   )
 
   if (!player?.captain && player?.libero) {
-    toast.error(useNuxtApp().$i18n.t('errors.libero_cannot_be_captain'))
+    toast.error(app.$i18n.t('errors.libero_cannot_be_captain'))
     return
   }
 
@@ -127,7 +136,7 @@ const setLibero = (profileId: number) => {
     selectedLiberos.value.length >= MAX_CALL_LIBERO_PLAYERS
   ) {
     toast.error(
-      useNuxtApp().$i18n.t('errors.max_liberos', {
+      app.$i18n.t('errors.max_liberos', {
         max: MAX_CALL_LIBERO_PLAYERS,
       }),
     )
@@ -135,7 +144,7 @@ const setLibero = (profileId: number) => {
   }
 
   if (!player?.libero && player?.captain) {
-    toast.error(useNuxtApp().$i18n.t('errors.libero_cannot_be_captain'))
+    toast.error(app.$i18n.t('errors.libero_cannot_be_captain'))
     return
   }
 
@@ -162,7 +171,7 @@ const changePlayerShirtNumber = (player?: Player) => {
           p.profileId !== player.profileId,
       )
     ) {
-      toast.error(useNuxtApp().$i18n.t('shirts.already_in_use'))
+      toast.error(app.$i18n.t('shirts.already_in_use'))
       return
     }
 
@@ -194,7 +203,7 @@ const changePlayerShirtNumber = (player?: Player) => {
   }
 }
 
-const getTeamPlayers = async (listenEvent = false) => {
+const getTeamPlayers = async () => {
   loadingApi.value = true
 
   const { data, error } = await gameService.teamPlayers(
@@ -215,9 +224,8 @@ const getTeamPlayers = async (listenEvent = false) => {
 
   loadingApi.value = false
 
-  if (listenEvent) {
-    listenCallUnlockedEvent()
-  }
+  window.Echo.leaveAllChannels()
+  listenCallUnlockedEvent()
 }
 
 const submit = async () => {
@@ -237,7 +245,7 @@ const submit = async () => {
     errors.value = error.value?.data?.errors
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('calls.submitted'))
+    toast.success(app.$i18n.t('calls.submitted'))
     navigateTo(`/coach`)
   }
 }
@@ -248,25 +256,24 @@ const listenCallUnlockedEvent = () => {
   ).listen(
     ApiEvents.CALL_UNLOCKED,
     (response: ApiCallUnlockedEventResponse) => {
-      toast.info(useNuxtApp().$i18n.t('events.call_unlocked'))
+      toast.info(
+        response.call.locked
+          ? app.$i18n.t('events.call_locked')
+          : app.$i18n.t('events.call_unlocked'),
+      )
       getTeamPlayers()
     },
   )
 }
 
-const leaveCallUnlockedEvent = () => {
-  window.Echo.leaveChannel(
-    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
-  )
-}
+// INFO: replaced with window.Echo.leaveAllChannels()
+// const leaveCallUnlockedEvent = () => {
+//   window.Echo.leaveChannel(
+//     `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+//   )
+// }
 
-onBeforeMount(() => {
-  getTeamPlayers(true)
-})
-
-onBeforeUnmount(() => {
-  leaveCallUnlockedEvent()
-})
+onBeforeMount(getTeamPlayers)
 </script>
 
 <template>

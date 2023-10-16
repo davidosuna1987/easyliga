@@ -12,7 +12,12 @@
     margin-left: 0.25rem;
   }
 
+  &.finished {
+    color: var(--primary-color);
+  }
+
   &.warmup,
+  &.timeout,
   &.resting {
     color: var(--tertiary-color-dark);
 

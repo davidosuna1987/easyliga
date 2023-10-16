@@ -3,8 +3,13 @@ import { Team } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
+import { Timeout, TimeoutStatusEnum } from '@/domain/timeout'
 
-const emit = defineEmits(['call:unlocked', 'rotation:lock-toggled'])
+const emit = defineEmits([
+  'call:unlocked',
+  'rotation:lock-toggled',
+  'timeout:start',
+])
 
 const props = defineProps({
   team: {
@@ -17,6 +22,10 @@ const props = defineProps({
   },
   rotation: {
     type: Object as PropType<Rotation>,
+    required: false,
+  },
+  timeouts: {
+    type: Array as PropType<Timeout[]>,
     required: false,
   },
   currentSet: {
@@ -43,6 +52,16 @@ const benchPlayers = computed(() => {
     player => !inCourtPlayerIds?.includes(player.profileId),
   )
 })
+
+const requestedTimeout = computed(() =>
+  props.timeouts?.find(
+    timeout => timeout.status === TimeoutStatusEnum.requested,
+  ),
+)
+
+const runningTimeout = computed(() =>
+  props.timeouts?.find(timeout => timeout.status === TimeoutStatusEnum.running),
+)
 </script>
 
 <template>
@@ -71,7 +90,17 @@ const benchPlayers = computed(() => {
       <div class="rotation-status-area p-[0.5rem]">
         <RefereeGameRotationStatus
           :rotation="props.rotation"
+          :requestedTimeout="requestedTimeout"
+          :runningTimeout="runningTimeout"
           @rotation:lock-toggled="emit('rotation:lock-toggled', true)"
+        />
+      </div>
+      <div v-if="!!requestedTimeout" class="rotation-timeout-requested">
+        <Button
+          class="w-full"
+          severity="danger"
+          :label="$t('timeouts.init')"
+          @click.prevent="emit('timeout:start', requestedTimeout)"
         />
       </div>
     </template>

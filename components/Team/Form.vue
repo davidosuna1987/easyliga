@@ -150,3 +150,9 @@ watch(
     />
   </form>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'TeamForm',
+}
+</script>

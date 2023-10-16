@@ -91,6 +91,12 @@ const playerToReplace = computed(() => {
   )
 })
 
+const canChangeCaptain = computed(
+  () =>
+    !selectedCaptain.value?.captain &&
+    selectableCaptainPlayers.value.every(player => !player.captain),
+)
+
 const setRotationPlayersFromRtotation = () => {
   playerChanges.value = []
 
@@ -370,6 +376,7 @@ const isPlayerInCurrentChanges = (player?: CallPlayerData): boolean => {
 
 const toggleCaptainSelector = () => {
   if (
+    !canChangeCaptain ||
     !selectableCaptainPlayers.value.length ||
     (props.rotation?.locked && props.isInitialRotationAssignment)
   )
@@ -478,6 +485,7 @@ watch(
     <div>
       <div
         class="easy-captain-selector inline-flex items-center justify-center mt-10 lg:mt-0 mb-3 p-2 absolute left-0 bottom-[-78px]"
+        :class="{ 'pointer-events-none': !canChangeCaptain }"
         @click="toggleCaptainSelector"
       >
         <GameCallSelectedCaptain
@@ -491,6 +499,7 @@ watch(
         />
         <Button
           v-if="
+            canChangeCaptain &&
             selectedRotationInCourtCaptain &&
             !!selectableCaptainPlayers.length &&
             !rotation?.locked

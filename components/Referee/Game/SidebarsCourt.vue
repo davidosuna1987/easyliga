@@ -4,6 +4,7 @@ import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 import { CurrentRotation, Rotation } from '@/domain/rotation'
 import { GameStatus } from '@/domain/game'
+import { Timeout } from '@/domain/timeout'
 
 const props = defineProps({
   leftSideTeam: {
@@ -42,6 +43,14 @@ const props = defineProps({
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
+  leftSideTeamTimeouts: {
+    type: Array as PropType<Timeout[]>,
+    required: false,
+  },
+  rightSideTeamTimeouts: {
+    type: Array as PropType<Timeout[]>,
+    required: false,
+  },
   undoPointButtonDisabled: {
     type: Boolean,
     required: true,
@@ -62,6 +71,10 @@ const props = defineProps({
     type: String as PropType<GameStatus>,
     required: true,
   },
+  timeoutRunning: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
@@ -70,6 +83,7 @@ const emit = defineEmits([
   'point:sum',
   'point:undo',
   'set:start',
+  'timeout:start',
 ])
 
 const leftSideTeamRotation = computed(() =>
@@ -95,14 +109,23 @@ const undoLastPoint = () => {
 
 <template>
   <div class="easy-game-sidebars-court-component">
-    <RefereeGameCallSidebar
-      :team="leftSideTeam"
-      :call="leftSideTeamCall"
-      :rotation="leftSideTeamRotation"
-      :currentSet="currentSet"
-      @call:unlocked="emit('call:unlocked')"
-      @rotation:lock-toggled="emit('rotation:lock-toggled')"
-    />
+    <div class="sidebar-wrapper left">
+      <RefereeGameCallSidebar
+        :team="leftSideTeam"
+        :call="leftSideTeamCall"
+        :rotation="leftSideTeamRotation"
+        :timeouts="leftSideTeamTimeouts"
+        :currentSet="currentSet"
+        @call:unlocked="emit('call:unlocked')"
+        @rotation:lock-toggled="emit('rotation:lock-toggled')"
+        @timeout:start="emit('timeout:start', $event)"
+      />
+
+      <small class="mt-3 block">
+        {{ $t('timeouts.requested_short', 2) }}:
+        {{ props.leftSideTeamTimeouts?.length ?? 0 }}
+      </small>
+    </div>
     <div class="score-court relative flex flex-col gap-3">
       <GameScore :currentSet="currentSet" />
       <GameCourt
@@ -120,19 +143,29 @@ const undoLastPoint = () => {
         :servingTeamId="servingTeamId"
         :rotations="rotations"
         :gameStatus="gameStatus"
+        :timeoutRunning="timeoutRunning"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"
       />
     </div>
-    <RefereeGameCallSidebar
-      :team="rightSideTeam"
-      :call="rightSideTeamCall"
-      :rotation="rightSideTeamRotation"
-      :currentSet="currentSet"
-      @call:unlocked="emit('call:unlocked')"
-      @rotation:lock-toggled="emit('rotation:lock-toggled')"
-    />
+    <div class="sidebar-wrapper right">
+      <RefereeGameCallSidebar
+        :team="rightSideTeam"
+        :call="rightSideTeamCall"
+        :rotation="rightSideTeamRotation"
+        :timeouts="rightSideTeamTimeouts"
+        :currentSet="currentSet"
+        @call:unlocked="emit('call:unlocked')"
+        @rotation:lock-toggled="emit('rotation:lock-toggled')"
+        @timeout:start="emit('timeout:start', $event)"
+      />
+
+      <small class="mt-3 block">
+        {{ $t('timeouts.requested_short', 2) }}:
+        {{ props.rightSideTeamTimeouts?.length ?? 0 }}
+      </small>
+    </div>
   </div>
 </template>
 

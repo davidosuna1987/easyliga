@@ -29,6 +29,12 @@
             background-color: var(--tertiary-color-light);
           }
         }
+
+        &.p-button-danger {
+          &:hover {
+            background-color: var(--danger-color-lightest);
+          }
+        }
       }
     }
   }

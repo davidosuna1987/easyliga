@@ -14,6 +14,9 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { Division } from '@/domain/division'
 import { League } from '@/domain/league'
+import moment from 'moment'
+
+export const GAME_OBSERVATIONS_MINUTES = 10
 
 export enum CategoryType {
   MASCULINE = 'masculine',
@@ -66,16 +69,19 @@ export type GameRelations = {
   sets?: Set[]
   calls?: Call[]
   currentSet?: Set
-  // points?: Point[] TODO: add points
 }
 
 export type GameRelationsCount = {
   localTeamSetsWonCount?: number
   visitorTeamSetsWonCount?: number
-  // points?: Point[] TODO: add points
 }
 
-export type GameStatus = 'warmup' | 'playing' | 'resting' | 'finished'
+export type GameStatus =
+  | 'warmup'
+  | 'playing'
+  | 'timeout'
+  | 'resting'
+  | 'finished'
 
 export type Game = {
   id: number
@@ -172,3 +178,8 @@ export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
   id: apiGender.id,
   name: apiGender.name as GenderType,
 })
+
+export const isValidCoachPanelGame = (game: Game): boolean =>
+  !game.end ||
+  moment(game.end).add(GAME_OBSERVATIONS_MINUTES, 'minutes').valueOf() >
+    moment().valueOf()

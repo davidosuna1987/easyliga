@@ -4,7 +4,7 @@ import rotationVue from
 <script setup lang="ts">
 import RotationService from '@/services/rotation'
 import { Rotation } from '@/domain/rotation'
-import { Set } from '@/domain/set'
+import { Timeout } from '@/domain/timeout'
 
 const toast = useEasyToast()
 const rotationService = new RotationService()
@@ -14,6 +14,14 @@ const props = defineProps({
   rotation: {
     type: Object as PropType<Rotation>,
     required: true,
+  },
+  requestedTimeout: {
+    type: Object as PropType<Timeout>,
+    required: false,
+  },
+  runningTimeout: {
+    type: Object as PropType<Timeout>,
+    required: false,
   },
 })
 
@@ -53,18 +61,34 @@ const lock = async () => {
 <template>
   <div
     class="easy-game-rotation-status-component flex items-center"
-    :class="{ 'justify-between': props.rotation.locked }"
+    :class="{
+      'justify-between':
+        props.rotation.locked &&
+        !props.requestedTimeout &&
+        !props.runningTimeout,
+    }"
   >
     <Loading v-if="loadingApi" />
+
     <Button
       class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
       :severity="props.rotation.locked ? 'primary' : 'danger'"
       :label="props.rotation.locked ? $t('forms.unlock') : $t('forms.lock')"
       @click="props.rotation.locked ? unlock() : lock()"
     />
-    <template v-if="!props.rotation.locked">
+    <template
+      v-if="
+        !props.rotation.locked || props.requestedTimeout || props.runningTimeout
+      "
+    >
       <FormSpinner size="0.75rem" />
-      <small>{{ $t('rotations.waiting_player_changes', 2) }}</small>
+      <small>{{
+        props.requestedTimeout
+          ? $t('timeouts.requested_short')
+          : props.runningTimeout
+          ? $t('timeouts.running')
+          : $t('rotations.waiting_player_changes', 2)
+      }}</small>
     </template>
   </div>
 </template>

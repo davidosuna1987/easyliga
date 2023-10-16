@@ -78,14 +78,9 @@ const setVisitorTeam = (team: ApiTeam) => {
   selectedVisitorTeam.value = team
 }
 
-const setSedeAndCourt = ({
-  sede,
-  court,
-}: {
-  sede: ApiSede | null
-  court: ApiCourt | null
-}) => {
-  selectedSede.value = sede
+const setSedeAndCourt = (court: ApiCourt) => {
+  selectedSede.value =
+    groupedCourts.value.find(sede => sede.id === court.sede_id) ?? null
   selectedCourt.value = court
 }
 
@@ -216,7 +211,7 @@ watch(onChangeData, data => {
         <SedeCourtSelector
           :grouped-courts="groupedCourts"
           :disabled="!form.local_team_id"
-          @selected="setSedeAndCourt"
+          @court:selected="setSedeAndCourt"
         />
       </FormLabel>
     </div>

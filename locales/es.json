@@ -109,7 +109,7 @@
     "to": "a",
     "validate": "Validar",
     "info": "Información",
-    "request": "Solicitudes",
+    "request": "Solicitar",
     "token": "Token",
     "date": "Fecha",
     "time": "Hora",
@@ -139,7 +139,11 @@
     "assign_in_court_captain": "Tienes que asignar al capitán en el campo",
     "max_liberos": "No puedes asignar más de {max} líberos en una convocatoria",
     "assign_min_rotation_players": "Tienes que alinear a {num} jugadores de campo",
-    "libero_cannot_be_captain": "El líbero no puede ser capitán"
+    "libero_cannot_be_captain": "El líbero no puede ser capitán",
+    "max_timeouts": "No puedes solicitar más de {max} tiempos muertos por set",
+    "timeout_running": "Hay un tiempo muerto en marcha",
+    "timeout_requested": "Hay un tiempo muerto solicitado que está pendiente de aprobar por el árbitro",
+    "timeout_game_not_playing": "No puedes solicitar un tiempo muerto en un partido que no está en juego"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -214,11 +218,17 @@
     "status": {
       "warmup": "Calentamiento",
       "playing": "En juego",
+      "timeout": "Tiempo muerto",
       "resting": "Descanso",
       "finished": "Finalizado"
     },
     "player_change": "Cambios | Cambio | Cambios",
-    "show_player_change": "Ver cambios | Ver cambio | Ver cambios"
+    "show_player_change": "Ver cambios | Ver cambio | Ver cambios",
+    "injury": "Lesión | Lesiones",
+    "observation": "Observación | Observaciones",
+    "close_acta": "Cerrar acta",
+    "observations_countdown": "Tiempo restante para anotar observaciones",
+    "observations_countdown_ended": "Ha finalizado el tiempo para anotar lesionados y observaciones del partido {gameName}"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",
@@ -476,13 +486,42 @@
     "select": "Selecciona un club",
     "no_managed_teams": "El club no gestiona ningún equipo"
   },
+  "timeouts": {
+    "timeout": "Tiempo muerto | Tiempos muertos",
+    "create": "Crear tiempo muerto",
+    "created": "El tiempo muerto ha sido creado correctamente",
+    "edit": "Editar tiempo muerto",
+    "update": "Actualizar tiempo muerto",
+    "updated": "El tiempo muerto ha sido actualizado correctamente",
+    "delete": "Eliminar tiempo muerto",
+    "deleted": "El tiempo muerto ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el tiempo muerto?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "request": "Solicitar tiempo muerto",
+    "request_alert": "¿Seguro que quieres solicitar un tiempo muerto?",
+    "request_disclaimer": "Te quedan {num} tiempo muerto en este set | Te quedan {num} tiempos muertos en este set",
+    "requested": "El tiempo muerto ha sido solicitado correctamente",
+    "finish": "Finalizar tiempo muerto",
+    "finished": "El tiempo muerto ha finalizado",
+    "grant": "Conceder tiempo muerto",
+    "requested_short": "Tiempo muerto solicitado | Tiempos muertos solicitados",
+    "init": "Iniciar tiempo muerto",
+    "running": "Tiempo muerto en curso"
+  },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",
+    "call_locked": "El árbitro ha bloqueado la convocatoria",
     "call_unlocked": "El árbitro ha desbloqueado la convocatoria",
     "rotation_created": "{teamName} ha asignado su rotación",
     "rotation_updated": "{teamName} ha actualizado su rotación",
     "rotation_locked": "El árbitro ha bloqueado la rotación",
     "rotation_unlocked": "El árbitro ha desbloqueado la rotación",
-    "game_status_updated": "El estado del partido {gameName} ha cambiado a \"{status}\""
+    "game_status_updated": "El estado del partido {gameName} ha cambiado a \"{status}\"",
+    "timeout_status_requested": "Se ha solicitado un tiempo muerto",
+    "timeout_status_requested_team": "El equipo {teamName} ha solicitado un tiempo muerto",
+    "timeout_status_running": "El tiempo muerto ha comenzado",
+    "timeout_status_running_game": "El tiempo muerto ha comenzado en el partido {gameName}",
+    "timeout_status_finished": "El tiempo muerto ha finalizado",
+    "timeout_status_finished_game": "El tiempo muerto ha finalizado en el partido {gameName}"
   }
 }

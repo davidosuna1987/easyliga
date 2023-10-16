@@ -2,6 +2,7 @@
 import GameService from '@/services/game'
 import PointService from '@/services/point'
 import SetService from '@/services/set'
+import TimeoutService from '@/services/timeout'
 import { GameInitialData, mapApiGameInitialDataToGame } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
@@ -9,6 +10,7 @@ import {
   ApiCallUpdatedEventResponse,
   ApiRotationCreatedEventResponse,
   ApiRotationUpdatedEventResponse,
+  ApiTimeoutStatusUpdatedEventResponse,
 } from '@/types/api/event'
 import { TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
@@ -19,11 +21,14 @@ import {
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
 import { useAuthStore } from '@/stores/useAuthStore'
-import {
-  mapApiRotationToRotation,
-  mapRotationToRotationPlayerChanges,
-} from '@/domain/rotation'
+import { mapApiRotationToRotation } from '@/domain/rotation'
 import { ApiEvents } from '@/types/api/event'
+import {
+  Timeout,
+  TimeoutStatus,
+  TimeoutStatusEnum,
+  mapApiTimeoutToTimeout,
+} from '@/domain/timeout'
 
 const auth = useAuthStore()
 const app = useNuxtApp()
@@ -33,6 +38,7 @@ const toast = useEasyToast()
 const gameService = new GameService()
 const pointService = new PointService()
 const setService = new SetService()
+const timeoutService = new TimeoutService()
 
 const gameInitialData = ref<GameInitialData>()
 const localTeamCall = ref<Call>()
@@ -41,6 +47,7 @@ const lastPoint = ref<Point>()
 const undoPointButtonDisabled = ref<boolean>(true)
 const undoLastPointCountdown = ref<number>(0)
 const loadingApi = ref<boolean>(false)
+const loadingTimeout = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
 const disablePointTimeout = ref<boolean>(true)
@@ -102,6 +109,26 @@ const rightSideTeamCurrentRotation = computed(() => {
     : gameInitialData.value?.localTeamRotation
 })
 
+const leftSideTeamTimeouts = computed(() =>
+  gameInitialData.value?.game.currentSet?.timeouts?.filter(
+    timeout => timeout.teamId === leftSideTeam.value?.id,
+  ),
+)
+
+const rightSideTeamTimeouts = computed(() =>
+  gameInitialData.value?.game.currentSet?.timeouts?.filter(
+    timeout => timeout.teamId === rightSideTeam.value?.id,
+  ),
+)
+
+const timeoutRunning = computed(
+  () =>
+    loadingTimeout.value ||
+    gameInitialData.value?.game.currentSet?.timeouts?.some(
+      timeout => timeout.status === TimeoutStatusEnum.running,
+    ),
+)
+
 const leftSideTeamSetsWonCount = computed(() =>
   localTeamCall.value?.teamId === leftSideTeam.value?.id
     ? gameInitialData.value?.game.localTeamSetsWonCount
@@ -125,7 +152,7 @@ const getGameInitialData = async () => {
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
     {
-      with: 'currentSet.rotations.players',
+      with: 'currentSet.rotations.players,currentSet.timeouts',
       with_count: 'localTeamSetsWon,visitorTeamSetsWon',
     },
   )
@@ -145,6 +172,9 @@ const getGameInitialData = async () => {
     call => call.teamId === gameInitialData.value?.visitorTeam?.id,
   )
   loadingApi.value = false
+
+  window.Echo.leaveAllChannels()
+  listenEvents()
 }
 
 const sumPoint = async (type: TeamType) => {
@@ -160,7 +190,9 @@ const sumPoint = async (type: TeamType) => {
       loadingApi.value = false
       return
     } else {
-      toast.success(useNuxtApp().$i18n.t('points.added'))
+      toast.success(app.$i18n.t('points.added'), {
+        life: 3000,
+      })
       await getGameInitialData()
     }
 
@@ -195,7 +227,7 @@ const undoLastPoint = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('points.deleted'))
+    toast.success(app.$i18n.t('points.deleted'))
     resetPointInterval()
     getGameInitialData()
   }
@@ -252,8 +284,44 @@ const startSet = async (setStartRequest: SetStartRequest) => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('sets.started'))
+    toast.success(app.$i18n.t('sets.started'))
     getGameInitialData()
+  }
+}
+
+const startTimeout = async (timeout: Timeout) => {
+  loadingTimeout.value = true
+
+  const { error } = await timeoutService.update(timeout.id, {
+    status: TimeoutStatusEnum.running,
+  })
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  }
+
+  loadingTimeout.value = false
+}
+
+const showTimeoutStatusUpdatedToast = (
+  status: TimeoutStatus,
+  teamName: string,
+) => {
+  if (status === TimeoutStatusEnum.requested) {
+    toast.info(
+      app.$i18n.t('events.timeout_status_requested_team', {
+        teamName: teamName,
+      }),
+      {
+        life: 20000,
+      },
+    )
+  }
+  if (status === TimeoutStatusEnum.running) {
+    toast.info(app.$i18n.t('events.timeout_status_running'))
+  }
+  if (status === TimeoutStatusEnum.finished) {
+    toast.info(app.$i18n.t('events.timeout_status_finished'))
   }
 }
 
@@ -344,40 +412,78 @@ const listenRotationUpdatedEvent = () => {
   )
 }
 
-const leaveCallUnlockedEvent = () => {
-  window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
+const listenTimeoutStatusUpdatedEvent = () => {
+  window.Echo.channel(
+    `game.${route.params.game_id}.timeout.status.updated`,
+  ).listen(
+    ApiEvents.TIMEOUT_STATUS_UPDATED,
+    (response: ApiTimeoutStatusUpdatedEventResponse) => {
+      showTimeoutStatusUpdatedToast(response.timeout.status, response.team.name)
+
+      const oldTimeout = gameInitialData.value?.game.currentSet?.timeouts?.find(
+        timeout => timeout.id === response.timeout.id,
+      )
+
+      if (oldTimeout) {
+        gameInitialData.value?.game.currentSet?.timeouts?.splice(
+          gameInitialData.value?.game.currentSet?.timeouts
+            ?.map(timeout => timeout.id)
+            .indexOf(oldTimeout.id),
+          1,
+        )
+      }
+
+      const newTimeout = mapApiTimeoutToTimeout(response.timeout)
+      gameInitialData.value?.game.currentSet?.timeouts?.push(newTimeout)
+
+      if (gameInitialData.value) {
+        if (response.timeout.status === TimeoutStatusEnum.running) {
+          gameInitialData.value.game.status = 'timeout'
+        }
+        if (response.timeout.status === 'finished') {
+          gameInitialData.value.game.status = 'playing'
+        }
+      }
+    },
+  )
 }
 
-const leaveRotationCreateddEvent = () => {
-  window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.created`)
-}
+// INFO: replaced with window.Echo.leaveAllChannels()
+// const leaveCallUnlockedEvent = () => {
+//   window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
+// }
 
-const leaveRotationUpdateddEvent = () => {
-  window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.updated`)
-}
+// const leaveRotationCreateddEvent = () => {
+//   window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.created`)
+// }
+
+// const leaveRotationUpdateddEvent = () => {
+//   window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.updated`)
+// }
+
+// const leaveTimeoutStatusUpdatedEvent = () => {
+//   window.Echo.leaveChannel(
+//     `game.${route.params.game_id}.timeout.status.updated`,
+//   )
+// }
 
 const listenEvents = () => {
   listenCallUpdatedEvent()
   listenRotationCreatedEvent()
   listenRotationUpdatedEvent()
+  listenTimeoutStatusUpdatedEvent()
 }
 
-const leaveEvents = () => {
-  leaveCallUnlockedEvent()
-  leaveRotationCreateddEvent()
-  leaveRotationUpdateddEvent()
-}
+// INFO: replaced with window.Echo.leaveAllChannels()
+// const leaveEvents = () => {
+//   leaveCallUnlockedEvent()
+//   leaveRotationCreateddEvent()
+//   leaveRotationUpdateddEvent()
+//   leaveTimeoutStatusUpdatedEvent()
+// }
 
 onBeforeMount(() => {
   getGameInitialData()
-})
-
-onMounted(() => {
-  listenEvents()
-})
-
-onBeforeUnmount(() => {
-  leaveEvents()
 })
 </script>
 
@@ -414,16 +520,20 @@ onBeforeUnmount(() => {
       :rightSideTeamRotation="rightSideTeamRotation"
       :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
       :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
+      :leftSideTeamTimeouts="leftSideTeamTimeouts"
+      :rightSideTeamTimeouts="rightSideTeamTimeouts"
       :undoPointButtonDisabled="undoPointButtonDisabled"
       :undoLastPointCountdown="undoLastPointCountdown"
       :servingTeamId="servingTeamId"
       :rotations="gameInitialData.game.currentSet.rotations"
       :gameStatus="gameInitialData.game.status"
+      :timeoutRunning="timeoutRunning"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
       @point:sum="sumPoint"
       @point:undo="undoLastPoint"
       @set:start="startSet"
+      @timeout:start="startTimeout"
     />
 
     <!-- TODO: remove in production -->

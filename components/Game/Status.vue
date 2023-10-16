@@ -16,8 +16,12 @@ const props = defineProps({
     class="easy-game-status-component inline-flex items-center"
     :class="props.status"
   >
-    <!-- <span class="icon"></span> -->
-    <div class="icon-wrapper">
+    <Icon
+      v-if="status === 'finished'"
+      name="ic:baseline-check-circle-outline"
+      size="1.15rem"
+    />
+    <div v-else class="icon-wrapper">
       <svg
         :aria-label="`status ${status}`"
         width="100%"

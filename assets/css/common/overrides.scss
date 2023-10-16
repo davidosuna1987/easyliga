@@ -29,6 +29,10 @@
   }
 }
 
+.p-dialog-mask {
+  backdrop-filter: blur(3px);
+}
+
 .p-button-label {
   font-weight: var(--font-weight);
 }

@@ -16,6 +16,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['court:selected'])
+
 const selectedCourt = ref<ApiCourt | null>(null)
 const loadingApi = ref<boolean>(false)
 
@@ -24,16 +26,9 @@ const options = computed(
   (): ApiSede[] => props.groupedCourts ?? groupedCourts.value,
 )
 
-const selectedSede = computed(() =>
-  groupedCourts.value.find(sede => sede.id === selectedCourt.value?.sede_id),
-)
-
-const emitData = computed(() => {
-  return {
-    sede: selectedSede.value,
-    court: selectedCourt.value,
-  }
-})
+const selectCourt = (court: ApiCourt) => {
+  emit('court:selected', court)
+}
 
 onMounted(async () => {
   if (!props.groupedCourts) {
@@ -59,7 +54,7 @@ onMounted(async () => {
     optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="$t('courts.select')"
-    @update:modelValue="$emit('selected', emitData)"
+    @update:modelValue="selectCourt"
   />
 </template>
 

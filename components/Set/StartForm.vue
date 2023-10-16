@@ -119,3 +119,9 @@ const setFirstServeTeam = () => {
   }
 }
 </style>
+
+<script lang="ts">
+export default {
+  name: 'SetStartForm',
+}
+</script>

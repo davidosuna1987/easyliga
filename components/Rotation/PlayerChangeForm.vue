@@ -15,6 +15,7 @@ import {
   ApiRotationLockToggledEventResponse,
 } from '@/types/api/event'
 
+const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
 const rotationService = new RotationService()
@@ -28,7 +29,7 @@ const errors = ref<ApiErrorObject>()
 const form = ref<Rotation>()
 const requestedPlayerChanges = ref<RotationPlayerChangeRequest[]>([])
 
-const getRotation = async (firstCall: boolean = false) => {
+const getRotation = async () => {
   loadingApi.value = true
 
   const { data, error } = await rotationService.get(
@@ -51,9 +52,8 @@ const getRotation = async (firstCall: boolean = false) => {
   game.value = rotation.value.game
   form.value = rotation.value
 
-  if (firstCall && game.value) {
-    listenRotationLockToggledEvent(game.value?.id, rotation.value.id)
-  }
+  window.Echo.leaveAllChannels()
+  listenRotationLockToggledEvent(game.value?.id, rotation.value.id)
 
   loadingApi.value = false
 }
@@ -111,12 +111,12 @@ const handleSubmit = async () => {
   if (!form.value) return
 
   if (form.value.locked) {
-    toast.warn(useNuxtApp().$i18n.t('rotations.locked_warning'))
+    toast.warn(app.$i18n.t('rotations.locked_warning'))
     return
   }
 
   if (!form.value.inCourtCaptainProfileId) {
-    toast.error(useNuxtApp().$i18n.t('errors.assign_in_court_captain'))
+    toast.error(app.$i18n.t('errors.assign_in_court_captain'))
     return
   }
   loadingApi.value = true
@@ -139,14 +139,19 @@ const handleSubmit = async () => {
     loadingApi.value = false
     return
   } else {
-    toast.success(useNuxtApp().$i18n.t('rotations.player_change_requested'))
+    toast.success(app.$i18n.t('rotations.player_change_requested'))
     navigateTo(`/coach`)
   }
 
   await getRotation()
 }
 
-const listenRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+const listenRotationLockToggledEvent = (
+  gameId?: number,
+  rotationId?: number,
+) => {
+  if (!gameId || !rotationId) return
+
   window.Echo.channel(
     `game.${gameId}.rotation.${rotationId}.lock-toggled`,
   ).listen(
@@ -154,25 +159,20 @@ const listenRotationLockToggledEvent = (gameId: number, rotationId: number) => {
     (response: ApiRotationLockToggledEventResponse) => {
       toast.info(
         response.rotation.locked
-          ? useNuxtApp().$i18n.t('events.rotation_locked')
-          : useNuxtApp().$i18n.t('events.rotation_unlocked'),
+          ? app.$i18n.t('events.rotation_locked')
+          : app.$i18n.t('events.rotation_unlocked'),
       )
       getRotation()
     },
   )
 }
 
-const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
-  window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
-}
+// INFO: replaced with window.Echo.leaveAllChannels()
+// const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+//   window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
+// }
 
-onBeforeMount(() => getRotation(true))
-onBeforeUnmount(
-  () =>
-    game.value &&
-    rotation.value &&
-    leaveRotationLockToggledEvent(game.value?.id, rotation.value.id),
-)
+onBeforeMount(getRotation)
 </script>
 
 <template>
@@ -202,17 +202,14 @@ onBeforeUnmount(
         @update:captain="setRotationCaptain"
       />
 
-      <footer class="flex justify-end items-center mt-8">
+      <footer class="flex justify-end items-center mt-24 md:mt-8">
         <Button
           type="submit"
           :disabled="!requestedPlayerChanges.length"
           :label="
             form?.locked
               ? $t('rotations.locked')
-              : $t(
-                  'rotations.request_player_change',
-                  requestedPlayerChanges.length,
-                )
+              : $t('rotations.player_change', requestedPlayerChanges.length)
           "
         />
       </footer>

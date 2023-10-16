@@ -23,6 +23,8 @@
     .easy-icon-libero-component,
     .easy-icon-shirt-number-component {
       pointer-events: none;
+      filter: none;
+      opacity: 1;
     }
   }
 }

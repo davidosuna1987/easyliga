@@ -66,6 +66,10 @@ const props = defineProps({
     type: String as PropType<GameStatus>,
     required: true,
   },
+  timeoutRunning: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['point:sum', 'point:undo', 'set:start'])
@@ -88,15 +92,6 @@ const getRotationPlayerDataAtPosition = (
 ): Player | undefined => {
   const call =
     side === SetSide.LEFT ? props.leftSideTeamCall : props.rightSideTeamCall
-
-  // const currentRotation =
-  //   side === SetSide.LEFT
-  //     ? props.leftSideTeamCurrentRotation
-  //     : props.rightSideTeamCurrentRotation
-
-  // const profileId = Number(
-  //   Object.entries(currentRotation).find(([_, pos]) => pos === position)?.[0],
-  // )
 
   const sideRotation =
     side === SetSide.LEFT
@@ -181,6 +176,16 @@ const setActionsDisabled = computed(() => {
         <Button
           class="px-12"
           :label="$t('rotations.waiting_player_changes')"
+          outlined
+          :loading="true"
+          :disabled="true"
+        />
+      </div>
+      <div v-else-if="timeoutRunning" class="actions grid place-content-center">
+        <Button
+          class="px-12"
+          :label="$t('timeouts.running')"
+          severity="danger"
           outlined
           :loading="true"
           :disabled="true"
