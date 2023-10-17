@@ -3,6 +3,10 @@ import {
   ApiCallResponse,
   ApiCallsResponse,
 } from '@/types/api/call'
+import {
+  CallObservationsRequest,
+  mapCallObservationsRequestToApiCallObservationsRequest,
+} from '@/domain/call'
 
 export default class CallService {
   get(callId: number, params?: Record<string, string>) {
@@ -23,6 +27,13 @@ export default class CallService {
   unlock(callId: number) {
     return useApi<ApiCallResponse>(`calls/${callId}/unlock`, {
       method: 'PUT',
+    })
+  }
+
+  observations(callId: number, data: CallObservationsRequest) {
+    return useApi<ApiCallResponse>(`calls/${callId}/observations`, {
+      method: 'PUT',
+      body: mapCallObservationsRequestToApiCallObservationsRequest(data),
     })
   }
 }

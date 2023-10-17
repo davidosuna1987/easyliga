@@ -1,4 +1,8 @@
-import { ApiCall, ApiCallPlayersData } from '@/types/api/call'
+import {
+  ApiCall,
+  ApiCallObservationsRequest,
+  ApiCallPlayersData,
+} from '@/types/api/call'
 import { Game } from '@/domain/game'
 import { Team } from '@/domain/team'
 import { Player } from '@/domain/player'
@@ -24,6 +28,7 @@ export type CallRelations = {
   players?: Player[]
   rotations?: Rotation[]
   currentRotation?: Rotation
+  observations?: string
 }
 
 export type Call = {
@@ -33,6 +38,10 @@ export type Call = {
   playersData: CallPlayerData[]
   locked: boolean
 } & CallRelations
+
+export type CallObservationsRequest = {
+  observations?: string
+}
 
 export const mapApiCallToCall = (apiCall: ApiCall): Call => {
   return {
@@ -44,6 +53,7 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => {
       ? mapApiRotationToRotation(apiCall.current_rotation)
       : undefined,
     locked: apiCall.locked,
+    observations: apiCall.observations ?? undefined,
   }
 }
 
@@ -77,6 +87,14 @@ export const mapApiCallPlayersDataToCallPlayersData = (
       libero: apiCallPlayerData.libero,
     }
   })
+}
+
+export const mapCallObservationsRequestToApiCallObservationsRequest = (
+  callObservationsRequest: CallObservationsRequest,
+): ApiCallObservationsRequest => {
+  return {
+    observations: callObservationsRequest.observations ?? null,
+  }
 }
 
 export const getProfileIdsFromCallPlayersData = (

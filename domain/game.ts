@@ -16,7 +16,7 @@ import { Division } from '@/domain/division'
 import { League } from '@/domain/league'
 import moment from 'moment'
 
-export const GAME_OBSERVATIONS_MINUTES = 10
+export const GAME_OBSERVATIONS_DELAY = 10
 
 export enum CategoryType {
   MASCULINE = 'masculine',
@@ -181,5 +181,5 @@ export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
 
 export const isValidCoachPanelGame = (game: Game): boolean =>
   !game.end ||
-  moment(game.end).add(GAME_OBSERVATIONS_MINUTES, 'minutes').valueOf() >
+  moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf() >
     moment().valueOf()

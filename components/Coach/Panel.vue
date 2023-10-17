@@ -33,7 +33,7 @@ const getCurrentGames = async () => {
   if (!auth.user) return
 
   const commonParams = {
-    where: `start:>=:${moment()
+    where: `date:>=:${moment()
       .subtract(1, 'day')
       .format('YYYY-MM-DD HH:mm:ss')}`,
     with: `currentSet.rotations.players,currentSet.timeouts`,
@@ -73,28 +73,26 @@ const getCurrentGamesCalls = async () => {
   calls.value = []
 
   currentGames.value?.forEach(async game => {
-    if (['warmup', 'resting', 'playing'].includes(game.status)) {
-      const { data } = await callService.fetch({
-        where: `game_id:${game.id}`,
-        with: 'currentRotation.players',
-      })
+    const { data } = await callService.fetch({
+      where: `game_id:${game.id}`,
+      with: 'currentRotation.players',
+    })
 
-      const apiGameCall = data.value?.data.calls.find(
-        call => call.team_id === game?.[`${teamType.value}TeamId`],
-      )
+    const apiGameCall = data.value?.data.calls.find(
+      call => call.team_id === game?.[`${teamType.value}TeamId`],
+    )
 
-      if (apiGameCall) calls.value?.push(mapApiCallToCall(apiGameCall))
+    if (apiGameCall) calls.value?.push(mapApiCallToCall(apiGameCall))
 
-      window.Echo.leaveAllChannels()
+    window.Echo.leaveAllChannels()
 
-      listenGameStatusUpdatedEvent(game.id)
-      listenTimeoutStatusUpdatedEvent(game.id)
+    listenGameStatusUpdatedEvent(game.id)
+    listenTimeoutStatusUpdatedEvent(game.id)
 
-      calls.value?.forEach(call => {
-        listenCallUnlockedEvent(game.id, call.id)
-        listenRotationLockToggledEvent(game.id, call.currentRotation?.id)
-      })
-    }
+    calls.value?.forEach(call => {
+      listenCallUnlockedEvent(game.id, call.id)
+      listenRotationLockToggledEvent(game.id, call.currentRotation?.id)
+    })
 
     loadingApi.value = false
   })

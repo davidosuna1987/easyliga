@@ -228,7 +228,8 @@
     "observation": "Observación | Observaciones",
     "close_acta": "Cerrar acta",
     "observations_countdown": "Tiempo restante para anotar observaciones",
-    "observations_countdown_ended": "Ha finalizado el tiempo para anotar lesionados y observaciones del partido {gameName}"
+    "observations_countdown_ended": "Ha finalizado el tiempo para anotar lesionados y observaciones del partido {gameName}",
+    "observations_disclaimer": "Anota aquí las observaciones del partido"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",
@@ -390,7 +391,8 @@
     "lock": "Cerrar convocatoria",
     "locked_alert": "¿Seguro que quieres cerrar la convocatoria?",
     "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
-    "waiting": "Esperando convocatoria"
+    "waiting": "Esperando convocatoria",
+    "observations_stored": "Las observaciones se han guardado correctamente"
   },
   "rotations": {
     "rotation": "Rotaciones | Rotación | Rotaciones",

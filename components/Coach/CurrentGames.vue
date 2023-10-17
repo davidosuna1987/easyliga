@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Game, GAME_OBSERVATIONS_MINUTES } from '@/domain/game'
+import { Game, GAME_OBSERVATIONS_DELAY } from '@/domain/game'
 import { Call, MIN_CALL_PLAYERS } from '@/domain/call'
 import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
 import { TimeoutStatusEnum, mapApiTimeoutToTimeout } from '@/domain/timeout'
@@ -76,7 +76,7 @@ const maxSetPlayerChangesReached = (
 }
 
 const getGameObservationsCountdownTarget = (game: Game): number =>
-  moment(game.end).add(GAME_OBSERVATIONS_MINUTES, 'minutes').valueOf()
+  moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf()
 
 const onCountdownEnded = (game: Game) => emit('countdown:ended', game)
 </script>
@@ -138,7 +138,7 @@ const onCountdownEnded = (game: Game) => emit('countdown:ended', game)
             :game="game"
             :call="calls[index]"
           />
-          <CoachButtonObservations class="action" :game="game" />
+          <CoachButtonObservations class="action" :call="calls[index]" />
           <Button class="action" :label="$t('games.close_acta')" outlined />
 
           <Countdown

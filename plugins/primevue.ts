@@ -8,6 +8,7 @@ import Avatar from 'primevue/avatar'
 import TieredMenu from 'primevue/tieredmenu'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
+import Textarea from 'primevue/textarea'
 import Password from 'primevue/password'
 import Toast from 'primevue/toast'
 import ToastService from 'primevue/toastservice'
@@ -27,6 +28,7 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('TieredMenu', TieredMenu)
   nuxtApp.vueApp.component('InputText', InputText)
   nuxtApp.vueApp.component('InputNumber', InputNumber)
+  nuxtApp.vueApp.component('Textarea', Textarea)
   nuxtApp.vueApp.component('Password', Password)
   nuxtApp.vueApp.component('Toast', Toast)
   nuxtApp.vueApp.component('Message', Message)

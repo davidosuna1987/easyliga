@@ -28,6 +28,7 @@ export type ApiCall = {
   team_id: number
   players_data: ApiCallPlayersData[]
   locked: boolean
+  observations: string | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
@@ -48,6 +49,10 @@ export type ApiCallStoreRequest = {
 
 export type ApiCallUpdateRequest = {
   players: ApiCallRequestPlayer[]
+}
+
+export type ApiCallObservationsRequest = {
+  observations: string | null
 }
 
 export type ApiCallResponse = {
