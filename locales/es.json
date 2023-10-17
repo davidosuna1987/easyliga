@@ -113,7 +113,8 @@
     "token": "Token",
     "date": "Fecha",
     "time": "Hora",
-    "place": "Lugar"
+    "place": "Lugar",
+    "sign": "Firmar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -512,6 +513,12 @@
     "stored": "Las observaciones se han guardado correctamente",
     "record": "Anotar observaciones",
     "record_text": "Anota aquí las observaciones del partido"
+  },
+  "reports": {
+    "report": "Acta | Actas",
+    "sign": "Firmar acta",
+    "sign_disclaimer": "Al firmar el acta ya no podrás añadir más observaciones ni lesionados en esta convocatoria",
+    "closed": "El acta del partido {gameName} se ha cerrado"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

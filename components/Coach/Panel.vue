@@ -114,18 +114,35 @@ const setTimeoutStatus = (requestedTimeout: Timeout) => {
   }
 }
 
-const onCountdownEnded = (game: Game) => {
+const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
   const endedGame = currentGames.value?.find(g => g.id === game.id)
   if (!endedGame) return
+
+  const callToSign = calls.value.find(c => c.id === call.id && !c.signedAt)
+
+  if (callToSign) {
+    const signData = { signedAt: moment().format('YYYY-MM-DD HH:mm:ss') }
+    await callService.sign(call.id, signData)
+  }
 
   currentGames.value?.splice(
     currentGames.value?.map(g => g.id).indexOf(endedGame.id),
     1,
   )
 
-  toast.info(
-    app.$i18n.t('observations.countdown_ended', { gameName: game.name }),
+  toast.info(app.$i18n.t('reports.closed', { gameName: game.name }))
+}
+
+const onReportSigned = (game: Game) => {
+  const signedGame = currentGames.value?.find(g => g.id === game.id)
+  if (!signedGame) return
+
+  currentGames.value?.splice(
+    currentGames.value?.map(g => g.id).indexOf(signedGame.id),
+    1,
   )
+
+  toast.info(app.$i18n.t('reports.closed', { gameName: game.name }))
 }
 
 const listenCallUnlockedEvent = (gameId: number, callId: number) => {
@@ -264,6 +281,7 @@ onBeforeMount(getCurrentGames)
         :calls="calls"
         @timeout:requested="setTimeoutStatus"
         @countdown:ended="onCountdownEnded"
+        @report:signed="onReportSigned"
       />
       <p v-else class="text-center">{{ $t('coaches.no_current_games') }}</p>
     </template>

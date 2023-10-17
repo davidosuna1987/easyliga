@@ -15,10 +15,29 @@ const props = defineProps({
 
 const app = useNuxtApp()
 const toast = useEasyToast()
+
+const showInjuriesDialog = ref<boolean>(false)
+
+const actionButtonDisabled = computed(() => !!props.call.signedAt)
+
+const onActionButtonClick = () => {
+  console.log(props.call)
+  if (props.call.signedAt) {
+    toast.error(app.$i18n.t('reports.closed'))
+    return
+  }
+  showInjuriesDialog.value = true
+}
 </script>
 
 <template>
-  <Button class="action" outlined :label="$t('games.injury', 2)" />
+  <Button
+    class="action"
+    outlined
+    :label="$t('games.injury', 2)"
+    :disabled="actionButtonDisabled"
+    @click="onActionButtonClick"
+  />
 </template>
 
 <script lang="ts">

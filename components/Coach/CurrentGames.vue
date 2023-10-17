@@ -21,7 +21,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['timeout:requested', 'countdown:ended'])
+const emit = defineEmits([
+  'timeout:requested',
+  'countdown:ended',
+  'report:signed',
+])
 
 const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
@@ -78,7 +82,8 @@ const maxSetPlayerChangesReached = (
 const getGameObservationsCountdownTarget = (game: Game): number =>
   moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf()
 
-const onCountdownEnded = (game: Game) => emit('countdown:ended', game)
+const onCountdownEnded = ({ game, call }: { game: Game; call: Call }) =>
+  emit('countdown:ended', { game, call })
 </script>
 
 <template>
@@ -133,28 +138,40 @@ const onCountdownEnded = (game: Game) => emit('countdown:ended', game)
           />
         </template>
         <template v-if="game.status === 'finished'">
-          <CoachButtonInjuries
-            class="action"
-            :game="game"
-            :call="calls[index]"
-          />
-          <CoachButtonObservations class="action" :call="calls[index]" />
-          <Button class="action" :label="$t('games.close_acta')" outlined />
-
-          <Countdown
-            v-if="getGameObservationsCountdownTarget(game) >= Date.now()"
-            class="col-span-3"
-            :target="getGameObservationsCountdownTarget(game)"
-            v-slot="{ minutes, seconds }"
-            @countdown:ended="onCountdownEnded(game)"
+          <div
+            v-if="calls[index].signedAt"
+            class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
           >
-            <div
-              class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+            {{ $t('reports.closed') }}
+          </div>
+          <template v-else>
+            <CoachButtonInjuries
+              class="action"
+              :game="game"
+              :call="calls[index]"
+            />
+            <CoachButtonObservations class="action" :call="calls[index]" />
+            <CoachButtonSign
+              class="action"
+              :game="game"
+              :call="calls[index]"
+              @report:signed="emit('report:signed', $event)"
+            />
+            <Countdown
+              v-if="getGameObservationsCountdownTarget(game) >= Date.now()"
+              class="col-span-3"
+              :target="getGameObservationsCountdownTarget(game)"
+              v-slot="{ minutes, seconds }"
+              @countdown:ended="onCountdownEnded({ game, call: calls[index] })"
             >
-              {{ $t('observations.countdown') }}
-              <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
-            </div>
-          </Countdown>
+              <div
+                class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+              >
+                {{ $t('observations.countdown') }}
+                <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
+              </div>
+            </Countdown>
+          </template>
         </template>
       </div>
     </div>

@@ -18,11 +18,26 @@ const form = ref<CallObservationsRequest>({
 })
 const showObservationsDialog = ref<boolean>(false)
 
+const actionButtonDisabled = computed(() => !!props.call.signedAt)
+
 const setObservations = (observations?: string) => {
   form.value.observations = observations
 }
 
+const onActionButtonClick = () => {
+  console.log(props.call)
+  if (props.call.signedAt) {
+    toast.error(app.$i18n.t('reports.closed'))
+    return
+  }
+  showObservationsDialog.value = true
+}
+
 const submit = async () => {
+  if (!form.value.observations && !props.call.observations) {
+    showObservationsDialog.value = false
+    return
+  }
   const { data, error } = await callService.observations(
     props.call.id,
     form.value,
@@ -44,7 +59,8 @@ const submit = async () => {
     class="action"
     outlined
     :label="$t('observations.observation', 2)"
-    @click="showObservationsDialog = true"
+    :disabled="actionButtonDisabled"
+    @click="onActionButtonClick"
   />
 
   <ObservationsDialog
