@@ -286,6 +286,16 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
 
   emit('change:players', removeUnchangedPlayerChanges(playerChanges.value))
 
+  const callPlayerSelectedCaptain = props.call.playersData.find(
+    player =>
+      player.profileId ===
+      selectedRotationInCourtCaptain.value?.inCourtProfileId,
+  )
+
+  if (!callPlayerSelectedCaptain?.captain && replacementPlayer.captain) {
+    setRotationCaptain(replacementPlayer.profileId)
+  }
+
   selectedPosition.value = null
 }
 
