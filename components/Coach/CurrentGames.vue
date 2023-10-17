@@ -151,7 +151,7 @@ const onCountdownEnded = (game: Game) => emit('countdown:ended', game)
             <div
               class="text-xs text-[var(--danger-color)] flex items-center justify-center"
             >
-              {{ $t('games.observations_countdown') }}
+              {{ $t('observations.countdown') }}
               <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
             </div>
           </Countdown>

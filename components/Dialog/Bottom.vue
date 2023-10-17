@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Prop } from 'nuxt/dist/app/compat/capi'
 import { DialogProps } from 'primevue/dialog'
 
 const props = defineProps({
@@ -43,6 +42,8 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['hide'])
+
 const showDialog = ref<boolean>(props.visible)
 
 const classes = computed(
@@ -65,7 +66,7 @@ watch(
     :position="position"
     :breakpoints="breakpoints"
     modal
-    @hide="$emit('hide', true)"
+    @hide="emit('hide', true)"
   >
     <template #header><slot name="header" /></template>
     <slot />

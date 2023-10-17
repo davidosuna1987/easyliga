@@ -28,7 +28,7 @@ export type ApiPoint = {
   visitor_team_score: number
   start: string | null
   end: string | null
-  comments: string | null
+  observations: string | null
 } & ApiPointRelations
 
 export type ApiPointStoreRequest = {
@@ -42,7 +42,7 @@ export type ApiPointStoreRequest = {
   loser_team_id: number
   local_team_score: number
   visitor_team_score: number
-  comments: string | null
+  observations: string | null
 }
 
 export type ApiPointResponse = {

@@ -2,6 +2,7 @@
 import CallService from '@/services/call'
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
+import { GameStatus } from '@/domain/game'
 
 const toast = useEasyToast()
 const callService = new CallService()
@@ -14,6 +15,10 @@ const props = defineProps({
   },
   currentSet: {
     type: Object as PropType<Set>,
+    required: true,
+  },
+  gameStatus: {
+    type: String as PropType<GameStatus>,
     required: true,
   },
 })
@@ -43,7 +48,7 @@ const unlock = async () => {
         <small>{{ $t('rotations.waiting') }}</small>
       </div>
       <Button
-        v-if="props.currentSet.number === 1"
+        v-if="props.currentSet.number === 1 && props.gameStatus !== 'finished'"
         class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
         :label="$t('forms.unlock')"
         @click="unlock()"

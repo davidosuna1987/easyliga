@@ -29,7 +29,7 @@ export type Point = {
   visitorTeamScore: number
   start: string | null
   end: string | null
-  comments: string | null
+  observations: string | null
 } & PointRelations
 
 export const mapApiPointToPoint = (apiPoint: ApiPoint): Point => ({
@@ -46,7 +46,7 @@ export const mapApiPointToPoint = (apiPoint: ApiPoint): Point => ({
   visitorTeamScore: apiPoint.visitor_team_score,
   start: apiPoint.start,
   end: apiPoint.end,
-  comments: apiPoint.comments,
+  observations: apiPoint.observations,
 
   set: apiPoint.set ? mapApiSetToSet(apiPoint.set) : undefined,
   game: apiPoint.game ? mapApiGameToGame(apiPoint.game) : undefined,

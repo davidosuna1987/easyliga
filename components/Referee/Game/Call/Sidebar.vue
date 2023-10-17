@@ -4,6 +4,7 @@ import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
 import { Timeout, TimeoutStatusEnum } from '@/domain/timeout'
+import { GameStatus } from '@/domain/game'
 
 const emit = defineEmits([
   'call:unlocked',
@@ -30,6 +31,10 @@ const props = defineProps({
   },
   currentSet: {
     type: Object as PropType<Set>,
+    required: true,
+  },
+  gameStatus: {
+    type: String as PropType<GameStatus>,
     required: true,
   },
 })
@@ -71,6 +76,7 @@ const runningTimeout = computed(() =>
       <PlayerItem
         v-for="player in inCourtPlayers"
         :key="player.profileId"
+        :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
         :player="player"
         :showIcons="false"
         :showCaptain="rotation?.inCourtCaptainProfileId === player.profileId"
@@ -81,6 +87,7 @@ const runningTimeout = computed(() =>
         <PlayerItem
           v-for="player in benchPlayers"
           :key="player.profileId"
+          :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
           :player="player"
           :showIcons="false"
           :showCaptain="!!player.captain"
@@ -92,6 +99,7 @@ const runningTimeout = computed(() =>
           :rotation="props.rotation"
           :requestedTimeout="requestedTimeout"
           :runningTimeout="runningTimeout"
+          :gameStatus="props.gameStatus"
           @rotation:lock-toggled="emit('rotation:lock-toggled', true)"
         />
       </div>
@@ -109,6 +117,7 @@ const runningTimeout = computed(() =>
       <PlayerItem
         v-for="player in props.call.playersData"
         :key="player.profileId"
+        :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
         :player="player"
         :showIcons="false"
         :showCaptain="!!player.captain"
@@ -118,6 +127,7 @@ const runningTimeout = computed(() =>
         <RefereeGameCallStatus
           :call="props.call"
           :currentSet="props.currentSet"
+          :gameStatus="props.gameStatus"
           @call:unlocked="emit('call:unlocked', true)"
         />
       </div>

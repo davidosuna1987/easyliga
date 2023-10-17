@@ -71,6 +71,10 @@ const props = defineProps({
     type: String as PropType<GameStatus>,
     required: true,
   },
+  gameEndedAt: {
+    type: String,
+    required: false,
+  },
   timeoutRunning: {
     type: Boolean,
     default: false,
@@ -84,6 +88,8 @@ const emit = defineEmits([
   'point:undo',
   'set:start',
   'timeout:start',
+  'observations:dialog',
+  'countdown:ended',
 ])
 
 const leftSideTeamRotation = computed(() =>
@@ -116,6 +122,7 @@ const undoLastPoint = () => {
         :rotation="leftSideTeamRotation"
         :timeouts="leftSideTeamTimeouts"
         :currentSet="currentSet"
+        :gameStatus="gameStatus"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
@@ -143,10 +150,13 @@ const undoLastPoint = () => {
         :servingTeamId="servingTeamId"
         :rotations="rotations"
         :gameStatus="gameStatus"
+        :gameEndedAt="gameEndedAt"
         :timeoutRunning="timeoutRunning"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"
+        @observations:dialog="emit('observations:dialog')"
+        @countdown:ended="emit('countdown:ended')"
       />
     </div>
     <div class="sidebar-wrapper right">
@@ -156,6 +166,7 @@ const undoLastPoint = () => {
         :rotation="rightSideTeamRotation"
         :timeouts="rightSideTeamTimeouts"
         :currentSet="currentSet"
+        :gameStatus="gameStatus"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"

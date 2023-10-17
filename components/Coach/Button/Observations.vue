@@ -18,6 +18,10 @@ const form = ref<CallObservationsRequest>({
 })
 const showObservationsDialog = ref<boolean>(false)
 
+const setObservations = (observations?: string) => {
+  form.value.observations = observations
+}
+
 const submit = async () => {
   const { data, error } = await callService.observations(
     props.call.id,
@@ -29,7 +33,7 @@ const submit = async () => {
     return
   }
 
-  toast.success(app.$i18n.t('calls.observations_stored'))
+  toast.success(app.$i18n.t('observations.stored'))
 
   showObservationsDialog.value = false
 }
@@ -39,41 +43,17 @@ const submit = async () => {
   <Button
     class="action"
     outlined
-    :label="$t('games.observation', 2)"
+    :label="$t('observations.observation', 2)"
     @click="showObservationsDialog = true"
   />
 
-  <DialogBottom
-    class="easy-coach-observations-dialog-component"
+  <ObservationsDialog
     :visible="!!showObservationsDialog"
+    :observations="form.observations"
     @hide="showObservationsDialog = false"
-  >
-    <template #header>
-      <Heading tag="h6">{{ $t('games.observation', 2) }}</Heading>
-    </template>
-
-    <p>{{ $t('games.observations_disclaimer') }}</p>
-
-    <Textarea
-      class="mt-6 w-full"
-      v-model="form.observations"
-      :rows="5"
-      autoResize
-    />
-
-    <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="showObservationsDialog = false"
-        />
-        <Button :label="$t('forms.submit')" @click="submit" />
-      </div>
-    </template>
-  </DialogBottom>
+    @observations:changed="setObservations"
+    @submit="submit"
+  />
 </template>
 
 <script lang="ts">

@@ -3,7 +3,11 @@ import GameService from '@/services/game'
 import PointService from '@/services/point'
 import SetService from '@/services/set'
 import TimeoutService from '@/services/timeout'
-import { GameInitialData, mapApiGameInitialDataToGame } from '@/domain/game'
+import {
+  GameInitialData,
+  GameObservationsRequest,
+  mapApiGameInitialDataToGame,
+} from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
 import {
@@ -44,8 +48,12 @@ const gameInitialData = ref<GameInitialData>()
 const localTeamCall = ref<Call>()
 const visitorTeamCall = ref<Call>()
 const lastPoint = ref<Point>()
+const observationsForm = ref<GameObservationsRequest>({
+  observations: undefined,
+})
 const undoPointButtonDisabled = ref<boolean>(true)
 const undoLastPointCountdown = ref<number>(0)
+const showObservationsDialog = ref<boolean>(false)
 const loadingApi = ref<boolean>(false)
 const loadingTimeout = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
@@ -171,6 +179,8 @@ const getGameInitialData = async () => {
   visitorTeamCall.value = gameInitialData.value?.calls?.find(
     call => call.teamId === gameInitialData.value?.visitorTeam?.id,
   )
+  observationsForm.value.observations =
+    gameInitialData.value.game.observations ?? undefined
   loadingApi.value = false
 
   window.Echo.leaveAllChannels()
@@ -266,7 +276,7 @@ const createFormPoint = (type?: TeamType) => {
       type === TeamType.VISITOR
         ? Number(lastPoint.value?.visitorTeamScore ?? 0) + 1
         : Number(lastPoint.value?.visitorTeamScore ?? 0),
-    comments: null,
+    observations: null,
   }
 }
 
@@ -323,6 +333,25 @@ const showTimeoutStatusUpdatedToast = (
   if (status === TimeoutStatusEnum.finished) {
     toast.info(app.$i18n.t('events.timeout_status_finished'))
   }
+}
+
+const setObservations = (observations?: string) =>
+  (observationsForm.value.observations = observations)
+
+const submitObservations = async () => {
+  const { data, error } = await gameService.observations(
+    Number(route.params.game_id),
+    observationsForm.value,
+  )
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  toast.success(app.$i18n.t('observations.stored'))
+
+  showObservationsDialog.value = false
 }
 
 const listenCallUpdatedEvent = () => {
@@ -527,6 +556,7 @@ onBeforeMount(() => {
       :servingTeamId="servingTeamId"
       :rotations="gameInitialData.game.currentSet.rotations"
       :gameStatus="gameInitialData.game.status"
+      :gameEndedAt="gameInitialData.game.end ?? undefined"
       :timeoutRunning="timeoutRunning"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
@@ -534,6 +564,16 @@ onBeforeMount(() => {
       @point:undo="undoLastPoint"
       @set:start="startSet"
       @timeout:start="startTimeout"
+      @observations:dialog="showObservationsDialog = true"
+    />
+
+    <ObservationsDialog
+      :visible="!!showObservationsDialog"
+      :observations="observationsForm.observations"
+      :submitLabel="$t('forms.store')"
+      @hide="showObservationsDialog = false"
+      @observations:changed="setObservations"
+      @submit="submitObservations"
     />
 
     <!-- TODO: remove in production -->

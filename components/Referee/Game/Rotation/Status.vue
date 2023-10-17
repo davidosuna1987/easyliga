@@ -5,6 +5,7 @@ import rotationVue from
 import RotationService from '@/services/rotation'
 import { Rotation } from '@/domain/rotation'
 import { Timeout } from '@/domain/timeout'
+import { GameStatus } from '@/domain/game'
 
 const toast = useEasyToast()
 const rotationService = new RotationService()
@@ -22,6 +23,10 @@ const props = defineProps({
   runningTimeout: {
     type: Object as PropType<Timeout>,
     required: false,
+  },
+  gameStatus: {
+    type: String as PropType<GameStatus>,
+    required: true,
   },
 })
 
@@ -71,6 +76,7 @@ const lock = async () => {
     <Loading v-if="loadingApi" />
 
     <Button
+      v-if="props.gameStatus !== 'finished'"
       class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
       :severity="props.rotation.locked ? 'primary' : 'danger'"
       :label="props.rotation.locked ? $t('forms.unlock') : $t('forms.lock')"

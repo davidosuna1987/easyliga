@@ -5,7 +5,8 @@ import { Player } from '@/domain/player'
 import { Team, TeamType } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
 import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
-import { GameStatus } from '@/domain/game'
+import { GAME_OBSERVATIONS_DELAY, GameStatus } from '@/domain/game'
+import moment from 'moment'
 
 const auth = useAuthStore()
 
@@ -70,9 +71,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  gameEndedAt: {
+    type: String,
+    required: false,
+  },
 })
 
-const emit = defineEmits(['point:sum', 'point:undo', 'set:start'])
+const emit = defineEmits([
+  'point:sum',
+  'point:undo',
+  'set:start',
+  'observations:dialog',
+  'countdown:ended',
+])
+
+const showCountdown = ref<boolean>(false)
 
 const waitingForPlayerChanges = computed(() =>
   props.rotations.some(rotation => !rotation.locked),
@@ -126,6 +139,26 @@ const setActionsDisabled = computed(() => {
     props.rotations?.some(rotation => rotation.players.length < 6)
   )
 })
+
+const gameObservationsCountdownTarget = computed((): number =>
+  props.gameEndedAt
+    ? moment(props.gameEndedAt)
+        .add(GAME_OBSERVATIONS_DELAY, 'minutes')
+        .valueOf()
+    : 0,
+)
+
+const onCountdownEnded = () => {
+  showCountdown.value = false
+  emit('countdown:ended')
+}
+
+const setInitialShowCountdown = () => {
+  showCountdown.value =
+    !!props.gameEndedAt && gameObservationsCountdownTarget.value > Date.now()
+}
+
+onMounted(setInitialShowCountdown)
 </script>
 
 <template>
@@ -219,6 +252,28 @@ const setActionsDisabled = computed(() => {
           disabled
         />
       </div>
+      <a
+        v-if="gameStatus !== 'finished' || showCountdown"
+        href=""
+        class="w-full text-center block mt-5 text-primary"
+        @click.prevent="emit('observations:dialog')"
+      >
+        {{ $t('observations.record') }}
+      </a>
+      <Countdown
+        v-if="gameStatus === 'finished' && showCountdown"
+        class="col-span-3"
+        :target="gameObservationsCountdownTarget"
+        v-slot="{ minutes, seconds }"
+        @countdown:ended="onCountdownEnded"
+      >
+        <div
+          class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+        >
+          {{ $t('observations.countdown') }}
+          <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
+        </div>
+      </Countdown>
     </template>
   </div>
 </template>

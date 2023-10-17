@@ -23,7 +23,7 @@ export type ApiSet = {
   loser_team_id: number | null
   start: string | null
   end: string | null
-  comments: string | null
+  observations: string | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null

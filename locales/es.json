@@ -90,7 +90,7 @@
     "continue": "Continuar",
     "pending": "Pendiente",
     "not_set": "No especificado",
-    "comments": "Comentarios",
+    "observations": "Observaciones",
     "attach_file": "Adjuntar archivo | Adjuntar archivos",
     "add_file": "Añadir archivo | Añadir archivos",
     "folder": "Carpetas | Carpeta | Carpetas",
@@ -225,11 +225,7 @@
     "player_change": "Cambios | Cambio | Cambios",
     "show_player_change": "Ver cambios | Ver cambio | Ver cambios",
     "injury": "Lesión | Lesiones",
-    "observation": "Observación | Observaciones",
-    "close_acta": "Cerrar acta",
-    "observations_countdown": "Tiempo restante para anotar observaciones",
-    "observations_countdown_ended": "Ha finalizado el tiempo para anotar lesionados y observaciones del partido {gameName}",
-    "observations_disclaimer": "Anota aquí las observaciones del partido"
+    "close_acta": "Cerrar acta"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",
@@ -391,8 +387,7 @@
     "lock": "Cerrar convocatoria",
     "locked_alert": "¿Seguro que quieres cerrar la convocatoria?",
     "locked_warning": "La convocatoria está cerrada, tienes que pedir al árbitro del partido que la abra para poder modificarla",
-    "waiting": "Esperando convocatoria",
-    "observations_stored": "Las observaciones se han guardado correctamente"
+    "waiting": "Esperando convocatoria"
   },
   "rotations": {
     "rotation": "Rotaciones | Rotación | Rotaciones",
@@ -509,6 +504,14 @@
     "requested_short": "Tiempo muerto solicitado | Tiempos muertos solicitados",
     "init": "Iniciar tiempo muerto",
     "running": "Tiempo muerto en curso"
+  },
+  "observations": {
+    "observation": "Observación | Observaciones",
+    "countdown": "Tiempo restante para anotar observaciones",
+    "countdown_ended": "Ha finalizado el tiempo para anotar lesionados y observaciones del partido {gameName}",
+    "stored": "Las observaciones se han guardado correctamente",
+    "record": "Anotar observaciones",
+    "record_text": "Anota aquí las observaciones del partido"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

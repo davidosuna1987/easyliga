@@ -124,7 +124,7 @@ const onCountdownEnded = (game: Game) => {
   )
 
   toast.info(
-    app.$i18n.t('games.observations_countdown_ended', { gameName: game.name }),
+    app.$i18n.t('observations.countdown_ended', { gameName: game.name }),
   )
 }
 

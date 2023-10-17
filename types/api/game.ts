@@ -50,7 +50,7 @@ export type ApiGame = {
   winner_team_id: number | null
   loser_team_id: number | null
   status: GameStatus
-  comments: string | null
+  observations: string | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
@@ -79,6 +79,10 @@ export type ApiGameStoreRequest = {
   referee_id: number | null
   local_team_id: number | null
   visitor_team_id: number | null
+}
+
+export type ApiGameObservationsRequest = {
+  observations: string | null
 }
 
 export type ApiGameInitialDataResponse = {

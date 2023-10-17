@@ -1,4 +1,8 @@
-import { ApiGame, ApiGameInitialDataResponse } from '@/types/api/game'
+import {
+  ApiGame,
+  ApiGameInitialDataResponse,
+  ApiGameObservationsRequest,
+} from '@/types/api/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import {
@@ -100,9 +104,13 @@ export type Game = {
   start: string | null
   end: string | null
   status: GameStatus
-  comments: string | null
+  observations: string | null
 } & GameRelations &
   GameRelationsCount
+
+export type GameObservationsRequest = {
+  observations?: string
+}
 
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
@@ -121,7 +129,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   start: apiGame.start,
   end: apiGame.end,
   status: apiGame.status,
-  comments: apiGame.comments,
+  observations: apiGame.observations,
   sets: apiGame.sets?.map(mapApiSetToSet),
   currentSet: apiGame.current_set
     ? mapApiSetToSet(apiGame.current_set)
@@ -178,6 +186,14 @@ export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
   id: apiGender.id,
   name: apiGender.name as GenderType,
 })
+
+export const mapGameObservationsRequestToApiGameObservationsRequest = (
+  gameObservationsRequest: GameObservationsRequest,
+): ApiGameObservationsRequest => {
+  return {
+    observations: gameObservationsRequest.observations ?? null,
+  }
+}
 
 export const isValidCoachPanelGame = (game: Game): boolean =>
   !game.end ||

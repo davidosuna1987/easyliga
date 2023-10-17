@@ -28,7 +28,7 @@ export type Set = {
   loserTeamId?: number
   start?: string
   end?: string
-  comments?: string
+  observations?: string
 } & SetRelations
 
 export type SetStartRequest = {
@@ -50,7 +50,7 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   loserTeamId: apiSet.loser_team_id ?? undefined,
   start: apiSet.start ?? undefined,
   end: apiSet.end ?? undefined,
-  comments: apiSet.comments ?? undefined,
+  observations: apiSet.observations ?? undefined,
 
   lastPoint: apiSet.last_point
     ? mapApiPointToPoint(apiSet.last_point)
