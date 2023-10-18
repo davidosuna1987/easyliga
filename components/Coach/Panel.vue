@@ -175,7 +175,7 @@ const listenRotationLockToggledEvent = (
           ? app.$i18n.t('events.rotation_locked')
           : app.$i18n.t('events.rotation_unlocked'),
       )
-      getCurrentGamesCalls()
+      getCurrentGames()
     },
   )
 }
