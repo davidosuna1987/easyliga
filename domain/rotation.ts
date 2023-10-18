@@ -22,6 +22,15 @@ export enum ChangeType {
   SECOND = 2,
 }
 
+export enum ChangeActionIcon {
+  remove = 'ic:baseline-delete',
+  done = 'ic:baseline-check-circle',
+  undo = 'ic:baseline-replay-circle-filled',
+  help = 'ic:baseline-help',
+}
+
+export type ChangeAction = keyof typeof ChangeActionIcon
+
 export type RotationPlayer = {
   profileId: number
   rotationId: number
@@ -30,6 +39,7 @@ export type RotationPlayer = {
   position: number
   currentPosition: number
   libero: boolean
+  changeWindows: number[]
 }
 
 export type RotationRelations = {
@@ -48,6 +58,7 @@ export type Rotation = {
   inCourtCaptainProfileId: number
   playerChangesCount: number
   locked: boolean
+  currentChangeWindow: number
 } & RotationRelations
 
 export type RotationUpdateRequestPlayer = {
@@ -56,6 +67,7 @@ export type RotationUpdateRequestPlayer = {
   inCourtProfileId: number
   position: number
   libero: boolean
+  changeWindows: number[]
 }
 
 export type RotationUpdateRequest = {
@@ -73,6 +85,7 @@ export type RotationPlayerChangeRequest = {
   inCourtProfileId: number
   position: number
   libero: boolean
+  changeWindows: number[]
   comesFromApi: boolean
 }
 
@@ -84,6 +97,11 @@ export type RotationPlayerChangeForm = {
 export type RotationPlayerChange = {
   in: CallPlayerData
   out: CallPlayerData
+  changeWindow: number
+}
+
+export type RotationWindowPlayerChange = {
+  [changeWindow: number]: RotationPlayerChange[]
 }
 
 export const mapRotationPlayerToApiRotationPlayer = (
@@ -96,6 +114,9 @@ export const mapRotationPlayerToApiRotationPlayer = (
   position: rotationPlayer.position,
   current_position: rotationPlayer.currentPosition,
   libero: rotationPlayer.libero,
+  change_windows: rotationPlayer.changeWindows.length
+    ? rotationPlayer.changeWindows
+    : null,
 })
 
 export const mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer = (
@@ -106,6 +127,7 @@ export const mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer = (
   inCourtProfileId: rotationPlayerChangeRequest.inCourtProfileId,
   position: rotationPlayerChangeRequest.position,
   libero: rotationPlayerChangeRequest.libero,
+  changeWindows: rotationPlayerChangeRequest.changeWindows,
 })
 
 export const mapApiRotationPlayerToRotationPlayer = (
@@ -118,6 +140,7 @@ export const mapApiRotationPlayerToRotationPlayer = (
   position: apiRotationPlayer.position,
   currentPosition: apiRotationPlayer.current_position,
   libero: apiRotationPlayer.libero,
+  changeWindows: apiRotationPlayer.change_windows ?? [],
 })
 
 export const mapRotationPlayerToApiRotationPlayerChange = (
@@ -128,6 +151,9 @@ export const mapRotationPlayerToApiRotationPlayerChange = (
   in_court_profile_id: rotationPlayer.inCourtProfileId,
   position: rotationPlayer.position,
   libero: rotationPlayer.libero,
+  change_windows: rotationPlayer.changeWindows.length
+    ? rotationPlayer.changeWindows
+    : null,
 })
 
 export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
@@ -138,6 +164,9 @@ export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
   in_court_profile_id: rotationUpdateRequestPlayer.inCourtProfileId,
   position: rotationUpdateRequestPlayer.position,
   libero: rotationUpdateRequestPlayer.libero,
+  change_windows: rotationUpdateRequestPlayer.changeWindows.length
+    ? rotationUpdateRequestPlayer.changeWindows
+    : null,
 })
 
 export const mapApiRotationToRotation = (
@@ -150,6 +179,7 @@ export const mapApiRotationToRotation = (
   playerChangesCount: apiRotation.player_changes_count,
   number: apiRotation.number,
   locked: apiRotation.locked,
+  currentChangeWindow: apiRotation.current_change_window,
   players: apiRotation.players
     ? apiRotation.players.map(mapApiRotationPlayerToRotationPlayer)
     : [],
@@ -221,6 +251,7 @@ export const mapRotationToRotationPlayerChanges = (
     playerChanges.push({
       in: playerIn,
       out: playerOut,
+      changeWindow: player.changeWindows[0],
     })
 
     if (player.inCourtProfileId === player.profileId) {
@@ -237,9 +268,49 @@ export const mapRotationToRotationPlayerChanges = (
       playerChanges.push({
         in: playerIn,
         out: playerOut,
+        changeWindow: player.changeWindows[1],
       })
     }
   }
 
   return playerChanges
+}
+
+export const mapRotationToRotationWindowPlayerChanges = (
+  rotation: Rotation,
+  callPlayersData: CallPlayerData[],
+): RotationWindowPlayerChange[] => {
+  const playerChanges: RotationPlayerChange[] =
+    mapRotationToRotationPlayerChanges(rotation, callPlayersData)
+
+  return Array.from(
+    { length: Math.max(...playerChanges.map(change => change.changeWindow)) },
+    (_, i) => i + 1,
+  ).map(changeWindow => ({
+    [changeWindow]: playerChanges.filter(
+      change => change.changeWindow === changeWindow,
+    ),
+  }))
+}
+
+export const playerChangeCanBeRemovedOLD = (
+  playerChange: RotationPlayerChange,
+  playerChanges: RotationPlayerChange[],
+): boolean =>
+  !!playerChanges.find(
+    pc =>
+      pc.in.profileId === playerChange.out.profileId &&
+      pc.out.profileId === playerChange.in.profileId,
+  )
+
+export const playerChangeCanBeRemoved = (
+  playerChange: RotationPlayerChange,
+  currentChangeWindow: number,
+): boolean => {
+  console.log(
+    playerChange.changeWindow,
+    currentChangeWindow,
+    playerChange.changeWindow === currentChangeWindow - 1,
+  )
+  return playerChange.changeWindow === currentChangeWindow - 1
 }

@@ -226,7 +226,9 @@
     "player_change": "Cambios | Cambio | Cambios",
     "show_player_change": "Ver cambios | Ver cambio | Ver cambios",
     "injury": "Lesión | Lesiones",
-    "close_acta": "Cerrar acta"
+    "close_acta": "Cerrar acta",
+    "change_window": "Ventana de cambios",
+    "change_window_num": "Ventana de cambios {num}"
   },
   "federations": {
     "federation": "Federaciones | Federación | Federaciones",

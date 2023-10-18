@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CallPlayerData } from '@/domain/call'
+import { ChangeAction, ChangeActionIcon } from '@/domain/rotation'
 
 const props = defineProps({
   playerIn: {
@@ -18,13 +19,29 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  action: {
+    type: String as PropType<ChangeAction>,
+    required: false,
+  },
 })
+
+const emit = defineEmits(['change:remove'])
+
+const onActionClick = () => {
+  if (props.action === 'remove') {
+    emit('change:remove')
+  }
+}
 </script>
 
 <template>
   <div
     class="easy-player-change-item-component gap-3 mb-2"
-    :class="{ 'is-mini': props.mini, 'is-block': !props.mini && props.block }"
+    :class="{
+      'is-mini': props.mini,
+      'is-block': !props.mini && props.block,
+      'has-actions': props.action,
+    }"
   >
     <div class="player-container">
       <IconShirtNumber
@@ -57,6 +74,15 @@ const props = defineProps({
         :showIcons="false"
         :selectable="false"
         :showAvatar="false"
+      />
+    </div>
+    <div v-if="props.action" class="actions">
+      <Icon
+        class="action"
+        :class="[`action-${props.action}`]"
+        :name="ChangeActionIcon[props.action]"
+        size="1.5rem"
+        @click="onActionClick()"
       />
     </div>
   </div>

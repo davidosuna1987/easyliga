@@ -18,6 +18,13 @@ export enum TeamType {
   VISITOR = 'visitor',
 }
 
+export enum TeamSideEnum {
+  left = 'left',
+  right = 'right',
+}
+
+export type TeamSide = keyof typeof TeamSideEnum
+
 export type TeamRelations = {
   division?: Division
   category?: Category

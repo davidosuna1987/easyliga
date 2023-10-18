@@ -112,6 +112,7 @@ const setRotationPlayersFromRtotation = () => {
       inCourtProfileId: player.inCourtProfileId,
       position: player.currentPosition,
       libero: player.libero,
+      changeWindows: player.changeWindows,
       comesFromApi: true,
     })
 
@@ -210,6 +211,7 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
     position: selectedPosition.value,
     currentPosition: selectedPosition.value,
     libero: false,
+    changeWindows: [],
   })
 
   if (!selectedRotationInCourtCaptain.value) {
@@ -282,6 +284,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     position: selectedPosition.value ?? 0,
     libero: replacementPlayer.libero,
     comesFromApi: false,
+    changeWindows: rotationPlayerToReplace.changeWindows,
   })
 
   emit('change:players', removeUnchangedPlayerChanges(playerChanges.value))

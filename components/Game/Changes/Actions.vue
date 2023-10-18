@@ -2,10 +2,13 @@
 import {
   Rotation,
   RotationPlayerChange,
+  RotationWindowPlayerChange,
   mapRotationToRotationPlayerChanges,
+  mapRotationToRotationWindowPlayerChanges,
+  playerChangeCanBeRemoved,
 } from '@/domain/rotation'
 import { Call } from '@/domain/call'
-import { getFullName } from '@/domain/player'
+import { TeamSide, TeamSideEnum } from '@/domain/team'
 
 const props = defineProps({
   leftSideTeamCall: {
@@ -26,7 +29,40 @@ const props = defineProps({
   },
 })
 
-const playerChanges = ref<RotationPlayerChange[]>()
+const selectedTeamSide = ref<TeamSide>()
+
+const playerChanges = computed((): RotationPlayerChange[] => {
+  switch (selectedTeamSide.value) {
+    case TeamSideEnum.left:
+      return leftSideTeamPlayerChanges.value ?? []
+    case TeamSideEnum.right:
+      return rightSideTeamPlayerChanges.value ?? []
+    default:
+      return []
+  }
+})
+
+const windowPlayerChanges = computed((): RotationWindowPlayerChange[] => {
+  switch (selectedTeamSide.value) {
+    case TeamSideEnum.left:
+      return leftSideTeamWindowPlayerChanges.value ?? []
+    case TeamSideEnum.right:
+      return rightSideTeamWindowPlayerChanges.value ?? []
+    default:
+      return []
+  }
+})
+
+const rotation = computed((): Rotation | undefined => {
+  switch (selectedTeamSide.value) {
+    case TeamSideEnum.left:
+      return props.leftSideTeamRotation
+    case TeamSideEnum.right:
+      return props.rightSideTeamRotation
+    default:
+      return undefined
+  }
+})
 
 const leftSideTeamPlayerChanges = computed(
   () =>
@@ -46,8 +82,38 @@ const rightSideTeamPlayerChanges = computed(
     ),
 )
 
+const leftSideTeamWindowPlayerChanges = computed(
+  () =>
+    props.leftSideTeamRotation &&
+    mapRotationToRotationWindowPlayerChanges(
+      props.leftSideTeamRotation,
+      props.leftSideTeamCall.playersData,
+    ),
+)
+
+const rightSideTeamWindowPlayerChanges = computed(
+  () =>
+    props.rightSideTeamRotation &&
+    mapRotationToRotationWindowPlayerChanges(
+      props.rightSideTeamRotation,
+      props.rightSideTeamCall.playersData,
+    ),
+)
+
 const numberToString = (playerChangesCount: number = 0) =>
   playerChangesCount.toString()
+
+const removePlayerChange = async (playerChange: RotationPlayerChange) => {
+  const targetRotation = props.leftSideTeamRotation?.players.find(player =>
+    [playerChange.in.profileId, playerChange.out.profileId].includes(
+      player.profileId,
+    ),
+  )
+    ? props.leftSideTeamRotation
+    : props.rightSideTeamRotation
+
+  // TODO: Implement this method
+}
 </script>
 
 <template>
@@ -59,7 +125,7 @@ const numberToString = (playerChangesCount: number = 0) =>
         :badge="numberToString(leftSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
-        @click.prevent="playerChanges = leftSideTeamPlayerChanges"
+        @click.prevent="selectedTeamSide = TeamSideEnum.left"
       />
       <Button
         class="col-span-5/10"
@@ -67,14 +133,14 @@ const numberToString = (playerChangesCount: number = 0) =>
         :badge="numberToString(rightSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
-        @click.prevent="playerChanges = rightSideTeamPlayerChanges"
+        @click.prevent="selectedTeamSide = TeamSideEnum.right"
       />
     </div>
 
     <DialogBottom
       class="easy-coach-rotation-captain-selector-dialog-component"
-      :visible="!!playerChanges"
-      @hide="playerChanges = undefined"
+      :visible="!!selectedTeamSide"
+      @hide="selectedTeamSide = undefined"
     >
       <template #header>
         <Heading tag="h6">{{ $t('rotations.player_change_done', 2) }}</Heading>
@@ -84,13 +150,54 @@ const numberToString = (playerChangesCount: number = 0) =>
         $t('rotations.player_change_done', 0)
       }}</Message>
 
-      <RotationPlayerChangeItem
-        v-for="(change, index) in playerChanges"
-        :key="index"
-        class="mt-4"
-        :playerIn="change.in"
-        :playerOut="change.out"
-      />
+      <!-- <template v-if="playerChanges">
+        <RotationPlayerChangeItem
+          v-for="(change, index) in playerChanges"
+          :key="index"
+          class="mt-4"
+          :playerIn="change.in"
+          :playerOut="change.out"
+          :action="
+            playerChangeCanBeRemoved(change, rotation?.currentChangeWindow ?? 0)
+              ? 'remove'
+              : 'done'
+          "
+          @change:remove="removePlayerChange(change)"
+        />
+      </template> -->
+      <template
+        v-if="windowPlayerChanges"
+        v-for="windowPlayerChange in windowPlayerChanges"
+      >
+        <div
+          v-for="(playerChanges, changeWindow) in windowPlayerChange"
+          :key="changeWindow"
+          class="mt-3 mb-6"
+        >
+          <Heading tag="h6">
+            {{ $t('games.change_window_num', { num: changeWindow }) }}
+          </Heading>
+
+          <RotationPlayerChangeItem
+            v-for="(change, index) in playerChanges"
+            :key="index"
+            class="mt-4"
+            :playerIn="change.in"
+            :playerOut="change.out"
+            :action="
+              // TODO: Implement this method when remove player changes also captain to previous one
+              // playerChangeCanBeRemoved(
+              //   change,
+              //   rotation?.currentChangeWindow ?? 0,
+              // )
+              //   ? 'remove'
+              //   : 'done'
+              undefined
+            "
+            @change:remove="removePlayerChange(change)"
+          />
+        </div>
+      </template>
     </DialogBottom>
   </div>
 </template>

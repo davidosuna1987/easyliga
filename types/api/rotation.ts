@@ -11,6 +11,7 @@ export type ApiRotationPlayer = {
   position: number
   current_position: number
   libero: boolean
+  change_windows: number[] | null
 }
 
 export type ApiRotationUpdateRequestPlayer = Pick<
@@ -20,6 +21,7 @@ export type ApiRotationUpdateRequestPlayer = Pick<
   | 'in_court_profile_id'
   | 'position'
   | 'libero'
+  | 'change_windows'
 >
 
 export type ApiRotationRelations = {
@@ -38,6 +40,7 @@ export type ApiRotation = {
   player_changes_count: number
   number: number
   locked: boolean
+  current_change_window: number
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
