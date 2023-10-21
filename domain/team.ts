@@ -10,8 +10,22 @@ import {
   mapApiCategoryToCategory,
   mapApiGenderToGender,
 } from '@/domain/game'
-import { Profile, mapApiProfileToProfile } from '@/domain/profile'
+import { Profile, mapApiProfileToCoach } from '@/domain/profile'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
+import { CallPlayerData } from '@/domain/call'
+
+export type TeamRelations = {
+  division?: Division
+  category?: Category
+  gender?: Gender
+  coach?: Coach
+  players?: Player[]
+}
+
+export type Team = {
+  id: number
+  name: string
+} & TeamRelations
 
 export enum TeamType {
   LOCAL = 'local',
@@ -25,18 +39,18 @@ export enum TeamSideEnum {
 
 export type TeamSide = keyof typeof TeamSideEnum
 
-export type TeamRelations = {
-  division?: Division
-  category?: Category
-  gender?: Gender
-  coach?: Profile
-  players?: Player[]
-}
+export type Coach = Profile & { coach: boolean }
 
-export type Team = {
-  id: number
-  name: string
-} & TeamRelations
+export type TeamMember = {
+  profileId: number
+  firstName: string
+  lastName: string
+  shirtNumber?: number
+  avatar?: string
+  captain?: boolean
+  libero?: boolean
+  coach: boolean
+}
 
 export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
   id: apiTeam.id,
@@ -48,7 +62,7 @@ export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
     ? mapApiCategoryToCategory(apiTeam.category)
     : undefined,
   gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
-  coach: apiTeam.coach ? mapApiProfileToProfile(apiTeam.coach) : undefined,
+  coach: apiTeam.coach ? mapApiProfileToCoach(apiTeam.coach) : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players)
     : undefined,
@@ -61,4 +75,26 @@ export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
   gender_id: team.gender?.id ?? null,
   coach_id: team.coach?.id ?? null,
   players: team.players ? team.players.map(mapPlayerToApiPlayerRequest) : null,
+})
+
+export const mapProfileToTeamMember = (
+  profile: Profile,
+  coach: boolean,
+): TeamMember => ({
+  profileId: profile.id,
+  firstName: profile.firstName,
+  lastName: profile.lastName,
+  avatar: profile.avatar,
+  coach,
+})
+
+export const mapCallPlayerDataToTeamMember = (
+  callPlayerData: CallPlayerData,
+): TeamMember => ({
+  profileId: callPlayerData.profileId,
+  firstName: callPlayerData.firstName,
+  lastName: callPlayerData.lastName,
+  shirtNumber: callPlayerData.shirtNumber,
+  avatar: callPlayerData.avatar,
+  coach: false,
 })

@@ -7,7 +7,7 @@ import { ApiRotation } from '@/types/api/rotation'
 export type ApiCallPlayersData = {
   profile_id: number
   first_name: string
-  last_name: string | null
+  last_name: string
   avatar: string | null
   shirt_number: number
   libero: boolean

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Player, getFullName } from '@/domain/player'
 import { CallPlayerData } from '@/domain/call'
+import { TeamMember } from '@/domain/team'
 
 const props = defineProps({
   player: {
-    type: Object as PropType<Player | CallPlayerData>,
+    type: Object as PropType<Player | CallPlayerData | TeamMember>,
     required: true,
   },
   setCaptain: {
@@ -20,7 +21,7 @@ const props = defineProps({
     default: null,
   },
   setShirtNumberUpdatePlayer: {
-    type: Function as PropType<(player: Player) => void>,
+    type: Function as PropType<(player: Player | TeamMember) => void>,
     default: null,
   },
   setCaptainToggleDisabledProfileId: {
@@ -84,7 +85,7 @@ const iconsGap = computed(() => {
       <Avatar
         v-if="showAvatar"
         class="player-avatar"
-        :image="player?.avatar ?? undefined"
+        :image="player?.avatar"
         shape="circle"
       />
       <IconShirtNumber

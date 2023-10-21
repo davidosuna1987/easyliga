@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Team } from '@/domain/team'
+import { Coach, Team } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
@@ -10,12 +10,17 @@ const emit = defineEmits([
   'call:unlocked',
   'rotation:lock-toggled',
   'timeout:start',
+  'member:clicked',
 ])
 
 const props = defineProps({
   team: {
     type: Object as PropType<Team>,
     required: true,
+  },
+  coach: {
+    type: Object as PropType<Coach>,
+    required: false,
   },
   call: {
     type: Object as PropType<Call>,
@@ -81,6 +86,7 @@ const runningTimeout = computed(() =>
         :showIcons="false"
         :showCaptain="rotation?.inCourtCaptainProfileId === player.profileId"
         :showLibero="!!player.libero"
+        @click="emit('member:clicked', { player })"
       />
       <template v-if="benchPlayers.length">
         <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
@@ -92,6 +98,14 @@ const runningTimeout = computed(() =>
           :showIcons="false"
           :showCaptain="!!player.captain"
           :showLibero="!!player.libero"
+          @click="emit('member:clicked', { player })"
+        />
+      </template>
+      <template v-if="props.coach">
+        <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
+        <CoachItem
+          :coach="props.coach"
+          @click="emit('member:clicked', { coach: props.coach })"
         />
       </template>
       <div class="rotation-status-area p-[0.5rem]">

@@ -3,7 +3,7 @@ import rotationVue from
 'pages/coach/games/[game_id]/calls/[call_id]/rotation.vue';
 <script setup lang="ts">
 import RotationService from '@/services/rotation'
-import { Rotation } from '@/domain/rotation'
+import { MAX_ROTATION_PLAYER_CHANGES, Rotation } from '@/domain/rotation'
 import { Timeout } from '@/domain/timeout'
 import { GameStatus } from '@/domain/game'
 
@@ -76,7 +76,11 @@ const lock = async () => {
     <Loading v-if="loadingApi" />
 
     <Button
-      v-if="props.gameStatus !== 'finished' && props.gameStatus !== 'warmup'"
+      v-if="
+        props.gameStatus !== 'finished' &&
+        props.gameStatus !== 'warmup' &&
+        props.rotation.playerChangesCount < MAX_ROTATION_PLAYER_CHANGES
+      "
       class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
       :severity="props.rotation.locked ? 'primary' : 'danger'"
       :label="props.rotation.locked ? $t('forms.unlock') : $t('forms.lock')"

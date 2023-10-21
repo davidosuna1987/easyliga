@@ -6,6 +6,7 @@ import {
   mapApiAddressToAddress,
 } from '@/domain/address'
 import { GenderType } from '@/domain/game'
+import { Coach } from '@/domain/team'
 
 export type Image = {
   preview: string | null
@@ -65,6 +66,11 @@ export const mapApiProfileToProfile = (apiProfile: ApiProfile): Profile => ({
   address: apiProfile.address
     ? mapApiAddressToAddress(apiProfile.address)
     : undefined,
+})
+
+export const mapApiProfileToCoach = (apiProfile: ApiProfile): Coach => ({
+  ...mapApiProfileToProfile(apiProfile),
+  coach: true,
 })
 
 export const mapProfileUpdateRequestToApiProfileUpdateRequest = (

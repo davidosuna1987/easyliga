@@ -5,7 +5,6 @@ import {
   RotationWindowPlayerChange,
   mapRotationToRotationPlayerChanges,
   mapRotationToRotationWindowPlayerChanges,
-  playerChangeCanBeRemoved,
 } from '@/domain/rotation'
 import { Call } from '@/domain/call'
 import { TeamSide, TeamSideEnum } from '@/domain/team'

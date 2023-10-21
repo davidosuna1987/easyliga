@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps({
   shirtNumber: {
-    type: Number,
+    type: [Number, String],
     required: false,
   },
   size: {

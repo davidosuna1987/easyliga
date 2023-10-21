@@ -16,8 +16,8 @@ export const MAX_CALL_LIBERO_PLAYERS = 2
 export type CallPlayerData = {
   profileId: number
   firstName: string
-  lastName: string | null
-  avatar: string | null
+  lastName: string
+  avatar?: string
   shirtNumber: number
   captain: boolean
   libero: boolean
@@ -82,7 +82,7 @@ export const mapApiCallPlayersDataToCallPlayersData = (
     profileId: apiCallPlayerData.profile_id,
     firstName: apiCallPlayerData.first_name,
     lastName: apiCallPlayerData.last_name,
-    avatar: apiCallPlayerData.avatar,
+    avatar: apiCallPlayerData.avatar ?? undefined,
     shirtNumber: apiCallPlayerData.shirt_number,
     captain: apiCallPlayerData.captain,
     libero: apiCallPlayerData.libero,

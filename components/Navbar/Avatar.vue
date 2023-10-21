@@ -9,7 +9,7 @@ const authMenu = ref()
 <template>
   <Avatar
     class="easy-navbar__avatar"
-    :image="auth?.profile?.avatar ?? undefined"
+    :image="auth?.profile?.avatar"
     shape="circle"
     size="normal"
     @click="authMenu.toggle($event)"

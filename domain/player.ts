@@ -1,13 +1,14 @@
 import { ApiPlayer } from '@/types/api/auth'
 import { CallPlayerData } from '@/domain/call'
 import { ApiPlayerRequest } from '@/types/api/player'
+import { Coach, TeamMember } from '@/domain/team'
 
 export type Player = {
   profileId: number
   firstName: string
-  lastName?: string | null
+  lastName: string
   shirtNumber: number
-  avatar?: string | null
+  avatar?: string
   captain: boolean
   libero: boolean
 }
@@ -20,7 +21,7 @@ export const mapApiPlayersToPlayers = (
   return apiPlayers.map(apiPlayer => ({
     profileId: apiPlayer.id,
     firstName: apiPlayer.first_name,
-    lastName: apiPlayer.last_name ?? undefined,
+    lastName: apiPlayer.last_name,
     avatar: apiPlayer.avatar ?? undefined,
     shirtNumber: apiPlayer.pivot.shirt_number,
     captain: apiPlayer.pivot.captain,
@@ -28,8 +29,10 @@ export const mapApiPlayersToPlayers = (
   }))
 }
 
-export const getFullName = (player: Player | CallPlayerData): string => {
-  const { firstName, lastName } = player
+export const getFullName = (
+  profile: Player | CallPlayerData | TeamMember | Coach,
+): string => {
+  const { firstName, lastName } = profile
   return lastName ? `${firstName} ${lastName}` : firstName
 }
 

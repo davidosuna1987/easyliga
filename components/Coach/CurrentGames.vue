@@ -52,14 +52,8 @@ const requestTimeout = async () => {
   }
 }
 
-const currentSetRotation = (
-  game: Game,
-  callId: number,
-): Rotation | undefined => {
-  return game.currentSet?.rotations?.find(
-    rotation => rotation.callId === callId,
-  )
-}
+const currentSetRotation = (game: Game, callId: number): Rotation | undefined =>
+  game.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
 const callUnlocked = (callIndex: number): boolean | undefined =>
   !props.calls[callIndex]?.locked ||

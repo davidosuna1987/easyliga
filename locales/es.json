@@ -198,7 +198,8 @@
     "coach": "Entrenador | Entrenadores",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?",
-    "no_current_games": "No tienes ningún partido en juego"
+    "no_current_games": "No tienes ningún partido en juego",
+    "coach_one_char": "E"
   },
   "games": {
     "game": "Partidos | Partido | Partidos",
@@ -292,7 +293,9 @@
     "libero": "Líbero",
     "libero_select": "Selecciona un líbero",
     "libero_assign": "Asignar líbero",
-    "libero_remove": "Quitar líbero"
+    "libero_remove": "Quitar líbero",
+    "members": "Miembros del equipo",
+    "member_select": "Selecciona un miembro del equipo"
   },
   "players": {
     "player": "Jugadores | Jugador | Jugadores",
@@ -438,7 +441,8 @@
     "replacement_taken": "El jugador seleccionado sólo puede ser reemplazado por {name}",
     "libero_not_allowed_in_attack_positions": "El líbero no puede jugar en posiciones de ataque",
     "only_one_libero_in_court_allowed": "Sólo puedes alinear un líbero en la rotación",
-    "max_player_change_changes_reached": "No puedes volver a sustituir a {name} en este set"
+    "max_player_change_changes_reached": "No puedes volver a sustituir a {name} en este set",
+    "max_changes_reached": "No puedes hacer más de {num} cambios en cada set"
   },
   "sets": {
     "set": "Sets | Set | Sets",
@@ -521,6 +525,23 @@
     "sign": "Firmar acta",
     "sign_disclaimer": "Al firmar el acta ya no podrás añadir más observaciones ni lesionados en esta convocatoria",
     "closed": "El acta del partido {gameName} se ha cerrado"
+  },
+  "sanctions": {
+    "to_sanction": "Sancionar",
+    "sanction": "Sanción | Sanciones",
+    "team": "Demora",
+    "member": "Conducta incorrecta",
+    "team_user_friendly": "Equipo",
+    "member_user_friendly": "Jugador",
+    "type": {
+      "warning": "Amonestación verbal",
+      "point": "Punto para el otro equipo",
+      "set": "Expulsión del set y punto para el otro equipo",
+      "game": "Expulsión del partido y punto para el otro equipo"
+    },
+    "invalid_form": "La sanción no se puede enviar porque no está completa",
+    "store_disclaimer": "¿Seguro que quieres realizar esta sanción?",
+    "to_sanction_name": "Sancionar a {name}"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

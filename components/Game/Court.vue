@@ -2,10 +2,19 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import { Call } from '@/domain/call'
 import { Player } from '@/domain/player'
-import { Team, TeamType } from '@/domain/team'
+import {
+  Team,
+  TeamMember,
+  TeamSide,
+  TeamSideEnum,
+  TeamType,
+  mapCallPlayerDataToTeamMember,
+  mapProfileToTeamMember,
+} from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
 import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
 import { GAME_OBSERVATIONS_DELAY, GameStatus } from '@/domain/game'
+import { SanctionType } from '@/domain/sanction'
 import moment from 'moment'
 
 const auth = useAuthStore()
@@ -86,10 +95,56 @@ const emit = defineEmits([
 ])
 
 const showCountdown = ref<boolean>(false)
+const sideTeamToSanction = ref<TeamSide>()
+const memberToSanction = ref<TeamMember>()
 
 const waitingForPlayerChanges = computed(() =>
   props.rotations.some(rotation => !rotation.locked),
 )
+
+const leftSideTeamMembers = computed((): TeamMember[] =>
+  props.leftSideTeam.coach
+    ? [
+        ...props.leftSideTeamCall.playersData.map(
+          mapCallPlayerDataToTeamMember,
+        ),
+        mapProfileToTeamMember(props.leftSideTeam.coach, true),
+      ]
+    : props.leftSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
+)
+
+const rightSideTeamMembers = computed((): TeamMember[] =>
+  props.rightSideTeam.coach
+    ? [
+        ...props.rightSideTeamCall.playersData.map(
+          mapCallPlayerDataToTeamMember,
+        ),
+        mapProfileToTeamMember(props.rightSideTeam.coach, true),
+      ]
+    : props.rightSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
+)
+
+const teamToSanction = computed((): Team | undefined => {
+  switch (sideTeamToSanction.value) {
+    case TeamSideEnum.left:
+      return props.leftSideTeam
+    case TeamSideEnum.right:
+      return props.rightSideTeam
+    default:
+      return undefined
+  }
+})
+
+const teamMembersToSanction = computed((): TeamMember[] => {
+  switch (sideTeamToSanction.value) {
+    case TeamSideEnum.left:
+      return leftSideTeamMembers.value
+    case TeamSideEnum.right:
+      return rightSideTeamMembers.value
+    default:
+      return []
+  }
+})
 
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
@@ -158,6 +213,19 @@ const setInitialShowCountdown = () => {
     !!props.gameEndedAt && gameObservationsCountdownTarget.value > Date.now()
 }
 
+const setMemberToSanction = (side: TeamSide, player?: Player) => {
+  sideTeamToSanction.value = side
+
+  const teamToSanctionMembers =
+    side === TeamSideEnum.left
+      ? leftSideTeamMembers.value
+      : rightSideTeamMembers.value
+
+  memberToSanction.value = teamToSanctionMembers.find(
+    member => member.profileId === player?.profileId,
+  )
+}
+
 onMounted(setInitialShowCountdown)
 </script>
 
@@ -173,6 +241,12 @@ onMounted(setInitialShowCountdown)
             :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
+            @click="
+              setMemberToSanction(
+                TeamSideEnum.left,
+                leftSideTeamCurrentRotationPlayersData[position - 1],
+              )
+            "
           />
         </div>
         <div class="side right">
@@ -183,75 +257,94 @@ onMounted(setInitialShowCountdown)
             :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
+            @click="
+              setMemberToSanction(
+                TeamSideEnum.right,
+                rightSideTeamCurrentRotationPlayersData[position - 1],
+              )
+            "
           />
         </div>
       </div>
     </div>
 
     <template v-if="auth.hasRole('referee')">
-      <GameSetActions
-        v-if="
-          !currentSet.localTeamSide ||
-          !currentSet.visitorTeamSide ||
-          !currentSet.firstServeTeamId ||
-          ['warmup', 'resting'].includes(gameStatus)
-        "
-        :currentSet="currentSet"
-        :leftSideTeam="leftSideTeam"
-        :rightSideTeam="rightSideTeam"
-        :disabled="setActionsDisabled"
-        @set:start="emit('set:start', $event)"
-      />
-      <div
-        v-else-if="waitingForPlayerChanges"
-        class="actions grid place-content-center"
-      >
-        <Button
-          class="px-12"
-          :label="$t('rotations.waiting_player_changes')"
-          outlined
-          :loading="true"
-          :disabled="true"
-        />
-      </div>
-      <div v-else-if="timeoutRunning" class="actions grid place-content-center">
-        <Button
-          class="px-12"
-          :label="$t('timeouts.running')"
-          severity="danger"
-          outlined
-          :loading="true"
-          :disabled="true"
-        />
-      </div>
-      <div v-else-if="gameStatus === 'playing'" class="flex flex-col gap-8">
-        <GameChangesActions
-          class="w-full"
-          :leftSideTeamCall="leftSideTeamCall"
-          :rightSideTeamCall="rightSideTeamCall"
-          :leftSideTeamRotation="leftSideTeamRotation"
-          :rightSideTeamRotation="rightSideTeamRotation"
-        />
-        <GamePointActions
-          class="w-full"
+      <template v-if="waitingForPlayerChanges || timeoutRunning">
+        <div
+          v-if="waitingForPlayerChanges"
+          class="actions grid place-content-center"
+        >
+          <Button
+            class="px-12"
+            :label="$t('rotations.waiting_player_changes')"
+            outlined
+            :loading="true"
+            :disabled="true"
+          />
+        </div>
+        <div v-if="timeoutRunning" class="actions grid place-content-center">
+          <Button
+            class="px-12"
+            :label="$t('timeouts.running')"
+            severity="danger"
+            outlined
+            :loading="true"
+            :disabled="true"
+          />
+        </div>
+      </template>
+      <template v-else>
+        <GameSetActions
+          v-if="
+            !currentSet.localTeamSide ||
+            !currentSet.visitorTeamSide ||
+            !currentSet.firstServeTeamId ||
+            ['warmup', 'resting'].includes(gameStatus)
+          "
           :currentSet="currentSet"
-          :undoPointButtonDisabled="undoPointButtonDisabled"
-          :undoLastPointCountdown="undoLastPointCountdown"
-          @point:sum="sumPoint"
-          @point:undo="undoLastPoint"
+          :leftSideTeam="leftSideTeam"
+          :rightSideTeam="rightSideTeam"
+          :disabled="setActionsDisabled"
+          @set:start="emit('set:start', $event)"
         />
-      </div>
-      <div
-        v-else-if="gameStatus === 'finished'"
-        class="actions grid place-content-center"
-      >
-        <Button
-          class="px-12"
-          :label="$t('games.status.finished')"
-          outlined
-          disabled
+        <div v-if="gameStatus === 'playing'" class="flex flex-col gap-8">
+          <GameChangesActions
+            class="w-full"
+            :leftSideTeamCall="leftSideTeamCall"
+            :rightSideTeamCall="rightSideTeamCall"
+            :leftSideTeamRotation="leftSideTeamRotation"
+            :rightSideTeamRotation="rightSideTeamRotation"
+          />
+          <GamePointActions
+            class="w-full"
+            :currentSet="currentSet"
+            :undoPointButtonDisabled="undoPointButtonDisabled"
+            :undoLastPointCountdown="undoLastPointCountdown"
+            @point:sum="sumPoint"
+            @point:undo="undoLastPoint"
+          />
+        </div>
+        <GameTimeoutSanctionActions
+          v-if="gameStatus !== 'finished'"
+          class="mt-6"
+          :leftSideTeam="leftSideTeam"
+          :rightSideTeam="rightSideTeam"
+          :leftSideTeamMembers="leftSideTeamMembers"
+          :rightSideTeamMembers="rightSideTeamMembers"
+          :currentSet="currentSet"
         />
-      </div>
+        <div
+          v-if="gameStatus === 'finished'"
+          class="actions grid place-content-center"
+        >
+          <Button
+            class="px-12"
+            :label="$t('games.status.finished')"
+            outlined
+            disabled
+          />
+        </div>
+      </template>
       <a
         v-if="gameStatus !== 'finished' || showCountdown"
         href=""
@@ -274,6 +367,15 @@ onMounted(setInitialShowCountdown)
           <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
         </div>
       </Countdown>
+      <GameTimeoutSanctionDialog
+        v-if="teamToSanction && memberToSanction"
+        :visible="!!teamToSanction"
+        :type="SanctionType.member"
+        :team="teamToSanction"
+        :member="memberToSanction"
+        :members="teamMembersToSanction"
+        @hide="sideTeamToSanction = undefined"
+      />
     </template>
   </div>
 </template>

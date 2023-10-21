@@ -3,6 +3,7 @@ import { Call, CallPlayerData } from '@/domain/call'
 import {
   ATTACK_POSITIONS,
   ChangeType,
+  MAX_ROTATION_PLAYER_CHANGES,
   RotationPlayer,
   RotationPlayerChangeRequest,
   mapPlayerChangeToChangeType,
@@ -399,6 +400,14 @@ const toggleCaptainSelector = () => {
 
 const handleRotationCourtPositionClick = (position: number) => {
   const playerData = getCallPlayerDataByPosition(position)
+
+  if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
+    toast.warn(
+      useNuxtApp().$i18n.t('rotations.max_changes_reached', {
+        num: MAX_ROTATION_PLAYER_CHANGES,
+      }),
+    )
+  }
 
   switch (mapPlayerChangeToChangeType(getPlayerChangeByPosition(position))) {
     case ChangeType.NONE:

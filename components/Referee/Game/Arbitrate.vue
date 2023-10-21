@@ -16,7 +16,7 @@ import {
   ApiRotationUpdatedEventResponse,
   ApiTimeoutStatusUpdatedEventResponse,
 } from '@/types/api/event'
-import { TeamType } from '@/domain/team'
+import { Coach, Team, TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
 import {
@@ -25,7 +25,11 @@ import {
   mapSetStartRequestToApiSetStartRequest,
 } from '@/domain/set'
 import { useAuthStore } from '@/stores/useAuthStore'
-import { mapApiRotationToRotation } from '@/domain/rotation'
+import {
+  CurrentRotation,
+  Rotation,
+  mapApiRotationToRotation,
+} from '@/domain/rotation'
 import { ApiEvents } from '@/types/api/event'
 import {
   Timeout,
@@ -65,95 +69,107 @@ const pointInterval = ref<NodeJS.Timeout>()
 
 const formPoint = ref<ApiPointStoreRequest>()
 
-const leftSideTeam = computed(() => {
-  return !gameInitialData.value?.game.currentSet?.localTeamSide ||
-    gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
+const leftSideTeam = computed((): Team | undefined =>
+  !gameInitialData.value?.game.currentSet?.localTeamSide ||
+  gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
     ? gameInitialData.value?.localTeam
-    : gameInitialData.value?.visitorTeam
-})
+    : gameInitialData.value?.visitorTeam,
+)
 
-const rightSideTeam = computed(() => {
-  return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
+const rightSideTeam = computed((): Team | undefined =>
+  !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
+  gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
     ? gameInitialData.value?.visitorTeam
-    : gameInitialData.value?.localTeam
-})
+    : gameInitialData.value?.localTeam,
+)
 
-const leftSideTeamCall = computed(() =>
+const leftSideTeamCoach = computed(
+  (): Coach | undefined => leftSideTeam.value?.coach,
+)
+
+const rightSideTeamCoach = computed(
+  (): Coach | undefined => rightSideTeam.value?.coach,
+)
+
+const leftSideTeamCall = computed((): Call | undefined =>
   localTeamCall.value?.teamId === leftSideTeam.value?.id
     ? localTeamCall.value
     : visitorTeamCall.value,
 )
 
-const rightSideTeamCall = computed(() =>
+const rightSideTeamCall = computed((): Call | undefined =>
   visitorTeamCall.value?.teamId === rightSideTeam.value?.id
     ? visitorTeamCall.value
     : localTeamCall.value,
 )
 
-const leftSideTeamRotation = computed(() =>
+const leftSideTeamRotation = computed((): Rotation | undefined =>
   gameInitialData.value?.game.currentSet?.rotations?.find(
     rotation => rotation.callId === leftSideTeamCall.value?.id,
   ),
 )
 
-const rightSideTeamRotation = computed(() =>
+const rightSideTeamRotation = computed((): Rotation | undefined =>
   gameInitialData.value?.game.currentSet?.rotations?.find(
     rotation => rotation.callId === rightSideTeamCall.value?.id,
   ),
 )
 
-const leftSideTeamCurrentRotation = computed(() => {
-  return !gameInitialData.value?.game.currentSet?.localTeamSide ||
-    gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
-    ? gameInitialData.value?.localTeamRotation
-    : gameInitialData.value?.visitorTeamRotation
-})
+const leftSideTeamCurrentRotation = computed(
+  (): CurrentRotation | undefined => {
+    return !gameInitialData.value?.game.currentSet?.localTeamSide ||
+      gameInitialData.value?.game.currentSet?.localTeamSide === SetSide.LEFT
+      ? gameInitialData.value?.localTeamRotation
+      : gameInitialData.value?.visitorTeamRotation
+  },
+)
 
-const rightSideTeamCurrentRotation = computed(() => {
-  return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
-    gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
-    ? gameInitialData.value?.visitorTeamRotation
-    : gameInitialData.value?.localTeamRotation
-})
+const rightSideTeamCurrentRotation = computed(
+  (): CurrentRotation | undefined => {
+    return !gameInitialData.value?.game.currentSet?.visitorTeamSide ||
+      gameInitialData.value?.game.currentSet?.visitorTeamSide === SetSide.RIGHT
+      ? gameInitialData.value?.visitorTeamRotation
+      : gameInitialData.value?.localTeamRotation
+  },
+)
 
-const leftSideTeamTimeouts = computed(() =>
+const leftSideTeamTimeouts = computed((): Timeout[] | undefined =>
   gameInitialData.value?.game.currentSet?.timeouts?.filter(
     timeout => timeout.teamId === leftSideTeam.value?.id,
   ),
 )
 
-const rightSideTeamTimeouts = computed(() =>
+const rightSideTeamTimeouts = computed((): Timeout[] | undefined =>
   gameInitialData.value?.game.currentSet?.timeouts?.filter(
     timeout => timeout.teamId === rightSideTeam.value?.id,
   ),
 )
 
 const timeoutRunning = computed(
-  () =>
-    loadingTimeout.value ||
-    gameInitialData.value?.game.currentSet?.timeouts?.some(
+  (): boolean =>
+    !!loadingTimeout.value ||
+    !!gameInitialData.value?.game.currentSet?.timeouts?.some(
       timeout => timeout.status === TimeoutStatusEnum.running,
     ),
 )
 
-const leftSideTeamSetsWonCount = computed(() =>
+const leftSideTeamSetsWonCount = computed((): number =>
   localTeamCall.value?.teamId === leftSideTeam.value?.id
-    ? gameInitialData.value?.game.localTeamSetsWonCount
-    : gameInitialData.value?.game.visitorTeamSetsWonCount,
+    ? gameInitialData.value?.game.localTeamSetsWonCount ?? 0
+    : gameInitialData.value?.game.visitorTeamSetsWonCount ?? 0,
 )
 
-const rightSideTeamSetsWonCount = computed(() =>
+const rightSideTeamSetsWonCount = computed((): number =>
   visitorTeamCall.value?.teamId === rightSideTeam.value?.id
-    ? gameInitialData.value?.game.visitorTeamSetsWonCount
-    : gameInitialData.value?.game.localTeamSetsWonCount,
+    ? gameInitialData.value?.game.visitorTeamSetsWonCount ?? 0
+    : gameInitialData.value?.game.localTeamSetsWonCount ?? 0,
 )
 
-const servingTeamId = computed(() => {
-  return lastPoint.value
+const servingTeamId = computed((): number | undefined =>
+  lastPoint.value
     ? lastPoint.value?.winnerTeamId ?? undefined
-    : gameInitialData.value?.game?.currentSet?.firstServeTeamId ?? undefined
-})
+    : gameInitialData.value?.game?.currentSet?.firstServeTeamId ?? undefined,
+)
 
 const getGameInitialData = async () => {
   loadingApi.value = true
@@ -542,6 +558,8 @@ onBeforeMount(() => {
       "
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
+      :leftSideTeamCoach="leftSideTeamCoach"
+      :rightSideTeamCoach="rightSideTeamCoach"
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"

@@ -32,11 +32,7 @@ const props = defineProps({
 <template>
   <div class="easy-game-player-item">
     <div class="team-player-info">
-      <Avatar
-        class="player-avatar"
-        :image="player?.avatar ?? undefined"
-        shape="circle"
-      />
+      <Avatar class="player-avatar" :image="player?.avatar" shape="circle" />
       <IconShirtNumber
         v-tooltip.top="{
           value: $t('shirts.number_change'),
