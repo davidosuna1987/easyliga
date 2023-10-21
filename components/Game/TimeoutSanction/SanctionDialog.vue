@@ -39,9 +39,23 @@ const toast = useEasyToast()
 const showDialog = ref<boolean>(props.visible)
 const sanctionType = ref<SanctionTypeKey | undefined>(props.type)
 const selectedMember = ref<TeamMember>()
+const selectedSeverity = ref<SanctionSeverityKey>()
 
-const form = ref<SanctionStoreRequest>()
 const showEnsureSubmitSanction = ref<boolean>(false)
+
+const form = computed((): SanctionStoreRequest => {
+  return {
+    type: sanctionType.value,
+    severity: selectedSeverity.value,
+    playerProfileId: selectedMember.value?.coach
+      ? undefined
+      : selectedMember.value?.profileId,
+    coachProfileId: selectedMember.value?.coach
+      ? selectedMember.value?.profileId
+      : undefined,
+    teamId: props.team.id,
+  }
+})
 
 const isValidSanctionedTeam = computed(
   (): boolean =>
@@ -71,44 +85,23 @@ const nameToSanction = computed((): string =>
 const hide = () => {
   sanctionType.value = SanctionType.team
   selectedMember.value = undefined
-  form.value = undefined
   emit('hide')
 }
 
 const setSanctionType = (type: SanctionTypeKey) => {
   selectedMember.value = undefined
   sanctionType.value = type
-  form.value = undefined
-  form.value = {
-    type,
-    severity: undefined,
-    teamId: type === SanctionType.team ? props.team.id : undefined,
-  }
 }
 
 const setSelectedMember = (member: TeamMember) => {
   selectedMember.value = member
-  console.log({ member })
-
-  form.value = {
-    ...form.value,
-    playerProfileId: member.coach ? undefined : member.profileId,
-    coachProfileId: member.coach ? member.profileId : undefined,
-  }
-
-  console.log({ form: form.value })
 }
 
 const handleSeveritySelected = (severity: SanctionSeverityKey) => {
-  form.value = {
-    ...form.value,
-    type: sanctionType.value,
-    severity,
-  }
+  selectedSeverity.value = severity
 }
 
 const ensureSubmitSanction = () => {
-  console.log(form.value)
   if (!isValidForm.value) {
     toast.error(app.$i18n.t('sanctions.invalid_form'))
     return
