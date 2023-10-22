@@ -1,10 +1,9 @@
 import { ApiClub } from '@/types/api/club'
 import { ApiSede } from '@/types/api/sede'
-import { ApiPlayer } from '@/types/api/auth'
+import { ApiPlayer, ApiUser } from '@/types/api/auth'
 import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
 import { ApiGender } from '@/types/api/gender'
-import { ApiProfile } from '@/types/api/profile'
 import { ApiPlayerRequest } from '@/types/api/player'
 
 export type ApiTeamRelations = {
@@ -13,7 +12,7 @@ export type ApiTeamRelations = {
   division?: ApiDivision
   category?: ApiCategory
   gender?: ApiGender
-  coach?: ApiProfile
+  coach?: ApiUser
   players?: ApiPlayer[]
 }
 

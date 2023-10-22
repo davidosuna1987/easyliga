@@ -62,7 +62,9 @@ export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
     ? mapApiCategoryToCategory(apiTeam.category)
     : undefined,
   gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
-  coach: apiTeam.coach ? mapApiProfileToCoach(apiTeam.coach) : undefined,
+  coach: apiTeam.coach?.profile
+    ? mapApiProfileToCoach(apiTeam.coach.profile)
+    : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players)
     : undefined,
