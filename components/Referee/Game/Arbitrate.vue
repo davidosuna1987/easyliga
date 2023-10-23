@@ -329,6 +329,11 @@ const startTimeout = async (timeout: Timeout) => {
   loadingTimeout.value = false
 }
 
+const addTimeout = (timeout: Timeout) => {
+  if (!gameInitialData.value?.game.currentSet?.timeouts) return
+  gameInitialData.value.game.currentSet.timeouts.push(timeout)
+}
+
 const showTimeoutStatusUpdatedToast = (
   status: TimeoutStatus,
   teamName: string,
@@ -583,6 +588,7 @@ onBeforeMount(() => {
       @set:start="startSet"
       @timeout:start="startTimeout"
       @observations:dialog="showObservationsDialog = true"
+      @timeout:init="addTimeout"
     />
 
     <ObservationsDialog

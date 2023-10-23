@@ -7,6 +7,7 @@ import {
 } from '@/domain/sanction'
 import { Team, TeamMember } from '@/domain/team'
 import { getFullName } from '@/domain/player'
+import { Set } from '@/domain/set'
 
 const props = defineProps({
   visible: {
@@ -29,6 +30,10 @@ const props = defineProps({
     type: Array as PropType<TeamMember[]>,
     required: true,
   },
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['hide'])
@@ -40,6 +45,8 @@ const showDialog = ref<boolean>(props.visible)
 const sanctionType = ref<SanctionTypeKey | undefined>(props.type)
 const selectedMember = ref<TeamMember>()
 const selectedSeverity = ref<SanctionSeverityKey>()
+const showObservations = ref<boolean>(false)
+const observations = ref<string>()
 
 const showEnsureSubmitSanction = ref<boolean>(false)
 
@@ -54,6 +61,8 @@ const form = computed((): SanctionStoreRequest => {
       ? selectedMember.value?.profileId
       : undefined,
     teamId: props.team.id,
+    setId: props.currentSet.id,
+    observations: observations.value,
   }
 })
 
@@ -168,6 +177,24 @@ onMounted(() => {
         class="pointer-events-none"
         :severity="form.severity"
       />
+
+      <div class="mt-6 w-full">
+        <Textarea
+          v-if="showObservations"
+          class="w-full"
+          v-model="observations"
+          :rows="5"
+          autoResize
+          :placeholder="$t('observations.record')"
+        />
+        <a
+          v-else
+          class="cursor-pointer text-primary text-center block w-full"
+          @click="showObservations = true"
+        >
+          {{ $t('observations.record') }}
+        </a>
+      </div>
     </div>
     <template v-else>
       <nav

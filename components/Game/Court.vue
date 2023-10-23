@@ -16,6 +16,7 @@ import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
 import { GAME_OBSERVATIONS_DELAY, GameStatus } from '@/domain/game'
 import { SanctionType } from '@/domain/sanction'
 import moment from 'moment'
+import { Timeout } from '@/domain/timeout'
 
 const auth = useAuthStore()
 
@@ -56,6 +57,14 @@ const props = defineProps({
     type: Object as PropType<CurrentRotation>,
     required: true,
   },
+  leftSideTeamTimeouts: {
+    type: Array as PropType<Timeout[]>,
+    required: false,
+  },
+  rightSideTeamTimeouts: {
+    type: Array as PropType<Timeout[]>,
+    required: false,
+  },
   undoPointButtonDisabled: {
     type: Boolean,
     required: true,
@@ -92,6 +101,7 @@ const emit = defineEmits([
   'set:start',
   'observations:dialog',
   'countdown:ended',
+  'timeout:init',
 ])
 
 const showCountdown = ref<boolean>(false)
@@ -331,7 +341,11 @@ onMounted(setInitialShowCountdown)
           :rightSideTeam="rightSideTeam"
           :leftSideTeamMembers="leftSideTeamMembers"
           :rightSideTeamMembers="rightSideTeamMembers"
+          :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
+          :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
           :currentSet="currentSet"
+          :gameStatus="gameStatus"
+          @timeout:init="emit('timeout:init', $event)"
         />
         <div
           v-if="gameStatus === 'finished'"
@@ -367,11 +381,12 @@ onMounted(setInitialShowCountdown)
           <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
         </div>
       </Countdown>
-      <GameTimeoutSanctionDialog
+      <SanctionDialog
         v-if="teamToSanction && memberToSanction"
         :visible="!!teamToSanction"
         :type="SanctionType.member"
         :team="teamToSanction"
+        :currentSet="currentSet"
         :member="memberToSanction"
         :members="teamMembersToSanction"
         @hide="sideTeamToSanction = undefined"

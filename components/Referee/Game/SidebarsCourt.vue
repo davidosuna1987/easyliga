@@ -109,6 +109,7 @@ const emit = defineEmits([
   'timeout:start',
   'observations:dialog',
   'countdown:ended',
+  'timeout:init',
 ])
 
 const sideTeamToSanction = ref<TeamSide>()
@@ -231,6 +232,8 @@ const undoLastPoint = () => {
         :rightSideTeamRotation="rightSideTeamRotation"
         :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
         :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
+        :leftSideTeamTimeouts="leftSideTeamTimeouts"
+        :rightSideTeamTimeouts="rightSideTeamTimeouts"
         :undoPointButtonDisabled="undoPointButtonDisabled"
         :undoLastPointCountdown="undoLastPointCountdown"
         :servingTeamId="servingTeamId"
@@ -243,6 +246,7 @@ const undoLastPoint = () => {
         @set:start="emit('set:start', $event)"
         @observations:dialog="emit('observations:dialog')"
         @countdown:ended="emit('countdown:ended')"
+        @timeout:init="emit('timeout:init', $event)"
       />
     </div>
     <div class="sidebar-wrapper right">
@@ -265,10 +269,11 @@ const undoLastPoint = () => {
         {{ props.rightSideTeamTimeouts?.length ?? 0 }}
       </small>
     </div>
-    <GameTimeoutSanctionDialog
+    <SanctionDialog
       v-if="teamToSanction && memberToSanction"
       :visible="!!teamToSanction"
       :type="SanctionType.member"
+      :currentSet="currentSet"
       :team="teamToSanction"
       :member="memberToSanction"
       :members="teamMembersToSanction"

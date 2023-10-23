@@ -34,7 +34,7 @@ export const SANCTION_SEVERITY_MEMBER = [
 export type SanctionStoreRequest = {
   type?: SanctionTypeKey
   severity?: SanctionSeverityKey
-  matchId?: number
+  setId?: number
   teamId?: number
   playerProfileId?: number
   coachProfileId?: number

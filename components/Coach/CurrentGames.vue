@@ -2,7 +2,11 @@
 import { Game, GAME_OBSERVATIONS_DELAY } from '@/domain/game'
 import { Call, MIN_CALL_PLAYERS } from '@/domain/call'
 import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
-import { TimeoutStatusEnum, mapApiTimeoutToTimeout } from '@/domain/timeout'
+import {
+  TimeoutStatusEnum,
+  TimeoutStoreRequest,
+  mapApiTimeoutToTimeout,
+} from '@/domain/timeout'
 import TimeoutService from '@/services/timeout'
 import moment from 'moment'
 
@@ -31,7 +35,7 @@ const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
 
 const requestTimeout = async () => {
-  const storeTimeoutForm = {
+  const storeTimeoutForm: TimeoutStoreRequest = {
     setId: setToRequestTimeout.value ?? 0,
     teamId: props.calls[0].teamId ?? 0,
     status: TimeoutStatusEnum.requested,

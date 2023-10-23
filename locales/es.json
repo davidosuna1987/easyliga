@@ -510,7 +510,9 @@
     "grant": "Conceder tiempo muerto",
     "requested_short": "Tiempo muerto solicitado | Tiempos muertos solicitados",
     "init": "Iniciar tiempo muerto",
-    "running": "Tiempo muerto en curso"
+    "init_alert": "¿Seguro que quieres iniciar el tiempo muerto?",
+    "running": "Tiempo muerto en curso",
+    "started": "El tiempo muerto ha comenzado"
   },
   "observations": {
     "observation": "Observación | Observaciones",
