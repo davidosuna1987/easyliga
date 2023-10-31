@@ -18,7 +18,9 @@
   --link-color: #4c78c4;
   --danger-color: #fc3c2e;
   --danger-color-light: #ff9494;
+  --danger-color-lighten: #fdcccc;
   --danger-color-lightest: #ffe2e2;
+  --danger-color-medium: #fe6f6f;
   --danger-color-dark: #dc3023;
   --danger-color-darkest: #901632;
   --icon-easy-liga-color: #ffeb3b;
@@ -89,12 +91,16 @@
   --layout-sidebar-width: 350px;
   --court-max-width: 550px;
   --background-image: url('/images/background.svg');
+  --main-min-height: calc(
+    100svh - var(--container-margin-top) - 2 * var(--app-margin)
+  );
 }
 
 $min-width-small: 640px;
 $min-width-tablet: 768px;
 $min-width-desktop: 992px;
 $min-width-desktop-big: 1024px;
+$media-sidebars-min: 1285px;
 
 @media (min-width: $min-width-tablet) {
   :root {

@@ -2,6 +2,7 @@ import { ApiCall } from '@/types/api/call'
 import { ApiGame } from '@/types/api/game'
 import { ApiSet } from '@/types/api/set'
 import { ApiTeam } from '@/types/api/team'
+import { ApiSanction } from '@/types/api/sanction'
 
 export type ApiRotationPlayer = {
   profile_id: number
@@ -30,6 +31,7 @@ export type ApiRotationRelations = {
   set?: ApiSet
   game?: ApiGame
   team?: ApiTeam
+  set_sanctions?: ApiSanction[]
 }
 
 export type ApiRotation = {

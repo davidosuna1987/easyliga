@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getFullName } from '@/domain/player'
 import { Coach, TeamMember } from '@/domain/team'
+import { Sanction } from '@/domain/sanction'
 
 const props = defineProps({
   coach: {
@@ -15,12 +16,21 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  sanction: {
+    type: Object as PropType<Sanction>,
+    required: false,
+  },
 })
 </script>
 
 <template>
   <div class="easy-game-coach-item easy-game-player-item">
     <div class="team-player-info">
+      <SanctionItem
+        v-if="props.sanction"
+        :severity="props.sanction.severity"
+        size="1rem"
+      />
       <Avatar
         v-if="showAvatar"
         class="player-avatar"

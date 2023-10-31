@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
+    "mitt": "^3.0.1",
     "moment": "^2.29.4",
     "pinia": "^2.1.4",
     "primevue": "^3.30.2",

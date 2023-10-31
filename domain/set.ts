@@ -2,6 +2,7 @@ import { ApiSet, ApiSetStartRequest } from '@/types/api/set'
 import { Point, mapApiPointToPoint } from '@/domain/point'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 import { Timeout, mapApiTimeoutToTimeout } from '@/domain/timeout'
+import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 
 export enum SetSide {
   LEFT = 'left',
@@ -13,6 +14,8 @@ export type SetRelations = {
   lastTwoPoints?: Point[]
   rotations?: Rotation[]
   timeouts?: Timeout[]
+  sanctions?: Sanction[]
+  gameSanctions?: Sanction[]
 }
 
 export type Set = {
@@ -63,6 +66,12 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
     : undefined,
   timeouts: apiSet.timeouts
     ? apiSet.timeouts.map(mapApiTimeoutToTimeout)
+    : undefined,
+  sanctions: apiSet.sanctions
+    ? apiSet.sanctions.map(mapApiSanctionToSanction)
+    : undefined,
+  gameSanctions: apiSet.game_sanctions
+    ? apiSet.game_sanctions.map(mapApiSanctionToSanction)
     : undefined,
 })
 

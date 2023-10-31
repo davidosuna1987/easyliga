@@ -1,7 +1,5 @@
 .easy-main {
-  min-height: calc(
-    100svh - var(--container-margin-top) - 2 * var(--app-margin)
-  );
+  @extend %main-height;
   max-width: var(--main-max-width);
   margin-top: var(--container-margin-top);
   margin-inline: auto;
@@ -20,6 +18,17 @@
 
   @media (min-width: $min-width-tablet) {
     .easy-container {
+      padding-inline: var(--easy-main-padding-tablet);
+
+      &.referee-arbitrate {
+        padding-top: 0;
+      }
+    }
+  }
+
+  @media (min-width: $media-sidebars-min) {
+    .easy-container,
+    .easy-container.referee-arbitrate {
       padding: var(--easy-main-padding-tablet);
     }
   }

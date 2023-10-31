@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { Coach, Team, TeamMember, TeamSide, TeamSideEnum } from '@/domain/team'
+import { Team, TeamMember, TeamSide, TeamSideEnum } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { GameStatus } from '@/domain/game'
-import { Timeout } from '@/domain/timeout'
+import { MAX_TIMEOUTS_PER_SET, Timeout } from '@/domain/timeout'
+import { Sanction } from '@/domain/sanction'
 
 const props = defineProps({
   leftSideTeam: {
@@ -33,13 +34,20 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
+  gameSanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
+  },
   gameStatus: {
     type: String as PropType<GameStatus>,
     required: true,
   },
 })
 
-const emit = defineEmits(['timeout:init'])
+const emit = defineEmits(['timeout:init', 'sanction:stored'])
+
+const app = useNuxtApp()
+const toast = useEasyToast()
 
 const sideTeamToSanction = ref<TeamSide>()
 const sideTeamToTimeout = ref<TeamSide>()
@@ -87,17 +95,34 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
       return []
   }
 })
+
+const setSideTeamToTimeout = (side: TeamSide) => {
+  console.log(props[`${side}SideTeamTimeouts`])
+  if (props[`${side}SideTeamTimeouts`]?.length >= MAX_TIMEOUTS_PER_SET) {
+    toast.error(
+      app.$i18n.t('errors.max_timeouts', { max: MAX_TIMEOUTS_PER_SET }),
+    )
+    return
+  }
+  sideTeamToTimeout.value = side
+}
 </script>
 
 <template>
   <div class="game-timeout-sanction-actions-component flex justify-between">
     <div class="flex gap-3">
       <Button
-        class="p-3"
+        class="p-3 relative"
         rounded
-        @click="sideTeamToTimeout = TeamSideEnum.left"
+        @click="setSideTeamToTimeout(TeamSideEnum.left)"
       >
         <Icon name="material-symbols:alarm" size="1.5rem" />
+        <Badge
+          v-if="props.leftSideTeamTimeouts?.length >= 0"
+          class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
+          :value="props.leftSideTeamTimeouts?.length"
+          rounded
+        />
       </Button>
       <Button
         class="p-3"
@@ -117,11 +142,17 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
         <Icon name="mdi:cards" size="1.5rem" />
       </Button>
       <Button
-        class="p-3"
+        class="p-3 relative"
         rounded
-        @click="sideTeamToTimeout = TeamSideEnum.right"
+        @click="setSideTeamToTimeout(TeamSideEnum.right)"
       >
         <Icon name="material-symbols:alarm" size="1.5rem" />
+        <Badge
+          v-if="props.rightSideTeamTimeouts?.length >= 0"
+          class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
+          :value="props.rightSideTeamTimeouts?.length"
+          rounded
+        />
       </Button>
     </div>
 
@@ -131,6 +162,8 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
       :team="teamToSanction"
       :members="teamMembersToSanction"
       :currentSet="currentSet"
+      :gameSanctions="props.gameSanctions"
+      @sanction:stored="emit('sanction:stored', $event)"
       @hide="sideTeamToSanction = undefined"
     />
     <TimeoutDialog
@@ -144,6 +177,25 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.game-timeout-sanction-actions-component {
+  width: 100%;
+  max-width: var(--court-max-width);
+  margin: 0 auto;
+  .p-button {
+    overflow: visible;
+
+    .p-badge {
+      width: 17px;
+      height: 17px;
+      display: grid;
+      place-content: center;
+      border: solid 2px;
+    }
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

@@ -13,21 +13,67 @@ import RotationService from '@/services/rotation'
 import {
   ApiEvents,
   ApiRotationLockToggledEventResponse,
+  ApiSanctionStoredEventResponse,
 } from '@/types/api/event'
+import {
+  EXPULSION_SEVERITIES,
+  Sanction,
+  SanctionSeverity,
+  SanctionType,
+  mergeSanctionsRemovingDuplicates,
+} from '@/domain/sanction'
+import { CallPlayerData } from '@/domain/call'
+import { getFullName } from '@/domain/player'
+import { mapApiProfileToProfile } from '@/domain/profile'
 
 const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
+
 const rotationService = new RotationService()
 
 const game = ref<Game>()
 const rotation = ref<Rotation>()
 const initialRotation = ref<Rotation>()
+const rotationSanctions = ref<Sanction[]>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
 
 const form = ref<Rotation>()
 const requestedPlayerChanges = ref<RotationPlayerChangeRequest[]>([])
+
+const currentSetTeamMemberSanctions = computed((): Sanction[] | undefined =>
+  rotationSanctions.value?.filter(
+    sanction =>
+      sanction.type === SanctionType.member &&
+      sanction.teamId === rotation.value?.call?.teamId,
+  ),
+)
+
+const rotationPlayersToBeReplacedForSanction = computed(
+  (): CallPlayerData[] => {
+    const playerIdsToBeReplaced = currentSetTeamMemberSanctions.value
+      ?.filter(sanction => {
+        const inCourtProfileIds = rotation.value?.players?.map(
+          player => player.inCourtProfileId,
+        )
+
+        return (
+          sanction.type === SanctionType.member &&
+          !!EXPULSION_SEVERITIES.includes(sanction.severity) &&
+          sanction.playerProfileId &&
+          inCourtProfileIds?.includes(sanction.playerProfileId ?? 0)
+        )
+      })
+      .map(sanction => sanction.playerProfileId)
+
+    return (
+      rotation.value?.call?.playersData.filter(player =>
+        playerIdsToBeReplaced?.includes(player.profileId),
+      ) ?? []
+    )
+  },
+)
 
 const getRotation = async () => {
   loadingApi.value = true
@@ -35,9 +81,8 @@ const getRotation = async () => {
   const { data, error } = await rotationService.get(
     Number(route.params.rotation_id),
     {
-      with: 'game,call,players',
+      with: 'game.sanctions,call,players,setSanctions',
       set_appends: 'current_rotation',
-      with_count: 'players',
     },
   )
 
@@ -52,8 +97,24 @@ const getRotation = async () => {
   game.value = rotation.value.game
   form.value = rotation.value
 
+  const rotationSetSanctions = rotation.value.setSanctions ?? []
+
+  const gameSanctions =
+    rotation.value.game?.sanctions?.filter(
+      sanction =>
+        sanction.type === SanctionType.member &&
+        sanction.severity === SanctionSeverity.game &&
+        sanction.teamId === rotation.value?.call?.teamId,
+    ) ?? []
+
+  rotationSanctions.value = mergeSanctionsRemovingDuplicates(
+    rotationSetSanctions,
+    gameSanctions,
+  )
+
   window.Echo.leaveAllChannels()
   listenRotationLockToggledEvent(game.value?.id, rotation.value.id)
+  listenSanctionStoredEvent(game.value?.id)
 
   loadingApi.value = false
 }
@@ -72,10 +133,11 @@ const setRotationCaptain = (profileId?: number) => {
 const setFormPlayerChanges = (playerChanges: RotationPlayerChangeRequest[]) => {
   if (!form.value) return
 
-  const clonedInitialRotation = JSON.parse(
+  const clonedInitialRotation: Rotation = JSON.parse(
     JSON.stringify(initialRotation.value),
   )
 
+  // back to initial rotation in court captain
   if (
     !form.value.players
       .map(p => p.inCourtProfileId)
@@ -87,6 +149,7 @@ const setFormPlayerChanges = (playerChanges: RotationPlayerChangeRequest[]) => {
 
   requestedPlayerChanges.value = playerChanges
 
+  // back to initial rotation players
   if (!playerChanges.length) {
     form.value.players = clonedInitialRotation?.players ?? []
     form.value.inCourtCaptainProfileId =
@@ -95,6 +158,10 @@ const setFormPlayerChanges = (playerChanges: RotationPlayerChangeRequest[]) => {
   }
 
   form.value.players.forEach(player => {
+    const initialPlayer = clonedInitialRotation.players.find(
+      p => p.profileId === player.profileId,
+    )
+
     const playerChange = playerChanges.find(
       playerChange => playerChange.profileId === player.profileId,
     )
@@ -103,6 +170,10 @@ const setFormPlayerChanges = (playerChanges: RotationPlayerChangeRequest[]) => {
       player.replacementProfileId = playerChange.replacementProfileId
       player.inCourtProfileId = playerChange.inCourtProfileId
       player.libero = playerChange.libero
+    } else if (initialPlayer) {
+      player.replacementProfileId = initialPlayer.replacementProfileId
+      player.inCourtProfileId = initialPlayer.inCourtProfileId ?? 0
+      player.libero = initialPlayer.libero
     }
   })
 }
@@ -167,12 +238,36 @@ const listenRotationLockToggledEvent = (
   )
 }
 
+const listenSanctionStoredEvent = (gameId?: number) => {
+  if (!gameId) return
+
+  window.Echo.channel(`game.${gameId}.sanction.stored`).listen(
+    ApiEvents.SANCTION_STORED,
+    (response: ApiSanctionStoredEventResponse) => {
+      const sanctionedPlayer = response.profile
+        ? mapApiProfileToProfile(response.profile)
+        : undefined
+
+      toast.error(
+        app.$i18n.t(`sanctions.sanctioned.${response.sanction.severity}`, {
+          name: getFullName(sanctionedPlayer) ?? response.team.name,
+        }),
+      )
+      getRotation()
+    },
+  )
+}
+
 // INFO: replaced with window.Echo.leaveAllChannels()
 // const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
 //   window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
 // }
 
-onBeforeMount(getRotation)
+onMounted(getRotation)
+
+onBeforeUnmount(() => {
+  window.Echo.leaveAllChannels()
+})
 </script>
 
 <template>
@@ -188,6 +283,11 @@ onBeforeMount(getRotation)
       $t('rotations.locked_warning')
     }}</Message>
 
+    <RotationPlayerSanctionedMessage
+      v-if="rotationPlayersToBeReplacedForSanction.length"
+      :playersData="rotationPlayersToBeReplacedForSanction"
+    />
+
     <div
       class="form-lockable-section"
       :class="{ 'is-locked': rotation?.locked }"
@@ -198,6 +298,7 @@ onBeforeMount(getRotation)
         :rotation="form"
         :initialRotation="initialRotation"
         :isInitialRotationAssignment="false"
+        :sanctions="currentSetTeamMemberSanctions"
         @change:players="setFormPlayerChanges"
         @update:captain="setRotationCaptain"
       />

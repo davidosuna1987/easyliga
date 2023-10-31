@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { CallPlayerData } from '@/domain/call'
+import { Call, CallPlayerData, getPlayerDataByProfileId } from '@/domain/call'
 import {
   RotationPlayerChangeRequest,
   ChangeType,
   mapPlayerChangeToChangeType,
+  Rotation,
 } from '@/domain/rotation'
+import {
+  Sanction,
+  SanctionMember,
+  SanctionMemberKey,
+  getPlayerItemSanction,
+} from '@/domain/sanction'
 
 const props = defineProps({
   playersData: {
@@ -19,9 +26,33 @@ const props = defineProps({
     type: Array as PropType<RotationPlayerChangeRequest[]>,
     required: true,
   },
+  call: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+  rotation: {
+    type: Object as PropType<Rotation>,
+    required: false,
+  },
+  sanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
+  },
 })
 
 const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
+
+const getPlayerSanction = (player?: CallPlayerData): Sanction | undefined => {
+  if (!player || !props.rotation) return undefined
+  return getPlayerItemSanction(
+    props.sanctions,
+    props.rotation?.setId,
+    props.call.teamId,
+    player.profileId,
+    SanctionMember.player as SanctionMemberKey,
+    'game',
+  )
+}
 </script>
 
 <template>
@@ -34,6 +65,19 @@ const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
         :playersData="playersData"
         :playerChange="playerChange"
         :initialPlayerChange="props.initialPlayerChanges[index]"
+        :initialPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(props.playersData, playerChange.profileId),
+          )
+        "
+        :replacementPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(
+              props.playersData,
+              playerChange.replacementProfileId,
+            ),
+          )
+        "
         :type="ChangeType.FIRST"
         :changesCount="mapPlayerChangeToChangeType(playerChange)"
         hasActions
@@ -45,6 +89,19 @@ const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
         :playersData="playersData"
         :playerChange="playerChange"
         :initialPlayerChange="props.initialPlayerChanges[index]"
+        :initialPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(
+              props.playersData,
+              playerChange.replacementProfileId,
+            ),
+          )
+        "
+        :replacementPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(props.playersData, playerChange.profileId),
+          )
+        "
         :type="ChangeType.SECOND"
         :changesCount="mapPlayerChangeToChangeType(playerChange)"
         hasActions
@@ -53,3 +110,9 @@ const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
     </template>
   </div>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'CoachRotationPlayerChanges',
+}
+</script>

@@ -3,6 +3,8 @@ import { ApiRotation } from '@/types/api/rotation'
 import { ApiCall } from '@/types/api/call'
 import { ApiTeam } from '@/types/api/team'
 import { ApiTimeout } from '@/types/api/timeout'
+import { ApiSanction } from '@/types/api/sanction'
+import { ApiProfile } from '@/types/api/profile'
 
 export enum ApiEvents {
   CALL_UPDATED = 'CallUpdatedEvent',
@@ -12,6 +14,7 @@ export enum ApiEvents {
   ROTATION_LOCK_TOGGLED = 'RotationLockToggledEvent',
   GAME_STATUS_UPDATED = 'GameStatusUpdatedEvent',
   TIMEOUT_STATUS_UPDATED = 'TimeoutStatusUpdatedEvent',
+  SANCTION_STORED = 'SanctionStoredEvent',
 }
 
 export type ApiCallUpdatedEventResponse = {
@@ -45,4 +48,10 @@ export type ApiGameStatusUpdatedEventResponse = {
 export type ApiTimeoutStatusUpdatedEventResponse = {
   timeout: ApiTimeout
   team: ApiTeam
+}
+
+export type ApiSanctionStoredEventResponse = {
+  sanction: ApiSanction
+  team: ApiTeam
+  profile: ApiProfile | null
 }

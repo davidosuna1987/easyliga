@@ -5,7 +5,7 @@ import {
   ChangeType,
   mapPlayerChangeToChangeType,
 } from '@/domain/rotation'
-import { PropType } from 'nuxt/dist/app/compat/capi'
+import { EXPULSION_SEVERITIES, Sanction } from '@/domain/sanction'
 
 const props = defineProps({
   playersData: {
@@ -18,7 +18,15 @@ const props = defineProps({
   },
   initialPlayerChange: {
     type: Object as PropType<RotationPlayerChangeRequest>,
-    required: true,
+    required: false,
+  },
+  initialPlayerSanction: {
+    type: Object as PropType<Sanction>,
+    required: false,
+  },
+  replacementPlayerSanction: {
+    type: Object as PropType<Sanction>,
+    required: false,
   },
   type: {
     type: Number as PropType<ChangeType>,
@@ -39,6 +47,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
+
+const app = useNuxtApp()
+const toast = useEasyToast()
 
 const ICON_TYPE = {
   REMOVE: 'remove',
@@ -87,6 +98,14 @@ const iconNameBasedOnPlayerChangeTypes = computed((): string => {
   }
 })
 
+const replacementPlayerIsSanctioned = computed(
+  (): boolean =>
+    props.playerChange.comesFromApi &&
+    props.changesCount === 1 &&
+    !!props.initialPlayerSanction &&
+    EXPULSION_SEVERITIES.includes(props.initialPlayerSanction.severity),
+)
+
 const getPlayerDataByProfileId = (
   profileId: number,
 ): CallPlayerData | undefined => {
@@ -116,6 +135,10 @@ const replacementPlayer = computed(() => {
 })
 
 const handleActionClick = () => {
+  if (replacementPlayerIsSanctioned.value) {
+    toast.error(app.$i18n.t('rotations.replacement_player_sanctioned'))
+    return
+  }
   if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.REMOVE) {
     emit('remove:playerChange', props.playerChange)
   } else if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.UNDO) {
@@ -137,6 +160,7 @@ const handleActionClick = () => {
         :showLibero="false"
         :showIcons="false"
         :selectable="false"
+        :sanction="props.replacementPlayerSanction"
       />
     </div>
     <img class="arrows-icon" src="/icons/change-player.svg" width="40" />
@@ -147,12 +171,16 @@ const handleActionClick = () => {
         :showLibero="false"
         :showIcons="false"
         :selectable="false"
+        :sanction="props.initialPlayerSanction"
       />
     </div>
     <div v-if="hasActions" class="actions">
       <Icon
         class="action"
-        :class="[`action-${iconTypeBasedOnPlayerChangeTypes}`]"
+        :class="[
+          `action-${iconTypeBasedOnPlayerChangeTypes}`,
+          { 'is-replacement-sanctioned': replacementPlayerIsSanctioned },
+        ]"
         :name="iconNameBasedOnPlayerChangeTypes"
         size="1.5rem"
         @click="handleActionClick()"

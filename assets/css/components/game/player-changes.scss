@@ -24,6 +24,15 @@
           color: var(--danger-color);
         }
       }
+
+      &.is-replacement-sanctioned {
+        cursor: not-allowed;
+        color: var(--danger-color);
+
+        &:hover {
+          color: var(--danger-color);
+        }
+      }
     }
   }
 }

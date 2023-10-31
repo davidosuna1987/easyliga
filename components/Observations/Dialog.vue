@@ -14,7 +14,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['hide', 'observations:changed', 'submit'])
+const emit = defineEmits([
+  'hide',
+  'observations:changed',
+  'observations:submit',
+])
 
 const showDialog = ref<boolean>(props.visible)
 const form = ref<{ observations?: string }>({
@@ -61,7 +65,10 @@ watch(
           outlined
           @click="emit('hide')"
         />
-        <Button :label="props.submitLabel" @click="emit('submit')" />
+        <Button
+          :label="props.submitLabel"
+          @click="emit('observations:submit')"
+        />
       </div>
     </template>
   </DialogBottom>

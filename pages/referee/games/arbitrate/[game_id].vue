@@ -2,6 +2,7 @@
 definePageMeta({
   middleware: ['role'],
   roles: ['referee'],
+  containerClass: 'referee-arbitrate',
 })
 </script>
 

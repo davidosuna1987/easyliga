@@ -13,8 +13,8 @@
   .easy-game-rotation-status-component {
     .unlock-button {
       position: absolute;
-      top: var(--app-margin);
-      right: var(--app-margin);
+      top: calc(var(--app-margin) + 4px);
+      right: calc(var(--app-margin) + 42px);
     }
   }
 
@@ -25,6 +25,17 @@
       pointer-events: none;
       filter: none;
       opacity: 1;
+    }
+  }
+
+  @media (min-width: $media-sidebars-min) {
+    .easy-game-call-status-component,
+    .easy-game-rotation-status-component {
+      .unlock-button {
+        position: absolute;
+        top: var(--app-margin);
+        right: var(--app-margin);
+      }
     }
   }
 }

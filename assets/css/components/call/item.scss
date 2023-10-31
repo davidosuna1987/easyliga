@@ -11,10 +11,17 @@
   }
 
   .team-player-info {
+    position: relative;
     display: grid;
     grid-template-columns: auto auto 1fr;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .easy-sanction-item-component {
+    position: absolute;
+    top: -8px;
+    left: 11px;
   }
 
   .easy-icon-captain-component,

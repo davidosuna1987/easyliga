@@ -7,6 +7,7 @@ import { Call, mapApiCallToCall } from '@/domain/call'
 import {
   ApiCallUnlockedEventResponse,
   ApiRotationLockToggledEventResponse,
+  ApiSanctionStoredEventResponse,
   ApiTimeoutStatusUpdatedEventResponse,
 } from '@/types/api/event'
 import { TeamType } from '@/domain/team'
@@ -16,6 +17,10 @@ import {
   TimeoutStatusEnum,
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
+import { mapApiProfileToProfile } from '@/domain/profile'
+import { getFullName } from '@/domain/player'
+import { Rotation } from '@/domain/rotation'
+import { EXPULSION_SEVERITIES } from '@/domain/sanction'
 import moment from 'moment'
 
 const app = useNuxtApp()
@@ -36,7 +41,7 @@ const getCurrentGames = async () => {
     where: `date:>=:${moment()
       .subtract(1, 'day')
       .format('YYYY-MM-DD HH:mm:ss')}`,
-    with: `currentSet.rotations.players,currentSet.timeouts`,
+    with: `currentSet.rotations.players,currentSet.timeouts,currentSet.sanctions`,
   }
 
   const { data } = await gameService.fetch({
@@ -88,6 +93,7 @@ const getCurrentGamesCalls = async () => {
 
     listenGameStatusUpdatedEvent(game.id)
     listenTimeoutStatusUpdatedEvent(game.id)
+    listenSanctionStoredEvent(game.id)
 
     calls.value?.forEach(call => {
       listenCallUnlockedEvent(game.id, call.id)
@@ -144,6 +150,14 @@ const onReportSigned = (game: Game) => {
 
   toast.info(app.$i18n.t('reports.closed', { gameName: game.name }))
 }
+
+const currentSetRotation = (
+  gameId: number,
+  callId: number,
+): Rotation | undefined =>
+  currentGames.value
+    ?.find(game => game.id === gameId)
+    ?.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
 const listenCallUnlockedEvent = (gameId: number, callId: number) => {
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
@@ -244,6 +258,45 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
   )
 }
 
+const listenSanctionStoredEvent = (gameId: number) => {
+  window.Echo.channel(`game.${gameId}.sanction.stored`).listen(
+    ApiEvents.SANCTION_STORED,
+    (response: ApiSanctionStoredEventResponse) => {
+      const sanctionedPlayer = response.profile
+        ? mapApiProfileToProfile(response.profile)
+        : undefined
+
+      toast.error(
+        app.$i18n.t(`sanctions.sanctioned.${response.sanction.severity}`, {
+          name: getFullName(sanctionedPlayer) ?? response.team.name,
+        }),
+      )
+
+      if (EXPULSION_SEVERITIES.includes(response.sanction.severity)) {
+        const game = currentGames.value?.find(
+          game => game.currentSet?.id === response.sanction.set_id,
+        )
+        const call = calls.value.find(call => call.gameId === game?.id)
+        const rotation = currentSetRotation(game?.id ?? 0, call?.id ?? 0)
+        const inCourtPlayerIds = rotation?.players?.map(
+          player => player.inCourtProfileId,
+        )
+        if (
+          game &&
+          call &&
+          rotation &&
+          sanctionedPlayer &&
+          inCourtPlayerIds?.includes(sanctionedPlayer.id)
+        ) {
+          navigateTo(
+            `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+          )
+        }
+      }
+    },
+  )
+}
+
 // INFO: replaced with window.Echo.leaveAllChannels()
 // const leaveCallUnlockedEvent = (gameId: number, callId: number) => {
 //   window.Echo.leaveChannel(`game.${gameId}.call.${callId}.unlocked`)
@@ -261,7 +314,11 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
 //   window.Echo.leaveChannel(`game.${gameId}.timeout.status.updated`)
 // }
 
-onBeforeMount(getCurrentGames)
+onMounted(getCurrentGames)
+
+onBeforeUnmount(() => {
+  window.Echo.leaveAllChannels()
+})
 </script>
 
 <template>

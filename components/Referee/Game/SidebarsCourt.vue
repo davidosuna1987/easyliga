@@ -14,7 +14,12 @@ import { Set } from '@/domain/set'
 import { CurrentRotation, Rotation } from '@/domain/rotation'
 import { GameStatus } from '@/domain/game'
 import { Timeout } from '@/domain/timeout'
-import { SanctionType } from '@/domain/sanction'
+import {
+  Sanction,
+  SanctionSeverity,
+  SanctionType,
+  mergeSanctionsRemovingDuplicates,
+} from '@/domain/sanction'
 import { Player } from '@/domain/player'
 
 const props = defineProps({
@@ -45,6 +50,10 @@ const props = defineProps({
   currentSet: {
     type: Object as PropType<Set>,
     required: true,
+  },
+  gameSanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
   },
   leftSideTeamRotation: {
     type: Object as PropType<Rotation>,
@@ -110,10 +119,26 @@ const emit = defineEmits([
   'observations:dialog',
   'countdown:ended',
   'timeout:init',
+  'sanction:stored',
 ])
 
 const sideTeamToSanction = ref<TeamSide>()
 const memberToSanction = ref<TeamMember>()
+const sidebarOpened = ref<Record<TeamSide, boolean>>({
+  [TeamSideEnum.left]: false,
+  [TeamSideEnum.right]: false,
+})
+
+const sidebarAction = computed(
+  (): Record<TeamSide, 'open' | 'close'> => ({
+    [TeamSideEnum.left]: sidebarOpened.value[TeamSideEnum.left]
+      ? 'close'
+      : 'open',
+    [TeamSideEnum.right]: sidebarOpened.value[TeamSideEnum.right]
+      ? 'close'
+      : 'open',
+  }),
+)
 
 const leftSideTeamRotation = computed(() =>
   props.rotations.find(
@@ -149,6 +174,25 @@ const rightSideTeamMembers = computed((): TeamMember[] =>
     : props.rightSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
 )
 
+const setSanctions = computed((): Sanction[] =>
+  mergeSanctionsRemovingDuplicates(
+    props.currentSet.sanctions ?? [],
+    props.gameSanctions ?? [],
+  ),
+)
+
+const leftSideTeamSanctions = computed((): Sanction[] | undefined =>
+  setSanctions.value?.filter(
+    sanction => sanction.teamId === props.leftSideTeam.id,
+  ),
+)
+
+const rightSideTeamSanctions = computed((): Sanction[] | undefined =>
+  setSanctions.value?.filter(
+    sanction => sanction.teamId === props.rightSideTeam.id,
+  ),
+)
+
 const teamToSanction = computed((): Team | undefined => {
   switch (sideTeamToSanction.value) {
     case TeamSideEnum.left:
@@ -171,10 +215,25 @@ const teamMembersToSanction = computed((): TeamMember[] => {
   }
 })
 
+const gameSanctions = computed(() =>
+  props.gameSanctions?.filter(
+    sanction =>
+      sanction.type === SanctionType.member &&
+      sanction.severity === SanctionSeverity.game,
+  ),
+)
+
+const closeSidebars = (): void => {
+  console.log('closeSidebars')
+  sidebarOpened.value[TeamSideEnum.left] = false
+  sidebarOpened.value[TeamSideEnum.right] = false
+}
+
 const setMemberToSanction = (
   side: TeamSide,
   { player, coach }: { player: Player; coach: Coach },
-) => {
+): void => {
+  closeSidebars()
   sideTeamToSanction.value = side
 
   const teamToSanctionMembers =
@@ -196,34 +255,75 @@ const sumPoint = (type: TeamType) => {
 const undoLastPoint = () => {
   emit('point:undo')
 }
+
+onMounted(() => {
+  easyListen('game-call-sidebar:open', (teamSide: TeamSide) => {
+    sidebarOpened.value[teamSide] = true
+  })
+  easyListen('game-call-sidebar:close', (teamSide: TeamSide) => {
+    sidebarOpened.value[teamSide] = false
+  })
+})
+
+onUnmounted(() => {
+  easyUnlisten('game-call-sidebar:open')
+  easyUnlisten('game-call-sidebar:close')
+})
 </script>
 
 <template>
   <div class="easy-game-sidebars-court-component">
-    <div class="sidebar-wrapper left">
+    <div class="sidebars-navbar flex justify-between">
+      <Button
+        class="p-2"
+        rounded
+        @click="
+          easyEmit(`game-call-sidebar:${sidebarAction.left}`, TeamSideEnum.left)
+        "
+      >
+        <Icon name="ph:users-three-fill" size="1.25rem" />
+      </Button>
+
+      <Button
+        class="p-2"
+        rounded
+        @click="
+          easyEmit(
+            `game-call-sidebar:${sidebarAction.right}`,
+            TeamSideEnum.right,
+          )
+        "
+      >
+        <Icon name="ph:users-three-fill" size="1.25rem" />
+      </Button>
+    </div>
+    <div
+      class="sidebar-wrapper left"
+      :class="{ 'is-opened': !!sidebarOpened[TeamSideEnum.left] }"
+      @click.self="closeSidebars()"
+    >
       <RefereeGameCallSidebar
         :team="leftSideTeam"
+        :side="TeamSideEnum.left"
         :coach="leftSideTeamCoach"
         :call="leftSideTeamCall"
         :rotation="leftSideTeamRotation"
         :timeouts="leftSideTeamTimeouts"
         :currentSet="currentSet"
+        :setSanctions="leftSideTeamSanctions"
+        :gameSanctions="gameSanctions"
         :gameStatus="gameStatus"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
         @member:clicked="setMemberToSanction(TeamSideEnum.left, $event)"
       />
-
-      <small class="mt-3 block">
-        {{ $t('timeouts.requested_short', 2) }}:
-        {{ props.leftSideTeamTimeouts?.length ?? 0 }}
-      </small>
     </div>
     <div class="score-court relative flex flex-col gap-3">
       <GameScore :currentSet="currentSet" />
       <GameCourt
         :currentSet="currentSet"
+        :gameSanctions="gameSanctions"
         :leftSideTeam="leftSideTeam"
         :rightSideTeam="rightSideTeam"
         :leftSideTeamCall="leftSideTeamCall"
@@ -247,36 +347,41 @@ const undoLastPoint = () => {
         @observations:dialog="emit('observations:dialog')"
         @countdown:ended="emit('countdown:ended')"
         @timeout:init="emit('timeout:init', $event)"
+        @sanction:stored="emit('sanction:stored', $event)"
       />
     </div>
-    <div class="sidebar-wrapper right">
+    <div
+      class="sidebar-wrapper right"
+      :class="{ 'is-opened': !!sidebarOpened[TeamSideEnum.right] }"
+      @click.self="closeSidebars()"
+    >
       <RefereeGameCallSidebar
         :team="rightSideTeam"
+        :side="TeamSideEnum.right"
         :coach="rightSideTeamCoach"
         :call="rightSideTeamCall"
         :rotation="rightSideTeamRotation"
         :timeouts="rightSideTeamTimeouts"
         :currentSet="currentSet"
+        :setSanctions="rightSideTeamSanctions"
+        :gameSanctions="gameSanctions"
         :gameStatus="gameStatus"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
         @member:clicked="setMemberToSanction(TeamSideEnum.right, $event)"
       />
-
-      <small class="mt-3 block">
-        {{ $t('timeouts.requested_short', 2) }}:
-        {{ props.rightSideTeamTimeouts?.length ?? 0 }}
-      </small>
     </div>
     <SanctionDialog
       v-if="teamToSanction && memberToSanction"
       :visible="!!teamToSanction"
       :type="SanctionType.member"
       :currentSet="currentSet"
+      :gameSanctions="gameSanctions"
       :team="teamToSanction"
       :member="memberToSanction"
       :members="teamMembersToSanction"
+      @sanction:stored="emit('sanction:stored', $event)"
       @hide="sideTeamToSanction = undefined"
     />
   </div>

@@ -9,6 +9,7 @@ import {
 } from '@/domain/timeout'
 import TimeoutService from '@/services/timeout'
 import moment from 'moment'
+import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
 
 const app = useNuxtApp()
 const toast = useEasyToast()
@@ -34,6 +35,26 @@ const emit = defineEmits([
 const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
 
+const gamesWithSanctionedMembersToChange = computed((): Game[] =>
+  props.games.filter((game, index) => {
+    const teamRotation = game.currentSet?.rotations?.find(
+      rotation => rotation.callId === props.calls[index].id,
+    )
+    const inCourtProfileIds = teamRotation?.players?.map(
+      player => player.inCourtProfileId,
+    )
+
+    return game.currentSet?.sanctions?.some(
+      sanction =>
+        sanction.type === SanctionType.member &&
+        EXPULSION_SEVERITIES.includes(sanction.severity) &&
+        sanction.teamId === props.calls[index].teamId &&
+        sanction.playerProfileId &&
+        inCourtProfileIds?.includes(sanction.playerProfileId),
+    )
+  }),
+)
+
 const requestTimeout = async () => {
   const storeTimeoutForm: TimeoutStoreRequest = {
     setId: setToRequestTimeout.value ?? 0,
@@ -50,7 +71,6 @@ const requestTimeout = async () => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value?.data) {
-    console.log({ data: data.value })
     toast.success(app.$i18n.t('timeouts.requested'))
     emit('timeout:requested', mapApiTimeoutToTimeout(data.value.data.timeout))
   }
@@ -82,6 +102,25 @@ const getGameObservationsCountdownTarget = (game: Game): number =>
 
 const onCountdownEnded = ({ game, call }: { game: Game; call: Call }) =>
   emit('countdown:ended', { game, call })
+
+const redirectIfSanctionedMembersToChange = () => {
+  if (gamesWithSanctionedMembersToChange.value.length) {
+    const game = gamesWithSanctionedMembersToChange.value[0]
+    const call = props.calls.find(call => call.gameId === game.id)
+    const rotation = currentSetRotation(game, call?.id ?? 0)
+    if (game && call && rotation) {
+      navigateTo(
+        `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+      )
+    }
+  }
+}
+
+onMounted(redirectIfSanctionedMembersToChange)
+
+onBeforeUnmount(() => {
+  window.Echo.leaveAllChannels()
+})
 </script>
 
 <template>
@@ -175,7 +214,7 @@ const onCountdownEnded = ({ game, call }: { game: Game; call: Call }) =>
     </div>
 
     <DialogBottom
-      class="easy-coach-rotation-players-dialog-component"
+      class="easy-coach-timeout-request-dialog-component"
       :visible="!!setToRequestTimeout"
       @hide="setToRequestTimeout = undefined"
     >

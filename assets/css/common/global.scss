@@ -64,3 +64,9 @@ a {
 .text-success {
   color: var(--primary-color);
 }
+
+.is-muted {
+  pointer-events: none;
+  cursor: default;
+  filter: grayscale(1);
+}

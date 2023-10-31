@@ -111,3 +111,10 @@ export const getCaptainIdFromCallPlayersData = (
 export const getLiberoIdFromCallPlayersData = (
   callPlayersData: CallPlayerData[],
 ) => callPlayersData.find(p => p.libero)?.profileId ?? 0
+
+export const getPlayerDataByProfileId = (
+  playersData: CallPlayerData[],
+  profileId: number,
+): CallPlayerData | undefined => {
+  return playersData.find(p => p.profileId === profileId)
+}

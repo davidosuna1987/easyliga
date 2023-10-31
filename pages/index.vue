@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// onBeforeMount(() => navigateTo('/login'))
+// onMounted(() => navigateTo('/login'))
 </script>
 
 <template>

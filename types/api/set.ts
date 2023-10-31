@@ -2,12 +2,15 @@ import { SetSide } from '@/domain/set'
 import { ApiPoint } from '@/types/api/point'
 import { ApiRotation } from '@/types/api/rotation'
 import { ApiTimeout } from '@/types/api/timeout'
+import { ApiSanction } from '@/types/api/sanction'
 
 export type ApiSetRelations = {
   last_point?: ApiPoint
   last_two_points?: ApiPoint[]
   rotations?: ApiRotation[]
   timeouts?: ApiTimeout[]
+  sanctions?: ApiSanction[]
+  game_sanctions?: ApiSanction[]
 }
 
 export type ApiSet = {

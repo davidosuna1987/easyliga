@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { Call } from '@/domain/call'
+import { Call, CallPlayerData } from '@/domain/call'
 import { Player } from '@/domain/player'
 import {
   Team,
@@ -14,7 +14,14 @@ import {
 import { Set, SetSide } from '@/domain/set'
 import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
 import { GAME_OBSERVATIONS_DELAY, GameStatus } from '@/domain/game'
-import { SanctionType } from '@/domain/sanction'
+import {
+  EXPULSION_SEVERITIES,
+  Sanction,
+  SanctionMember,
+  SanctionMemberKey,
+  SanctionType,
+  getPlayerItemSanction,
+} from '@/domain/sanction'
 import moment from 'moment'
 import { Timeout } from '@/domain/timeout'
 
@@ -24,6 +31,10 @@ const props = defineProps({
   currentSet: {
     type: Object as PropType<Set>,
     required: true,
+  },
+  gameSanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
   },
   leftSideTeam: {
     type: Object as PropType<Team>,
@@ -102,6 +113,7 @@ const emit = defineEmits([
   'observations:dialog',
   'countdown:ended',
   'timeout:init',
+  'sanction:stored',
 ])
 
 const showCountdown = ref<boolean>(false)
@@ -154,6 +166,37 @@ const teamMembersToSanction = computed((): TeamMember[] => {
     default:
       return []
   }
+})
+
+const playersToBeReplacedForSanction = computed((): CallPlayerData[] => {
+  const inCourtPlayerProfileIds = props.rotations
+    ?.map(rotation => rotation.players)
+    .flat()
+    .map(player => player.inCourtProfileId)
+
+  const inCourtPlayerProfileWithExpulsionSeveritySanctionIds =
+    props.currentSet.sanctions
+      ?.filter(
+        sanction =>
+          sanction.type === SanctionType.member &&
+          EXPULSION_SEVERITIES.includes(sanction.severity) &&
+          sanction.playerProfileId &&
+          inCourtPlayerProfileIds?.includes(sanction.playerProfileId),
+      )
+      .map(sanction => sanction.playerProfileId)
+
+  const callsPlayersData = [
+    ...props.leftSideTeamCall.playersData,
+    ...props.rightSideTeamCall.playersData,
+  ]
+
+  return callsPlayersData.filter(
+    player =>
+      inCourtPlayerProfileIds.includes(player.profileId) &&
+      inCourtPlayerProfileWithExpulsionSeveritySanctionIds?.includes(
+        player.profileId,
+      ),
+  )
 })
 
 const sumPoint = (type: TeamType) => {
@@ -236,6 +279,24 @@ const setMemberToSanction = (side: TeamSide, player?: Player) => {
   )
 }
 
+const getPlayerSanction = (
+  side: TeamSide,
+  player?: Player,
+): Sanction | undefined => {
+  if (!player) return undefined
+
+  const playerTeam =
+    side === TeamSideEnum.left ? props.leftSideTeam : props.rightSideTeam
+
+  return getPlayerItemSanction(
+    props.currentSet.sanctions,
+    props.currentSet.id,
+    playerTeam.id,
+    player.profileId,
+    SanctionMember.player as SanctionMemberKey,
+  )
+}
+
 onMounted(setInitialShowCountdown)
 </script>
 
@@ -251,6 +312,12 @@ onMounted(setInitialShowCountdown)
             :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
+            :sanction="
+              getPlayerSanction(
+                TeamSideEnum.left,
+                leftSideTeamCurrentRotationPlayersData[position - 1],
+              )
+            "
             @click="
               setMemberToSanction(
                 TeamSideEnum.left,
@@ -267,6 +334,12 @@ onMounted(setInitialShowCountdown)
             :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
+            :sanction="
+              getPlayerSanction(
+                TeamSideEnum.right,
+                rightSideTeamCurrentRotationPlayersData[position - 1],
+              )
+            "
             @click="
               setMemberToSanction(
                 TeamSideEnum.right,
@@ -279,7 +352,25 @@ onMounted(setInitialShowCountdown)
     </div>
 
     <template v-if="auth.hasRole('referee')">
-      <template v-if="waitingForPlayerChanges || timeoutRunning">
+      <template
+        v-if="
+          playersToBeReplacedForSanction.length ||
+          waitingForPlayerChanges ||
+          timeoutRunning
+        "
+      >
+        <div
+          v-if="playersToBeReplacedForSanction.length"
+          class="actions grid place-content-center"
+        >
+          <Button
+            class="px-12 mb-3"
+            :label="$t('sanctions.players_to_replace')"
+            severity="danger"
+            outlined
+            :disabled="true"
+          />
+        </div>
         <div
           v-if="waitingForPlayerChanges"
           class="actions grid place-content-center"
@@ -317,8 +408,9 @@ onMounted(setInitialShowCountdown)
           :disabled="setActionsDisabled"
           @set:start="emit('set:start', $event)"
         />
-        <div v-if="gameStatus === 'playing'" class="flex flex-col gap-8">
+        <div class="flex flex-col gap-8">
           <GameChangesActions
+            v-if="gameStatus === 'playing'"
             class="w-full"
             :leftSideTeamCall="leftSideTeamCall"
             :rightSideTeamCall="rightSideTeamCall"
@@ -326,6 +418,7 @@ onMounted(setInitialShowCountdown)
             :rightSideTeamRotation="rightSideTeamRotation"
           />
           <GamePointActions
+            v-if="gameStatus === 'playing'"
             class="w-full"
             :currentSet="currentSet"
             :undoPointButtonDisabled="undoPointButtonDisabled"
@@ -333,20 +426,22 @@ onMounted(setInitialShowCountdown)
             @point:sum="sumPoint"
             @point:undo="undoLastPoint"
           />
+          <GameTimeoutSanctionActions
+            v-if="gameStatus !== 'finished'"
+            class="mt-6"
+            :leftSideTeam="leftSideTeam"
+            :rightSideTeam="rightSideTeam"
+            :leftSideTeamMembers="leftSideTeamMembers"
+            :rightSideTeamMembers="rightSideTeamMembers"
+            :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
+            :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
+            :currentSet="currentSet"
+            :gameSanctions="props.gameSanctions"
+            :gameStatus="gameStatus"
+            @timeout:init="emit('timeout:init', $event)"
+            @sanction:stored="emit('sanction:stored', $event)"
+          />
         </div>
-        <GameTimeoutSanctionActions
-          v-if="gameStatus !== 'finished'"
-          class="mt-6"
-          :leftSideTeam="leftSideTeam"
-          :rightSideTeam="rightSideTeam"
-          :leftSideTeamMembers="leftSideTeamMembers"
-          :rightSideTeamMembers="rightSideTeamMembers"
-          :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
-          :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
-          :currentSet="currentSet"
-          :gameStatus="gameStatus"
-          @timeout:init="emit('timeout:init', $event)"
-        />
         <div
           v-if="gameStatus === 'finished'"
           class="actions grid place-content-center"
@@ -387,8 +482,10 @@ onMounted(setInitialShowCountdown)
         :type="SanctionType.member"
         :team="teamToSanction"
         :currentSet="currentSet"
+        :sanctions="props.currentSet.sanctions"
         :member="memberToSanction"
         :members="teamMembersToSanction"
+        @sanction:stored="emit('sanction:stored', $event)"
         @hide="sideTeamToSanction = undefined"
       />
     </template>

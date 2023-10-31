@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Call, CallPlayerData } from '@/domain/call'
+import { Call, CallPlayerData, getPlayerDataByProfileId } from '@/domain/call'
 import {
   ATTACK_POSITIONS,
   ChangeType,
@@ -9,7 +9,18 @@ import {
   mapPlayerChangeToChangeType,
 } from '@/domain/rotation'
 import { Rotation, POSITIONS } from '@/domain/rotation'
-import { getFullName } from '@/domain/player'
+import { Player, getFullName, mapCallPlayerDataToPlayer } from '@/domain/player'
+import {
+  EXPULSION_SEVERITIES,
+  Sanction,
+  SanctionMember,
+  SanctionMemberKey,
+  SanctionSeverity,
+  SanctionType,
+  getPlayerItemSanction,
+  isMembeSanction,
+  mergeSanctionsRemovingDuplicates,
+} from '@/domain/sanction'
 
 const props = defineProps({
   call: {
@@ -28,10 +39,19 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  sanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
+  },
+  gameSanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
+  },
 })
 
 const emit = defineEmits(['update:players', 'update:captain', 'change:players'])
 
+const app = useNuxtApp()
 const toast = useEasyToast()
 
 const rotationPlayers = ref<RotationPlayer[]>([])
@@ -49,7 +69,26 @@ const totalPlayerChanges = computed(
   () => playerChanges.value.length + (props.rotation?.playerChangesCount ?? 0),
 )
 
-const availablePlayers = computed(() =>
+const isTeamMembeSanction = (sanction: Sanction): boolean =>
+  isMembeSanction(sanction) && sanction.teamId === props.call.teamId
+
+const memberSanctions = computed((): Sanction[] => {
+  const setSanctions = props.sanctions?.filter(isTeamMembeSanction) ?? []
+  const gameSanctions = props.gameSanctions?.filter(isTeamMembeSanction) ?? []
+
+  return mergeSanctionsRemovingDuplicates(setSanctions, gameSanctions)
+})
+
+const expulsionSanctions = computed((): Sanction[] =>
+  memberSanctions.value.filter(
+    sanction =>
+      sanction.severity === SanctionSeverity.game ||
+      (sanction.severity === SanctionSeverity.set &&
+        sanction.setId === props.rotation?.setId),
+  ),
+)
+
+const benchPlayers = computed((): CallPlayerData[] =>
   props.call.playersData.filter(
     player =>
       !player.libero &&
@@ -59,6 +98,23 @@ const availablePlayers = computed(() =>
       !rotationPlayers.value
         .map(rp => rp.replacementProfileId)
         .includes(player.profileId),
+  ),
+)
+
+const availableBenchPlayers = computed((): CallPlayerData[] =>
+  benchPlayers.value.filter(
+    player =>
+      !expulsionSanctions.value
+        ?.map(sanction => sanction.playerProfileId)
+        .includes(player.profileId),
+  ),
+)
+
+const expelledPlayers = computed((): CallPlayerData[] =>
+  benchPlayers.value.filter(player =>
+    expulsionSanctions.value
+      ?.map(sanction => sanction.playerProfileId)
+      .includes(player.profileId),
   ),
 )
 
@@ -96,6 +152,37 @@ const canChangeCaptain = computed(
   () =>
     !selectedCaptain.value?.captain &&
     selectableCaptainPlayers.value.every(player => !player.captain),
+)
+
+const gameTeamSanctions = computed((): Sanction[] | undefined =>
+  props.gameSanctions?.filter(
+    sanction =>
+      sanction.type === SanctionType.member &&
+      sanction.teamId === props.call.teamId,
+  ),
+)
+
+const initialRotationPlayersToBeReplacedForSanction = computed(
+  (): CallPlayerData[] => {
+    const playerIdsToBeReplaced = gameTeamSanctions.value
+      ?.filter(sanction => {
+        const inCourtProfileIds = rotationPlayers.value?.map(
+          player => player.inCourtProfileId,
+        )
+
+        return (
+          sanction.playerProfileId &&
+          inCourtProfileIds?.includes(sanction.playerProfileId ?? 0)
+        )
+      })
+      .map(sanction => sanction.playerProfileId)
+
+    return (
+      props.call?.playersData.filter(player =>
+        playerIdsToBeReplaced?.includes(player.profileId),
+      ) ?? []
+    )
+  },
 )
 
 const setRotationPlayersFromRtotation = () => {
@@ -181,9 +268,7 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   if (!!props.rotation?.players) return
 
   if (!!props.isInitialRotationAssignment && !!player.libero) {
-    toast.warn(
-      useNuxtApp().$i18n.t('rotations.libero_not_allowed_in_initial_rotation'),
-    )
+    toast.warn(app.$i18n.t('rotations.libero_not_allowed_in_initial_rotation'))
     return
   }
 
@@ -207,7 +292,7 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   rotationPlayers.value.push({
     profileId: player.profileId,
     rotationId: 0,
-    replacementProfileId: null,
+    replacementProfileId: undefined,
     inCourtProfileId: player.profileId,
     position: selectedPosition.value,
     currentPosition: selectedPosition.value,
@@ -230,9 +315,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
   const playerChangesHasLibero = !!playerChanges.value.find(pc => pc.libero)
 
   if (playerChangesHasLibero && replacementPlayer.libero) {
-    toast.error(
-      useNuxtApp().$i18n.t('rotations.only_one_libero_in_court_allowed'),
-    )
+    toast.error(app.$i18n.t('rotations.only_one_libero_in_court_allowed'))
     return
   }
 
@@ -242,9 +325,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     ATTACK_POSITIONS.includes(selectedPosition.value)
 
   if (isReplacementPlayerLiberoInAttackPosition) {
-    toast.error(
-      useNuxtApp().$i18n.t('rotations.libero_not_allowed_in_attack_positions'),
-    )
+    toast.error(app.$i18n.t('rotations.libero_not_allowed_in_attack_positions'))
     return
   }
 
@@ -265,7 +346,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     rotationPlayerToReplace.replacementProfileId === replacementPlayer.profileId
   ) {
     toast.error(
-      useNuxtApp().$i18n.t('rotations.replacement_taken', {
+      app.$i18n.t('rotations.replacement_taken', {
         name: getFullName(playerToReplace.value),
       }),
     )
@@ -403,13 +484,29 @@ const handleRotationCourtPositionClick = (position: number) => {
 
   if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
     toast.warn(
-      useNuxtApp().$i18n.t('rotations.max_changes_reached', {
+      app.$i18n.t('rotations.max_changes_reached', {
         num: MAX_ROTATION_PLAYER_CHANGES,
       }),
     )
+    return
   }
 
-  switch (mapPlayerChangeToChangeType(getPlayerChangeByPosition(position))) {
+  const playerChange = getPlayerChangeByPosition(position)
+
+  const replacementPlayerSanctioned =
+    !!playerChange?.comesFromApi &&
+    !!playerChange?.replacementProfileId &&
+    memberSanctions.value
+      .filter(sanction => EXPULSION_SEVERITIES.includes(sanction.severity))
+      .map(sanction => sanction.playerProfileId)
+      .includes(playerChange?.profileId ?? 0)
+
+  if (replacementPlayerSanctioned) {
+    toast.error(app.$i18n.t('rotations.replacement_player_sanctioned'))
+    return
+  }
+
+  switch (mapPlayerChangeToChangeType(playerChange)) {
     case ChangeType.NONE:
     case ChangeType.FIRST:
       return selectPosition(position)
@@ -420,9 +517,25 @@ const handleRotationCourtPositionClick = (position: number) => {
 
 const showMaxChangesReachedToast = (playerData: CallPlayerData) => {
   toast.warn(
-    useNuxtApp().$i18n.t('rotations.max_player_change_changes_reached', {
+    app.$i18n.t('rotations.max_player_change_changes_reached', {
       name: getFullName(playerData),
     }),
+  )
+}
+
+const getPlayerSanction = (player?: Player): Sanction | undefined => {
+  if (!player) return undefined
+
+  const scope =
+    props.rotation && props.isInitialRotationAssignment ? 'set' : 'game'
+
+  return getPlayerItemSanction(
+    memberSanctions.value,
+    props.rotation?.setId,
+    props.call.teamId,
+    player.profileId,
+    SanctionMember.player as SanctionMemberKey,
+    scope,
   )
 }
 
@@ -463,6 +576,11 @@ watch(
     class="easy-coach-rotation-court-changes-wrapper grid gap-6 mt-10 relative"
     :class="{ 'lg:grid-cols-2': playerChanges.length }"
   >
+    <RotationPlayerSanctionedMessage
+      v-if="initialRotationPlayersToBeReplacedForSanction.length"
+      :playersData="initialRotationPlayersToBeReplacedForSanction"
+    />
+
     <div class="easy-game-court-component easy-coach-rotation-court-component">
       <div class="wrapper">
         <div
@@ -489,6 +607,12 @@ watch(
               "
               :changesCount="
                 mapPlayerChangeToChangeType(getPlayerChangeByPosition(position))
+              "
+              :initialPlayerSanction="
+                getPlayerSanction(getCallPlayerDataByPosition(position))
+              "
+              :replacementPlayerSanction="
+                getPlayerSanction(getRotationInCourtPlayerByPosition(position))
               "
               @click="handleRotationCourtPositionClick(position)"
             />
@@ -537,6 +661,9 @@ watch(
         :playersData="props.call.playersData"
         :playerChanges="playerChanges"
         :initialPlayerChanges="initialPlayerChanges"
+        :call="props.call"
+        :rotation="props.rotation"
+        :sanctions="memberSanctions"
         @remove:playerChange="setPlayerChangeToUndo"
         @undo:playerChange="setPlayerChangeToUndo"
       />
@@ -556,18 +683,34 @@ watch(
       }}</Heading>
     </template>
 
-    <CoachRotationPlayer
-      v-if="availablePlayers.length"
-      v-for="player in availablePlayers"
-      :key="player.profileId"
-      :player="player"
-      @click="
-        !!props.isInitialRotationAssignment
-          ? addOrReplaceRotationPlayer(player)
-          : changePlayer(player)
-      "
-    />
+    <template v-if="availableBenchPlayers.length">
+      <CoachRotationPlayer
+        v-for="player in availableBenchPlayers"
+        :key="player.profileId"
+        :player="player"
+        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
+        @click="
+          !!props.isInitialRotationAssignment
+            ? addOrReplaceRotationPlayer(player)
+            : changePlayer(player)
+        "
+      />
+    </template>
+
     <Message v-else :closable="false">{{ $t('players.no_available') }}</Message>
+
+    <template v-if="expelledPlayers.length">
+      <Heading class="mt-5" tag="h6">
+        {{ $t('sanctions.expelled_player', 2) }}
+      </Heading>
+      <CoachRotationPlayer
+        v-for="player in expelledPlayers"
+        :key="player.profileId"
+        class="pointer-events-none"
+        :player="player"
+        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
+      />
+    </template>
   </DialogBottom>
 
   <DialogBottom
@@ -607,6 +750,26 @@ watch(
       :playersData="props.call.playersData"
       :playerChange="playerChangeToUndo"
       :initialPlayerChange="initialPlayerChangeToUndo ?? playerChangeToUndo"
+      :initialPlayerSanction="
+        getPlayerSanction(
+          getPlayerDataByProfileId(
+            props.call.playersData,
+            initialPlayerChangeToUndo
+              ? playerChangeToUndo.replacementProfileId
+              : playerChangeToUndo.profileId,
+          ),
+        )
+      "
+      :replacementPlayerSanction="
+        getPlayerSanction(
+          getPlayerDataByProfileId(
+            props.call.playersData,
+            initialPlayerChangeToUndo
+              ? playerChangeToUndo.profileId
+              : playerChangeToUndo.replacementProfileId,
+          ),
+        )
+      "
       :type="initialPlayerChangeToUndo ? ChangeType.SECOND : ChangeType.FIRST"
       :changesCount="
         mapPlayerChangeToChangeType(

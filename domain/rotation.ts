@@ -9,6 +9,7 @@ import { Game, mapApiGameToGame } from '@/domain/game'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { Call, CallPlayerData, mapApiCallToCall } from '@/domain/call'
+import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 
 export const ROTATION_PLAYERS_LENGTH = 6
 export const MAX_ROTATION_PLAYER_CHANGES = 6
@@ -34,7 +35,7 @@ export type ChangeAction = keyof typeof ChangeActionIcon
 export type RotationPlayer = {
   profileId: number
   rotationId: number
-  replacementProfileId: number | null
+  replacementProfileId?: number
   inCourtProfileId: number
   position: number
   currentPosition: number
@@ -48,6 +49,7 @@ export type RotationRelations = {
   set?: Set
   game?: Game
   team?: Team
+  setSanctions?: Sanction[]
 }
 
 export type Rotation = {
@@ -109,7 +111,7 @@ export const mapRotationPlayerToApiRotationPlayer = (
 ): ApiRotationPlayer => ({
   profile_id: rotationPlayer.profileId,
   rotation_id: rotationPlayer.rotationId,
-  replacement_profile_id: rotationPlayer.replacementProfileId,
+  replacement_profile_id: rotationPlayer.replacementProfileId ?? null,
   in_court_profile_id: rotationPlayer.inCourtProfileId,
   position: rotationPlayer.position,
   current_position: rotationPlayer.currentPosition,
@@ -135,7 +137,7 @@ export const mapApiRotationPlayerToRotationPlayer = (
 ): RotationPlayer => ({
   profileId: apiRotationPlayer.profile_id,
   rotationId: apiRotationPlayer.rotation_id,
-  replacementProfileId: apiRotationPlayer.replacement_profile_id,
+  replacementProfileId: apiRotationPlayer.replacement_profile_id ?? undefined,
   inCourtProfileId: apiRotationPlayer.in_court_profile_id,
   position: apiRotationPlayer.position,
   currentPosition: apiRotationPlayer.current_position,
@@ -147,7 +149,7 @@ export const mapRotationPlayerToApiRotationPlayerChange = (
   rotationPlayer: RotationPlayer,
 ): ApiRotationUpdateRequestPlayer => ({
   profile_id: rotationPlayer.profileId,
-  replacement_profile_id: rotationPlayer.replacementProfileId,
+  replacement_profile_id: rotationPlayer.replacementProfileId ?? null,
   in_court_profile_id: rotationPlayer.inCourtProfileId,
   position: rotationPlayer.position,
   libero: rotationPlayer.libero,
@@ -160,7 +162,8 @@ export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
   rotationUpdateRequestPlayer: RotationUpdateRequestPlayer,
 ): ApiRotationUpdateRequestPlayer => ({
   profile_id: rotationUpdateRequestPlayer.profileId,
-  replacement_profile_id: rotationUpdateRequestPlayer.replacementProfileId,
+  replacement_profile_id:
+    rotationUpdateRequestPlayer.replacementProfileId ?? null,
   in_court_profile_id: rotationUpdateRequestPlayer.inCourtProfileId,
   position: rotationUpdateRequestPlayer.position,
   libero: rotationUpdateRequestPlayer.libero,
@@ -180,6 +183,7 @@ export const mapApiRotationToRotation = (
   number: apiRotation.number,
   locked: apiRotation.locked,
   currentChangeWindow: apiRotation.current_change_window,
+
   players: apiRotation.players
     ? apiRotation.players.map(mapApiRotationPlayerToRotationPlayer)
     : [],
@@ -187,6 +191,9 @@ export const mapApiRotationToRotation = (
   set: apiRotation.set ? mapApiSetToSet(apiRotation.set) : undefined,
   game: apiRotation.game ? mapApiGameToGame(apiRotation.game) : undefined,
   team: apiRotation.team ? mapApiTeamToTeam(apiRotation.team) : undefined,
+  setSanctions: apiRotation.set_sanctions
+    ? apiRotation.set_sanctions.map(mapApiSanctionToSanction)
+    : undefined,
 })
 
 export const mapApiCurrentRotationToCurrentRotation = (
@@ -306,11 +313,4 @@ export const playerChangeCanBeRemovedOLD = (
 export const playerChangeCanBeRemoved = (
   playerChange: RotationPlayerChange,
   currentChangeWindow: number,
-): boolean => {
-  console.log(
-    playerChange.changeWindow,
-    currentChangeWindow,
-    playerChange.changeWindow === currentChangeWindow - 1,
-  )
-  return playerChange.changeWindow === currentChangeWindow - 1
-}
+): boolean => playerChange.changeWindow === currentChangeWindow - 1

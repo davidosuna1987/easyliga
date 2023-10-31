@@ -9,20 +9,60 @@
     display: grid;
     gap: var(--app-margin);
 
-    .easy-game-call-sidebar-component {
-      height: fit-content;
+    .sidebars-navbar {
+      position: absolute;
+      top: -90px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: var(--court-max-width);
+      margin-inline: auto;
     }
 
     .sidebar-wrapper {
-      position: absolute;
-      transition: all 350ms ease-in-out;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(3px);
+      height: 100svh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1001;
 
-      &.left {
-        left: -100%;
+      .sidebar-content {
+        max-height: calc(100vh - 77px);
+        overflow: auto;
       }
 
-      &.right {
-        right: -100%;
+      .easy-game-call-sidebar-component {
+        position: relative;
+        bottom: -100%;
+        width: 100%;
+        max-width: 450px;
+        height: fit-content;
+        max-height: calc(
+          100vh - var(--container-margin-top) - var(--app-margin)
+        );
+        background-color: white;
+        transition: all 350ms ease-in-out;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &.is-opened {
+        opacity: 1;
+        pointer-events: all;
+
+        .easy-game-call-sidebar-component {
+          bottom: 0;
+        }
       }
     }
 
@@ -108,12 +148,36 @@
     }
   }
 
-  @media (min-width: $min-width-tablet) {
+  @media (min-width: $media-sidebars-min) {
     .easy-game-sidebars-court-component {
-      grid-template-columns: 300px 1fr 300px;
+      grid-template-columns: 330px 1fr 330px;
+
+      .sidebars-navbar {
+        display: none;
+      }
 
       .sidebar-wrapper {
         position: static;
+        display: block;
+        height: auto;
+        width: 100%;
+        padding: var(--app-margin);
+        background: transparent;
+        opacity: 1;
+        pointer-events: all;
+        z-index: initial;
+
+        .easy-game-call-sidebar-component {
+          bottom: 0;
+          max-height: none;
+          transition: none;
+          border-bottom-left-radius: var(--border-radius);
+          border-bottom-right-radius: var(--border-radius);
+        }
+      }
+
+      .easy-dialog-close-button-component {
+        display: none;
       }
     }
 

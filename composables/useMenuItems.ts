@@ -6,7 +6,7 @@ import clubItems from '@/config/navbar/items/club'
 import refereeItems from '@/config/navbar/items/referee'
 import coachItems from '@/config/navbar/items/coach'
 
-export default function useEasyToast() {
+export default function useMenuItems() {
   const auth = useAuthStore()
   const items = ref<MenuItem[]>(guestItems)
 

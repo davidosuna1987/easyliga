@@ -2,6 +2,7 @@
 import { Player, getFullName } from '@/domain/player'
 import { CallPlayerData } from '@/domain/call'
 import { TeamMember } from '@/domain/team'
+import { Sanction } from '@/domain/sanction'
 
 const props = defineProps({
   player: {
@@ -56,6 +57,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  sanction: {
+    type: Object as PropType<Sanction>,
+    required: false,
+  },
 })
 
 const tooltipDisabled = computed(
@@ -82,6 +87,11 @@ const iconsGap = computed(() => {
     }"
   >
     <div class="team-player-info">
+      <SanctionItem
+        v-if="props.sanction"
+        :severity="props.sanction.severity"
+        size="1rem"
+      />
       <Avatar
         v-if="showAvatar"
         class="player-avatar"

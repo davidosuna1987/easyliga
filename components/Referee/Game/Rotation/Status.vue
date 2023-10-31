@@ -71,6 +71,10 @@ const lock = async () => {
         props.rotation.locked &&
         !props.requestedTimeout &&
         !props.runningTimeout,
+      'p-[0.5rem]':
+        !props.rotation.locked ||
+        props.requestedTimeout ||
+        props.runningTimeout,
     }"
   >
     <Loading v-if="loadingApi" />

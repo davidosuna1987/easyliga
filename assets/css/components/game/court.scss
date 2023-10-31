@@ -47,6 +47,10 @@
         transform: translate(50%, -100%);
         z-index: 0;
 
+        .easy-sanction-item-component {
+          transform: scale(0.5) translate(-100%, 40%);
+        }
+
         .easy-icon-shirt-number-component {
           background-color: var(--danger-color-dark);
         }
@@ -62,7 +66,7 @@
       bottom: 50%;
       left: calc(50% - 2rem);
       transform: translate(-15%, -50%);
-      z-index: 1;
+      z-index: 2;
     }
 
     .easy-icon-libero-component {
@@ -70,7 +74,7 @@
       bottom: 50%;
       right: calc(50% - 2rem);
       transform: translate(15%, -50%);
-      z-index: 1;
+      z-index: 2;
     }
 
     .easy-icon-easy-liga-component {
@@ -79,6 +83,14 @@
       left: 50%;
       transform: translate(-50%, -50%);
       // opacity: 0.5;
+    }
+
+    .easy-sanction-item-component {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 60%);
+      z-index: 2;
     }
 
     [class^='position'] {
@@ -116,6 +128,22 @@
 
         .easy-icon-easy-liga-component {
           // opacity: 0.65;
+        }
+      }
+
+      &.is-sanctioned {
+        .easy-icon-shirt-number-component {
+          background-color: var(--danger-color-light);
+          border-color: var(--danger-color-light);
+        }
+
+        &:hover {
+          background-color: var(--danger-color-lighten);
+
+          .easy-icon-shirt-number-component {
+            background-color: var(--danger-color-medium);
+            border-color: var(--danger-color-medium);
+          }
         }
       }
     }

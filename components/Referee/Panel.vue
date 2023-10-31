@@ -24,7 +24,7 @@ const getCurrentGames = async () => {
   loadingApi.value = false
 }
 
-onBeforeMount(getCurrentGames)
+onMounted(getCurrentGames)
 </script>
 
 <template>

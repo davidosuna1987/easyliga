@@ -273,7 +273,7 @@ const listenCallUnlockedEvent = () => {
 //   )
 // }
 
-onBeforeMount(getTeamPlayers)
+onMounted(getTeamPlayers)
 </script>
 
 <template>

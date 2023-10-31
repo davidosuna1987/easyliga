@@ -1,7 +1,20 @@
+import { ApiUser } from '@/types/api/auth'
+import { Profile, mapApiProfileToProfile } from '@/domain/profile'
+
+export type UserRelations = {
+  profile?: Profile
+}
+
 export type User = {
   id: number
   email: string
-  created_at: string | null
-  updated_at: string | null
-  deleted_at: string | null
-}
+} & UserRelations
+
+export const mapApiUserToUser = (apiUser: ApiUser): User => ({
+  id: apiUser.id,
+  email: apiUser.email,
+
+  profile: apiUser.profile
+    ? mapApiProfileToProfile(apiUser.profile)
+    : undefined,
+})

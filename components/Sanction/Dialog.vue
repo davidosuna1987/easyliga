@@ -4,10 +4,18 @@ import {
   SanctionTypeKey,
   SanctionSeverityKey,
   SanctionStoreRequest,
+  getAvailableTeamSanctionSeverities,
+  getAvailableMemberSanctionSeverities,
+  SanctionMember,
+  SanctionMemberKey,
+  mapApiSanctionToSanction,
+  Sanction,
+  mergeSanctionsRemovingDuplicates,
 } from '@/domain/sanction'
 import { Team, TeamMember } from '@/domain/team'
 import { getFullName } from '@/domain/player'
 import { Set } from '@/domain/set'
+import SanctionService from '@/services/sanction'
 
 const props = defineProps({
   visible: {
@@ -34,15 +42,21 @@ const props = defineProps({
     type: Object as PropType<Set>,
     required: true,
   },
+  gameSanctions: {
+    type: Array as PropType<Sanction[]>,
+    required: false,
+  },
 })
 
-const emit = defineEmits(['hide'])
+const emit = defineEmits(['hide', 'sanction:stored'])
 
 const app = useNuxtApp()
 const toast = useEasyToast()
 
+const sanctionService = new SanctionService()
+
 const showDialog = ref<boolean>(props.visible)
-const sanctionType = ref<SanctionTypeKey | undefined>(props.type)
+const selectedType = ref<SanctionTypeKey | undefined>(props.type)
 const selectedMember = ref<TeamMember>()
 const selectedSeverity = ref<SanctionSeverityKey>()
 const showObservations = ref<boolean>(false)
@@ -52,7 +66,7 @@ const showEnsureSubmitSanction = ref<boolean>(false)
 
 const form = computed((): SanctionStoreRequest => {
   return {
-    type: sanctionType.value,
+    type: selectedType.value,
     severity: selectedSeverity.value,
     playerProfileId: selectedMember.value?.coach
       ? undefined
@@ -68,12 +82,12 @@ const form = computed((): SanctionStoreRequest => {
 
 const isValidSanctionedTeam = computed(
   (): boolean =>
-    sanctionType.value === SanctionType.team && !!form.value?.teamId,
+    selectedType.value === SanctionType.team && !!form.value?.teamId,
 )
 
 const isValidSanctionedMember = computed(
   (): boolean =>
-    sanctionType.value === SanctionType.member &&
+    selectedType.value === SanctionType.member &&
     (!!form.value?.playerProfileId || !!form.value?.coachProfileId),
 )
 
@@ -85,21 +99,51 @@ const isValidForm = computed(
     (isValidSanctionedTeam.value || isValidSanctionedMember.value),
 )
 
-const nameToSanction = computed((): string =>
-  sanctionType.value === SanctionType.team
+const nameToSanction = computed((): string | undefined =>
+  selectedType.value === SanctionType.team
     ? props.team.name
-    : getFullName(selectedMember.value as TeamMember),
+    : getFullName(selectedMember.value),
 )
 
+const setSanctions = computed((): Sanction[] =>
+  mergeSanctionsRemovingDuplicates(
+    props.currentSet.sanctions ?? [],
+    props.gameSanctions ?? [],
+  ),
+)
+
+const availableSeverities = computed((): SanctionSeverityKey[] => {
+  switch (selectedType.value) {
+    case SanctionType.team:
+      return getAvailableTeamSanctionSeverities(
+        setSanctions.value,
+        form.value.setId,
+        form.value.teamId,
+      )
+    case SanctionType.member:
+      return getAvailableMemberSanctionSeverities(
+        setSanctions.value,
+        form.value.setId,
+        form.value.teamId,
+        form.value.playerProfileId ?? form.value.coachProfileId,
+        form.value.playerProfileId
+          ? (SanctionMember.player as SanctionMemberKey)
+          : (SanctionMember.coach as SanctionMemberKey),
+      )
+    default:
+      return []
+  }
+})
+
 const hide = () => {
-  sanctionType.value = SanctionType.team
+  selectedType.value = SanctionType.team
   selectedMember.value = undefined
   emit('hide')
 }
 
 const setSanctionType = (type: SanctionTypeKey) => {
   selectedMember.value = undefined
-  sanctionType.value = type
+  selectedType.value = type
 }
 
 const setSelectedMember = (member: TeamMember) => {
@@ -119,8 +163,28 @@ const ensureSubmitSanction = () => {
   showEnsureSubmitSanction.value = true
 }
 
-const submitSanction = () => {
-  if (!form.value) return
+const submitSanction = async () => {
+  if (!isValidForm.value) {
+    toast.error(app.$i18n.t('sanctions.invalid_form'))
+    return
+  }
+
+  const { data, error } = await sanctionService.store(form.value)
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  toast.success(
+    app.$i18n.t('sanctions.sanctioned.default', {
+      name: nameToSanction.value,
+    }),
+  )
+
+  emit('sanction:stored', mapApiSanctionToSanction(data.value.data.sanction))
+
+  hide()
 }
 
 watch(
@@ -156,7 +220,7 @@ onMounted(() => {
       <Heading tag="h5" class="mt-3">
         {{ props.team.name }}
       </Heading>
-      <template v-if="sanctionType === SanctionType.member && selectedMember">
+      <template v-if="selectedType === SanctionType.member && selectedMember">
         <CoachItem
           v-if="selectedMember.coach"
           class="pointer-events-none w-min whitespace-nowrap"
@@ -205,7 +269,7 @@ onMounted(() => {
           v-for="key in SanctionType"
           :key="key"
           class="sanction-navbar-item flex items-center justify-center"
-          :outlined="sanctionType !== key"
+          :outlined="selectedType !== key"
           @click="setSanctionType(key)"
         >
           <!-- <Icon :name="SanctionIcon[key]" size="1.5rem" class="mr-1" /> -->
@@ -214,22 +278,27 @@ onMounted(() => {
       </nav>
 
       <SanctionGrid
-        v-if="sanctionType === SanctionType.team"
+        v-if="selectedType === SanctionType.team"
         class="mt-6"
-        :type="sanctionType"
+        :type="selectedType"
+        :availableSeverities="availableSeverities"
         @sanction:selected="handleSeveritySelected"
       />
-      <template v-if="sanctionType === SanctionType.member">
+      <template v-if="selectedType === SanctionType.member">
         <TeamMemberSelector
           class="mt-6 w-full"
+          :currentSet="props.currentSet"
+          :team="props.team"
           :member="props.member"
           :members="props.members"
+          :setSanctions="setSanctions"
           @member:selected="setSelectedMember"
         />
 
         <SanctionGrid
           class="mt-6"
-          :type="sanctionType"
+          :type="selectedType"
+          :availableSeverities="availableSeverities"
           @sanction:selected="handleSeveritySelected"
         />
       </template>
@@ -271,6 +340,6 @@ onMounted(() => {
 
 <script lang="ts">
 export default {
-  name: 'GameSanctionDialog',
+  name: 'SanctionDialog',
 }
 </script>

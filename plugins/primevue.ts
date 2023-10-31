@@ -17,6 +17,7 @@ import Tooltip from 'primevue/tooltip'
 import Checkbox from 'primevue/checkbox'
 import Calendar from 'primevue/calendar'
 import Tag from 'primevue/tag'
+import Badge from 'primevue/badge'
 
 export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(PrimeVue, config)
@@ -35,6 +36,7 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('Checkbox', Checkbox)
   nuxtApp.vueApp.component('Calendar', Calendar)
   nuxtApp.vueApp.component('Tag', Tag)
+  nuxtApp.vueApp.component('Badge', Badge)
 
   nuxtApp.vueApp.use(ToastService)
 

@@ -25,7 +25,6 @@ const setObservations = (observations?: string) => {
 }
 
 const onActionButtonClick = () => {
-  console.log(props.call)
   if (props.call.signedAt) {
     toast.error(app.$i18n.t('reports.closed'))
     return

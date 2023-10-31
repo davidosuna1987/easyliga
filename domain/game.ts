@@ -18,6 +18,7 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { Division } from '@/domain/division'
 import { League } from '@/domain/league'
+import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 import moment from 'moment'
 
 export const GAME_OBSERVATIONS_DELAY = 10
@@ -73,6 +74,7 @@ export type GameRelations = {
   sets?: Set[]
   calls?: Call[]
   currentSet?: Set
+  sanctions?: Sanction[]
 }
 
 export type GameRelationsCount = {
@@ -130,10 +132,15 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   end: apiGame.end,
   status: apiGame.status,
   observations: apiGame.observations,
+
   sets: apiGame.sets?.map(mapApiSetToSet),
   currentSet: apiGame.current_set
     ? mapApiSetToSet(apiGame.current_set)
     : undefined,
+  sanctions: apiGame.sanctions
+    ? apiGame.sanctions.map(mapApiSanctionToSanction)
+    : undefined,
+
   localTeamSetsWonCount: apiGame.local_team_sets_won_count,
   visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count,
 })

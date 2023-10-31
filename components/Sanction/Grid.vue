@@ -11,6 +11,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  availableSeverities: {
+    type: Array as PropType<SanctionSeverityKey[]>,
+    default: [],
+  },
 })
 
 const emit = defineEmits(['sanction:selected'])
@@ -34,12 +38,26 @@ const handleSanctionSelected = (severity: SanctionSeverityKey) => {
     <SanctionItem
       v-for="key in iterationSeverities"
       :key="key"
+      :disabled="!props.availableSeverities.includes(key as SanctionSeverityKey)"
       :severity="key"
       :selected="selectedSanction === key"
       @sanction:selected="handleSanctionSelected"
     />
   </div>
 </template>
+
+<style scoped lang="scss">
+.easy-sanction-grid-component {
+  .easy-sanction-item-component {
+    padding: 1rem;
+
+    &:hover {
+      cursor: pointer;
+      border-color: var(--primary-color-medium);
+    }
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

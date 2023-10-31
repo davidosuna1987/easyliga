@@ -37,6 +37,7 @@ import {
   TimeoutStatusEnum,
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
+import { Sanction, SanctionSeverity } from '@/domain/sanction'
 
 const auth = useAuthStore()
 const app = useNuxtApp()
@@ -153,6 +154,13 @@ const timeoutRunning = computed(
     ),
 )
 
+const gameSanctions = computed(
+  (): Sanction[] =>
+    gameInitialData.value?.game?.sanctions?.filter(
+      sanction => sanction.severity === SanctionSeverity.game,
+    ) ?? [],
+)
+
 const leftSideTeamSetsWonCount = computed((): number =>
   localTeamCall.value?.teamId === leftSideTeam.value?.id
     ? gameInitialData.value?.game.localTeamSetsWonCount ?? 0
@@ -176,7 +184,7 @@ const getGameInitialData = async () => {
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
     {
-      with: 'currentSet.rotations.players,currentSet.timeouts',
+      with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts',
       with_count: 'localTeamSetsWon,visitorTeamSetsWon',
     },
   )
@@ -532,14 +540,16 @@ const listenEvents = () => {
 //   leaveTimeoutStatusUpdatedEvent()
 // }
 
-onBeforeMount(() => {
-  getGameInitialData()
-})
+onMounted(getGameInitialData)
 </script>
 
 <template>
   <div class="easy-referee-game-arbitrate-component">
     <Loading v-if="loadingApi" />
+
+    <!-- <Button class="ml-36" @click="easyEmit('game-call-sidebar:open', 'left')"
+      >LEFT</Button
+    > -->
 
     <GameStatus v-if="gameInitialData" :status="gameInitialData.game.status" />
     <RefereeGameTeamSetsWon
@@ -568,6 +578,7 @@ onBeforeMount(() => {
       :leftSideTeamCall="leftSideTeamCall"
       :rightSideTeamCall="rightSideTeamCall"
       :currentSet="gameInitialData.game.currentSet"
+      :gameSanctions="gameSanctions"
       :leftSideTeamRotation="leftSideTeamRotation"
       :rightSideTeamRotation="rightSideTeamRotation"
       :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
@@ -589,6 +600,7 @@ onBeforeMount(() => {
       @timeout:start="startTimeout"
       @observations:dialog="showObservationsDialog = true"
       @timeout:init="addTimeout"
+      @sanction:stored="getGameInitialData"
     />
 
     <ObservationsDialog
@@ -597,7 +609,7 @@ onBeforeMount(() => {
       :submitLabel="$t('forms.store')"
       @hide="showObservationsDialog = false"
       @observations:changed="setObservations"
-      @submit="submitObservations"
+      @observations:submit="submitObservations"
     />
 
     <!-- TODO: remove in production -->

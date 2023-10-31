@@ -41,7 +41,7 @@ const goToEditTeam = (team: Team) => {
   navigateTo(`/club/teams/${team.id}/edit`)
 }
 
-onBeforeMount(getAuthuserClubWithSedesAndTeams)
+onMounted(getAuthuserClubWithSedesAndTeams)
 </script>
 
 <template>

@@ -442,7 +442,8 @@
     "libero_not_allowed_in_attack_positions": "El líbero no puede jugar en posiciones de ataque",
     "only_one_libero_in_court_allowed": "Sólo puedes alinear un líbero en la rotación",
     "max_player_change_changes_reached": "No puedes volver a sustituir a {name} en este set",
-    "max_changes_reached": "No puedes hacer más de {num} cambios en cada set"
+    "max_changes_reached": "No puedes hacer más de {num} cambios en cada set",
+    "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación"
   },
   "sets": {
     "set": "Sets | Set | Sets",
@@ -543,7 +544,17 @@
     },
     "invalid_form": "La sanción no se puede enviar porque no está completa",
     "store_disclaimer": "¿Seguro que quieres realizar esta sanción?",
-    "to_sanction_name": "Sancionar a {name}"
+    "to_sanction_name": "Sancionar a {name}",
+    "sanctioned": {
+      "default": "{name} ha sido sancionado",
+      "warning": "{name} ha sido amonestado con tarjeta amarilla",
+      "point": "{name} ha sido sancionado con tarjeta roja",
+      "set": "{name} ha sido amonestado y expulsado del set",
+      "game": "{name} ha sido amonestado y expulsado del partido"
+    },
+    "player_change_needed": "{name} está sancionado y debe ser sustituido | Hay jugadores sancionados en el campo que deben ser sustituidos",
+    "players_to_replace": "Hay jugadores sancionados por reemplazar",
+    "expelled_player": "Jugador expulsado | Jugadores expulsados"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

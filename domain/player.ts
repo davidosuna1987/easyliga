@@ -2,6 +2,7 @@ import { ApiPlayer } from '@/types/api/auth'
 import { CallPlayerData } from '@/domain/call'
 import { ApiPlayerRequest } from '@/types/api/player'
 import { Coach, TeamMember } from '@/domain/team'
+import { Profile } from '@/domain/profile'
 
 export type Player = {
   profileId: number
@@ -30,13 +31,14 @@ export const mapApiPlayersToPlayers = (
 }
 
 export const getFullName = (
-  profile: Player | CallPlayerData | TeamMember | Coach,
-): string => {
+  profile?: Profile | Player | CallPlayerData | TeamMember | Coach,
+): string | undefined => {
+  if (!profile) return undefined
   const { firstName, lastName } = profile
   return lastName ? `${firstName} ${lastName}` : firstName
 }
 
-export const mapCallPlayerDataToPlayers = (
+export const mapCallPlayerDataToPlayer = (
   callPlayerData: CallPlayerData,
 ): Player => {
   return {

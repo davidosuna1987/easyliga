@@ -18,21 +18,33 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['sanction:selected'])
 
 const colorClass = computed((): string =>
   props.severity === SanctionSeverity.point
-    ? 'text-[var(--danger-color)]'
+    ? props.disabled
+      ? 'text-[var(--tertiary-color)]'
+      : 'text-[var(--danger-color)]'
     : 'text-[var(--tertiary-color)]',
 )
 </script>
 
 <template>
   <div
-    class="easy-severity-item-component flex justify-center items-center"
-    :class="[`severity-${props.severity}`, { 'is-selected': props.selected }]"
+    class="easy-sanction-item-component flex justify-center items-center"
+    :class="[
+      `severity-${props.severity}`,
+      {
+        'is-selected': props.selected,
+        'is-muted': props.disabled,
+      },
+    ]"
     @click="emit('sanction:selected', props.severity)"
   >
     <Icon
@@ -54,29 +66,23 @@ const colorClass = computed((): string =>
 </template>
 
 <style scoped lang="scss">
-.easy-severity-item-component {
+.easy-sanction-item-component {
   border: solid 2px transparent;
   border-radius: 1rem;
-  padding: 1rem;
 
   &.severity-set {
     .severity-item {
       &:first-child {
         position: relative;
-        left: 1.5rem;
+        left: 12.5%;
         z-index: 1;
       }
 
       &:last-child {
         position: relative;
-        right: 1.5rem;
+        right: 12.5%;
       }
     }
-  }
-
-  &:hover {
-    cursor: pointer;
-    border-color: var(--primary-color-medium);
   }
 
   &.is-selected {

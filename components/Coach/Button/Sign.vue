@@ -25,7 +25,6 @@ const showSignDialog = ref<boolean>(false)
 const actionButtonDisabled = computed(() => !!props.call.signedAt)
 
 const onActionButtonClick = () => {
-  console.log(props.call)
   if (props.call.signedAt) {
     toast.error(app.$i18n.t('reports.closed'))
     return
