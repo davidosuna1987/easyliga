@@ -8,14 +8,14 @@ declare global {
   }
 }
 
-const config = useRuntimeConfig()
-
 export default defineNuxtPlugin(() => {
+  const config = useRuntimeConfig()
+
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'pusher',
     key: config.public.pusherAppKey,
-    wsHost: config.public.apiUrl,
+    wsHost: config.public.pusherAppHost,
     wsPort: 6001,
     wssPort: 6001,
     encrypted: true,

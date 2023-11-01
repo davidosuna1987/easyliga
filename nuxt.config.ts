@@ -22,6 +22,7 @@ export default defineNuxtConfig({
       appUrl: process.env.APP_URL,
       apiUrl: process.env.API_URL,
       pusherAppKey: process.env.PUSHER_APP_KEY,
+      pusherAppHost: process.env.PUSHER_APP_HOST,
     },
     devtools: { enabled: true },
   },
