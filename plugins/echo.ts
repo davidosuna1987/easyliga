@@ -12,8 +12,8 @@ export default defineNuxtPlugin(() => {
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'key',
-    wsHost: 'api.easyliga.test',
+    key: process.env.PUSHER_APP_KEY,
+    wsHost: process.env.API_URL,
     wsPort: 6001,
     wssPort: 6001,
     encrypted: true,
