@@ -224,9 +224,13 @@ const gameSanctions = computed(() =>
 )
 
 const closeSidebars = (): void => {
-  console.log('closeSidebars')
   sidebarOpened.value[TeamSideEnum.left] = false
   sidebarOpened.value[TeamSideEnum.right] = false
+}
+
+const toggleSidebars = (teamSide: TeamSide): void => {
+  console.log('toggleSidebars', teamSide)
+  easyEmit(`game-call-sidebar:${sidebarAction.value[teamSide]}`, teamSide)
 }
 
 const setMemberToSanction = (
@@ -273,30 +277,6 @@ onUnmounted(() => {
 
 <template>
   <div class="easy-game-sidebars-court-component">
-    <div class="sidebars-navbar flex justify-between">
-      <Button
-        class="p-2"
-        rounded
-        @click="
-          easyEmit(`game-call-sidebar:${sidebarAction.left}`, TeamSideEnum.left)
-        "
-      >
-        <Icon name="ph:users-three-fill" size="1.25rem" />
-      </Button>
-
-      <Button
-        class="p-2"
-        rounded
-        @click="
-          easyEmit(
-            `game-call-sidebar:${sidebarAction.right}`,
-            TeamSideEnum.right,
-          )
-        "
-      >
-        <Icon name="ph:users-three-fill" size="1.25rem" />
-      </Button>
-    </div>
     <div
       class="sidebar-wrapper left"
       :class="{ 'is-opened': !!sidebarOpened[TeamSideEnum.left] }"
@@ -348,6 +328,7 @@ onUnmounted(() => {
         @countdown:ended="emit('countdown:ended')"
         @timeout:init="emit('timeout:init', $event)"
         @sanction:stored="emit('sanction:stored', $event)"
+        @sidebar:toggle="toggleSidebars($event)"
       />
     </div>
     <div

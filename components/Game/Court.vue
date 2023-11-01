@@ -114,6 +114,7 @@ const emit = defineEmits([
   'countdown:ended',
   'timeout:init',
   'sanction:stored',
+  'sidebar:toggle',
 ])
 
 const showCountdown = ref<boolean>(false)
@@ -376,7 +377,7 @@ onMounted(setInitialShowCountdown)
           class="actions grid place-content-center"
         >
           <Button
-            class="px-12"
+            class="px-12 mb-3"
             :label="$t('rotations.waiting_player_changes')"
             outlined
             :loading="true"
@@ -385,7 +386,7 @@ onMounted(setInitialShowCountdown)
         </div>
         <div v-if="timeoutRunning" class="actions grid place-content-center">
           <Button
-            class="px-12"
+            class="px-12 mb-3"
             :label="$t('timeouts.running')"
             severity="danger"
             outlined
@@ -402,6 +403,7 @@ onMounted(setInitialShowCountdown)
             !currentSet.firstServeTeamId ||
             ['warmup', 'resting'].includes(gameStatus)
           "
+          class="mb-3"
           :currentSet="currentSet"
           :leftSideTeam="leftSideTeam"
           :rightSideTeam="rightSideTeam"
@@ -411,7 +413,7 @@ onMounted(setInitialShowCountdown)
         <div class="flex flex-col gap-8">
           <GameChangesActions
             v-if="gameStatus === 'playing'"
-            class="w-full"
+            class="w-full mb-3"
             :leftSideTeamCall="leftSideTeamCall"
             :rightSideTeamCall="rightSideTeamCall"
             :leftSideTeamRotation="leftSideTeamRotation"
@@ -419,7 +421,7 @@ onMounted(setInitialShowCountdown)
           />
           <GamePointActions
             v-if="gameStatus === 'playing'"
-            class="w-full"
+            class="w-full mb-3"
             :currentSet="currentSet"
             :undoPointButtonDisabled="undoPointButtonDisabled"
             :undoLastPointCountdown="undoLastPointCountdown"
@@ -428,7 +430,7 @@ onMounted(setInitialShowCountdown)
           />
           <GameTimeoutSanctionActions
             v-if="gameStatus !== 'finished'"
-            class="mt-6"
+            class="mt-6 mb-3"
             :leftSideTeam="leftSideTeam"
             :rightSideTeam="rightSideTeam"
             :leftSideTeamMembers="leftSideTeamMembers"
@@ -440,6 +442,7 @@ onMounted(setInitialShowCountdown)
             :gameStatus="gameStatus"
             @timeout:init="emit('timeout:init', $event)"
             @sanction:stored="emit('sanction:stored', $event)"
+            @sidebar:toggle="emit('sidebar:toggle', $event)"
           />
         </div>
         <div
@@ -447,7 +450,7 @@ onMounted(setInitialShowCountdown)
           class="actions grid place-content-center"
         >
           <Button
-            class="px-12"
+            class="px-12 mb-3"
             :label="$t('games.status.finished')"
             outlined
             disabled
@@ -457,7 +460,7 @@ onMounted(setInitialShowCountdown)
       <a
         v-if="gameStatus !== 'finished' || showCountdown"
         href=""
-        class="w-full text-center block mt-5 text-primary"
+        class="w-full text-center block mt-5 mb-3 text-primary"
         @click.prevent="emit('observations:dialog')"
       >
         {{ $t('observations.record') }}

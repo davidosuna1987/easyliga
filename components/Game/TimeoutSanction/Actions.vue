@@ -44,7 +44,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['timeout:init', 'sanction:stored'])
+const emit = defineEmits(['timeout:init', 'sanction:stored', 'sidebar:toggle'])
 
 const app = useNuxtApp()
 const toast = useEasyToast()
@@ -97,7 +97,6 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
 })
 
 const setSideTeamToTimeout = (side: TeamSide) => {
-  console.log(props[`${side}SideTeamTimeouts`])
   if (props[`${side}SideTeamTimeouts`]?.length >= MAX_TIMEOUTS_PER_SET) {
     toast.error(
       app.$i18n.t('errors.max_timeouts', { max: MAX_TIMEOUTS_PER_SET }),
@@ -111,6 +110,13 @@ const setSideTeamToTimeout = (side: TeamSide) => {
 <template>
   <div class="game-timeout-sanction-actions-component flex justify-between">
     <div class="flex gap-3">
+      <Button
+        class="p-3 relative"
+        rounded
+        @click="emit('sidebar:toggle', TeamSideEnum.left)"
+      >
+        <Icon name="ph:users-three-fill" size="1.5rem" />
+      </Button>
       <Button
         class="p-3 relative"
         rounded
@@ -153,6 +159,13 @@ const setSideTeamToTimeout = (side: TeamSide) => {
           :value="props.rightSideTeamTimeouts?.length"
           rounded
         />
+      </Button>
+      <Button
+        class="p-3 relative"
+        rounded
+        @click="emit('sidebar:toggle', TeamSideEnum.right)"
+      >
+        <Icon name="ph:users-three-fill" size="1.5rem" />
       </Button>
     </div>
 

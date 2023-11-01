@@ -20,21 +20,21 @@
     }
 
     .sidebar-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(3px);
-      height: 100svh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      padding: 0;
-      opacity: 0;
-      overflow: hidden;
-      pointer-events: none;
-      z-index: 1001;
+      &:before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(3px);
+        height: 100svh;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        transition: all 350ms ease-in-out;
+        z-index: 1001;
+      }
 
       .sidebar-content {
         max-height: calc(100vh - 77px);
@@ -42,8 +42,11 @@
       }
 
       .easy-game-call-sidebar-component {
-        position: relative;
-        bottom: -100%;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin-inline: auto;
         width: 100%;
         max-width: 450px;
         height: fit-content;
@@ -54,14 +57,18 @@
         transition: all 350ms ease-in-out;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
+        transform: translateY(100%);
+        z-index: 1002;
       }
 
       &.is-opened {
-        opacity: 1;
-        pointer-events: all;
+        &:before {
+          opacity: 1;
+          pointer-events: all;
+        }
 
         .easy-game-call-sidebar-component {
-          bottom: 0;
+          transform: translateY(0);
         }
       }
     }
@@ -157,18 +164,12 @@
       }
 
       .sidebar-wrapper {
-        position: static;
-        display: block;
-        height: auto;
-        width: 100%;
-        padding: var(--app-margin);
-        background: transparent;
-        opacity: 1;
-        pointer-events: all;
-        z-index: initial;
+        &:before {
+          content: none;
+        }
 
         .easy-game-call-sidebar-component {
-          bottom: 0;
+          transform: none;
           max-height: none;
           transition: none;
           border-bottom-left-radius: var(--border-radius);
