@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
-import { LoginData } from '@/types/api/auth'
+import { ApiLoginRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
 const auth = useAuthStore()
 const toast = useEasyToast()
 
-const form = ref<LoginData>({
+const form = ref<ApiLoginRequest>({
   email: '',
   password: '',
 })

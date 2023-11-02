@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
-import { RegisterData } from '@/types/api/auth'
+import { ApiRegisterRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
 const auth = useAuthStore()
 const toast = useEasyToast()
 
-const form = ref<RegisterData>({
+const form = ref<ApiRegisterRequest>({
+  first_name: '',
+  last_name: '',
   email: '',
   password: '',
   password_confirm: '',
@@ -33,6 +35,20 @@ async function handleRegister() {
     :buttonLabel="$t('auth.register')"
     @submit="handleRegister"
   >
+    <FormLabel
+      for="first_name"
+      :label="$t('forms.name')"
+      :error="errors?.first_name?.[0]"
+    />
+    <InputText id="first_name" v-model="form.first_name" type="text" />
+
+    <FormLabel
+      for="last_name"
+      :label="$t('forms.surnames')"
+      :error="errors?.last_name?.[0]"
+    />
+    <InputText id="last_name" v-model="form.last_name" type="text" />
+
     <FormLabel
       for="email"
       :label="$t('forms.email')"

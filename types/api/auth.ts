@@ -25,27 +25,29 @@ export type ApiPlayer = ApiProfile & {
 
 export type Role = string
 
-export type LoginData = {
+export type ApiLoginRequest = {
   email: string
   password: string
 }
 
-export type RegisterData = {
+export type ApiRegisterRequest = {
+  first_name: string
+  last_name: string
   email: string
   password: string
   password_confirm: string
 }
 
-export type VerifyData = {
+export type ApiVerifyRequest = {
   user: number
   token: string
 }
 
-export type ForgotData = {
+export type ApiForgotRequest = {
   email: string
 }
 
-export type ResetData = {
+export type ApiResetRequest = {
   email: string
   token: string
   password: string

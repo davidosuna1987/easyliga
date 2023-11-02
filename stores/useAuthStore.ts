@@ -2,14 +2,14 @@ import { defineStore } from 'pinia'
 import { useApi } from '@/composables/useApi'
 import {
   AuthuserResponse,
-  ForgotData,
-  LoginData,
+  ApiForgotRequest,
+  ApiLoginRequest,
   ApiLoginResponse,
   ApiMessageResponse,
-  RegisterData,
-  ResetData,
+  ApiRegisterRequest,
+  ApiResetRequest,
   ApiUser,
-  VerifyData,
+  ApiVerifyRequest,
   ApiFreshData,
   ApiLoginData,
 } from '@/types/api/auth'
@@ -34,10 +34,10 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = response.data.value?.data.user as ApiUser
   }
 
-  const login = async (loginData: LoginData) => {
+  const login = async (data: ApiLoginRequest) => {
     const response = await useApi<ApiLoginResponse>('auth/login', {
       method: 'POST',
-      body: loginData,
+      body: data,
     })
 
     if (response.data?.value?.data) {
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
     return response
   }
 
-  const register = async (data: RegisterData) => {
+  const register = async (data: ApiRegisterRequest) => {
     const response = await useApi<ApiMessageResponse>('auth/register', {
       method: 'POST',
       body: data,
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
     return response
   }
 
-  const verify = async (data: VerifyData) => {
+  const verify = async (data: ApiVerifyRequest) => {
     const response = await useApi<ApiMessageResponse>(
       `auth/verify/${data.user}/${data.token}`,
       {
@@ -74,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
     navigateTo('/login')
   }
 
-  const forgot = async (data: ForgotData) => {
+  const forgot = async (data: ApiForgotRequest) => {
     const response = await useApi<ApiMessageResponse>('auth/forgot', {
       method: 'POST',
       body: data,
@@ -83,7 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
     return response
   }
 
-  const reset = async (data: ResetData) => {
+  const reset = async (data: ApiResetRequest) => {
     const response = await useApi<ApiMessageResponse>('auth/reset', {
       method: 'POST',
       body: data,

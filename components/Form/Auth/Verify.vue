@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { VerifyData } from '@/types/api/auth'
+import { ApiVerifyRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
 const route = useRoute()
 const auth = useAuthStore()
 const toast = useEasyToast()
 
-const form = ref<VerifyData>({
+const form = ref<ApiVerifyRequest>({
   user: Number(route.params.user),
   token: String(route.params.token),
 })
