@@ -30,16 +30,16 @@ export default defineNuxtConfig({
   build: {
     transpile: ['primevue'],
   },
-  // pwa: {
-  //   workbox: {
-  //     enabled: true,
-  //   },
-  //   manifest: {
-  //     name: process.env.APP_NAME,
-  //     short_name: process.env.APP_NAME,
-  //     description: process.env.APP_DESCRIPTION,
-  //     theme_color: '#ffffff',
-  //     lang: 'es',
-  //   },
-  // },
+  pwa: {
+    workbox: {
+      enabled: true,
+    },
+    manifest: {
+      name: process.env.APP_NAME,
+      short_name: process.env.APP_NAME,
+      description: process.env.APP_DESCRIPTION,
+      theme_color: '#ffffff',
+      lang: 'es',
+    },
+  },
 })
