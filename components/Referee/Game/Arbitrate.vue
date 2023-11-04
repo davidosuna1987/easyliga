@@ -20,6 +20,10 @@ import { Coach, Team, TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
 import {
+  LAST_SET_POINTS_TO_WIN,
+  MAX_SETS_PER_MATCH,
+  POINT_DIFFERENCE_TO_WIN,
+  SET_POINTS_TO_WIN,
   SetSide,
   SetStartRequest,
   mapSetStartRequestToApiSetStartRequest,
@@ -69,6 +73,7 @@ const pointTimeout = ref<NodeJS.Timeout>()
 const pointInterval = ref<NodeJS.Timeout>()
 
 const formPoint = ref<ApiPointStoreRequest>()
+const showSetPointWillEndSetDialog = ref<boolean>()
 
 const leftSideTeam = computed((): Team | undefined =>
   !gameInitialData.value?.game.currentSet?.localTeamSide ||
@@ -179,7 +184,43 @@ const servingTeamId = computed((): number | undefined =>
     : gameInitialData.value?.game?.currentSet?.firstServeTeamId ?? undefined,
 )
 
-const getGameInitialData = async () => {
+const winnerTeamIfSumPoint = computed((): Team | undefined => {
+  if (!formPoint.value || !gameInitialData.value?.game) return undefined
+
+  const game = gameInitialData.value.game
+
+  const winnerTeamId = formPoint.value.winner_team_id
+  const winnerTeam =
+    winnerTeamId === leftSideTeam.value?.id ? leftSideTeam : rightSideTeam
+
+  const localTeamId = game.localTeamId
+
+  const winnerTeamScore =
+    winnerTeamId === localTeamId
+      ? formPoint.value.local_team_score
+      : formPoint.value.visitor_team_score
+
+  const loserTeamScore =
+    winnerTeamId === localTeamId
+      ? formPoint.value.visitor_team_score
+      : formPoint.value.local_team_score
+
+  const pointsToWin =
+    game.currentSet?.number === MAX_SETS_PER_MATCH
+      ? LAST_SET_POINTS_TO_WIN
+      : SET_POINTS_TO_WIN
+
+  if (
+    winnerTeamScore >= pointsToWin &&
+    winnerTeamScore - loserTeamScore >= POINT_DIFFERENCE_TO_WIN
+  ) {
+    return winnerTeam.value
+  }
+
+  return undefined
+})
+
+const getGameInitialData = async (firstCall: boolean = false) => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
@@ -207,14 +248,20 @@ const getGameInitialData = async () => {
     gameInitialData.value.game.observations ?? undefined
   loadingApi.value = false
 
-  window.Echo.leaveAllChannels()
-  listenEvents()
+  if (firstCall) {
+    window.Echo.leaveAllChannels()
+    listenEvents()
+  }
 }
 
-const sumPoint = async (type: TeamType) => {
-  loadingApi.value = true
+const sumPoint = async () => {
+  if (!formPoint.value) return
 
-  createFormPoint(type)
+  if (showSetPointWillEndSetDialog.value) {
+    showSetPointWillEndSetDialog.value = false
+  }
+
+  loadingApi.value = true
 
   if (formPoint.value) {
     const { error } = await pointService.store(formPoint.value)
@@ -247,6 +294,8 @@ const sumPoint = async (type: TeamType) => {
         resetPointInterval()
       }, delay)
     }
+
+    formPoint.value = undefined
   }
 }
 
@@ -275,7 +324,7 @@ const resetPointInterval = () => {
   clearTimeout(pointTimeout.value)
 }
 
-const createFormPoint = (type?: TeamType) => {
+const createFormPoint = (type: TeamType) => {
   if (!gameInitialData.value?.game.currentSet) return
 
   formPoint.value = {
@@ -301,6 +350,12 @@ const createFormPoint = (type?: TeamType) => {
         ? Number(lastPoint.value?.visitorTeamScore ?? 0) + 1
         : Number(lastPoint.value?.visitorTeamScore ?? 0),
     observations: null,
+  }
+
+  if (winnerTeamIfSumPoint.value) {
+    showSetPointWillEndSetDialog.value = true
+  } else {
+    sumPoint()
   }
 }
 
@@ -540,7 +595,9 @@ const listenEvents = () => {
 //   leaveTimeoutStatusUpdatedEvent()
 // }
 
-onMounted(getGameInitialData)
+onMounted(() => {
+  getGameInitialData(true)
+})
 </script>
 
 <template>
@@ -594,7 +651,7 @@ onMounted(getGameInitialData)
       :timeoutRunning="timeoutRunning"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
-      @point:sum="sumPoint"
+      @point:sum="createFormPoint"
       @point:undo="undoLastPoint"
       @set:start="startSet"
       @timeout:start="startTimeout"
@@ -611,6 +668,39 @@ onMounted(getGameInitialData)
       @observations:changed="setObservations"
       @observations:submit="submitObservations"
     />
+
+    <DialogBottom
+      class="easy-observations-dialog-component"
+      :visible="!!showSetPointWillEndSetDialog"
+      @hide="showSetPointWillEndSetDialog = false"
+    >
+      <template #header>
+        <Heading tag="h6">{{ $t('sets.close') }}</Heading>
+      </template>
+
+      <p>
+        {{
+          $t('games.point_will_end_set', {
+            teamName: winnerTeamIfSumPoint?.name,
+          })
+        }}
+      </p>
+
+      <p class="mt-3">{{ $t('games.point_will_end_set_alert') }}</p>
+
+      <template #footer>
+        <div class="flex justify-end gap-3 mt-3">
+          <Button
+            class="grayscale"
+            :label="$t('forms.cancel')"
+            severity="info"
+            outlined
+            @click="showSetPointWillEndSetDialog = false"
+          />
+          <Button :label="$t('forms.accept')" @click="sumPoint()" />
+        </div>
+      </template>
+    </DialogBottom>
 
     <!-- TODO: remove in production -->
     <div v-if="auth.hasRole('staff')" class="flex items-center mt-5">

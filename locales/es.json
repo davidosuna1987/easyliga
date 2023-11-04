@@ -229,7 +229,9 @@
     "injury": "Lesión | Lesiones",
     "close_acta": "Cerrar acta",
     "change_window": "Ventana de cambios",
-    "change_window_num": "Ventana de cambios {num}"
+    "change_window_num": "Ventana de cambios {num}",
+    "point_will_end_set": "Al sumar este punto, {teamName} será el ganador del set.",
+    "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?"
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -453,7 +455,8 @@
     "select_team_sides": "Establece la posición de los equipos en el campo",
     "select_left_side_team": "Selecciona el equipo que jugará en el lado izquierdo",
     "select_right_side_team": "Selecciona el equipo que jugará en el lado derecho",
-    "select_first_serve_team": "Selecciona el equipo que sacará primero"
+    "select_first_serve_team": "Selecciona el equipo que sacará primero",
+    "close": "Cerrar set"
   },
   "points": {
     "point": "Punto | Puntos",
