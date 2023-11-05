@@ -25,3 +25,5 @@ logs
 # mkcert localhost
 localhost-key.pem
 localhost.pem
+
+/todo.txt
