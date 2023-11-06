@@ -20,8 +20,7 @@ export default defineNuxtPlugin(() => {
     wssPort: 6001,
     encrypted: true,
     cluster: 'mt1',
-    forceTLS: false,
-    disableStats: true,
+    forceTLS: true,
   })
 })
 
