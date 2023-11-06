@@ -15,7 +15,7 @@ export default defineNuxtPlugin(() => {
   window.Echo = new Echo({
     broadcaster: 'pusher',
     key: config.public.pusherAppKey,
-    wsHost: config.public.pusherAppHost,
+    wsHost: '127.0.0.1',
     wsPort: 6001,
     wssPort: 6001,
     encrypted: true,
