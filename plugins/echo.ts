@@ -21,6 +21,7 @@ export default defineNuxtPlugin(() => {
     encrypted: true,
     cluster: 'mt1',
     forceTLS: true,
+    disableStats: true,
   })
 })
 
