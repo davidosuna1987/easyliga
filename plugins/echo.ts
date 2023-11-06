@@ -11,11 +11,20 @@ declare global {
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
 
+  const subdomain = config.public.appEnv !== 'production' ? 'api' : 'socket'
+  const domain =
+    config.public.appEnv !== 'production'
+      ? 'easyliga.test'
+      : window.location.hostname
+  const pusherKey = 'FhtsfC274mzSEriQdvseeFHLnOLxXvTW'
+  const pusherHost = `${subdomain}.${domain.replace('www.', '')}`
+  console.log({ pusherAppHost: config.public.pusherAppHost, pusherHost })
+
   window.Pusher = Pusher
   window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: config.public.pusherAppKey,
-    wsHost: config.public.pusherAppHost,
+    key: pusherKey,
+    wsHost: pusherHost,
     wsPort: 6001,
     wssPort: 6001,
     encrypted: true,
