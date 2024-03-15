@@ -13,6 +13,15 @@ export default class FederationService {
     })
   }
 
+  scopeWithLeagues(scope: FederationScope, params?: Record<string, string>) {
+    return useApi<ApiFederationResponse>(
+      `federations/scope-with-leagues/${scope}`,
+      {
+        params,
+      },
+    )
+  }
+
   clubs(federationId: number, params?: Record<string, string>) {
     return useApi<ApiTeamResponse>(`federations/${federationId}/clubs/fetch`, {
       params,

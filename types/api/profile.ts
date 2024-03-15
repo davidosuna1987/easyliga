@@ -30,6 +30,22 @@ export type ApiProfileResponse = {
   errors: null
 }
 
+export type ApiProfilesResponse = {
+  success: boolean
+  data: {
+    profiles: ApiProfile[]
+  }
+  errors: null
+}
+
+export type ApiClubTeamPlayerProfileUpdateResponse = {
+  success: boolean
+  data: {
+    profile: ApiProfile
+  }
+  errors: null
+}
+
 export type ApiProfileUpdateRequest = {
   email: string | null
   first_name: string

@@ -49,6 +49,8 @@ export type ApiTeamsResponse = {
 
 export type ApiTeamRequest = {
   name: string
+  club_id: number | null
+  sede_id: number | null
   division_id: number | null
   category_id: number | null
   gender_id: number | null
