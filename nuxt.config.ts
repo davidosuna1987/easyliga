@@ -32,7 +32,7 @@ export default defineNuxtConfig({
   },
   pwa: {
     workbox: {
-      enabled: true,
+      enabled: false,
     },
     manifest: {
       name: process.env.APP_NAME,
