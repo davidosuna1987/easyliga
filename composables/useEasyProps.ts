@@ -1,9 +1,9 @@
 export default function useEasyProps() {
   const storage = useEasyStorage()
 
-  const get = (key: string) => {
+  const get = (key: string, removeAfterGet: boolean = true) => {
     const props = storage.get(`props:${key}`)
-    remove(key)
+    removeAfterGet && remove(key)
     return props ?? undefined
   }
 
