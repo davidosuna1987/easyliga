@@ -229,7 +229,6 @@ const closeSidebars = (): void => {
 }
 
 const toggleSidebars = (teamSide: TeamSide): void => {
-  console.log('toggleSidebars', teamSide)
   easyEmit(`game-call-sidebar:${sidebarAction.value[teamSide]}`, teamSide)
 }
 

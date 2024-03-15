@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Call, CallPlayerData, getPlayerDataByProfileId } from '@/domain/call'
+import { Set } from '@/domain/set'
 import {
   ATTACK_POSITIONS,
   ChangeType,
@@ -26,6 +27,10 @@ const props = defineProps({
   call: {
     type: Object as PropType<Call>,
     required: true,
+  },
+  currentSet: {
+    type: Object as PropType<Set>,
+    required: false,
   },
   rotation: {
     type: Object as PropType<Rotation>,
@@ -84,7 +89,7 @@ const expulsionSanctions = computed((): Sanction[] =>
     sanction =>
       sanction.severity === SanctionSeverity.game ||
       (sanction.severity === SanctionSeverity.set &&
-        sanction.setId === props.rotation?.setId),
+        sanction.setId === props.currentSet?.id),
   ),
 )
 

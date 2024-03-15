@@ -17,7 +17,7 @@ const sizeClass = computed(() => {
 
 <template>
   <div
-    v-if="shirtNumber"
+    v-if="shirtNumber !== undefined"
     class="easy-icon-shirt-number-component"
     :class="[sizeClass]"
   >

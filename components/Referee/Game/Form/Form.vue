@@ -12,7 +12,7 @@ import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
-import { ApiCourt } from 'types/api/court'
+import { ApiCourt } from '@/types/api/court'
 import { GameStorePreviewData } from '@/types/game'
 import { FederationScope } from '@/domain/federation'
 
@@ -102,10 +102,15 @@ const getGroupedLeagues = async () => {
 
   loadingLeagues.value = true
 
-  const response = await federationService.scope(FederationScope.NATIONAL, {
-    with: 'leagues',
-    where_has: `leagues:category_id:${selectedCategory.value.id},leagues:gender_id:${selectedGender.value.id}`,
-  })
+  const response = await federationService.scopeWithLeagues(
+    FederationScope.REGIONAL,
+    {
+      category_id: selectedCategory.value.id.toString(),
+      gender_id: selectedGender.value.id.toString(),
+      // with: 'leagues',
+      // where_has: `leagues:category_id:${selectedCategory.value.id},leagues:gender_id:${selectedGender.value.id}`,
+    },
+  )
   groupedLeagues.value = response.data.value?.data
     .federations as ApiFederation[]
   loadingLeagues.value = false
@@ -124,14 +129,15 @@ watch(selectedGender, async gender => {
 })
 
 watch(selectedLeague, async league => {
-  if (league) {
-    loadingTeams.value = true
-    const response = await teamService.fetch({
-      where: `division_id:${league?.division_id}`,
-    })
-    leagueTeams.value = response.data.value?.data.teams ?? []
-    loadingTeams.value = false
-  }
+  if (!league?.division_id || !selectedCategory.value || !selectedGender.value)
+    return
+
+  loadingTeams.value = true
+  const response = await teamService.fetch({
+    where: `division_id:${league?.division_id},category_id:${selectedCategory.value.id},gender_id:${selectedGender.value.id}`,
+  })
+  leagueTeams.value = response.data.value?.data.teams ?? []
+  loadingTeams.value = false
 })
 
 watch(selectedLocalTeam, async team => {
@@ -186,6 +192,8 @@ watch(onChangeData, data => {
       <FormLabel :label="$t('leagues.league')" :error="errors?.league_id?.[0]">
         <FederationLeagueSelector
           :grouped-leagues="groupedLeagues"
+          :categoryId="selectedCategory?.id"
+          :genderId="selectedGender?.id"
           :disabled="!selectedGender || loadingLeagues"
           :loading="loadingLeagues"
           @selected="setLeague"

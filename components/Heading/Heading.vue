@@ -10,6 +10,10 @@ const props = defineProps({
     type: String as PropType<HeadingPosition>,
     default: 'left',
   },
+  class: {
+    type: String,
+    default: '',
+  },
 })
 
 const headingPositionClass = computed(() =>
@@ -18,7 +22,7 @@ const headingPositionClass = computed(() =>
 </script>
 
 <template>
-  <Component :is="tag" :class="[headingPositionClass]">
+  <Component :is="tag" :class="[props.class, headingPositionClass]">
     <slot />
   </Component>
 </template>

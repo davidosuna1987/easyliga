@@ -4,6 +4,13 @@ import { CallPlayerData } from '@/domain/call'
 import { TeamMember } from '@/domain/team'
 import { Sanction } from '@/domain/sanction'
 
+const RemoveIconTypes = {
+  trash: 'pepicons-pencil:trash-circle-filled',
+  times: 'pepicons-pencil:times',
+} as const
+
+type RemoveIcon = keyof typeof RemoveIconTypes
+
 const props = defineProps({
   player: {
     type: Object as PropType<Player | CallPlayerData | TeamMember>,
@@ -20,6 +27,10 @@ const props = defineProps({
   removePlayer: {
     type: Function as PropType<(id: number) => void>,
     default: null,
+  },
+  removeIcon: {
+    type: String as PropType<RemoveIcon>,
+    default: 'trash',
   },
   setShirtNumberUpdatePlayer: {
     type: Function as PropType<(player: Player | TeamMember) => void>,
@@ -61,7 +72,14 @@ const props = defineProps({
     type: Object as PropType<Sanction>,
     required: false,
   },
+  editable: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const emit = defineEmits(['profile:edit'])
+const { $i18n } = useNuxtApp()
 
 const tooltipDisabled = computed(
   () => !!props.tooltipsDisabled || (props.selectable && !props.selected),
@@ -72,7 +90,14 @@ const iconsGap = computed(() => {
   if (!!props.removePlayer) gap++
   if (!!props.showCaptain) gap++
   if (!!props.showLibero) gap++
+  if (!!props.editable) gap++
   return gap
+})
+
+const removeProfileTooltipText = computed(() => {
+  return props.removeIcon === 'trash'
+    ? $i18n.t('profiles.delete')
+    : $i18n.t('forms.cancel')
 })
 </script>
 
@@ -110,7 +135,7 @@ const iconsGap = computed(() => {
     </div>
     <div
       v-if="showIcons || showCaptain || showLibero"
-      class="team-player-captain grid gap-2"
+      class="team-player-captain flex gap-2"
       :class="[`grid-cols-${iconsGap}`]"
     >
       <IconLibero
@@ -144,11 +169,21 @@ const iconsGap = computed(() => {
         @click.stop="setCaptain(player.profileId)"
       />
       <PlayerItemIcon
-        v-if="!!removePlayer"
-        class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer"
-        name="ic:baseline-delete-outline"
+        v-if="!!editable"
+        class="hover:text-[var(--primary-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
+        name="pepicons-pencil:pen-circle-filled"
         v-tooltip.top="{
-          value: $t('players.delete'),
+          value: $t('profiles.edit'),
+          disabled: tooltipDisabled,
+        }"
+        @click.stop="emit('profile:edit', (player as Player).profile)"
+      />
+      <PlayerItemIcon
+        v-if="!!removePlayer"
+        class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
+        :name="RemoveIconTypes[removeIcon]"
+        v-tooltip.top="{
+          value: removeProfileTooltipText,
           disabled: tooltipDisabled,
         }"
         @click.stop="removePlayer(player.profileId)"

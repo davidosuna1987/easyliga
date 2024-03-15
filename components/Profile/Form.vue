@@ -8,9 +8,11 @@ import {
 } from '@/domain/profile'
 import { ApiErrorObject } from '@/types/errors'
 import { Address } from '@/domain/address'
+import ClubService from '@/services/club'
 import ProfileService from '@/services/profile'
 import { GenderType } from '@/domain/game'
 
+const clubService = new ClubService()
 const profileService = new ProfileService()
 const toast = useEasyToast()
 
@@ -18,6 +20,14 @@ const props = defineProps({
   profile: {
     type: Object as PropType<Profile>,
     required: true,
+  },
+  hideAvatar: {
+    type: Boolean,
+    default: false,
+  },
+  clubTeamPlayer: {
+    type: Object as PropType<UpdateClubTeamPlayer>,
+    required: false,
   },
 })
 
@@ -70,30 +80,63 @@ const handleSubmit = async () => {
 
   loadingApi.value = true
 
-  const { data, error } = await profileService.update(
-    props.profile.id,
-    mapProfileUpdateRequestToApiProfileUpdateRequest(form.value),
-  )
+  if (props.clubTeamPlayer) {
+    const { data, error } = await clubService.updateTeamPlayerProfile(
+      props.clubTeamPlayer.clubId,
+      props.clubTeamPlayer.teamId,
+      props.profile.id,
+      mapProfileUpdateRequestToApiProfileUpdateRequest(form.value),
+      {
+        with: 'address',
+      },
+    )
 
-  if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-  } else if (data.value) {
-    resetAvatar()
-    toast.success(useNuxtApp().$i18n.t('profiles.updated'))
-    emit('updated', data.value.data)
+    if (error.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+    } else if (data.value) {
+      resetAvatar()
+      toast.success(useNuxtApp().$i18n.t('profiles.updated'))
+      emit('updated', data.value.data.profile)
+    }
+  } else {
+    const { data, error } = await profileService.update(
+      props.profile.id,
+      mapProfileUpdateRequestToApiProfileUpdateRequest(form.value),
+    )
+
+    if (error.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+    } else if (data.value) {
+      resetAvatar()
+      toast.success(useNuxtApp().$i18n.t('profiles.updated'))
+      emit('updated', data.value.data)
+    }
   }
+
   loadingApi.value = false
 }
 
-watch(address, () => (form.value.address = address.value))
-watch(avatar, () => (form.value.avatar = avatar.value ?? undefined))
+watch(
+  () => address.value,
+  value => {
+    form.value.address = value
+  },
+)
+
+watch(
+  () => avatar.value,
+  value => {
+    form.value.avatar = value ?? undefined
+  },
+)
 </script>
 
 <template>
   <form class="easy-profile-form-component" @submit.prevent="handleSubmit">
     <UploadImage
+      v-if="!props.hideAvatar"
       :class="{ 'is-muted': loadingApi }"
-      :preview="avatar.preview ?? undefined"
+      :preview="avatar.preview ?? ''"
       @image="avatarChange"
     />
 
@@ -225,6 +268,13 @@ watch(avatar, () => (form.value.avatar = avatar.value ?? undefined))
 </template>
 
 <script lang="ts">
+export type UpdateClubTeamPlayer =
+  | {
+      clubId: number
+      teamId: number
+    }
+  | undefined
+
 export default {
   name: 'ProfileForm',
 }

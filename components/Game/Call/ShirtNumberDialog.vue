@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Player, getFullName } from '@/domain/player'
 import { Call } from '@/domain/call'
+import { TeamMember } from 'domain/team'
 
 const emit = defineEmits(['update:player', 'hide'])
 
 const props = defineProps({
   player: {
-    type: Object as PropType<Player>,
+    type: Object as PropType<Player | TeamMember>,
     default: null,
   },
   call: {

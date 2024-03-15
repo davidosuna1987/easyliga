@@ -111,7 +111,7 @@ const setSideTeamToTimeout = (side: TeamSide) => {
   <div class="game-timeout-sanction-actions-component flex justify-between">
     <div class="flex gap-3">
       <Button
-        class="p-3 relative"
+        class="team-toggle-button p-3 relative"
         rounded
         @click="emit('sidebar:toggle', TeamSideEnum.left)"
       >
@@ -161,7 +161,7 @@ const setSideTeamToTimeout = (side: TeamSide) => {
         />
       </Button>
       <Button
-        class="p-3 relative"
+        class="team-toggle-button p-3 relative"
         rounded
         @click="emit('sidebar:toggle', TeamSideEnum.right)"
       >

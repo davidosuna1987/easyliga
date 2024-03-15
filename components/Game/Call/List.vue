@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Player } from '@/domain/player'
+import { TeamMember } from 'domain/team'
 
 const props = defineProps({
   players: {
@@ -23,7 +24,7 @@ const props = defineProps({
     required: true,
   },
   setShirtNumberUpdatePlayer: {
-    type: Function as PropType<(player: Player) => void>,
+    type: Function as PropType<(player: Player | TeamMember) => void>,
     required: true,
   },
   setCaptainToggleDisabledProfileId: {

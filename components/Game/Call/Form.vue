@@ -13,6 +13,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/event'
 import { ApiEvents } from '@/types/api/event'
+import { TeamMember } from 'domain/team'
 
 const app = useNuxtApp()
 const route = useRoute()
@@ -26,7 +27,7 @@ const call = ref<Call>()
 const players = ref<Player[]>([])
 const selectedPlayers = ref<Player[]>([])
 const selectedCaptain = ref<Player>()
-const shirtNumberUpdatePlayer = ref<Player>()
+const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
 
@@ -153,7 +154,7 @@ const setLibero = (profileId: number) => {
   }
 }
 
-const setShirtNumberUpdatePlayer = (player: Player) => {
+const setShirtNumberUpdatePlayer = (player: Player | TeamMember) => {
   shirtNumberUpdatePlayer.value = player
 }
 

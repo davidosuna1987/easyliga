@@ -26,7 +26,6 @@ import {
 import { getFullName } from '@/domain/player'
 import { mapApiProfileToProfile } from '@/domain/profile'
 import { ApiEvents, ApiSanctionStoredEventResponse } from '@/types/api/event'
-import rotation from '@/services/rotation'
 
 const emit = defineEmits(['update:set'])
 
@@ -127,7 +126,8 @@ const getInitialData = async (): Promise<void> => {
 const getGameSets = async (): Promise<void> => {
   const { data } = await setService.fetch({
     where: `game_id:${route.params.game_id}`,
-    with: 'rotations.players,gameSanctions,sanctions',
+    with: 'rotations.players,sanctions',
+    set_appends: 'game_sanctions',
   })
 
   gameSets.value = data.value?.data.sets.map(mapApiSetToSet) ?? []
@@ -242,6 +242,7 @@ onBeforeUnmount((): void => {
       <form @submit.prevent="handleSubmit">
         <CoachRotationCourt
           :call="call"
+          :currentSet="currentSet"
           :rotation="currentSetRotation"
           :isInitialRotationAssignment="initialRotation"
           :gameSanctions="gameSanctions"

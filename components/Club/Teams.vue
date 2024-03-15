@@ -6,7 +6,7 @@ import { Sede } from '@/domain/sede'
 import { Team } from '@/domain/team'
 
 const auth = useAuthStore()
-const easyProps = useEasyProps()
+// const easyProps = useEasyProps()
 const clubService = new ClubService()
 
 const clubs = ref<Club[]>()
@@ -18,7 +18,7 @@ const getAuthuserClubWithSedesAndTeams = async () => {
   loadingApi.value = true
   const { data } = await clubService.fetch({
     where: `responsible_id:${auth.user.id}`,
-    with: 'sedes.teams.category,sedes.teams.gender,sedes.teams.players',
+    with: 'sedes.teams.division,sedes.teams.category,sedes.teams.gender,sedes.teams.players',
   })
 
   clubs.value = data.value?.data.clubs.map(mapApiClubToClub)
@@ -36,9 +36,14 @@ const clubManagesAnyTeam = computed(() => !!clubsWithTeams.value?.length)
 
 const sedeContainsTeams = (sede: Sede) => !!sede.teams?.length
 
-const goToEditTeam = (team: Team) => {
-  easyProps.set(`team.${team.id}.edit`, team)
-  navigateTo(`/club/teams/${team.id}/edit`)
+const goToEditClubTeam = (club: Club, team: Team) => {
+  // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
+  navigateTo(`/club/${club.id}/teams/${team.id}/edit`)
+}
+
+const goToCreateClubTeam = (club: Club) => {
+  // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
+  navigateTo(`/club/${club.id}/teams/create`)
 }
 
 onMounted(getAuthuserClubWithSedesAndTeams)
@@ -50,18 +55,30 @@ onMounted(getAuthuserClubWithSedesAndTeams)
     <template v-else>
       <div v-if="clubManagesAnyTeam" class="grid grid-gap-2">
         <div class="club" v-for="club in clubsWithTeams">
-          <Heading tag="h5">{{ club.name }}</Heading>
+          <header class="header flex justify-between">
+            <Heading tag="h5" class="club__name">{{ club.name }}</Heading>
+            <Button
+              :label="$t('teams.create')"
+              size="small"
+              class="action"
+              @click.prevent="goToCreateClubTeam(club)"
+            />
+          </header>
           <template v-for="sede in club.sedes">
             <div
               v-if="sedeContainsTeams(sede)"
               class="sede grid grid-gap-2 mt-3"
             >
               <Heading tag="h6">{{ sede.name }}</Heading>
-              <div v-for="team in sede.teams" class="team mt-2 p-3 rounded-lg">
+              <div
+                v-for="team in sede.teams"
+                class="team mt-2 p-3 rounded-lg"
+                @click.prevent="goToEditClubTeam(club, team)"
+              >
                 <div class="team-info flex items-center">
                   <p>{{ team.name }}</p>
                   <Tag
-                    class="px-3 font-light ml-2"
+                    class="font-light ml-2 border-solid border-primary bg-transparent text-primary border py-[2px] px-2"
                     :value="`${$t(`categories.${team.category?.name}`)} ${$t(
                       `genders.${team.gender?.name}`,
                     )}`"
@@ -69,10 +86,9 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                   ></Tag>
                 </div>
                 <div
-                  v-if="team.players"
                   class="team-actions flex items-center justify-between sm:justify-end"
                 >
-                  <small class="mr-3">
+                  <small v-if="team.players" class="mr-3">
                     {{
                       $t(
                         'players.count',
@@ -85,7 +101,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                     :label="$t('forms.edit')"
                     size="small"
                     class="action"
-                    @click.prevent="goToEditTeam(team)"
+                    @click.prevent="goToEditClubTeam(club, team)"
                   />
                 </div>
               </div>
