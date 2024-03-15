@@ -114,7 +114,8 @@
     "date": "Fecha",
     "time": "Hora",
     "place": "Lugar",
-    "sign": "Firmar"
+    "sign": "Firmar",
+    "search": "Buscar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -187,7 +188,11 @@
     "profile": "Perfil | Perfiles",
     "update": "Actualizar perfil",
     "edit": "Editar perfil",
-    "updated": "El perfil ha sido actualizado correctamente"
+    "updated": "El perfil ha sido actualizado correctamente",
+    "delete": "Eliminar perfil",
+    "deleted": "El perfil ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el perfil?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer"
   },
   "referees": {
     "referee": "Árbitro | Árbitros",
@@ -275,13 +280,13 @@
   "teams": {
     "team": "Equipo | Equipos",
     "create": "Crear equipo",
-    "created": "El equipo ha sido creada correctamente",
+    "created": "El equipo ha sido creado correctamente",
     "edit": "Editar equipo",
     "edit_name": "Editar equipo {name}",
     "update": "Actualizar equipo",
-    "updated": "El equipo ha sido actualizada correctamente",
+    "updated": "El equipo ha sido actualizado correctamente",
     "delete": "Eliminar equipo",
-    "deleted": "El equipo ha sido eliminada correctamente",
+    "deleted": "El equipo ha sido eliminado correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el equipo?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un equipo",
@@ -301,6 +306,7 @@
   },
   "players": {
     "player": "Jugador | Jugadores",
+    "add": "Añadir jugador",
     "create": "Crear jugador",
     "created": "El jugador ha sido creada correctamente",
     "edit": "Editar jugador",
@@ -314,7 +320,13 @@
     "count": "{num} jugador | {num} jugadores",
     "shirt_number_taken": "El número de camiseta {shirtNumber} ya está asignado a otro jugador",
     "replace_player": "Sustituir a {name}",
-    "no_available": "No hay jugadores disponibles"
+    "no_available": "No hay jugadores disponibles",
+    "search_by_nif": "Buscar por D.N.I",
+    "search": "Buscar jugador | Buscar jugadores",
+    "type_name": "Escribe el nombre del jugador",
+    "you_selected": "Has seleccionado al siguiente jugador",
+    "add_disclaimer": "Si deseas añadirlo a tu equipo haz clic en el botón \"Añadir jugador\" y cuando se cierre esta ventana deberás hacer click en el botón \"Actualizar equipo\" para que la operación finalice correctamente.",
+    "already_added": "El jugador que intentas añadir ya forma parte de tu equipo"
   },
   "shirts": {
     "shirt": "Camiseta | Camisetas",
@@ -493,6 +505,19 @@
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un club",
     "no_managed_teams": "El club no gestiona ningún equipo"
+  },
+  "sedes": {
+    "sede": "Sede | Sedes",
+    "create": "Crear sede",
+    "created": "La sede ha sido creada correctamente",
+    "edit": "Editar sede",
+    "update": "Actualizar sede",
+    "updated": "La sede ha sido actualizada correctamente",
+    "delete": "Eliminar sede",
+    "deleted": "La sede ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la sede?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona una sede"
   },
   "timeouts": {
     "timeout": "Tiempo muerto | Tiempos muertos",
