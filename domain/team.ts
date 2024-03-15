@@ -10,11 +10,15 @@ import {
   mapApiCategoryToCategory,
   mapApiGenderToGender,
 } from '@/domain/game'
-import { Profile, mapApiProfileToCoach } from '@/domain/profile'
+import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
+import { Profile, mapApiProfileToCoach } from '@/domain/profile'
 import { CallPlayerData } from '@/domain/call'
+import { Club, mapApiClubToClub } from '@/domain/club'
 
 export type TeamRelations = {
+  club?: Club
+  sede?: Sede
   division?: Division
   category?: Category
   gender?: Gender
@@ -25,6 +29,7 @@ export type TeamRelations = {
 export type Team = {
   id: number
   name: string
+  clubId?: number
 } & TeamRelations
 
 export enum TeamType {
@@ -52,9 +57,15 @@ export type TeamMember = {
   coach: boolean
 }
 
-export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
+export const mapApiTeamToTeam = (
+  apiTeam: ApiTeam,
+  withProfiles: boolean = false,
+): Team => ({
   id: apiTeam.id,
   name: apiTeam.name,
+  clubId: apiTeam.club_id ?? undefined,
+  club: apiTeam.club ? mapApiClubToClub(apiTeam.club) : undefined,
+  sede: apiTeam.sede ? mapApiSedeToSede(apiTeam.sede) : undefined,
   division: apiTeam.division
     ? mapApiDivisionToDivision(apiTeam.division)
     : undefined,
@@ -66,12 +77,14 @@ export const mapApiTeamToTeam = (apiTeam: ApiTeam): Team => ({
     ? mapApiProfileToCoach(apiTeam.coach.profile)
     : undefined,
   players: apiTeam.players?.length
-    ? mapApiPlayersToPlayers(apiTeam.players)
+    ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)
     : undefined,
 })
 
 export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
   name: team.name,
+  club_id: team.club?.id ?? null,
+  sede_id: team.sede?.id ?? null,
   division_id: team.division?.id ?? null,
   category_id: team.category?.id ?? null,
   gender_id: team.gender?.id ?? null,

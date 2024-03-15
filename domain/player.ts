@@ -2,7 +2,7 @@ import { ApiPlayer } from '@/types/api/auth'
 import { CallPlayerData } from '@/domain/call'
 import { ApiPlayerRequest } from '@/types/api/player'
 import { Coach, TeamMember } from '@/domain/team'
-import { Profile } from '@/domain/profile'
+import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 
 export type Player = {
   profileId: number
@@ -12,10 +12,23 @@ export type Player = {
   avatar?: string
   captain: boolean
   libero: boolean
+  profile?: Profile
 }
+
+export const mapProfileToPlayer = (profile: Profile): Player => ({
+  profileId: profile.id,
+  firstName: profile.firstName,
+  lastName: profile.lastName,
+  shirtNumber: 0,
+  avatar: profile.avatar,
+  captain: false,
+  libero: false,
+  profile,
+})
 
 export const mapApiPlayersToPlayers = (
   apiPlayers: ApiPlayer[] | undefined,
+  withProfiles: boolean = false,
 ): Player[] => {
   if (!apiPlayers) return []
 
@@ -27,6 +40,7 @@ export const mapApiPlayersToPlayers = (
     shirtNumber: apiPlayer.pivot.shirt_number,
     captain: apiPlayer.pivot.captain,
     libero: apiPlayer.pivot.libero,
+    profile: withProfiles ? mapApiProfileToProfile(apiPlayer) : undefined,
   }))
 }
 

@@ -40,7 +40,7 @@ export const mapApiSedeToSede = (apiSede: ApiSede): Sede => ({
     : undefined,
   courts: apiSede.courts ? apiSede.courts.map(mapApiCourtToCourt) : undefined,
   teams: apiSede.teams?.length
-    ? apiSede.teams.map(mapApiTeamToTeam)
+    ? apiSede.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
   games: apiSede.games ? apiSede.games.map(mapApiGameToGame) : undefined,
 })

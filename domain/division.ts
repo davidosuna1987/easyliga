@@ -30,7 +30,7 @@ export const mapApiDivisionToDivision = (
     ? mapApiProfileToResponsible(apiDivision.responsible)
     : undefined,
   teams: apiDivision.teams
-    ? apiDivision.teams.map(mapApiTeamToTeam)
+    ? apiDivision.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
   games: apiDivision.games
     ? apiDivision.games.map(mapApiGameToGame)
