@@ -6,6 +6,7 @@ import Dialog from 'primevue/dialog'
 import Menubar from 'primevue/menubar'
 import Avatar from 'primevue/avatar'
 import TieredMenu from 'primevue/tieredmenu'
+import AutoComplete from 'primevue/autocomplete'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
@@ -27,6 +28,7 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('Menubar', Menubar)
   nuxtApp.vueApp.component('Avatar', Avatar)
   nuxtApp.vueApp.component('TieredMenu', TieredMenu)
+  nuxtApp.vueApp.component('AutoComplete', AutoComplete)
   nuxtApp.vueApp.component('InputText', InputText)
   nuxtApp.vueApp.component('InputNumber', InputNumber)
   nuxtApp.vueApp.component('Textarea', Textarea)
