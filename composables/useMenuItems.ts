@@ -11,15 +11,16 @@ export default function useMenuItems() {
   const items = ref<MenuItem[]>(guestItems)
 
   if (auth.hasRole('club')) {
-    items.value = clubItems
+    // flat push clubItems to items.value
+    items.value = [...items.value, clubItems].flat()
   }
 
   if (auth.hasRole('referee')) {
-    items.value = refereeItems
+    items.value = [...items.value, refereeItems].flat()
   }
 
   if (auth.hasRole('coach')) {
-    items.value = coachItems
+    items.value = [...items.value, coachItems].flat()
   }
 
   return items
