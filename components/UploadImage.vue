@@ -1,5 +1,10 @@
-<script setup>
-const emit = defineEmits()
+<script setup lang="ts">
+import { type Image } from '@/domain/profile'
+const emit = defineEmits({
+  image: (image: Image) => {
+    return image
+  },
+})
 
 const props = defineProps({
   preview: {
@@ -8,10 +13,10 @@ const props = defineProps({
   },
 })
 
-const maxMB = ref(5)
-const imageFileInput = ref(null)
+const maxMB = ref<number>(5)
+const imageFileInput = ref<HTMLInputElement | null>(null)
 
-const image = ref({
+const image = ref<Image>({
   preview: props.preview,
   file: null,
   name: null,
@@ -27,11 +32,17 @@ const imageItemClick = () => {
 }
 
 const selectImage = () => {
-  imageFileInput.value.click()
+  imageFileInput.value?.click()
 }
 
-const imageChange = e => {
-  let files = e.target.files || e.originalEvent.dataTransfer.files
+const imageChange = (e: InputEvent | Event) => {
+  const input = e.target as HTMLInputElement
+
+  if (!input.files?.length) {
+    return
+  }
+
+  let files = input.files
 
   if (files) {
     if (files.length === 0) return
@@ -50,7 +61,7 @@ const imageChange = e => {
         : Math.round((size / 1000) * 10) / 10 + ' KB'
 
     image.value.name = fileName
-    image.value.size = fileSize
+    image.value.size = Number(fileSize)
 
     let img
     img = new Image()
@@ -63,7 +74,7 @@ const imageChange = e => {
 }
 
 const resetImage = () => {
-  imageFileInput.value.value = null
+  if (imageFileInput.value?.value) imageFileInput.value.value = ''
   image.value.preview = props.preview
   image.value.file = null
   image.value.name = null
@@ -107,7 +118,7 @@ watch(image.value, () => emit('image', image.value))
   </section>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: 'UploadImage',
 }
