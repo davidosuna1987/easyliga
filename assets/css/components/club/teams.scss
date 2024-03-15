@@ -1,4 +1,22 @@
 .easy-club-teams-component {
+  .club {
+    padding-block: 2rem;
+    &:not(:last-child) {
+      border-bottom: solid 2px gainsboro;
+    }
+
+    &__name {
+      font-weight: bold;
+    }
+
+    .header {
+      .action {
+        padding-block: 0.5rem;
+        padding-inline: 1rem;
+      }
+    }
+  }
+
   .team {
     display: flex;
     flex-direction: column;

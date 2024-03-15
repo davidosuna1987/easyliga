@@ -169,6 +169,10 @@
         }
 
         .easy-game-call-sidebar-component {
+          position: relative;
+          box-shadow: var(--box-shadow-hard);
+          padding: var(--app-margin);
+          border-radius: var(--border-radius);
           transform: none;
           max-height: none;
           transition: none;
@@ -192,6 +196,12 @@
 
     .easy-game-score-component {
       top: -35px;
+    }
+
+    .game-timeout-sanction-actions-component {
+      .team-toggle-button {
+        display: none;
+      }
     }
   }
 }
