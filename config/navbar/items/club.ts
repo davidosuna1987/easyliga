@@ -4,16 +4,17 @@ export default [
     items: [
       {
         label: 'navbar.club.teams.label',
-        items: [
-          {
-            label: 'navbar.club.teams.list',
-            to: '/club/teams',
-          },
-          {
-            label: 'navbar.club.teams.create',
-            to: '/club/teams/create',
-          },
-        ],
+        to: '/club/teams',
+        // items: [
+        //   {
+        //     label: 'navbar.club.teams.list',
+        //     to: '/club/teams',
+        //   },
+        //   {
+        //     label: 'navbar.club.teams.create',
+        //     to: '/club/teams/create',
+        //   },
+        // ],
       },
     ],
   },
