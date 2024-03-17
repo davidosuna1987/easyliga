@@ -51,6 +51,8 @@ export type GameInitialData = {
   calls: Call[]
   localTeamRotation: CurrentRotation
   visitorTeamRotation: CurrentRotation
+  localTeamSetsWonCount: number
+  visitorTeamSetsWonCount: number
   league: League
   localTeam: Team
   visitorTeam: Team
@@ -153,6 +155,8 @@ export const mapApiGameInitialDataToGame = (
     calls,
     local_team_rotation,
     visitor_team_rotation,
+    local_team_sets_won_count,
+    visitor_team_sets_won_count,
     league,
     referee,
     local_team,
@@ -169,6 +173,8 @@ export const mapApiGameInitialDataToGame = (
     visitorTeamRotation: mapApiCurrentRotationToCurrentRotation(
       visitor_team_rotation,
     ),
+    localTeamSetsWonCount: local_team_sets_won_count ?? 0,
+    visitorTeamSetsWonCount: visitor_team_sets_won_count ?? 0,
     league: {
       id: league.id,
       name: league.name,

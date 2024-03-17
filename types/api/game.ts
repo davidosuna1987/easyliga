@@ -94,6 +94,8 @@ export type ApiGameInitialDataResponse = {
     calls: ApiCall[]
     local_team_rotation: ApiCurrentRotation
     visitor_team_rotation: ApiCurrentRotation
+    local_team_sets_won_count: number
+    visitor_team_sets_won_count: number
     league: ApiLeague
     referee: ApiProfile
     local_team: ApiTeam

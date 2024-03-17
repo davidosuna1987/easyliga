@@ -168,14 +168,14 @@ const gameSanctions = computed(
 
 const leftSideTeamSetsWonCount = computed((): number =>
   localTeamCall.value?.teamId === leftSideTeam.value?.id
-    ? gameInitialData.value?.game.localTeamSetsWonCount ?? 0
-    : gameInitialData.value?.game.visitorTeamSetsWonCount ?? 0,
+    ? gameInitialData.value?.localTeamSetsWonCount ?? 0
+    : gameInitialData.value?.visitorTeamSetsWonCount ?? 0,
 )
 
 const rightSideTeamSetsWonCount = computed((): number =>
   visitorTeamCall.value?.teamId === rightSideTeam.value?.id
-    ? gameInitialData.value?.game.visitorTeamSetsWonCount ?? 0
-    : gameInitialData.value?.game.localTeamSetsWonCount ?? 0,
+    ? gameInitialData.value?.visitorTeamSetsWonCount ?? 0
+    : gameInitialData.value?.localTeamSetsWonCount ?? 0,
 )
 
 const servingTeamId = computed((): number | undefined =>
@@ -226,7 +226,6 @@ const getGameInitialData = async (firstCall: boolean = false) => {
     Number(route.params.game_id),
     {
       with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts',
-      with_count: 'localTeamSetsWon,visitorTeamSetsWon',
     },
   )
 
