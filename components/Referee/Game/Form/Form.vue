@@ -95,6 +95,8 @@ const submit = async () => {
     toast.success(useNuxtApp().$i18n.t('games.created'))
     navigateTo(`/referee/games/arbitrate/${data.value?.data.game.id}`)
   }
+
+  loadingStore.value = false
 }
 
 const getGroupedLeagues = async () => {
