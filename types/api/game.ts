@@ -115,3 +115,14 @@ export type ApiGameTeamPlayersResponse = {
   }
   errors: null
 }
+
+export type ApiGameTeamIncompleteResponse = {
+  success: boolean
+  data: {
+    incomplete: {
+      game: boolean
+      current_set: boolean
+    }
+  }
+  errors: null
+}

@@ -53,3 +53,14 @@ export type ApiSetStartRequest = {
   visitor_team_side: SetSide
   first_serve_team_id: number
 }
+
+export type ApiSetTeamIncompleteResponse = {
+  success: boolean
+  data: {
+    incomplete: {
+      game: boolean
+      set: boolean
+    }
+  }
+  errors: null
+}

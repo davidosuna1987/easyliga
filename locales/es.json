@@ -582,7 +582,9 @@
     },
     "player_change_needed": "{name} está sancionado y debe ser sustituido | Hay jugadores sancionados en el campo que deben ser sustituidos",
     "players_to_replace": "Hay jugadores sancionados por reemplazar",
-    "expelled_player": "Jugador expulsado | Jugadores expulsados"
+    "expelled_player": "Jugador expulsado | Jugadores expulsados",
+    "game_team_incomplete": "Si aplicas esta sanción el equipo {name} perderá el partido por alineación incompleta.",
+    "current_set_team_incomplete": "Si aplicas esta sanción el equipo {name} perderá el set por alineación incompleta."
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

@@ -11,11 +11,13 @@ import {
   mapApiSanctionToSanction,
   Sanction,
   mergeSanctionsRemovingDuplicates,
+  EXPULSION_SEVERITIES,
 } from '@/domain/sanction'
 import { Team, TeamMember } from '@/domain/team'
 import { getFullName } from '@/domain/player'
 import { Set } from '@/domain/set'
 import SanctionService from '@/services/sanction'
+import GameService from '@/services/game'
 
 const props = defineProps({
   visible: {
@@ -54,6 +56,7 @@ const app = useNuxtApp()
 const toast = useEasyToast()
 
 const sanctionService = new SanctionService()
+const gameService = new GameService()
 
 const showDialog = ref<boolean>(props.visible)
 const selectedType = ref<SanctionTypeKey | undefined>(props.type)
@@ -63,6 +66,9 @@ const showObservations = ref<boolean>(false)
 const observations = ref<string>()
 
 const showEnsureSubmitSanction = ref<boolean>(false)
+const showGameTeamIncomplete = ref<boolean>(false)
+const showCurrentSetTeamIncomplete = ref<boolean>(false)
+const loadingIncompleteTeam = ref<boolean>(false)
 
 const form = computed((): SanctionStoreRequest => {
   return {
@@ -154,13 +160,48 @@ const handleSeveritySelected = (severity: SanctionSeverityKey) => {
   selectedSeverity.value = severity
 }
 
-const ensureSubmitSanction = () => {
+const ensureSubmitSanction = async () => {
   if (!isValidForm.value) {
     toast.error(app.$i18n.t('sanctions.invalid_form'))
     return
   }
 
   showEnsureSubmitSanction.value = true
+
+  if (
+    selectedMember.value &&
+    !selectedMember.value.coach &&
+    selectedType.value === SanctionType.member &&
+    selectedSeverity.value &&
+    EXPULSION_SEVERITIES.includes(selectedSeverity.value)
+  ) {
+    loadingIncompleteTeam.value = true
+
+    const { data, error } = await gameService.teamIncomplete(
+      props.currentSet.gameId,
+      props.team.id,
+      {
+        type: selectedType.value,
+        severity: selectedSeverity.value,
+        player_profile_id: selectedMember.value.profileId,
+      },
+    )
+
+    loadingIncompleteTeam.value = false
+
+    if (error.value || !data.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+      return
+    }
+
+    if (data.value.data.incomplete.current_set) {
+      showCurrentSetTeamIncomplete.value = true
+    }
+
+    if (data.value.data.incomplete.game) {
+      showGameTeamIncomplete.value = true
+    }
+  }
 }
 
 const submitSanction = async () => {
@@ -259,6 +300,22 @@ onMounted(() => {
           {{ $t('observations.record') }}
         </a>
       </div>
+      <div class="mt-6 -mb-10 w-full">
+        <Message
+          v-if="showGameTeamIncomplete || showCurrentSetTeamIncomplete"
+          :closable="false"
+          severity="error"
+          :icon="undefined"
+        >
+          {{
+            $t(
+              `sanctions.${
+                showGameTeamIncomplete ? 'game' : 'current_set'
+              }_team_incomplete`,
+            )
+          }}
+        </Message>
+      </div>
     </div>
     <template v-else>
       <nav
@@ -308,9 +365,14 @@ onMounted(() => {
       <div class="flex justify-end gap-3 mt-3">
         <Button
           v-if="showEnsureSubmitSanction"
-          class="ensure-sanction-button"
+          :class="[
+            'ensure-sanction-button',
+            { grayscale: loadingIncompleteTeam },
+          ]"
+          :loading="loadingIncompleteTeam"
+          :disabled="loadingIncompleteTeam"
           :label="$t('sanctions.to_sanction_name', { name: nameToSanction })"
-          severity="danger"
+          :severity="loadingIncompleteTeam ? 'info' : 'danger'"
           size="large"
           @click="submitSanction"
         />

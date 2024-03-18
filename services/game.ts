@@ -4,12 +4,14 @@ import {
   ApiGameResponse,
   ApiGamesResponse,
   ApiGameStoreRequest,
+  ApiGameTeamIncompleteResponse,
 } from '@/types/api/game'
 
 import {
   GameObservationsRequest,
   mapGameObservationsRequestToApiGameObservationsRequest,
 } from '@/domain/game'
+import { SanctionSeverityKey, SanctionTypeKey } from '@/domain/sanction'
 
 const GAMES_API_PREFIX = 'games'
 
@@ -54,6 +56,21 @@ export default class GameService {
         method: 'PUT',
         body: mapGameObservationsRequestToApiGameObservationsRequest(data),
       },
+    )
+  }
+
+  teamIncomplete(
+    gameId: number,
+    teamId: number,
+    params?: {
+      type: Omit<SanctionTypeKey, 'team'>
+      severity: Omit<SanctionSeverityKey, 'warning' | 'point'>
+      player_profile_id: number
+    },
+  ) {
+    return useApi<ApiGameTeamIncompleteResponse>(
+      `${GAMES_API_PREFIX}/${gameId}/teams/${teamId}/incomplete`,
+      { params },
     )
   }
 }
