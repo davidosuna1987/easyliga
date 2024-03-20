@@ -2,7 +2,6 @@
   "forms": {
     "download": "Descargar",
     "accept": "Aceptar",
-    "undo": "Deshacer",
     "salutation": "¡Hola {name}!",
     "congrats": "¡Enhorabuena!",
     "email": "Email",
@@ -55,6 +54,8 @@
     "inactive": "Inactivo",
     "all": "Todos",
     "delete": "Eliminar",
+    "clear": "Borrar",
+    "undo": "Deshacer",
     "close": "Cerrar",
     "open": "Abrir",
     "unlock": "Desbloquear",
@@ -554,8 +555,12 @@
   "reports": {
     "report": "Acta | Actas",
     "sign": "Firmar acta",
+    "signed": "El acta ha sido firmada correctamente",
+    "sign_description": "Firma el acta en el siguiente recuadro y haz click en el botón \"Firmar acta\" para cerrarla",
     "sign_disclaimer": "Al firmar el acta ya no podrás añadir más observaciones ni lesionados en esta convocatoria",
-    "closed": "El acta del partido {gameName} se ha cerrado"
+    "closed": "El acta del partido {gameName} se ha cerrado",
+    "signature_empty": "Debes firmar en el recuadro para poder enviar la firma",
+    "sign_here": "Firma aquí"
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",

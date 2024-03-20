@@ -32,6 +32,7 @@
     "primevue": "^3.30.2",
     "pusher-js": "^8.3.0",
     "vue": "3",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vue-signature-pad": "^3.0.2"
   }
 }

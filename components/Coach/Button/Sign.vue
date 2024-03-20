@@ -20,7 +20,8 @@ const emit = defineEmits(['report:signed'])
 const app = useNuxtApp()
 const toast = useEasyToast()
 const callService = new CallService()
-const showSignDialog = ref<boolean>(false)
+const showSignatureDialog = ref<boolean>(false)
+// const showSignDialog = ref<boolean>(false)
 
 const actionButtonDisabled = computed(() => !!props.call.signedAt)
 
@@ -29,24 +30,25 @@ const onActionButtonClick = () => {
     toast.error(app.$i18n.t('reports.closed'))
     return
   }
-  showSignDialog.value = true
+  // showSignDialog.value = true
+  showSignatureDialog.value = true
 }
 
-const submit = async () => {
-  const signForm = { signedAt: moment().format('YYYY-MM-DD HH:mm:ss') }
-  const { data, error } = await callService.sign(props.call.id, signForm)
+// const submitOld = async () => {
+//   const signForm = { signedAt: moment().format('YYYY-MM-DD HH:mm:ss') }
+//   const { data, error } = await callService.sign(props.call.id, signForm)
 
-  if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-    return
-  }
+//   if (error.value || !data.value) {
+//     toast.mapError(Object.values(error.value?.data?.errors), false)
+//     return
+//   }
 
-  toast.success(app.$i18n.t('observations.stored'))
+//   toast.success(app.$i18n.t('observations.stored'))
 
-  showSignDialog.value = false
+//   showSignDialog.value = false
 
-  emit('report:signed', props.game)
-}
+//   emit('report:signed', props.game)
+// }
 </script>
 
 <template>
@@ -58,7 +60,13 @@ const submit = async () => {
     @click="onActionButtonClick"
   />
 
-  <DialogBottom
+  <SignatureDialog
+    :visible="showSignatureDialog"
+    :save-inline="false"
+    @hide="showSignatureDialog = false"
+  />
+
+  <!-- <DialogBottom
     class="easy-call-sign-dialog-component"
     :visible="!!showSignDialog"
     @hide="showSignDialog = false"
@@ -78,10 +86,10 @@ const submit = async () => {
           outlined
           @click="showSignDialog = false"
         />
-        <Button :label="$t('forms.sign')" @click="submit" />
+        <Button :label="$t('forms.sign')" @click="Old" />
       </div>
     </template>
-  </DialogBottom>
+  </DialogBottom> -->
 </template>
 
 <script lang="ts">
