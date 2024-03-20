@@ -15,11 +15,12 @@ export default defineNuxtPlugin(() => {
   window.Echo = new Echo({
     broadcaster: 'pusher',
     key: config.public.pusherAppKey,
-    wsHost: config.public.pusherAppHost,
+    // wsHost: config.public.pusherAppHost,
     wsPort: 6001,
     wssPort: 6001,
     encrypted: true,
-    cluster: 'mt1',
+    // cluster: 'mt1',
+    cluster: 'eu',
     forceTLS: true,
     disableStats: true,
   })
