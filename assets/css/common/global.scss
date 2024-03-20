@@ -21,6 +21,17 @@ html {
   }
 }
 
+p {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
 pre {
   white-space: pre-wrap;
 }
