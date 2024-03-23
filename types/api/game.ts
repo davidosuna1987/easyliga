@@ -11,6 +11,7 @@ import { GameStatus } from '@/domain/game'
 import { ApiCurrentRotation } from '@/types/api/rotation'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiSanction } from '@/types/api/sanction'
+import { ApiGameSignature } from '@/types/api/game-signature'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -28,6 +29,7 @@ export type ApiGameRelations = {
   current_set?: ApiSet
   calls?: ApiCall[]
   sanctions?: ApiSanction[]
+  signatures?: ApiGameSignature[]
 }
 
 export type ApiGameRelationsCount = {

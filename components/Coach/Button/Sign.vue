@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { Call, CallSignRequest } from '@/domain/call'
-import CallService from '@/services/call'
+import { Call } from '@/domain/call'
 import { Game } from '@/domain/game'
-import moment from 'moment'
+import {
+  GameSignature,
+  GameSignatureStoreRequest,
+  GameSignatureType,
+  mapApiGameSignatureToGameSignature,
+  mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
+} from '@/domain/game-signature'
+import GameSignatureService from '@/services/game-signature'
+import { TeamType } from '@/domain/team'
 
 const props = defineProps({
   game: {
@@ -13,83 +20,87 @@ const props = defineProps({
     type: Object as PropType<Call>,
     required: true,
   },
+  signatureType: {
+    type: String as PropType<GameSignatureType>,
+    required: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['report:signed'])
+const emit = defineEmits<{
+  (e: 'signature:stored', value: GameSignature): void
+}>()
 
 const app = useNuxtApp()
 const toast = useEasyToast()
-const callService = new CallService()
-const showSignatureDialog = ref<boolean>(false)
-// const showSignDialog = ref<boolean>(false)
 
-const actionButtonDisabled = computed(() => !!props.call.signedAt)
+const gameSignatureService = new GameSignatureService()
+const showSignatureDialog = ref<boolean>(false)
+const loadingSignature = ref<boolean>(false)
+
+const actionButtonDisabled = computed(
+  () => !!props.call.signedAt || props.disabled,
+)
+
+const teamType = computed<TeamType>(() =>
+  props.game.localTeamId === props.call.teamId
+    ? TeamType.LOCAL
+    : TeamType.VISITOR,
+)
 
 const onActionButtonClick = () => {
   if (props.call.signedAt) {
     toast.error(app.$i18n.t('reports.closed'))
     return
   }
-  // showSignDialog.value = true
   showSignatureDialog.value = true
 }
 
-// const submitOld = async () => {
-//   const signForm = { signedAt: moment().format('YYYY-MM-DD HH:mm:ss') }
-//   const { data, error } = await callService.sign(props.call.id, signForm)
+const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
+  loadingSignature.value = true
 
-//   if (error.value || !data.value) {
-//     toast.mapError(Object.values(error.value?.data?.errors), false)
-//     return
-//   }
+  const { data, error } = await gameSignatureService.store(
+    props.game.id,
+    mapGameSignatureStoreRequestToApiGameSignatureStoreRequest(signature),
+  )
 
-//   toast.success(app.$i18n.t('observations.stored'))
+  loadingSignature.value = false
 
-//   showSignDialog.value = false
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
 
-//   emit('report:signed', props.game)
-// }
+  showSignatureDialog.value = false
+
+  emit(
+    'signature:stored',
+    mapApiGameSignatureToGameSignature(data.value.data.game_signature),
+  )
+}
 </script>
 
 <template>
   <Button
     class="action"
     outlined
-    :label="$t('reports.sign')"
+    :label="$t(`reports.signature_type.short.${props.signatureType}`)"
     :disabled="actionButtonDisabled"
     @click="onActionButtonClick"
   />
 
   <SignatureDialog
     :visible="showSignatureDialog"
+    :loading="loadingSignature"
     :save-inline="false"
+    :type="props.signatureType"
+    :team-type="teamType"
     @hide="showSignatureDialog = false"
+    @signature:created="handleStoreSignature"
   />
-
-  <!-- <DialogBottom
-    class="easy-call-sign-dialog-component"
-    :visible="!!showSignDialog"
-    @hide="showSignDialog = false"
-  >
-    <template #header>
-      <Heading tag="h6">{{ $t('reports.sign') }}</Heading>
-    </template>
-
-    <p>{{ $t('reports.sign_disclaimer') }}</p>
-
-    <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="showSignDialog = false"
-        />
-        <Button :label="$t('forms.sign')" @click="Old" />
-      </div>
-    </template>
-  </DialogBottom> -->
 </template>
 
 <script lang="ts">

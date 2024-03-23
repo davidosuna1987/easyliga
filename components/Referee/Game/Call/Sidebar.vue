@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Coach, Team, TeamSide, TeamSideEnum } from '@/domain/team'
+import { Coach, Team, TeamSide, TeamSideEnum, TeamType } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call, CallPlayerData } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
@@ -15,17 +15,23 @@ import {
   getPlayerItemSanction,
   mergeSanctionsRemovingDuplicates,
 } from '@/domain/sanction'
-
-const emit = defineEmits([
-  'call:unlocked',
-  'rotation:lock-toggled',
-  'timeout:start',
-  'member:clicked',
-])
+import {
+  GameSignature,
+  GameSignatureStoreRequest,
+  GameSignatureType,
+  GameSignatureTypes,
+  mapApiGameSignatureToGameSignature,
+  mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
+} from '@/domain/game-signature'
+import GameSignatureService from '@/services/game-signature'
 
 const props = defineProps({
   team: {
     type: Object as PropType<Team>,
+    required: true,
+  },
+  teamType: {
+    type: String as PropType<TeamType>,
     required: true,
   },
   side: {
@@ -64,7 +70,26 @@ const props = defineProps({
     type: String as PropType<GameStatus>,
     required: true,
   },
+  gameSignatures: {
+    type: Array as PropType<GameSignature[]>,
+    required: true,
+  },
 })
+
+const emit = defineEmits([
+  'call:unlocked',
+  'rotation:lock-toggled',
+  'timeout:start',
+  'member:clicked',
+  'signature:stored',
+])
+
+const toast = useEasyToast()
+const gameSignatureService = new GameSignatureService()
+
+const selectedSignatureType = ref<GameSignatureType>()
+const showSignatureDialog = ref<boolean>(false)
+const loadingSignature = ref<boolean>(false)
 
 const inCourtPlayers = computed((): CallPlayerData[] => {
   const inCourtPlayerIds = props.rotation?.players.map(
@@ -132,15 +157,15 @@ const rotationSanctions = computed((): Sanction[] => {
   return mergeSanctionsRemovingDuplicates(rotationSetSanctions, gameSanctions)
 })
 
-const getCallMemberSanction = (player: Player): Sanction | undefined =>
-  getPlayerItemSanction(
-    props.gameSanctions,
-    undefined,
-    props.team.id,
-    player.profileId,
-    SanctionMember.player as SanctionMemberKey,
-    'game',
-  )
+// const getCallMemberSanction = (player: Player): Sanction | undefined =>
+//   getPlayerItemSanction(
+//     props.gameSanctions,
+//     undefined,
+//     props.team.id,
+//     player.profileId,
+//     SanctionMember.player as SanctionMemberKey,
+//     'game',
+//   )
 
 const getRotationMemberSanction = (
   player: Player | Coach,
@@ -154,6 +179,34 @@ const getRotationMemberSanction = (
     memberType,
     'game',
   )
+
+const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
+  loadingSignature.value = true
+
+  const { data, error } = await gameSignatureService.store(
+    props.currentSet.gameId,
+    mapGameSignatureStoreRequestToApiGameSignatureStoreRequest(signature),
+  )
+
+  loadingSignature.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  showSignatureDialog.value = false
+
+  emit(
+    'signature:stored',
+    mapApiGameSignatureToGameSignature(data.value.data.game_signature),
+  )
+}
+
+const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
+  selectedSignatureType.value = gameSignatureType
+  showSignatureDialog.value = true
+}
 </script>
 
 <template>
@@ -162,34 +215,126 @@ const getRotationMemberSanction = (
       <Heading tag="h5" class="mb-1">
         {{ props.team.name }}
       </Heading>
-      <!-- <Icon
-        class="cursor-pointer text-primary rounded-full text-4xl"
-        name="ic:baseline-cancel"
-        :ariaLabel="$t('forms.close')"
-        @click="easyEmit('game-call-sidebar:close', props.side)"
-      /> -->
       <DialogCloseButton
         @click="easyEmit('game-call-sidebar:close', props.side)"
       />
     </header>
     <main class="sidebar-content">
-      <template v-if="props.rotation && props.rotation.players.length === 6">
-        <Heading tag="h6">{{ $t('rotations.in_court') }}</Heading>
-        <PlayerItem
-          v-for="player in inCourtPlayers"
-          :key="player.profileId"
-          :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
-          :player="player"
-          :showIcons="false"
-          :showCaptain="rotation?.inCourtCaptainProfileId === player.profileId"
-          :showLibero="!!player.libero"
-          :sanction="getRotationMemberSanction(player)"
-          @click="emit('member:clicked', { player })"
+      <template v-if="gameSignatures.length < 5">
+        <div class="flex flex-col gap-2">
+          <Button
+            v-for="gameSignatureType in [
+              GameSignatureTypes.coach,
+              GameSignatureTypes.captain,
+            ]"
+            class="flex-1"
+            :label="$t(`reports.signature_type.short.${gameSignatureType}`)"
+            outlined
+            :disabled="
+              !!gameSignatures.find(
+                signature =>
+                  signature.type === gameSignatureType &&
+                  signature.teamId === team.id,
+              )
+            "
+            @click="handleOpenSignatureDialog(gameSignatureType)"
+          />
+        </div>
+
+        <SignatureDialog
+          v-if="selectedSignatureType"
+          :visible="showSignatureDialog"
+          :loading="loadingSignature"
+          :save-inline="false"
+          :type="selectedSignatureType"
+          :team-type="teamType"
+          :title="
+            $t(`reports.signature_type.long.${selectedSignatureType}`, {
+              teamName: team.name,
+            })
+          "
+          @hide="showSignatureDialog = false"
+          @signature:created="handleStoreSignature"
         />
-        <template v-if="benchPlayers.length">
-          <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
+      </template>
+      <template v-else>
+        <template v-if="props.rotation && props.rotation.players.length === 6">
+          <Heading tag="h6">{{ $t('rotations.in_court') }}</Heading>
           <PlayerItem
-            v-for="player in benchPlayers"
+            v-for="player in inCourtPlayers"
+            :key="player.profileId"
+            :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
+            :player="player"
+            :showIcons="false"
+            :showCaptain="
+              rotation?.inCourtCaptainProfileId === player.profileId
+            "
+            :showLibero="!!player.libero"
+            :sanction="getRotationMemberSanction(player)"
+            @click="emit('member:clicked', { player })"
+          />
+          <template v-if="benchPlayers.length">
+            <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
+            <PlayerItem
+              v-for="player in benchPlayers"
+              :key="player.profileId"
+              :class="{
+                'pointer-events-none': props.gameStatus === 'finished',
+              }"
+              :player="player"
+              :showIcons="false"
+              :showCaptain="!!player.captain"
+              :showLibero="!!player.libero"
+              :sanction="getRotationMemberSanction(player)"
+              @click="emit('member:clicked', { player })"
+            />
+          </template>
+          <template v-if="expelledPlayers.length">
+            <Heading class="mb-1" tag="h6">{{
+              $t('sanctions.expelled_player', 2)
+            }}</Heading>
+            <PlayerItem
+              v-for="player in expelledPlayers"
+              :key="player.profileId"
+              class="pointer-events-none"
+              :player="player"
+              :showIcons="false"
+              :showCaptain="!!player.captain"
+              :showLibero="!!player.libero"
+              :sanction="getRotationMemberSanction(player)"
+              @click="emit('member:clicked', { player })"
+            />
+          </template>
+          <template v-if="props.coach">
+            <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
+            <CoachItem
+              :coach="props.coach"
+              :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
+              @click="emit('member:clicked', { coach: props.coach })"
+            />
+          </template>
+          <div class="rotation-status-area">
+            <RefereeGameRotationStatus
+              :rotation="props.rotation"
+              :requestedTimeout="requestedTimeout"
+              :runningTimeout="runningTimeout"
+              :gameStatus="props.gameStatus"
+              @rotation:lock-toggled="emit('rotation:lock-toggled', true)"
+            />
+          </div>
+          <div v-if="!!requestedTimeout" class="rotation-timeout-requested">
+            <Button
+              class="w-full"
+              severity="danger"
+              :label="$t('timeouts.init')"
+              @click.prevent="emit('timeout:start', requestedTimeout)"
+            />
+          </div>
+        </template>
+        <template v-else>
+          <Heading tag="h6">{{ $t('calls.call') }}</Heading>
+          <PlayerItem
+            v-for="player in props.call.playersData"
             :key="player.profileId"
             :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
             :player="player"
@@ -199,78 +344,23 @@ const getRotationMemberSanction = (
             :sanction="getRotationMemberSanction(player)"
             @click="emit('member:clicked', { player })"
           />
+          <template v-if="props.coach">
+            <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
+            <CoachItem
+              :coach="props.coach"
+              :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
+              @click="emit('member:clicked', { coach: props.coach })"
+            />
+          </template>
+          <div class="call-status-area p-[0.5rem]">
+            <RefereeGameCallStatus
+              :call="props.call"
+              :currentSet="props.currentSet"
+              :gameStatus="props.gameStatus"
+              @call:unlocked="emit('call:unlocked', true)"
+            />
+          </div>
         </template>
-        <template v-if="expelledPlayers.length">
-          <Heading class="mb-1" tag="h6">{{
-            $t('sanctions.expelled_player', 2)
-          }}</Heading>
-          <PlayerItem
-            v-for="player in expelledPlayers"
-            :key="player.profileId"
-            class="pointer-events-none"
-            :player="player"
-            :showIcons="false"
-            :showCaptain="!!player.captain"
-            :showLibero="!!player.libero"
-            :sanction="getRotationMemberSanction(player)"
-            @click="emit('member:clicked', { player })"
-          />
-        </template>
-        <template v-if="props.coach">
-          <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
-          <CoachItem
-            :coach="props.coach"
-            :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
-            @click="emit('member:clicked', { coach: props.coach })"
-          />
-        </template>
-        <div class="rotation-status-area">
-          <RefereeGameRotationStatus
-            :rotation="props.rotation"
-            :requestedTimeout="requestedTimeout"
-            :runningTimeout="runningTimeout"
-            :gameStatus="props.gameStatus"
-            @rotation:lock-toggled="emit('rotation:lock-toggled', true)"
-          />
-        </div>
-        <div v-if="!!requestedTimeout" class="rotation-timeout-requested">
-          <Button
-            class="w-full"
-            severity="danger"
-            :label="$t('timeouts.init')"
-            @click.prevent="emit('timeout:start', requestedTimeout)"
-          />
-        </div>
-      </template>
-      <template v-else>
-        <Heading tag="h6">{{ $t('calls.call') }}</Heading>
-        <PlayerItem
-          v-for="player in props.call.playersData"
-          :key="player.profileId"
-          :class="{ 'pointer-events-none': props.gameStatus === 'finished' }"
-          :player="player"
-          :showIcons="false"
-          :showCaptain="!!player.captain"
-          :showLibero="!!player.libero"
-          :sanction="getRotationMemberSanction(player)"
-          @click="emit('member:clicked', { player })"
-        />
-        <template v-if="props.coach">
-          <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
-          <CoachItem
-            :coach="props.coach"
-            :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
-            @click="emit('member:clicked', { coach: props.coach })"
-          />
-        </template>
-        <div class="call-status-area p-[0.5rem]">
-          <RefereeGameCallStatus
-            :call="props.call"
-            :currentSet="props.currentSet"
-            :gameStatus="props.gameStatus"
-            @call:unlocked="emit('call:unlocked', true)"
-          />
-        </div>
       </template>
     </main>
   </div>

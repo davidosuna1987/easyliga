@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Player } from '@/domain/player'
-import { TeamMember } from 'domain/team'
+import { TeamMember } from '@/domain/team'
 
 const props = defineProps({
   players: {

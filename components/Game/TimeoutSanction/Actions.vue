@@ -110,63 +110,85 @@ const setSideTeamToTimeout = (side: TeamSide) => {
 <template>
   <div class="game-timeout-sanction-actions-component flex justify-between">
     <div class="flex gap-3">
-      <Button
-        class="team-toggle-button p-3 relative"
-        rounded
-        @click="emit('sidebar:toggle', TeamSideEnum.left)"
-      >
-        <Icon name="ph:users-three-fill" size="1.5rem" />
-      </Button>
-      <Button
-        class="p-3 relative"
-        rounded
-        @click="setSideTeamToTimeout(TeamSideEnum.left)"
-      >
-        <Icon name="material-symbols:alarm" size="1.5rem" />
-        <Badge
-          v-if="props.leftSideTeamTimeouts?.length >= 0"
-          class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
-          :value="props.leftSideTeamTimeouts?.length"
+      <template v-if="gameStatus === 'finished'">
+        <Button
+          class="team-toggle-button p-3 relative"
           rounded
-        />
-      </Button>
-      <Button
-        class="p-3"
-        rounded
-        @click="sideTeamToSanction = TeamSideEnum.left"
-      >
-        <Icon name="mdi:cards" size="1.5rem" />
-      </Button>
+          @click="emit('sidebar:toggle', TeamSideEnum.left)"
+        >
+          <Icon name="pepicons-pencil:pen" size="1.5rem" />
+        </Button>
+      </template>
+      <template v-else>
+        <Button
+          class="team-toggle-button p-3 relative"
+          rounded
+          @click="emit('sidebar:toggle', TeamSideEnum.left)"
+        >
+          <Icon name="ph:users-three-fill" size="1.5rem" />
+        </Button>
+        <Button
+          class="p-3 relative"
+          rounded
+          @click="setSideTeamToTimeout(TeamSideEnum.left)"
+        >
+          <Icon name="material-symbols:alarm" size="1.5rem" />
+          <Badge
+            v-if="props.leftSideTeamTimeouts?.length >= 0"
+            class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
+            :value="props.leftSideTeamTimeouts?.length"
+            rounded
+          />
+        </Button>
+        <Button
+          class="p-3"
+          rounded
+          @click="sideTeamToSanction = TeamSideEnum.left"
+        >
+          <Icon name="mdi:cards" size="1.5rem" />
+        </Button>
+      </template>
     </div>
 
     <div class="flex gap-3">
-      <Button
-        class="p-3"
-        rounded
-        @click="sideTeamToSanction = TeamSideEnum.right"
-      >
-        <Icon name="mdi:cards" size="1.5rem" />
-      </Button>
-      <Button
-        class="p-3 relative"
-        rounded
-        @click="setSideTeamToTimeout(TeamSideEnum.right)"
-      >
-        <Icon name="material-symbols:alarm" size="1.5rem" />
-        <Badge
-          v-if="props.rightSideTeamTimeouts?.length >= 0"
-          class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
-          :value="props.rightSideTeamTimeouts?.length"
+      <template v-if="gameStatus === 'finished'">
+        <Button
+          class="team-toggle-button p-3 relative"
           rounded
-        />
-      </Button>
-      <Button
-        class="team-toggle-button p-3 relative"
-        rounded
-        @click="emit('sidebar:toggle', TeamSideEnum.right)"
-      >
-        <Icon name="ph:users-three-fill" size="1.5rem" />
-      </Button>
+          @click="emit('sidebar:toggle', TeamSideEnum.right)"
+        >
+          <Icon name="pepicons-pencil:pen" size="1.5rem" />
+        </Button>
+      </template>
+      <template v-else>
+        <Button
+          class="p-3"
+          rounded
+          @click="sideTeamToSanction = TeamSideEnum.right"
+        >
+          <Icon name="mdi:cards" size="1.5rem" />
+        </Button>
+        <Button
+          class="p-3 relative"
+          rounded
+          @click="setSideTeamToTimeout(TeamSideEnum.right)"
+        >
+          <Icon name="material-symbols:alarm" size="1.5rem" />
+          <Badge
+            v-if="props.rightSideTeamTimeouts?.length >= 0"
+            class="text-xs absolute top-[-2px] right-[-2px] p-[4px]"
+            :value="props.rightSideTeamTimeouts?.length"
+            rounded
+          />
+        </Button>
+        <Button
+          class="team-toggle-button p-3 relative"
+          rounded
+          @click="emit('sidebar:toggle', TeamSideEnum.right)"
+        >
+          <Icon name="ph:users-three-fill" size="1.5rem" />
+        </Button>
+      </template>
     </div>
 
     <SanctionDialog

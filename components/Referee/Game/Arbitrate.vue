@@ -12,6 +12,7 @@ import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
 import {
   ApiCallUpdatedEventResponse,
+  ApiGameSignatureCreatedEventResponse,
   ApiRotationCreatedEventResponse,
   ApiRotationUpdatedEventResponse,
   ApiTimeoutStatusUpdatedEventResponse,
@@ -42,11 +43,15 @@ import {
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
 import { Sanction, SanctionSeverity } from '@/domain/sanction'
+import {
+  GameSignatureTypes,
+  mapApiGameSignatureToGameSignature,
+} from '@/domain/game-signature'
 
 const auth = useAuthStore()
-const app = useNuxtApp()
 const route = useRoute()
 const toast = useEasyToast()
+const { $i18n } = useNuxtApp()
 
 const gameService = new GameService()
 const pointService = new PointService()
@@ -225,7 +230,7 @@ const getGameInitialData = async (firstCall: boolean = false) => {
   const { data, error } = await gameService.initialData(
     Number(route.params.game_id),
     {
-      with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts',
+      with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts,signatures',
     },
   )
 
@@ -270,7 +275,7 @@ const sumPoint = async () => {
       loadingApi.value = false
       return
     } else {
-      toast.success(app.$i18n.t('points.added'), {
+      toast.success($i18n.t('points.added'), {
         life: 3000,
       })
       await getGameInitialData()
@@ -309,7 +314,7 @@ const undoLastPoint = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     loadingApi.value = false
   } else {
-    toast.success(app.$i18n.t('points.deleted'))
+    toast.success($i18n.t('points.deleted'))
     resetPointInterval()
     getGameInitialData()
   }
@@ -372,7 +377,7 @@ const startSet = async (setStartRequest: SetStartRequest) => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(app.$i18n.t('sets.started'))
+    toast.success($i18n.t('sets.started'))
     getGameInitialData()
   }
 }
@@ -402,7 +407,7 @@ const showTimeoutStatusUpdatedToast = (
 ) => {
   if (status === TimeoutStatusEnum.requested) {
     toast.info(
-      app.$i18n.t('events.timeout_status_requested_team', {
+      $i18n.t('events.timeout_status_requested_team', {
         teamName: teamName,
       }),
       {
@@ -411,10 +416,10 @@ const showTimeoutStatusUpdatedToast = (
     )
   }
   if (status === TimeoutStatusEnum.running) {
-    toast.info(app.$i18n.t('events.timeout_status_running'))
+    toast.info($i18n.t('events.timeout_status_running'))
   }
   if (status === TimeoutStatusEnum.finished) {
-    toast.info(app.$i18n.t('events.timeout_status_finished'))
+    toast.info($i18n.t('events.timeout_status_finished'))
   }
 }
 
@@ -432,7 +437,7 @@ const submitObservations = async () => {
     return
   }
 
-  toast.success(app.$i18n.t('observations.stored'))
+  toast.success($i18n.t('observations.stored'))
 
   showObservationsDialog.value = false
 }
@@ -442,7 +447,7 @@ const listenCallUpdatedEvent = () => {
     ApiEvents.CALL_UPDATED,
     (response: ApiCallUpdatedEventResponse) => {
       toast.info(
-        app.$i18n.t('events.call_updated', {
+        $i18n.t('events.call_updated', {
           teamName: response.team.name,
         }),
         {
@@ -463,7 +468,7 @@ const listenRotationCreatedEvent = () => {
     ApiEvents.ROTATION_CREATED,
     (response: ApiRotationCreatedEventResponse) => {
       toast.info(
-        app.$i18n.t('events.rotation_created', {
+        $i18n.t('events.rotation_created', {
           teamName: response.team.name,
         }),
         {
@@ -496,7 +501,7 @@ const listenRotationUpdatedEvent = () => {
     ApiEvents.ROTATION_UPDATED,
     (response: ApiRotationUpdatedEventResponse) => {
       toast.info(
-        app.$i18n.t('events.rotation_updated', {
+        $i18n.t('events.rotation_updated', {
           teamName: response.team.name,
         }),
         {
@@ -560,6 +565,28 @@ const listenTimeoutStatusUpdatedEvent = () => {
   )
 }
 
+const listenGameSignatureCreatedEvent = () => {
+  window.Echo.channel(
+    `game.${route.params.game_id}.game_signature.created`,
+  ).listen(
+    ApiEvents.GAME_SIGNATURE_CREATED,
+    (response: ApiGameSignatureCreatedEventResponse) => {
+      const newSignature = mapApiGameSignatureToGameSignature(
+        response.game_signature,
+      )
+      toast.info(
+        $i18n.t(
+          `events.game_signature_created.${newSignature.type}`,
+          newSignature.type !== GameSignatureTypes.referee
+            ? { teamName: response.team.name }
+            : {},
+        ),
+      )
+      gameInitialData.value?.game.signatures?.push(newSignature)
+    },
+  )
+}
+
 // INFO: replaced with window.Echo.leaveAllChannels()
 // const leaveCallUnlockedEvent = () => {
 //   window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
@@ -584,6 +611,7 @@ const listenEvents = () => {
   listenRotationCreatedEvent()
   listenRotationUpdatedEvent()
   listenTimeoutStatusUpdatedEvent()
+  listenGameSignatureCreatedEvent()
 }
 
 // INFO: replaced with window.Echo.leaveAllChannels()
@@ -622,11 +650,14 @@ onMounted(() => {
         leftSideTeamCall &&
         rightSideTeamCall &&
         gameInitialData &&
+        gameInitialData.game &&
         gameInitialData.game.currentSet &&
         leftSideTeamCurrentRotation &&
         rightSideTeamCurrentRotation &&
-        gameInitialData.game.currentSet.rotations
+        gameInitialData.game.currentSet.rotations &&
+        gameInitialData.game.signatures
       "
+      :game="gameInitialData.game"
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
       :leftSideTeamCoach="leftSideTeamCoach"
@@ -648,6 +679,7 @@ onMounted(() => {
       :gameStatus="gameInitialData.game.status"
       :gameEndedAt="gameInitialData.game.end ?? undefined"
       :timeoutRunning="timeoutRunning"
+      :gameSignatures="gameInitialData.game.signatures"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
       @point:sum="createFormPoint"

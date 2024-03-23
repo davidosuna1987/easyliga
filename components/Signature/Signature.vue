@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { GameSignatureStoreRequest } from '@/domain/game-signature'
 import { SaveSignatureReturnType, VueSignaturePad } from 'vue-signature-pad'
 
 const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
   saveInline: {
     type: Boolean,
     default: true,
@@ -10,14 +15,15 @@ const props = defineProps({
 
 const toast = useEasyToast()
 const { $i18n } = useNuxtApp()
-const emit = defineEmits(['signature:created'])
+const emit = defineEmits<{
+  (e: 'signature:created', value: string): void
+}>()
 
 const signaturePad = ref<VueSignaturePad>()
 const showPlaceholder = ref<boolean>(true)
-const disabled = ref<boolean>(false)
+const buttonsDisabled = ref<boolean>(props.disabled)
 
 const handleOnBegin = () => {
-  console.log('handleOnBegin')
   showPlaceholder.value = false
 }
 
@@ -26,7 +32,7 @@ const undo = () => {
   if (signaturePad.value?.isEmpty()) showPlaceholder.value = true
 }
 
-const clear = () => {
+const clearSignature = () => {
   showPlaceholder.value = true
   signaturePad.value?.clearSignature()
 }
@@ -35,19 +41,25 @@ const saveSignature = (
   type: string = 'image/svg+xml',
 ): SaveSignatureReturnType | undefined => {
   if (!signaturePad.value) return
-  const { isEmpty, data } = signaturePad.value.saveSignature(type)
+  const { data } = signaturePad.value.saveSignature(type)
 
-  if (isEmpty) {
-    toast.error($i18n.t('reports.signature_empty'))
-  } else {
-    disabled.value = true
+  if (data) {
+    buttonsDisabled.value = true
     signaturePad.value.lockSignaturePad()
     emit('signature:created', data)
+  } else {
+    toast.error($i18n.t('reports.signature_empty'))
   }
 }
 
+watch(
+  () => props.disabled,
+  value => (buttonsDisabled.value = value),
+)
+
 defineExpose({
   saveSignature,
+  clearSignature,
 })
 </script>
 
@@ -75,27 +87,27 @@ defineExpose({
 
     <footer class="flex gap-x-0.5">
       <Button
-        :class="['signature-button', { grayscale: disabled }]"
+        :class="['signature-button', { grayscale: buttonsDisabled }]"
         outlined
-        :disabled="disabled"
+        :disabled="buttonsDisabled"
         @click="undo"
       >
         {{ $t('forms.undo') }}
       </Button>
       <Button
-        :class="['signature-button', { grayscale: disabled }]"
+        :class="['signature-button', { grayscale: buttonsDisabled }]"
         outlined
-        :disabled="disabled"
-        @click="clear"
+        :disabled="buttonsDisabled"
+        @click="clearSignature"
       >
         {{ $t('forms.clear') }}
       </Button>
       <Button
         v-if="props.saveInline"
-        :class="['signature-button', { grayscale: disabled }]"
+        :class="['signature-button', { grayscale: buttonsDisabled }]"
         outlined
-        :disabled="disabled"
-        @click="() => saveSignature"
+        :disabled="buttonsDisabled"
+        @click="saveSignature()"
       >
         {{ $t('forms.save') }}
       </Button>
@@ -112,6 +124,7 @@ defineExpose({
   box-shadow: var(--box-shadow-hard);
 
   .signature-wrapper {
+    position: relative;
     aspect-ratio: 16/9;
 
     .signature-placeholder {

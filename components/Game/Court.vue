@@ -22,8 +22,17 @@ import {
   SanctionType,
   getPlayerItemSanction,
 } from '@/domain/sanction'
-import moment from 'moment'
 import { Timeout } from '@/domain/timeout'
+import {
+  GameSignature,
+  GameSignatureStoreRequest,
+  GameSignatureType,
+  GameSignatureTypes,
+  mapApiGameSignatureToGameSignature,
+  mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
+} from '@/domain/game-signature'
+import GameSignatureService from '@/services/game-signature'
+import moment from 'moment'
 
 const auth = useAuthStore()
 
@@ -104,6 +113,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  gameSignatures: {
+    type: Array as PropType<GameSignature[]>,
+    required: true,
+  },
 })
 
 const emit = defineEmits([
@@ -115,11 +128,20 @@ const emit = defineEmits([
   'timeout:init',
   'sanction:stored',
   'sidebar:toggle',
+  'signature:stored',
 ])
+
+const toast = useEasyToast()
+const gameSignatureService = new GameSignatureService()
 
 const showCountdown = ref<boolean>(false)
 const sideTeamToSanction = ref<TeamSide>()
 const memberToSanction = ref<TeamMember>()
+
+const selectedSignatureType = ref<GameSignatureType>()
+const selectedTeamType = ref<TeamType>()
+const showSignatureDialog = ref<boolean>(false)
+const loadingSignature = ref<boolean>(false)
 
 const waitingForPlayerChanges = computed(() =>
   props.rotations.some(rotation => !rotation.locked),
@@ -230,6 +252,23 @@ const getRotationPlayerDataAtPosition = (
   )
 }
 
+const localTeam = computed(() =>
+  props.currentSet.localTeamSide === SetSide.LEFT
+    ? props.leftSideTeam
+    : props.rightSideTeam,
+)
+
+const visitorTeam = computed(() =>
+  props.currentSet.visitorTeamSide === SetSide.LEFT
+    ? props.leftSideTeam
+    : props.rightSideTeam,
+)
+
+const teams = computed(() => ({
+  local: localTeam.value,
+  visitor: visitorTeam.value,
+}))
+
 const leftSideTeamCurrentRotationPlayersData = computed(() =>
   Array.from({ length: 6 }, (_, i) => i + 1)
     .map(position => getRotationPlayerDataAtPosition(position, SetSide.LEFT))
@@ -295,6 +334,38 @@ const getPlayerSanction = (
     playerTeam.id,
     player.profileId,
     SanctionMember.player as SanctionMemberKey,
+  )
+}
+
+const handleOpenSignatureDialog = (
+  signatureType: GameSignatureType,
+  teamType?: TeamType,
+) => {
+  selectedSignatureType.value = signatureType
+  selectedTeamType.value = teamType
+  showSignatureDialog.value = true
+}
+
+const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
+  loadingSignature.value = true
+
+  const { data, error } = await gameSignatureService.store(
+    props.currentSet.gameId,
+    mapGameSignatureStoreRequestToApiGameSignatureStoreRequest(signature),
+  )
+
+  loadingSignature.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  showSignatureDialog.value = false
+
+  emit(
+    'signature:stored',
+    mapApiGameSignatureToGameSignature(data.value.data.game_signature),
   )
 }
 
@@ -429,7 +500,6 @@ onMounted(setInitialShowCountdown)
             @point:undo="undoLastPoint"
           />
           <GameTimeoutSanctionActions
-            v-if="gameStatus !== 'finished'"
             class="mt-6 mb-3"
             :leftSideTeam="leftSideTeam"
             :rightSideTeam="rightSideTeam"
@@ -449,7 +519,42 @@ onMounted(setInitialShowCountdown)
           v-if="gameStatus === 'finished'"
           class="actions grid place-content-center"
         >
+          <div class="flex" v-if="true">
+            <Button
+              class="px-12"
+              :label="
+                $t(`reports.signature_type.long.${GameSignatureTypes.referee}`)
+              "
+              outlined
+              :disabled="
+                !!gameSignatures.find(
+                  signature => signature.type === GameSignatureTypes.referee,
+                )
+              "
+              @click="handleOpenSignatureDialog(GameSignatureTypes.referee)"
+            />
+            <SignatureDialog
+              v-if="selectedSignatureType"
+              :visible="showSignatureDialog"
+              :loading="loadingSignature"
+              :save-inline="false"
+              :type="selectedSignatureType"
+              :team-type="selectedTeamType"
+              :title="
+                $t(
+                  `reports.signature_type.long.${selectedSignatureType}`,
+                  selectedTeamType &&
+                    selectedSignatureType !== GameSignatureTypes.referee
+                    ? { teamName: teams[selectedTeamType].name }
+                    : {},
+                )
+              "
+              @hide="showSignatureDialog = false"
+              @signature:created="handleStoreSignature"
+            />
+          </div>
           <Button
+            v-else
             class="px-12 mb-3"
             :label="$t('games.status.finished')"
             outlined

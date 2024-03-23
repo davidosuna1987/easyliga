@@ -5,6 +5,7 @@ import { ApiTeam } from '@/types/api/team'
 import { ApiTimeout } from '@/types/api/timeout'
 import { ApiSanction } from '@/types/api/sanction'
 import { ApiProfile } from '@/types/api/profile'
+import { ApiGameSignature } from '@/types/api/game-signature'
 
 export enum ApiEvents {
   CALL_UPDATED = 'CallUpdatedEvent',
@@ -15,6 +16,7 @@ export enum ApiEvents {
   GAME_STATUS_UPDATED = 'GameStatusUpdatedEvent',
   TIMEOUT_STATUS_UPDATED = 'TimeoutStatusUpdatedEvent',
   SANCTION_STORED = 'SanctionStoredEvent',
+  GAME_SIGNATURE_CREATED = 'GameSignatureCreatedEvent',
 }
 
 export type ApiCallUpdatedEventResponse = {
@@ -54,4 +56,9 @@ export type ApiSanctionStoredEventResponse = {
   sanction: ApiSanction
   team: ApiTeam
   profile: ApiProfile | null
+}
+
+export type ApiGameSignatureCreatedEventResponse = {
+  team: ApiTeam
+  game_signature: ApiGameSignature
 }

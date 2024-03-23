@@ -19,6 +19,11 @@ import { ApiGender } from '@/types/api/gender'
 import { Division } from '@/domain/division'
 import { League } from '@/domain/league'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
+import { User, mapApiUserToUser } from '@/domain/user'
+import {
+  GameSignature,
+  mapApiGameSignatureToGameSignature,
+} from '@/domain/game-signature'
 import moment from 'moment'
 
 export const GAME_OBSERVATIONS_DELAY = 10
@@ -67,7 +72,7 @@ export type GameRelations = {
   club?: Club
   sede?: Sede
   court?: Court
-  referee?: Profile
+  referee?: User
   localTeam?: Team
   visitorTeam?: Team
   winnerTeam?: Team
@@ -77,6 +82,7 @@ export type GameRelations = {
   calls?: Call[]
   currentSet?: Set
   sanctions?: Sanction[]
+  signatures?: GameSignature[]
 }
 
 export type GameRelationsCount = {
@@ -145,6 +151,10 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
 
   localTeamSetsWonCount: apiGame.local_team_sets_won_count,
   visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count,
+  referee: apiGame.referee ? mapApiUserToUser(apiGame.referee) : undefined,
+  signatures: apiGame.signatures
+    ? apiGame.signatures.map(mapApiGameSignatureToGameSignature)
+    : undefined,
 })
 
 export const mapApiGameInitialDataToGame = (

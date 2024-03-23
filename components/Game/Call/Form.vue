@@ -13,7 +13,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/event'
 import { ApiEvents } from '@/types/api/event'
-import { TeamMember } from 'domain/team'
+import { TeamMember } from '@/domain/team'
 
 const app = useNuxtApp()
 const route = useRoute()

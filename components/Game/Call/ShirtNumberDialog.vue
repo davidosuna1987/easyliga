@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Player, getFullName } from '@/domain/player'
 import { Call } from '@/domain/call'
-import { TeamMember } from 'domain/team'
+import { TeamMember } from '@/domain/team'
 
 const emit = defineEmits(['update:player', 'hide'])
 

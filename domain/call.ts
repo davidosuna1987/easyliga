@@ -4,10 +4,11 @@ import {
   ApiCallPlayersData,
   ApiCallSignRequest,
 } from '@/types/api/call'
-import { Game } from '@/domain/game'
-import { Team } from '@/domain/team'
-import { Player } from '@/domain/player'
+import { Game, mapApiGameToGame } from '@/domain/game'
+import { Team, mapApiTeamToTeam } from '@/domain/team'
+import { Player, mapApiPlayersToPlayers } from '@/domain/player'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
+import { User, mapApiUserToUser } from '@/domain/user'
 
 export const MIN_CALL_PLAYERS = 6
 export const MAX_CALL_PLAYERS = 12
@@ -27,6 +28,7 @@ export type CallRelations = {
   game?: Game
   team?: Team
   players?: Player[]
+  coach?: User
   rotations?: Rotation[]
   currentRotation?: Rotation
 }
@@ -54,12 +56,19 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => ({
   gameId: apiCall.game_id,
   teamId: apiCall.team_id,
   playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
-  currentRotation: apiCall.current_rotation
-    ? mapApiRotationToRotation(apiCall.current_rotation)
-    : undefined,
   locked: apiCall.locked,
   observations: apiCall.observations ?? undefined,
   signedAt: apiCall.signed_at ?? undefined,
+
+  game: apiCall.game ? mapApiGameToGame(apiCall.game) : undefined,
+  team: apiCall.team ? mapApiTeamToTeam(apiCall.team) : undefined,
+  players: mapApiPlayersToPlayers(apiCall.players),
+  rotations: apiCall.rotations
+    ? apiCall.rotations.map(mapApiRotationToRotation)
+    : [],
+  currentRotation: apiCall.current_rotation
+    ? mapApiRotationToRotation(apiCall.current_rotation)
+    : undefined,
 })
 
 export const mapCallPlayersDataToPlayers = (

@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { Game, GAME_OBSERVATIONS_DELAY } from '@/domain/game'
+import {
+  GameSignature,
+  GameSignatureType,
+  GameSignatureTypes,
+} from '@/domain/game-signature'
 import { Call, MIN_CALL_PLAYERS } from '@/domain/call'
 import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
 import {
+  Timeout,
   TimeoutStatusEnum,
   TimeoutStoreRequest,
   mapApiTimeoutToTimeout,
@@ -26,12 +32,15 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits([
-  'timeout:requested',
-  'countdown:ended',
-  'report:signed',
-])
+const emit = defineEmits<{
+  (e: 'timeout:requested', value: Timeout): void
+  (e: 'countdown:ended', value: { game: Game; call: Call }): void
+  (e: 'signature:stored', value: GameSignature): void
+}>()
 
+const gameSignatures = ref<GameSignature[]>(
+  props.games.flatMap(game => game.signatures ?? []),
+)
 const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
 
@@ -116,6 +125,43 @@ const redirectIfSanctionedMembersToChange = () => {
   }
 }
 
+const signButtonTypeDisabled = (
+  game: Game,
+  call: Call,
+  signatureType: GameSignatureType,
+): boolean => {
+  return !!gameSignatures.value?.find(
+    signature =>
+      signature.gameId === game.id &&
+      signature.type === signatureType &&
+      signature.teamId === call.teamId,
+  )
+}
+
+const reportAlreadySignedByCoachAndCaptain = (
+  game: Game,
+  call: Call,
+): boolean => {
+  const gameTeamSignatures = gameSignatures.value?.filter(
+    signature =>
+      signature.gameId === game.id && signature.teamId === call.teamId,
+  )
+
+  return (
+    gameTeamSignatures?.some(
+      signature => signature.type === GameSignatureTypes.coach,
+    ) &&
+    gameTeamSignatures?.some(
+      signature => signature.type === GameSignatureTypes.captain,
+    )
+  )
+}
+
+const handleSignatureStored = (gameSignature: GameSignature) => {
+  gameSignatures.value.push(gameSignature)
+  emit('signature:stored', gameSignature)
+}
+
 onMounted(redirectIfSanctionedMembersToChange)
 
 onBeforeUnmount(() => {
@@ -132,7 +178,7 @@ onBeforeUnmount(() => {
         class="actions grid gap-2 mt-3"
         :class="[
           game.status === 'finished'
-            ? 'grid-cols-3'
+            ? 'grid-cols-2'
             : game.status === 'warmup'
             ? 'grid-cols-2'
             : game.status === 'resting'
@@ -176,26 +222,27 @@ onBeforeUnmount(() => {
         </template>
         <template v-if="game.status === 'finished'">
           <div
-            v-if="calls[index].signedAt"
+            v-if="reportAlreadySignedByCoachAndCaptain(game, calls[index])"
             class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
           >
             {{ $t('reports.closed') }}
           </div>
           <template v-else>
-            <CoachButtonInjuries
-              class="action"
-              :game="game"
-              :call="calls[index]"
-            />
-            <CoachButtonObservations class="action" :call="calls[index]" />
             <CoachButtonSign
+              v-for="gameSignatureType in [
+                GameSignatureTypes.coach,
+                GameSignatureTypes.captain,
+              ]"
               class="action"
               :game="game"
               :call="calls[index]"
-              @report:signed="emit('report:signed', $event)"
+              :signature-type="gameSignatureType"
+              :disabled="
+                signButtonTypeDisabled(game, calls[index], gameSignatureType)
+              "
+              @signature:stored="handleSignatureStored"
             />
             <Countdown
-              v-if="getGameObservationsCountdownTarget(game) >= Date.now()"
               class="col-span-3"
               :target="getGameObservationsCountdownTarget(game)"
               v-slot="{ minutes, seconds }"
@@ -204,7 +251,7 @@ onBeforeUnmount(() => {
               <div
                 class="text-xs text-[var(--danger-color)] flex items-center justify-center"
               >
-                {{ $t('observations.countdown') }}
+                {{ $t('reports.countdown') }}
                 <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
               </div>
             </Countdown>
@@ -223,19 +270,6 @@ onBeforeUnmount(() => {
       </template>
 
       <p>{{ $t('timeouts.request_alert') }}</p>
-      <!-- <p v-if="currentSetGame" class="mt-2">
-        {{
-          $t(
-            'timeouts.request_disclaimer',
-            {
-              num:
-                MAX_TIMEOUTS_PER_SET -
-                (gameTimeouts(currentSetGame)?.length ?? 0),
-            },
-            MAX_TIMEOUTS_PER_SET - (gameTimeouts(currentSetGame)?.length ?? 0),
-          )
-        }}
-      </p> -->
 
       <template #footer>
         <div class="flex justify-end gap-3 mt-3">

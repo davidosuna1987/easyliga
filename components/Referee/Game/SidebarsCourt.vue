@@ -12,7 +12,7 @@ import {
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 import { CurrentRotation, Rotation } from '@/domain/rotation'
-import { GameStatus } from '@/domain/game'
+import { Game, GameStatus } from '@/domain/game'
 import { Timeout } from '@/domain/timeout'
 import {
   Sanction,
@@ -21,8 +21,13 @@ import {
   mergeSanctionsRemovingDuplicates,
 } from '@/domain/sanction'
 import { Player } from '@/domain/player'
+import { GameSignature } from '@/domain/game-signature'
 
 const props = defineProps({
+  game: {
+    type: Object as PropType<Game>,
+    required: true,
+  },
   leftSideTeam: {
     type: Object as PropType<Team>,
     required: true,
@@ -106,6 +111,10 @@ const props = defineProps({
   timeoutRunning: {
     type: Boolean,
     default: false,
+  },
+  gameSignatures: {
+    type: Array as PropType<GameSignature[]>,
+    required: true,
   },
 })
 
@@ -292,6 +301,12 @@ onUnmounted(() => {
         :setSanctions="leftSideTeamSanctions"
         :gameSanctions="gameSanctions"
         :gameStatus="gameStatus"
+        :gameSignatures="gameSignatures"
+        :teamType="
+          leftSideTeam.id === game.localTeamId
+            ? TeamType.LOCAL
+            : TeamType.VISITOR
+        "
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
@@ -320,6 +335,7 @@ onUnmounted(() => {
         :gameStatus="gameStatus"
         :gameEndedAt="gameEndedAt"
         :timeoutRunning="timeoutRunning"
+        :gameSignatures="gameSignatures"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"
@@ -346,6 +362,12 @@ onUnmounted(() => {
         :setSanctions="rightSideTeamSanctions"
         :gameSanctions="gameSanctions"
         :gameStatus="gameStatus"
+        :gameSignatures="gameSignatures"
+        :teamType="
+          rightSideTeam.id === game.localTeamId
+            ? TeamType.LOCAL
+            : TeamType.VISITOR
+        "
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"

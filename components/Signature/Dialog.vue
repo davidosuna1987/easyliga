@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import {
+  GameSignatureStoreRequest,
+  GameSignatureType,
+} from '@/domain/game-signature'
+import { TeamType } from '@/domain/team'
 import { VueSignaturePad } from 'vue-signature-pad'
 
 const props = defineProps({
@@ -6,13 +11,32 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  title: {
+    type: String,
+    default: undefined,
+  },
   saveInline: {
     type: Boolean,
     default: true,
   },
+  type: {
+    type: String as PropType<GameSignatureType>,
+    required: true,
+  },
+  teamType: {
+    type: String as PropType<TeamType>,
+    required: false,
+  },
 })
 
-const emit = defineEmits(['hide', 'signature:created'])
+const emit = defineEmits<{
+  (e: 'hide'): void
+  (e: 'signature:created', value: GameSignatureStoreRequest): void
+}>()
 
 const signaturePad = ref<VueSignaturePad>()
 const showDialog = ref<boolean>(props.visible)
@@ -21,13 +45,13 @@ const hide = () => {
   emit('hide')
 }
 
-const saveSignature = () => {
-  signaturePad.value?.saveSignature()
+const handleSignatureCreated = (signature: string) => {
+  emit('signature:created', {
+    type: props.type,
+    signature,
+    teamType: props.teamType,
+  })
 }
-
-defineExpose({
-  signaturePad,
-})
 
 watch(
   () => props.visible,
@@ -38,18 +62,21 @@ watch(
 <template>
   <DialogBottom :visible="!!showDialog" @hide="hide">
     <template #header>
-      <Heading tag="h6">{{ $t('reports.sign') }}</Heading>
+      <Heading tag="h6">
+        {{
+          props.title
+            ? props.title
+            : $t(`reports.signature_type.short.${props.type}`)
+        }}
+      </Heading>
     </template>
-
-    <p class="mt-3">
-      {{ $t('reports.sign_description') }}
-    </p>
 
     <Signature
       ref="signaturePad"
       class="mt-6"
       :save-inline="props.saveInline"
-      @signature:created="emit('signature:created', $event)"
+      :disabled="props.loading"
+      @signature:created="handleSignatureCreated"
     />
 
     <template #footer>
@@ -59,9 +86,16 @@ watch(
           :label="$t('forms.cancel')"
           severity="info"
           outlined
+          :loading="props.loading"
+          :disabled="props.loading"
           @click="hide"
         />
-        <Button :label="$t('reports.sign')" @click="saveSignature" />
+        <Button
+          :label="$t('reports.sign')"
+          :loading="props.loading"
+          :disabled="props.loading"
+          @click="signaturePad?.saveSignature()"
+        />
       </div>
     </template>
   </DialogBottom>
