@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+  spaLoadingTemplate: false,
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/i18n',
