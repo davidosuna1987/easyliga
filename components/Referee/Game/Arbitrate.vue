@@ -628,7 +628,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="easy-referee-game-arbitrate-component">
+  <div
+    :class="[
+      'easy-referee-game-arbitrate-component',
+      gameInitialData?.game.status ? `is-${gameInitialData.game.status}` : '',
+    ]"
+  >
     <Loading v-if="loadingApi" />
 
     <!-- <Button class="ml-36" @click="easyEmit('game-call-sidebar:open', 'left')"
@@ -642,6 +647,12 @@ onMounted(() => {
       :rightSideTeam="rightSideTeam"
       :leftSideTeamSetsWonCount="leftSideTeamSetsWonCount"
       :rightSideTeamSetsWonCount="rightSideTeamSetsWonCount"
+    />
+    <RefereeGameTeamNames
+      class="font-bold text-lg text-center mt-8 mb-3"
+      v-if="leftSideTeam && rightSideTeam"
+      :leftSideTeamName="leftSideTeam.name"
+      :rightSideTeamName="rightSideTeam.name"
     />
     <RefereeGameSidebarsCourt
       v-if="

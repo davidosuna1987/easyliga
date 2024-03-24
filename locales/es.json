@@ -237,7 +237,8 @@
     "change_window": "Ventana de cambios",
     "change_window_num": "Ventana de cambios {num}",
     "point_will_end_set": "Al sumar este punto, {teamName} será el ganador del set.",
-    "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?"
+    "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?",
+    "finished": "Partido finalizado"
   },
   "federations": {
     "federation": "Federación | Federaciones",

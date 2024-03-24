@@ -12,7 +12,7 @@ import {
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 import { CurrentRotation, Rotation } from '@/domain/rotation'
-import { Game, GameStatus } from '@/domain/game'
+import { Game, type GameStatus } from '@/domain/game'
 import { Timeout } from '@/domain/timeout'
 import {
   Sanction,
@@ -286,6 +286,7 @@ onUnmounted(() => {
 <template>
   <div class="easy-game-sidebars-court-component">
     <div
+      v-if="gameStatus !== 'finished'"
       class="sidebar-wrapper left"
       :class="{ 'is-opened': !!sidebarOpened[TeamSideEnum.left] }"
       @click.self="closeSidebars()"
@@ -347,6 +348,7 @@ onUnmounted(() => {
       />
     </div>
     <div
+      v-if="gameStatus !== 'finished'"
       class="sidebar-wrapper right"
       :class="{ 'is-opened': !!sidebarOpened[TeamSideEnum.right] }"
       @click.self="closeSidebars()"
