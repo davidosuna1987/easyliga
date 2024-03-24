@@ -95,7 +95,6 @@
 
     [class^='position'] {
       position: relative;
-      background: var(--primary-color-light);
       display: grid;
       place-content: center;
       font-size: 2rem;
@@ -105,8 +104,6 @@
       cursor: pointer;
 
       &:hover {
-        background-color: var(--primary-color-medium);
-
         .shirt-number {
           .easy-icon-shirt-number-component {
             background-color: var(--primary-color);
@@ -121,13 +118,9 @@
             -webkit-text-stroke: 1px var(--text-color);
             color: var(--icon-easy-liga-color);
             font-weight: 900;
-            background-color: transparent;
+            background-color: rgba(0, 136, 136, 0.4);
             border: none;
           }
-        }
-
-        .easy-icon-easy-liga-component {
-          // opacity: 0.65;
         }
       }
 
@@ -145,6 +138,16 @@
             border-color: var(--danger-color-medium);
           }
         }
+      }
+    }
+
+    .position-1,
+    .position-5,
+    .position-6 {
+      background-color: var(--primary-color-light);
+
+      &:hover {
+        background-color: var(--primary-color-medium);
       }
     }
 
@@ -176,6 +179,35 @@
         grid-area: position-6;
         border-right: solid 1px var(--primary-color-medium);
       }
+
+      .position-2,
+      .position-3,
+      .position-4 {
+        background-image: linear-gradient(
+          135deg,
+          var(--primary-color-medium) 8.33%,
+          var(--primary-color-light) 8.33%,
+          var(--primary-color-light) 50%,
+          var(--primary-color-medium) 50%,
+          var(--primary-color-medium) 58.33%,
+          var(--primary-color-light) 58.33%,
+          var(--primary-color-light) 100%
+        );
+        background-size: 6.4px 6.4px;
+
+        &:hover {
+          background-image: linear-gradient(
+            135deg,
+            var(--primary-color-light) 8.33%,
+            var(--primary-color-medium) 8.33%,
+            var(--primary-color-medium) 50%,
+            var(--primary-color-light) 50%,
+            var(--primary-color-light) 58.33%,
+            var(--primary-color-medium) 58.33%,
+            var(--primary-color-medium) 100%
+          );
+        }
+      }
     }
 
     &.right {
@@ -205,6 +237,35 @@
       }
       .position-6 {
         grid-area: position-6;
+      }
+
+      .position-2,
+      .position-3,
+      .position-4 {
+        background-image: linear-gradient(
+          45deg,
+          var(--primary-color-medium) 8.33%,
+          var(--primary-color-light) 8.33%,
+          var(--primary-color-light) 50%,
+          var(--primary-color-medium) 50%,
+          var(--primary-color-medium) 58.33%,
+          var(--primary-color-light) 58.33%,
+          var(--primary-color-light) 100%
+        );
+        background-size: 6.4px 6.4px;
+
+        &:hover {
+          background-image: linear-gradient(
+            45deg,
+            var(--primary-color-light) 8.33%,
+            var(--primary-color-medium) 8.33%,
+            var(--primary-color-medium) 50%,
+            var(--primary-color-light) 50%,
+            var(--primary-color-light) 58.33%,
+            var(--primary-color-medium) 58.33%,
+            var(--primary-color-medium) 100%
+          );
+        }
       }
     }
   }
