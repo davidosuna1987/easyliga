@@ -636,23 +636,17 @@ onMounted(() => {
   >
     <Loading v-if="loadingApi" />
 
-    <!-- <Button class="ml-36" @click="easyEmit('game-call-sidebar:open', 'left')"
-      >LEFT</Button
-    > -->
-
     <GameStatus v-if="gameInitialData" :status="gameInitialData.game.status" />
-    <RefereeGameTeamSetsWon
-      v-if="leftSideTeam && rightSideTeam"
-      :leftSideTeam="leftSideTeam"
-      :rightSideTeam="rightSideTeam"
+    <GameScore
+      v-if="gameInitialData?.game.currentSet"
+      :currentSet="gameInitialData.game.currentSet"
       :leftSideTeamSetsWonCount="leftSideTeamSetsWonCount"
       :rightSideTeamSetsWonCount="rightSideTeamSetsWonCount"
     />
-    <RefereeGameTeamNames
-      class="font-bold text-lg text-center mt-8 mb-3"
+    <RefereeGameSidedTeamNames
       v-if="leftSideTeam && rightSideTeam"
-      :leftSideTeamName="leftSideTeam.name"
-      :rightSideTeamName="rightSideTeam.name"
+      :leftSideTeam="leftSideTeam"
+      :rightSideTeam="rightSideTeam"
     />
     <RefereeGameSidebarsCourt
       v-if="

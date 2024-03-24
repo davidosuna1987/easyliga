@@ -220,7 +220,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
       />
     </header>
     <main class="sidebar-content">
-      <template v-if="gameSignatures.length < 5">
+      <template v-if="gameStatus === 'finished' && gameSignatures.length < 5">
         <div class="flex flex-col gap-2">
           <Button
             v-for="gameSignatureType in [

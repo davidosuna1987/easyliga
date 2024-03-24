@@ -79,31 +79,34 @@
     }
   }
 
-  .easy-game-teams-sets-won-component {
+  .easy-game-sided-team-names-component {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin-bottom: 1rem;
-    margin-top: 8rem;
-
-    .teams-sets-won-team {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 1rem;
-      align-items: center;
-      border-radius: var(--border-radius);
-
-      &:nth-child(2) {
-        direction: rtl;
-      }
-    }
+    margin-top: 4rem;
 
     .team-name {
       font-size: 1.5rem;
       font-weight: 500;
-    }
 
-    .sets-count {
+      &:last-child {
+        direction: rtl;
+      }
+    }
+  }
+
+  .easy-game-score-component {
+    position: relative;
+    top: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    border: solid 2px var(--primary-color);
+    border-radius: var(--border-radius);
+    display: inline-flex;
+
+    .sets-won {
       font-size: 1.5rem;
       font-weight: 900;
       background: var(--primary-color-medium);
@@ -114,23 +117,10 @@
       height: 2.5rem;
       display: grid;
       place-content: center;
-      position: relative;
-      bottom: 6rem;
+      position: absolute;
+      bottom: 3rem;
       z-index: 3;
     }
-  }
-
-  .easy-game-score-component {
-    position: absolute;
-    top: -85px;
-    left: 50%;
-    transform: translate(-50%, -75%);
-    z-index: 2;
-    margin: 0 auto;
-    border: solid 2px var(--primary-color);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    display: flex;
 
     .score {
       background: var(--primary-color-medium);
@@ -139,6 +129,18 @@
       font-weight: 700;
       width: 62px;
       text-align: center;
+
+      &.left {
+        .sets-won {
+          left: 46px;
+        }
+      }
+
+      &.right {
+        .sets-won {
+          right: 46px;
+        }
+      }
     }
 
     .set {
@@ -186,16 +188,13 @@
       }
     }
 
-    .easy-game-teams-sets-won-component {
+    .easy-game-sided-team-names-component {
+      display: none;
       margin-top: 0;
-
-      .sets-count {
-        bottom: 2.5rem;
-      }
     }
 
     .easy-game-score-component {
-      top: -35px;
+      top: 0;
     }
 
     .game-timeout-sanction-actions-component {

@@ -315,7 +315,6 @@ onUnmounted(() => {
       />
     </div>
     <div class="score-court relative flex flex-col gap-3">
-      <GameScore :currentSet="currentSet" />
       <GameCourt
         :currentSet="currentSet"
         :gameSanctions="gameSanctions"
