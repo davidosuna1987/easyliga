@@ -105,6 +105,7 @@
     border: solid 2px var(--primary-color);
     border-radius: var(--border-radius);
     display: inline-flex;
+    background-color: var(--primary-color-medium);
 
     .sets-won {
       font-size: 1.5rem;
@@ -123,7 +124,6 @@
     }
 
     .score {
-      background: var(--primary-color-medium);
       padding: 1rem;
       font-size: 1.75rem;
       font-weight: 700;
