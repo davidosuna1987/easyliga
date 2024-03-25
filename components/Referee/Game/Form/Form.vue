@@ -20,6 +20,7 @@ const emit = defineEmits(['changed'])
 
 const auth = useAuthStore()
 const toast = useEasyToast()
+const { $i18n } = useNuxtApp()
 
 const teamService = new TeamService()
 const federationService = new FederationService()
@@ -92,8 +93,8 @@ const submit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
-    toast.success(useNuxtApp().$i18n.t('games.created'))
-    navigateTo(`/referee/games/arbitrate/${data.value?.data.game.id}`)
+    toast.success($i18n.t('games.created'))
+    navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
   }
 
   loadingStore.value = false

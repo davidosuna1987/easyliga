@@ -13,9 +13,3 @@ definePageMeta({
     </div>
   </NuxtLayout>
 </template>
-
-<script lang="ts">
-export default {
-  name: 'RefereeGamesArbitrateGamePage',
-}
-</script>
