@@ -189,7 +189,6 @@
     }
 
     .easy-game-sided-team-names-component {
-      display: none;
       margin-top: 0;
     }
 
@@ -200,6 +199,12 @@
     .game-timeout-sanction-actions-component {
       .team-toggle-button {
         display: none;
+      }
+    }
+
+    &.is-finished {
+      .easy-game-sidebars-court-component {
+        grid-template-columns: 1fr;
       }
     }
   }
