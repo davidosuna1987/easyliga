@@ -122,6 +122,14 @@ export type GameObservationsRequest = {
   observations?: string
 }
 
+export const GameReportTeamTypes = {
+  A: 'A',
+  B: 'B',
+} as const
+
+export type GameReportTeamType =
+  (typeof GameReportTeamTypes)[keyof typeof GameReportTeamTypes]
+
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
   name: apiGame.name,
