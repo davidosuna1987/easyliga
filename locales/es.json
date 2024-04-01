@@ -116,7 +116,8 @@
     "time": "Hora",
     "place": "Lugar",
     "sign": "Firmar",
-    "search": "Buscar"
+    "search": "Buscar",
+    "facility": "Instalación | Instalaciones"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",

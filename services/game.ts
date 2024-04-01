@@ -5,6 +5,7 @@ import {
   ApiGamesResponse,
   ApiGameStoreRequest,
   ApiGameTeamIncompleteResponse,
+  ApiGameReportSimpleResponse,
 } from '@/types/api/game'
 
 import {
@@ -71,6 +72,12 @@ export default class GameService {
     return useApi<ApiGameTeamIncompleteResponse>(
       `${GAMES_API_PREFIX}/${gameId}/teams/${teamId}/incomplete`,
       { params },
+    )
+  }
+
+  reportSimple(gameId: number) {
+    return useApi<ApiGameReportSimpleResponse>(
+      `${GAMES_API_PREFIX}/${gameId}/report/simple`,
     )
   }
 }

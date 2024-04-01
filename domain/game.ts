@@ -2,9 +2,10 @@ import {
   ApiGame,
   ApiGameInitialDataResponse,
   ApiGameObservationsRequest,
+  ApiGameReportSimple,
 } from '@/types/api/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
-import { Set, mapApiSetToSet } from '@/domain/set'
+import { Set, SetSide, mapApiSetToSet } from '@/domain/set'
 import {
   CurrentRotation,
   mapApiCurrentRotationToCurrentRotation,
@@ -13,11 +14,11 @@ import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Club } from '@/domain/club'
-import { Court } from '@/domain/court'
+import { Court, mapApiCourtToCourt } from '@/domain/court'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
-import { Division } from '@/domain/division'
-import { League } from '@/domain/league'
+import { Division, mapApiDivisionToDivision } from '@/domain/division'
+import { League, mapApiLeagueToLeague } from '@/domain/league'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 import { User, mapApiUserToUser } from '@/domain/user'
 import {
@@ -130,6 +131,24 @@ export const GameReportTeamTypes = {
 export type GameReportTeamType =
   (typeof GameReportTeamTypes)[keyof typeof GameReportTeamTypes]
 
+export type GameReportSimple = {
+  game: Game
+  division: Division
+  category: Category
+  gender: Gender
+  localTeam: Team
+  visitorTeam: Team
+  referee: Profile
+  sede: Sede
+  court: Court
+  sets: Set[]
+}
+
+export type GameSidedTeams = {
+  leftSideTeam: Team
+  rightSideTeam: Team
+}
+
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
   name: apiGame.name,
@@ -226,7 +245,35 @@ export const mapGameObservationsRequestToApiGameObservationsRequest = (
   }
 }
 
+export const mapApiGameReportSimpleToGameReportSimple = (
+  apiGameReportSimple: ApiGameReportSimple,
+): GameReportSimple => ({
+  game: mapApiGameToGame(apiGameReportSimple.game),
+  division: mapApiDivisionToDivision(apiGameReportSimple.division),
+  category: mapApiCategoryToCategory(apiGameReportSimple.category),
+  gender: mapApiGenderToGender(apiGameReportSimple.gender),
+  localTeam: mapApiTeamToTeam(apiGameReportSimple.local_team),
+  visitorTeam: mapApiTeamToTeam(apiGameReportSimple.visitor_team),
+  referee: mapApiProfileToProfile(apiGameReportSimple.referee),
+  sede: mapApiSedeToSede(apiGameReportSimple.sede),
+  court: mapApiCourtToCourt(apiGameReportSimple.court),
+  sets: apiGameReportSimple.sets.map(mapApiSetToSet),
+})
+
 export const isValidCoachPanelGame = (game: Game): boolean =>
   !game.end ||
   moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf() >
     moment().valueOf()
+
+export const getSidedTeams = (
+  set: Set,
+  localTeam: Team,
+  visitorTeam: Team,
+): GameSidedTeams | undefined => {
+  const leftSideTeam =
+    set.localTeamSide === SetSide.LEFT ? localTeam : visitorTeam
+  const rightSideTeam =
+    leftSideTeam.id === localTeam.id ? visitorTeam : localTeam
+
+  return { leftSideTeam, rightSideTeam }
+}

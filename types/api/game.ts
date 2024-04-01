@@ -12,6 +12,8 @@ import { ApiCurrentRotation } from '@/types/api/rotation'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiSanction } from '@/types/api/sanction'
 import { ApiGameSignature } from '@/types/api/game-signature'
+import { ApiCategory } from '@/types/api/category'
+import { ApiGender } from '@/types/api/gender'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -60,6 +62,19 @@ export type ApiGame = {
   deleted_at: string | null
 } & ApiGameRelations &
   ApiGameRelationsCount
+
+export type ApiGameReportSimple = {
+  game: ApiGame
+  division: ApiDivision
+  category: ApiCategory
+  gender: ApiGender
+  local_team: ApiTeam
+  visitor_team: ApiTeam
+  referee: ApiProfile
+  sede: ApiSede
+  court: ApiCourt
+  sets: ApiSet[]
+}
 
 export type ApiGameResponse = {
   success: boolean
@@ -126,5 +141,11 @@ export type ApiGameTeamIncompleteResponse = {
       current_set: boolean
     }
   }
+  errors: null
+}
+
+export type ApiGameReportSimpleResponse = {
+  success: boolean
+  data: ApiGameReportSimple
   errors: null
 }
