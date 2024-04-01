@@ -149,6 +149,11 @@ export type GameSidedTeams = {
   rightSideTeam: Team
 }
 
+export const GameReportSideTeamTypes = {
+  LEFT: 'A',
+  RIGHT: 'B',
+} as const
+
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
   name: apiGame.name,

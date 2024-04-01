@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Game } from '@/domain/game'
+import { Game, GameReportSideTeamTypes } from '@/domain/game'
 import { Division } from '@/domain/division'
 import { Category } from '@/domain/game'
 import { Gender } from '@/domain/game'
@@ -103,7 +103,7 @@ const config = useRuntimeConfig()
             <p
               class="report-team-side text-5xl font-semibold mr-3 text-primary"
             >
-              A
+              {{ GameReportSideTeamTypes.LEFT }}
             </p>
             <p class="report-team-name text-xl leading-5 mb-1.5">
               {{ leftSideTeam.name }}
@@ -113,7 +113,7 @@ const config = useRuntimeConfig()
             <p
               class="report-team-side text-5xl font-semibold ml-3 text-tertiary-dark"
             >
-              B
+              {{ GameReportSideTeamTypes.RIGHT }}
             </p>
             <p class="report-team-name text-xl leading-5 mb-1.5">
               {{ rightSideTeam.name }}
