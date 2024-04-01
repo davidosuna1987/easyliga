@@ -57,6 +57,10 @@ export type TeamMember = {
   coach: boolean
 }
 
+export const TeamMemberTypes = {
+  COACH: 'E',
+} as const
+
 export const mapApiTeamToTeam = (
   apiTeam: ApiTeam,
   withProfiles: boolean = false,

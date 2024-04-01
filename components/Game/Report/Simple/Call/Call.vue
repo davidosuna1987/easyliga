@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { TeamMemberTypes } from '@/domain/team'
+</script>
+
 <template>
   <aside class="easy-game-report-call-component">
     <div class="grid grid-cols-12">
@@ -25,7 +29,7 @@
             class="col-span-1 border-solid border-y-0 h-[29.5px] grid place-content-center"
           >
             <IconShirtNumber class="no-print" shirtNumber="E" size="sm" />
-            <strong class="print">E</strong>
+            <strong class="print">{{ TeamMemberTypes.COACH }}</strong>
           </div>
           <div class="col-span-5 px-2 flex items-center">
             El loco de la colina
