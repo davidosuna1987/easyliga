@@ -130,3 +130,9 @@ const config = useRuntimeConfig()
     </div>
   </header>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'GameReportSimpleHeader',
+}
+</script>
