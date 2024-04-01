@@ -1,6 +1,11 @@
 <script lang="ts" setup>
+const gameName = 'Navarvoley A VS Irbarate INF'
 const print = () => {
+  const originalTitle = document.title
+  const titleSlug = gameName.toLowerCase().replace(/ /g, '-')
+  document.title = `acta-${titleSlug}`
   window.print()
+  document.title = originalTitle
 }
 </script>
 
@@ -10,7 +15,7 @@ const print = () => {
       <GameReportSimpleHeader />
 
       <main
-        class="report-main mt-3 grid grid-cols-1 md:grid-cols-2 lg:[grid-template-columns:1fr_1fr_300px] gap-3"
+        class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3"
       >
         <GameReportSimpleCall />
         <div class="grid gap-3">
@@ -45,6 +50,11 @@ const print = () => {
 }
 
 @media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
   .no-print {
     display: none !important;
   }
@@ -57,6 +67,7 @@ const print = () => {
     margin: 0;
     padding: 0;
     min-height: 0;
+    font-size: 11px;
   }
 
   body {
@@ -79,6 +90,13 @@ const print = () => {
       border-radius: 0;
       box-shadow: none;
       padding: 2.5rem;
+
+      .easy-game-report-component {
+        .easy-icon-easy-liga-component {
+          width: 50px;
+          height: 50px;
+        }
+      }
     }
   }
 }
