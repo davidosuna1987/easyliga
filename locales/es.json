@@ -326,6 +326,7 @@
     "no_available": "No hay jugadores disponibles",
     "search_by_nif": "Buscar por D.N.I",
     "search": "Buscar jugador | Buscar jugadores",
+    "name": "Nombre del jugador",
     "type_name": "Escribe el nombre del jugador",
     "you_selected": "Has seleccionado al siguiente jugador",
     "add_disclaimer": "Si deseas añadirlo a tu equipo haz clic en el botón \"Añadir jugador\" y cuando se cierre esta ventana deberás hacer click en el botón \"Actualizar equipo\" para que la operación finalice correctamente.",
@@ -575,7 +576,8 @@
         "captain": "Firma capitán"
       }
     },
-    "closed": "El acta del partido {gameName} se ha cerrado"
+    "closed": "El acta del partido {gameName} se ha cerrado",
+    "player_number": "Nº"
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",

@@ -63,6 +63,7 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => ({
   game: apiCall.game ? mapApiGameToGame(apiCall.game) : undefined,
   team: apiCall.team ? mapApiTeamToTeam(apiCall.team) : undefined,
   players: mapApiPlayersToPlayers(apiCall.players),
+  coach: apiCall.coach ? mapApiUserToUser(apiCall.coach) : undefined,
   rotations: apiCall.rotations
     ? apiCall.rotations.map(mapApiRotationToRotation)
     : [],

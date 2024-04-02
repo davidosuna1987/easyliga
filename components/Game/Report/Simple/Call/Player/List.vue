@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { CallPlayerData } from '@/domain/call'
+
 defineProps({
-  testMax: {
+  rowLength: {
     type: Number,
     required: true,
   },
-  testLength: {
-    type: Number,
+  players: {
+    type: Array as PropType<CallPlayerData[]>,
     required: true,
   },
 })
@@ -13,13 +15,8 @@ defineProps({
 
 <template>
   <div class="easy-game-report-call-player-list-component grid grid-cols-6">
-    <!-- <GameReportSimpleCallPlayerHeader /> -->
-    <template v-for="i in testMax">
-      <GameReportSimpleCallPlayerItem v-if="i <= testLength" :shirtNumber="i" />
-      <template v-else>
-        <div class="col-span-1 border-solid border-t-0 h-[29.5px]" />
-        <div class="col-span-5 border-solid border-t-0 border-x-0 h-[29.5px]" />
-      </template>
+    <template v-for="i in rowLength">
+      <GameReportSimpleCallPlayerItem :player="players[i - 1]" />
     </template>
   </div>
 </template>

@@ -73,7 +73,14 @@ onMounted(() => {
       <main
         class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3"
       >
-        <GameReportSimpleCall />
+        <GameReportSimpleCall
+          v-if="gameSidedTeams?.leftSideTeam && gameSidedTeams?.rightSideTeam"
+          :calls="report.calls"
+          :localTeam="report.localTeam"
+          :visitorTeam="report.visitorTeam"
+          :leftSideTeam="gameSidedTeams.leftSideTeam"
+          :rightSideTeam="gameSidedTeams.rightSideTeam"
+        />
         <div class="grid gap-3">
           <GameReportSimpleResult />
           <GameReportSimpleSanction />

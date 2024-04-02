@@ -74,6 +74,7 @@ export type ApiGameReportSimple = {
   sede: ApiSede
   court: ApiCourt
   sets: ApiSet[]
+  calls: ApiCall[]
 }
 
 export type ApiGameResponse = {

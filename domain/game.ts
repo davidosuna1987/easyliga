@@ -142,6 +142,7 @@ export type GameReportSimple = {
   sede: Sede
   court: Court
   sets: Set[]
+  calls: Call[]
 }
 
 export type GameSidedTeams = {
@@ -263,6 +264,7 @@ export const mapApiGameReportSimpleToGameReportSimple = (
   sede: mapApiSedeToSede(apiGameReportSimple.sede),
   court: mapApiCourtToCourt(apiGameReportSimple.court),
   sets: apiGameReportSimple.sets.map(mapApiSetToSet),
+  calls: apiGameReportSimple.calls.map(mapApiCallToCall),
 })
 
 export const isValidCoachPanelGame = (game: Game): boolean =>
