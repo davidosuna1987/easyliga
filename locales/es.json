@@ -117,7 +117,8 @@
     "place": "Lugar",
     "sign": "Firmar",
     "search": "Buscar",
-    "facility": "Instalación | Instalaciones"
+    "facility": "Instalación | Instalaciones",
+    "print": "Imprimir"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
