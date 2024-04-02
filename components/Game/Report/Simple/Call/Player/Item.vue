@@ -29,7 +29,7 @@ const props = defineProps({
   <div
     class="col-span-5 p-2 border-solid border-t-0 border-x-0 flex items-center h-[29.5px]"
   >
-    <span v-if="player">{{ getFullName(player) }}</span>
+    <span class="leading-4" v-if="player">{{ getFullName(player) }}</span>
     <span v-else>&nbsp;</span>
   </div>
 </template>
