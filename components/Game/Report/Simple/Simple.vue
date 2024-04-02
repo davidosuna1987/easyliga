@@ -86,10 +86,10 @@ onMounted(() => {
           <GameReportSimpleSanction />
         </div>
         <div class="flex flex-col gap-3">
+          <GameReportSimpleSignatures />
           <GameReportSimpleObservations
             :observations="report.game.observations"
           />
-          <GameReportSimpleSignatures />
         </div>
       </main>
     </div>
@@ -100,7 +100,7 @@ onMounted(() => {
       size="small"
       variant="primary"
     >
-      Imprimir
+      {{ $t('forms.print') }}
     </Button>
   </div>
 </template>
