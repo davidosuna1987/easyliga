@@ -101,21 +101,21 @@ export type GameStatus =
 export type Game = {
   id: number
   name: string
-  leagueId: number | null
-  divisionId: number | null
-  clubId: number | null
-  sedeId: number | null
-  courtId: number | null
-  refereeId: number | null
-  localTeamId: number | null
-  visitorTeamId: number | null
-  winnerTeamId: number | null
-  loserTeamId: number | null
-  date: string | null
-  start: string | null
-  end: string | null
+  leagueId?: number
+  divisionId?: number
+  clubId?: number
+  sedeId?: number
+  courtId?: number
+  refereeId?: number
+  localTeamId?: number
+  visitorTeamId?: number
+  winnerTeamId?: number
+  loserTeamId?: number
+  date?: string
+  start?: string
+  end?: string
   status: GameStatus
-  observations: string | null
+  observations?: string
 } & GameRelations &
   GameRelationsCount
 
@@ -158,21 +158,21 @@ export const GameReportSideTeamTypes = {
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
   name: apiGame.name,
-  leagueId: apiGame.league_id,
-  divisionId: apiGame.division_id,
-  clubId: apiGame.club_id,
-  sedeId: apiGame.sede_id,
-  courtId: apiGame.court_id,
-  refereeId: apiGame.referee_id,
-  localTeamId: apiGame.local_team_id,
-  visitorTeamId: apiGame.visitor_team_id,
-  winnerTeamId: apiGame.winner_team_id,
-  loserTeamId: apiGame.loser_team_id,
-  date: apiGame.date,
-  start: apiGame.start,
-  end: apiGame.end,
+  leagueId: apiGame.league_id ?? undefined,
+  divisionId: apiGame.division_id ?? undefined,
+  clubId: apiGame.club_id ?? undefined,
+  sedeId: apiGame.sede_id ?? undefined,
+  courtId: apiGame.court_id ?? undefined,
+  refereeId: apiGame.referee_id ?? undefined,
+  localTeamId: apiGame.local_team_id ?? undefined,
+  visitorTeamId: apiGame.visitor_team_id ?? undefined,
+  winnerTeamId: apiGame.winner_team_id ?? undefined,
+  loserTeamId: apiGame.loser_team_id ?? undefined,
+  date: apiGame.date ?? undefined,
+  start: apiGame.start ?? undefined,
+  end: apiGame.end ?? undefined,
   status: apiGame.status,
-  observations: apiGame.observations,
+  observations: apiGame.observations ?? undefined,
 
   sets: apiGame.sets?.map(mapApiSetToSet),
   currentSet: apiGame.current_set

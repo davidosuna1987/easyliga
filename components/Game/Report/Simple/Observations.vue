@@ -1,19 +1,21 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps({
+  observations: {
+    type: String,
+    required: false,
+  },
+})
+</script>
 
 <template>
   <article class="easy-game-report-observations-component">
     <header
       class="report-observations-header border-solid p-2 grid place-content-center"
     >
-      <strong class="uppercase">Observaciones</strong>
+      <strong class="uppercase">{{ $t('observations.observation', 2) }}</strong>
     </header>
-    <main class="report-observations-main border-solid p-2">
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos cupiditate
-        cum earum veritatis eius numquam omnis mollitia minus consequatur iure
-        quidem esse expedita dolorum deserunt, praesentium fuga nemo cumque
-        repudiandae?
-      </p>
+    <main class="report-observations-main border-solid p-2 min-h-[110px]">
+      <p>{{ observations }}</p>
     </main>
   </article>
 </template>

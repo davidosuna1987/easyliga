@@ -86,7 +86,9 @@ onMounted(() => {
           <GameReportSimpleSanction />
         </div>
         <div class="flex flex-col gap-3">
-          <GameReportSimpleObservations />
+          <GameReportSimpleObservations
+            :observations="report.game.observations"
+          />
           <GameReportSimpleSignatures />
         </div>
       </main>
