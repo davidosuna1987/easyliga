@@ -18,14 +18,16 @@ import { Court, mapApiCourtToCourt } from '@/domain/court'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
-import { League, mapApiLeagueToLeague } from '@/domain/league'
+import { League } from '@/domain/league'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 import { User, mapApiUserToUser } from '@/domain/user'
+import { Timeout } from '@/domain/timeout'
 import {
   GameSignature,
   mapApiGameSignatureToGameSignature,
 } from '@/domain/game-signature'
 import moment from 'moment'
+import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
@@ -114,6 +116,7 @@ export type Game = {
   date?: string
   start?: string
   end?: string
+  duration?: Duration
   status: GameStatus
   observations?: string
 } & GameRelations &
@@ -150,6 +153,16 @@ export type GameSidedTeams = {
   rightSideTeam: Team
 }
 
+export type GameLocalVisitorCalls = {
+  localTeamCall: Call
+  visitorTeamCall: Call
+}
+
+export type GameLocalVisitorTimeouts = {
+  localTeamTimeouts: Timeout[]
+  visitorTeamTimeouts: Timeout[]
+}
+
 export const GameReportSideTeamTypes = {
   LEFT: 'A',
   RIGHT: 'B',
@@ -171,6 +184,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   date: apiGame.date ?? undefined,
   start: apiGame.start ?? undefined,
   end: apiGame.end ?? undefined,
+  duration: mapApiDurationToDuration(apiGame.duration),
   status: apiGame.status,
   observations: apiGame.observations ?? undefined,
 
@@ -283,4 +297,32 @@ export const getSidedTeams = (
     leftSideTeam.id === localTeam.id ? visitorTeam : localTeam
 
   return { leftSideTeam, rightSideTeam }
+}
+
+export const getLocalVisitorCalls = (
+  calls: Call[],
+  localTeam: Team,
+  visitorTeam: Team,
+): GameLocalVisitorCalls | undefined => {
+  const localTeamCall = calls.find(call => call.teamId === localTeam.id)
+  const visitorTeamCall = calls.find(call => call.teamId === visitorTeam.id)
+
+  if (!localTeamCall || !visitorTeamCall) return undefined
+
+  return { localTeamCall, visitorTeamCall }
+}
+
+export const getLocalVisitorTimeouts = (
+  timeouts: Timeout[],
+  localTeam: Team,
+  visitorTeam: Team,
+): GameLocalVisitorTimeouts => {
+  const localTeamTimeouts = timeouts.filter(
+    timeout => timeout.teamId === localTeam.id,
+  )
+  const visitorTeamTimeouts = timeouts.filter(
+    timeout => timeout.teamId === visitorTeam.id,
+  )
+
+  return { localTeamTimeouts, visitorTeamTimeouts }
 }

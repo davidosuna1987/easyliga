@@ -1,63 +1,79 @@
 <script setup lang="ts">
-import { GameReportTeamTypes } from '@/domain/game'
+import { Team } from '@/domain/team'
+
+const props = defineProps({
+  localTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  visitorTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  leftSideTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+})
 </script>
 
 <template>
   <header class="col-span-10 border-solid p-2 grid place-content-center">
-    <strong class="uppercase">Resultado final</strong>
+    <strong class="uppercase">{{ $t('reports.result.title') }}</strong>
   </header>
 
-  <div
-    class="flex justify-between col-span-5 border-solid border-r-0 border-t-0 p-2"
-  >
-    <span>Navarvoley A</span>
-    <GameReportSimpleTeamIcon :type="GameReportTeamTypes.B" />
-  </div>
+  <GameReportSimpleSidedTeam
+    :team="localTeam"
+    :leftSideTeam="leftSideTeam"
+    class="col-span-5 border-solid border-r-0 border-t-0 p-2"
+  />
 
-  <div
-    class="flex flex-row-reverse justify-between col-span-5 border-solid border-t-0 p-2"
-  >
-    <span>Irbarate INF</span>
-    <GameReportSimpleTeamIcon :type="GameReportTeamTypes.A" />
-  </div>
+  <GameReportSimpleSidedTeam
+    :team="visitorTeam"
+    :leftSideTeam="leftSideTeam"
+    direction="right"
+    class="col-span-5 border-solid border-t-0 p-2"
+  />
 
   <div class="grid place-content-center p-2 border-solid border-r-0 border-t-0">
-    <strong>"T"</strong>
+    <strong>{{ $t('reports.result.timeouts') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>S</strong>
+    <strong>{{ $t('reports.result.replacements') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <strong>W</strong>
+    <strong>{{ $t('reports.result.won_points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>P</strong>
+    <strong>{{ $t('reports.result.points') }}</strong>
   </div>
 
   <div
     class="grid grid-cols-2 place-content-center col-span-2 p-2 border-solid border-x-0 text-center border-t-0"
   >
-    <strong class="uppercase">Set</strong>
-    <span class="font-2xs place-self-center">(duración)</span>
+    <strong class="uppercase">{{ $t('reports.result.set') }}</strong>
+    <span class="font-2xs place-self-center">
+      ({{ $t('reports.result.duration').toLocaleLowerCase() }})
+    </span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>P</strong>
+    <strong>{{ $t('reports.result.points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <strong>W</strong>
+    <strong>{{ $t('reports.result.won_points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>S</strong>
+    <strong>{{ $t('reports.result.replacements') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-l-0 border-t-0">
-    <strong>"T"</strong>
+    <strong>{{ $t('reports.result.timeouts') }}</strong>
   </div>
 
   <div class="col-span-10 border-solid border-b-0"></div>

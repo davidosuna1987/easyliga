@@ -3,6 +3,7 @@ import { ApiPoint } from '@/types/api/point'
 import { ApiRotation } from '@/types/api/rotation'
 import { ApiTimeout } from '@/types/api/timeout'
 import { ApiSanction } from '@/types/api/sanction'
+import { ApiDuration } from '@/types/api/utils'
 
 export type ApiSetRelations = {
   last_point?: ApiPoint
@@ -11,6 +12,13 @@ export type ApiSetRelations = {
   timeouts?: ApiTimeout[]
   sanctions?: ApiSanction[]
   game_sanctions?: ApiSanction[]
+}
+
+export type ApiSetRelationsCount = {
+  rotations_count?: number
+  timeouts_count?: number
+  sanctions_count?: number
+  game_sanctions_count?: number
 }
 
 export type ApiSet = {
@@ -26,11 +34,13 @@ export type ApiSet = {
   loser_team_id: number | null
   start: string | null
   end: string | null
+  duration: ApiDuration | null
   observations: string | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-} & ApiSetRelations
+} & ApiSetRelations &
+  ApiSetRelationsCount
 
 export type ApiSetResponse = {
   success: boolean

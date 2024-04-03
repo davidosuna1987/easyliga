@@ -3,6 +3,7 @@ import { Point, mapApiPointToPoint } from '@/domain/point'
 import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 import { Timeout, mapApiTimeoutToTimeout } from '@/domain/timeout'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
+import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 
 export const POINT_DIFFERENCE_TO_WIN = 2
 export const SET_POINTS_TO_WIN = 5
@@ -23,6 +24,13 @@ export type SetRelations = {
   gameSanctions?: Sanction[]
 }
 
+export type SetRelationsCount = {
+  rotationsCount?: number
+  timeoutsCount?: number
+  sanctionsCount?: number
+  gameSanctionsCount?: number
+}
+
 export type Set = {
   id: number
   gameId: number
@@ -36,8 +44,10 @@ export type Set = {
   loserTeamId?: number
   start?: string
   end?: string
+  duration?: Duration
   observations?: string
-} & SetRelations
+} & SetRelations &
+  SetRelationsCount
 
 export type SetStartRequest = {
   localTeamSide: SetSide
@@ -58,6 +68,7 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   loserTeamId: apiSet.loser_team_id ?? undefined,
   start: apiSet.start ?? undefined,
   end: apiSet.end ?? undefined,
+  duration: mapApiDurationToDuration(apiSet.duration),
   observations: apiSet.observations ?? undefined,
 
   lastPoint: apiSet.last_point
@@ -78,6 +89,11 @@ export const mapApiSetToSet = (apiSet: ApiSet): Set => ({
   gameSanctions: apiSet.game_sanctions
     ? apiSet.game_sanctions.map(mapApiSanctionToSanction)
     : undefined,
+
+  rotationsCount: apiSet.rotations_count ?? undefined,
+  timeoutsCount: apiSet.timeouts_count ?? undefined,
+  sanctionsCount: apiSet.sanctions_count ?? undefined,
+  gameSanctionsCount: apiSet.game_sanctions_count ?? undefined,
 })
 
 export const mapSetStartRequestToApiSetStartRequest = (

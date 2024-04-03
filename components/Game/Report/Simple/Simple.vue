@@ -4,6 +4,10 @@ import {
   getSidedTeams,
   mapApiGameReportSimpleToGameReportSimple,
   GameSidedTeams,
+  GameLocalVisitorCalls,
+  GameLocalVisitorTimeouts,
+  getLocalVisitorCalls,
+  getLocalVisitorTimeouts,
 } from '@/domain/game'
 import { Set } from '@/domain/set'
 import GameService from '@/services/game'
@@ -38,6 +42,30 @@ const gameSidedTeams = computed((): GameSidedTeams | undefined => {
     report.value.visitorTeam,
   )
 })
+
+const gameLocalVisitorCalls = computed(
+  (): GameLocalVisitorCalls | undefined => {
+    if (!report.value) return
+
+    return getLocalVisitorCalls(
+      report.value.calls,
+      report.value.localTeam,
+      report.value.visitorTeam,
+    )
+  },
+)
+
+const gameLocalVisitorTimeouts = computed(
+  (): GameLocalVisitorTimeouts | undefined => {
+    if (!report.value) return
+
+    return getLocalVisitorTimeouts(
+      report.value.sets.flatMap(set => set.timeouts ?? []),
+      report.value.localTeam,
+      report.value.visitorTeam,
+    )
+  },
+)
 
 const print = () => {
   if (!report.value) return
@@ -82,7 +110,17 @@ onMounted(() => {
           :rightSideTeam="gameSidedTeams.rightSideTeam"
         />
         <div class="grid gap-3">
-          <GameReportSimpleResult />
+          <GameReportSimpleResult
+            v-if="gameSidedTeams && gameLocalVisitorCalls"
+            :game="report.game"
+            :localTeam="report.localTeam"
+            :visitorTeam="report.visitorTeam"
+            :leftSideTeam="gameSidedTeams.leftSideTeam"
+            :rightSideTeam="gameSidedTeams.rightSideTeam"
+            :localTeamCall="gameLocalVisitorCalls.localTeamCall"
+            :visitorTeamCall="gameLocalVisitorCalls.visitorTeamCall"
+            :sets="report.sets"
+          />
           <GameReportSimpleSanction />
         </div>
         <div class="flex flex-col gap-3">

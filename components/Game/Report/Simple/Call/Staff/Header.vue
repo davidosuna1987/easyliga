@@ -1,6 +1,6 @@
 <template>
   <div class="col-span-12 p-2 border-solid border-t-0 text-center">
-    <strong class="uppercase">Oficiales</strong>
+    <strong class="uppercase">{{ $t('teams.staff') }}</strong>
   </div>
 </template>
 

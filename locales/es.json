@@ -305,6 +305,8 @@
     "libero_select": "Selecciona un líbero",
     "libero_assign": "Asignar líbero",
     "libero_remove": "Quitar líbero",
+    "libero_player": "Jugador líbero",
+    "staff": "Oficiales",
     "members": "Miembros del equipo",
     "member_select": "Selecciona un miembro del equipo"
   },
@@ -578,7 +580,20 @@
       }
     },
     "closed": "El acta del partido {gameName} se ha cerrado",
-    "player_number": "Nº"
+    "player_number": "Nº",
+    "result": {
+      "title": "Resultado final",
+      "timeouts": "\"T\"",
+      "replacements": "S",
+      "won_points": "W",
+      "points": "P",
+      "set": "Set",
+      "duration": "Duración",
+      "total_duration": "Duración total",
+      "start_time": "Hora de inicio",
+      "end_time": "Hora de finalización",
+      "winner": "Ganador"
+    }
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",
@@ -614,6 +629,16 @@
       "referee": "Árbitro",
       "coach": "Entrenador",
       "captain": "Capitán"
+    }
+  },
+  "duration": {
+    "hours": "hora | horas",
+    "minutes": "minuto | minutos",
+    "seconds": "segundo | segundos",
+    "short": {
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
     }
   },
   "events": {

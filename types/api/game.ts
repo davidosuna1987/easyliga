@@ -14,6 +14,7 @@ import { ApiSanction } from '@/types/api/sanction'
 import { ApiGameSignature } from '@/types/api/game-signature'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
+import { ApiDuration } from '@/types/api/utils'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -53,6 +54,7 @@ export type ApiGame = {
   date: string | null
   start: string | null
   end: string | null
+  duration: ApiDuration | null
   winner_team_id: number | null
   loser_team_id: number | null
   status: GameStatus
