@@ -593,7 +593,8 @@
       "start_time": "Hora de inicio",
       "end_time": "Hora de finalización",
       "winner": "Ganador"
-    }
+    },
+    "approval": "Aprobación"
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",
@@ -629,6 +630,11 @@
       "referee": "Árbitro",
       "coach": "Entrenador",
       "captain": "Capitán"
+    },
+    "alt_text": {
+      "referee": "Firma del árbitro del partido",
+      "coach": "Firma del entrenador de {teamName}",
+      "captain": "Firma del capitán de {teamName}"
     }
   },
   "duration": {

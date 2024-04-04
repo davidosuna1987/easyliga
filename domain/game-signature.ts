@@ -71,3 +71,14 @@ export const mapGameSignatureStoreRequestToApiGameSignatureStoreRequest = (
   signature: gameSignature.signature,
   team_type: gameSignature.teamType,
 })
+
+export const getSignatureByType = (
+  gameSignatures: GameSignature[],
+  type: GameSignatureType,
+  teamId?: number,
+): GameSignature | undefined =>
+  gameSignatures.find(
+    gameSignature =>
+      gameSignature.type === type &&
+      (!teamId || gameSignature.teamId === teamId),
+  )

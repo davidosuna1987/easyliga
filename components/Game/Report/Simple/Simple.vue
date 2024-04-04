@@ -124,7 +124,15 @@ onMounted(() => {
           <GameReportSimpleSanction />
         </div>
         <div class="flex flex-col gap-3">
-          <GameReportSimpleSignatures />
+          <GameReportSimpleSignatures
+            v-if="gameSidedTeams"
+            :referee="report.referee"
+            :localTeam="report.localTeam"
+            :visitorTeam="report.visitorTeam"
+            :leftSideTeam="gameSidedTeams.leftSideTeam"
+            :rightSideTeam="gameSidedTeams.rightSideTeam"
+            :signatures="report.game.signatures ?? []"
+          />
           <GameReportSimpleObservations
             :observations="report.game.observations"
           />
