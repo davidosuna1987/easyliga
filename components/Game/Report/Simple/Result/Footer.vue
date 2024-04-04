@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Set } from '@/domain/set'
 import { Team } from '@/domain/team'
-import { Rotation } from 'domain/rotation'
+import { Rotation, getRotationsByCallId } from '@/domain/rotation'
 import { Call } from '@/domain/call'
 import { Game } from '@/domain/game'
-import { Timeout } from '@/domain/timeout'
+import { Timeout, getTimeoutsByTeamId } from '@/domain/timeout'
 import {
   Duration,
   formatTime,
@@ -43,36 +43,28 @@ const props = defineProps({
   },
 })
 
-const setTimeouts = computed((): Timeout[] => {
+const gameTimeouts = computed((): Timeout[] => {
   return props.sets.flatMap(set => set.timeouts ?? [])
 })
 
 const localTeamTimeoutsCount = computed((): number => {
-  return setTimeouts.value.filter(
-    timeout => timeout.teamId === props.localTeam.id,
-  ).length
+  return getTimeoutsByTeamId(gameTimeouts.value, props.localTeam.id).length
 })
 
 const visitorTeamTimeoutsCount = computed((): number => {
-  return setTimeouts.value.filter(
-    timeout => timeout.teamId === props.visitorTeam.id,
-  ).length
+  return getTimeoutsByTeamId(gameTimeouts.value, props.visitorTeam.id).length
 })
 
-const setRotations = computed((): Rotation[] => {
+const gameRotations = computed((): Rotation[] => {
   return props.sets.flatMap(set => set.rotations ?? [])
 })
 
 const localTeamRotation = computed((): Rotation[] => {
-  return setRotations.value.filter(
-    rotation => rotation.callId === props.localTeamCall.id,
-  )
+  return getRotationsByCallId(gameRotations.value, props.localTeamCall.id)
 })
 
 const visitorTeamRotation = computed((): Rotation[] => {
-  return setRotations.value.filter(
-    rotation => rotation.callId === props.visitorTeamCall.id,
-  )
+  return getRotationsByCallId(gameRotations.value, props.visitorTeamCall.id)
 })
 
 const localTeamPlayerChangesCount = computed((): number => {

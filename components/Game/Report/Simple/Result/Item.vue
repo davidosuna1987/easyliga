@@ -1,41 +1,117 @@
+<script setup lang="ts">
+import { Set } from '@/domain/set'
+import { Team } from '@/domain/team'
+import { Call } from '@/domain/call'
+import { getTimeoutsByTeamId } from '@/domain/timeout'
+import { Rotation } from '@/domain/rotation'
+import { DurationScopes, mapDurationTo } from '@/domain/utils'
+
+const props = defineProps({
+  set: {
+    type: Object as PropType<Set>,
+    required: false,
+  },
+  localTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  visitorTeam: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
+  localTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+  visitorTeamCall: {
+    type: Object as PropType<Call>,
+    required: true,
+  },
+})
+
+const localTeamTimeoutsCount = computed((): number | undefined => {
+  if (!props.set?.timeouts) return
+  return getTimeoutsByTeamId(props.set?.timeouts, props.localTeam.id).length
+})
+
+const visitorTeamTimeoutsCount = computed((): number | undefined => {
+  if (!props.set?.timeouts) return
+  return getTimeoutsByTeamId(props.set?.timeouts, props.visitorTeam.id).length
+})
+
+const localTeamRotation = computed((): Rotation | undefined => {
+  if (!props.set?.rotations) return
+  return props.set.rotations.find(
+    rotation => rotation.callId === props.localTeamCall.id,
+  )
+})
+
+const visitorTeamRotation = computed((): Rotation | undefined => {
+  if (!props.set?.rotations) return
+  return props.set.rotations.find(
+    rotation => rotation.callId === props.visitorTeamCall.id,
+  )
+})
+
+const localTeamWinner = computed((): number | undefined => {
+  return props.set?.winnerTeamId === props.localTeam.id ? 1 : undefined
+})
+
+const visitorTeamWinner = computed((): number | undefined => {
+  return props.set?.winnerTeamId === props.visitorTeam.id ? 1 : undefined
+})
+
+const localTeamWonPointsCount = computed((): number | undefined => {
+  return props.set?.localTeamScore
+})
+
+const visitorTeamWonPointsCount = computed((): number | undefined => {
+  return props.set?.visitorTeamScore
+})
+</script>
+
 <template>
   <div class="grid place-content-center p-2 border-solid border-r-0 border-t-0">
-    <span>2</span>
+    <span>{{ localTeamTimeoutsCount }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>0</span>
+    <span>{{ localTeamRotation?.playerChangesCount }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <span>0</span>
+    <span>{{ localTeamWinner }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>10</span>
+    <span>{{ localTeamWonPointsCount }}</span>
   </div>
 
   <div
-    class="grid grid-cols-2 place-content-center col-span-2 p-2 border-solid border-t-0 border-x-0 text-center"
+    class="grid grid-cols-2 place-content-center col-span-2 p-2 border-solid border-t-0 border-x-0 text-center h-[30.9px]"
   >
-    <span class="uppercase">1</span>
-    <span>20"</span>
+    <span class="uppercase">{{ set?.number }}</span>
+    <span>{{
+      set?.duration
+        ? `${mapDurationTo(set.duration, DurationScopes.minutes)}"`
+        : ' '
+    }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>25</span>
+    <span>{{ visitorTeamWonPointsCount }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <span>1</span>
+    <span>{{ visitorTeamWinner }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>2</span>
+    <span>{{ visitorTeamRotation?.playerChangesCount }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-l-0 border-t-0">
-    <span>0</span>
+    <span>{{ visitorTeamTimeoutsCount }}</span>
   </div>
 </template>
 

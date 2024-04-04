@@ -314,3 +314,10 @@ export const playerChangeCanBeRemoved = (
   playerChange: RotationPlayerChange,
   currentChangeWindow: number,
 ): boolean => playerChange.changeWindow === currentChangeWindow - 1
+
+export const getRotationsByCallId = (
+  rotations: Rotation[],
+  callId: number,
+): Rotation[] => {
+  return rotations.filter(rotation => rotation.callId === callId)
+}

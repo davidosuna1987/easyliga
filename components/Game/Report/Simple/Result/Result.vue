@@ -3,6 +3,7 @@ import { Team } from '@/domain/team'
 import { Call } from '@/domain/call'
 import { Game } from '@/domain/game'
 import { Set } from '@/domain/set'
+import { MIN_SETS_ROW_LENGTH } from '@/domain/report'
 
 const props = defineProps({
   game: {
@@ -39,6 +40,8 @@ const props = defineProps({
   },
 })
 
+const setRowLength = MIN_SETS_ROW_LENGTH
+
 const winnerTeam = computed((): Team | undefined => {
   if (!props.game.winnerTeamId) return
 
@@ -56,11 +59,15 @@ const winnerTeam = computed((): Team | undefined => {
         :visitorTeam="visitorTeam"
         :leftSideTeam="leftSideTeam"
       />
-      <GameReportSimpleResultItem />
-      <GameReportSimpleResultItem />
-      <GameReportSimpleResultItem />
-      <GameReportSimpleResultItem />
-      <GameReportSimpleResultItem />
+      <template v-for="i in setRowLength">
+        <GameReportSimpleResultItem
+          :set="sets[i - 1]"
+          :localTeam="localTeam"
+          :visitorTeam="visitorTeam"
+          :localTeamCall="localTeamCall"
+          :visitorTeamCall="visitorTeamCall"
+        />
+      </template>
       <GameReportSimpleResultFooter
         v-if="winnerTeam"
         :game="game"

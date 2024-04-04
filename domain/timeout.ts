@@ -63,3 +63,8 @@ export const mapTimeoutUpdateRequestToApiTimeoutUpdateRequest = (
 ): ApiTimeoutUpdateRequest => ({
   status: timeout.status,
 })
+
+export const getTimeoutsByTeamId = (
+  timeouts: Timeout[],
+  teamId: number,
+): Timeout[] => timeouts.filter(timeout => timeout.teamId === teamId)
