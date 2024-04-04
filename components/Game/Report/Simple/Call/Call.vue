@@ -22,10 +22,6 @@ const props = defineProps({
     type: Object as PropType<Team>,
     required: true,
   },
-  rightSideTeam: {
-    type: Object as PropType<Team>,
-    required: true,
-  },
 })
 
 const courtPlayersRowLength = computed((): number => {
@@ -37,36 +33,36 @@ const courtPlayersRowLength = computed((): number => {
 
 const liberoPlayersRowLength: number = 2
 
-const leftSideTeamCall = computed((): Call | undefined =>
-  props.calls.find(call => call.teamId === props.leftSideTeam.id),
+const localTeamCall = computed((): Call | undefined =>
+  props.calls.find(call => call.teamId === props.localTeam.id),
 )
 
-const rightSideTeamCall = computed((): Call | undefined =>
-  props.calls.find(call => call.teamId === props.rightSideTeam.id),
+const visitorTeamCall = computed((): Call | undefined =>
+  props.calls.find(call => call.teamId === props.visitorTeam.id),
 )
 
-const leftSideTeamCourtPlayers = computed((): CallPlayerData[] | undefined =>
-  leftSideTeamCall.value?.playersData.filter(player => !player.libero),
+const localTeamCourtPlayers = computed((): CallPlayerData[] | undefined =>
+  localTeamCall.value?.playersData.filter(player => !player.libero),
 )
 
-const rightSideTeamCourtPlayers = computed((): CallPlayerData[] | undefined =>
-  rightSideTeamCall.value?.playersData.filter(player => !player.libero),
+const visitorTeamCourtPlayers = computed((): CallPlayerData[] | undefined =>
+  visitorTeamCall.value?.playersData.filter(player => !player.libero),
 )
 
-const leftSideTeamLiberoPlayers = computed((): CallPlayerData[] | undefined =>
-  leftSideTeamCall.value?.playersData.filter(player => !!player.libero),
+const localTeamLiberoPlayers = computed((): CallPlayerData[] | undefined =>
+  localTeamCall.value?.playersData.filter(player => !!player.libero),
 )
 
-const rightSideTeamLiberoPlayers = computed((): CallPlayerData[] | undefined =>
-  rightSideTeamCall.value?.playersData.filter(player => !!player.libero),
+const visitorTeamLiberoPlayers = computed((): CallPlayerData[] | undefined =>
+  visitorTeamCall.value?.playersData.filter(player => !!player.libero),
 )
 
-const leftSideTeamCoach = computed(
-  (): Profile | undefined => leftSideTeamCall.value?.coach?.profile,
+const localTeamCoach = computed(
+  (): Profile | undefined => localTeamCall.value?.coach?.profile,
 )
 
-const rightSideTeamCoach = computed(
-  (): Profile | undefined => rightSideTeamCall.value?.coach?.profile,
+const visitorTeamCoach = computed(
+  (): Profile | undefined => visitorTeamCall.value?.coach?.profile,
 )
 </script>
 
@@ -80,38 +76,38 @@ const rightSideTeamCoach = computed(
       />
       <div class="col-span-6 border-solid border-b-0 border-x-0">
         <GameReportSimpleCallPlayerList
-          v-if="leftSideTeamCourtPlayers"
+          v-if="localTeamCourtPlayers"
           :rowLength="courtPlayersRowLength"
-          :players="leftSideTeamCourtPlayers"
+          :players="localTeamCourtPlayers"
         />
       </div>
       <div class="col-span-6 border-solid border-b-0 border-l-0">
         <GameReportSimpleCallPlayerList
-          v-if="rightSideTeamCourtPlayers"
+          v-if="visitorTeamCourtPlayers"
           :rowLength="courtPlayersRowLength"
-          :players="rightSideTeamCourtPlayers"
+          :players="visitorTeamCourtPlayers"
         />
       </div>
       <GameReportSimpleCallLiberoHeader />
       <div class="col-span-6 border-solid border-b-0 border-x-0">
         <GameReportSimpleCallPlayerList
-          v-if="leftSideTeamLiberoPlayers"
+          v-if="localTeamLiberoPlayers"
           :rowLength="liberoPlayersRowLength"
-          :players="leftSideTeamLiberoPlayers"
+          :players="localTeamLiberoPlayers"
         />
       </div>
       <div class="col-span-6 border-solid border-b-0 border-l-0">
         <GameReportSimpleCallPlayerList
-          v-if="rightSideTeamLiberoPlayers"
+          v-if="visitorTeamLiberoPlayers"
           :rowLength="liberoPlayersRowLength"
-          :players="rightSideTeamLiberoPlayers"
+          :players="visitorTeamLiberoPlayers"
         />
       </div>
       <GameReportSimpleCallStaffHeader />
       <div class="col-span-12 border-solid">
         <div class="grid grid-cols-11 place-content-center">
           <div class="col-span-5 px-2 flex items-center">
-            {{ getFullName(leftSideTeamCoach) }}
+            {{ getFullName(localTeamCoach) }}
           </div>
           <div
             class="col-span-1 border-solid border-y-0 h-[29.5px] grid place-content-center"
@@ -120,7 +116,7 @@ const rightSideTeamCoach = computed(
             <strong class="print">{{ TeamMemberTypes.COACH }}</strong>
           </div>
           <div class="col-span-5 px-2 flex items-center">
-            {{ getFullName(rightSideTeamCoach) }}
+            {{ getFullName(visitorTeamCoach) }}
           </div>
         </div>
       </div>
