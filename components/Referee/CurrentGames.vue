@@ -15,7 +15,7 @@ const props = defineProps({
       v-for="game in games"
       v-tooltip.top="$t('games.arbitrate')"
       class="game"
-      @click="navigateTo(`/referee/games/arbitrate/${game.id}`)"
+      @click="navigateTo(`/referee/games/${game.id}/arbitrate`)"
     >
       <span class="name">{{ game.name }}</span>
       <GameStatus :status="game.status" />
