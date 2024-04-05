@@ -128,7 +128,7 @@ const visitorTeamSignatures = computed(
             >
               <span>{{ $t('game_signatures.type.coach') }}</span>
             </div>
-            <figure class="p-2 grid grid-cols-4 h-[50px]">
+            <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
                 class="col-span-2 col-start-2"
                 v-if="localTeamSignatures.coach"
@@ -150,7 +150,7 @@ const visitorTeamSignatures = computed(
             >
               <span>{{ $t('game_signatures.type.captain') }}</span>
             </div>
-            <figure class="p-2 grid grid-cols-4 h-[50px]">
+            <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
                 class="col-span-2 col-start-2"
                 v-if="localTeamSignatures.captain"
@@ -180,7 +180,7 @@ const visitorTeamSignatures = computed(
             >
               <span>{{ $t('game_signatures.type.coach') }}</span>
             </div>
-            <figure class="p-2 grid grid-cols-4 h-[50px]">
+            <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
                 class="col-span-2 col-start-2"
                 v-if="visitorTeamSignatures.coach"
@@ -200,7 +200,7 @@ const visitorTeamSignatures = computed(
             >
               <span>{{ $t('game_signatures.type.captain') }}</span>
             </div>
-            <figure class="p-2 grid grid-cols-4 h-[50px]">
+            <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
                 class="col-span-2 col-start-2"
                 v-if="visitorTeamSignatures.captain"
