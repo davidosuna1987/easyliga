@@ -200,7 +200,8 @@
   "referees": {
     "referee": "Árbitro | Árbitros",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
-    "welcome_no_name": "¡Hola! ¿Es día de partido?"
+    "welcome_no_name": "¡Hola! ¿Es día de partido?",
+    "license": "Licencia | Licencias"
   },
   "coaches": {
     "coach": "Entrenador | Entrenadores",

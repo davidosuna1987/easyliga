@@ -99,7 +99,9 @@ const visitorTeamSignatures = computed(
         </div>
         <div class="p-2 pb-0 flex justify-between">
           <span>{{ getFullName(referee) }}</span>
-          <span><strong>Licencia:</strong>123456</span>
+          <!-- <span v-if="referee.license">
+            <strong>{{ $t('referees.license') }}:</strong>{{referee.license}}
+          </span> -->
         </div>
         <figure class="p-2 grid grid-cols-4">
           <img
