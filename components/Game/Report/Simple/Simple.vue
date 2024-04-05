@@ -99,7 +99,7 @@ onMounted(() => {
       />
 
       <main
-        class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3"
+        class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3 items-start"
       >
         <GameReportSimpleCall
           v-if="gameSidedTeams?.leftSideTeam"
@@ -120,7 +120,13 @@ onMounted(() => {
             :visitorTeamCall="gameLocalVisitorCalls.visitorTeamCall"
             :sets="report.sets"
           />
-          <GameReportSimpleSanction />
+          <GameReportSimpleSanction
+            v-if="gameSidedTeams"
+            :sets="report.sets"
+            :calls="report.calls"
+            :leftSideTeam="gameSidedTeams.leftSideTeam"
+            :rightSideTeam="gameSidedTeams.rightSideTeam"
+          />
         </div>
         <div class="flex flex-col gap-3">
           <GameReportSimpleSignatures

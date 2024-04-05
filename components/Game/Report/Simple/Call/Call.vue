@@ -26,7 +26,9 @@ const props = defineProps({
 
 const courtPlayersRowLength = computed((): number => {
   const max = Math.max(
-    ...props.calls.map(call => call.playersData?.length ?? 0),
+    ...props.calls.map(
+      call => call.playersData?.filter(player => !player.libero).length ?? 0,
+    ),
   )
   return max > MIN_CALL_PLAYERS_ROW_LENGTH ? max : MIN_CALL_PLAYERS_ROW_LENGTH
 })

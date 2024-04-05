@@ -25,6 +25,8 @@ export type ApiSanction = {
   team_id: number
   player_profile_id?: number
   coach_profile_id?: number
+  local_team_score: number
+  visitor_team_score: number
   observations?: string
 } & ApiSanctionRelations
 

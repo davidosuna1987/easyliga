@@ -76,6 +76,8 @@ export type Sanction = {
   teamId: number
   playerProfileId?: number
   coachProfileId?: number
+  localTeamScore: number
+  visitorTeamScore: number
   observations?: string
 } & SanctionRelations
 
@@ -99,6 +101,8 @@ export const mapApiSanctionToSanction = (
   teamId: apiSanction.team_id,
   playerProfileId: apiSanction.player_profile_id ?? undefined,
   coachProfileId: apiSanction.coach_profile_id ?? undefined,
+  localTeamScore: apiSanction.local_team_score,
+  visitorTeamScore: apiSanction.visitor_team_score,
   observations: apiSanction.observations ?? undefined,
 
   game: apiSanction.game ? mapApiGameToGame(apiSanction.game) : undefined,

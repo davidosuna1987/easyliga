@@ -240,7 +240,8 @@
     "change_window_num": "Ventana de cambios {num}",
     "point_will_end_set": "Al sumar este punto, {teamName} será el ganador del set.",
     "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?",
-    "finished": "Partido finalizado"
+    "finished": "Partido finalizado",
+    "score": "Marcador"
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -594,7 +595,19 @@
       "end_time": "Hora de finalización",
       "winner": "Ganador"
     },
-    "approval": "Aprobación"
+    "approval": "Aprobación",
+    "sanctions": {
+      "warning": "Amonestación",
+      "point": "Castigo",
+      "set": "Descanso",
+      "game": "Expulsión",
+      "short": {
+        "warning": "W",
+        "point": "P",
+        "set": "D",
+        "game": "E"
+      }
+    }
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",
