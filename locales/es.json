@@ -600,8 +600,8 @@
     "sanctions": {
       "warning": "Amonestación",
       "point": "Castigo",
-      "set": "Descanso",
-      "game": "Expulsión",
+      "set": "Expulsión",
+      "game": "Descalificación",
       "short": {
         "warning": "W",
         "point": "P",

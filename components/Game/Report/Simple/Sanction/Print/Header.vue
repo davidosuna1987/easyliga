@@ -21,13 +21,13 @@ import { GameReportTeamTypes } from '@/domain/game'
   </div>
   <div class="grid place-content-center border-solid border-t-0">
     <div class="flex flex-col justify-center items-center">
-      <p class="font-bold">{{ $t('reports.sanctions.short.set') }}</p>
+      <p class="font-bold">{{ $t('reports.sanctions.short.game') }}</p>
       <span class="font-2xs">{{ $t('reports.sanctions.set') }}</span>
     </div>
   </div>
   <div class="grid place-content-center border-solid border-t-0 border-x-0">
     <div class="flex flex-col justify-center items-center">
-      <p class="font-bold">{{ $t('reports.sanctions.short.game') }}</p>
+      <p class="font-bold">{{ $t('reports.sanctions.short.set') }}</p>
       <span class="font-2xs">{{ $t('reports.sanctions.game') }}</span>
     </div>
   </div>
