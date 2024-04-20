@@ -43,6 +43,7 @@ const gameSignatures = ref<GameSignature[]>(
 )
 const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
+const enableRequestTimeouts = ref<boolean>(false)
 
 const gamesWithSanctionedMembersToChange = computed((): Game[] =>
   props.games.filter((game, index) => {
@@ -183,7 +184,7 @@ onBeforeUnmount(() => {
             ? 'grid-cols-2'
             : game.status === 'resting'
             ? 'grid-cols-1'
-            : 'grid-cols-2',
+            : 'grid-cols-1', // grid-cols-2 if timeouts are enabled
         ]"
       >
         <CoachButtonCall
@@ -213,6 +214,7 @@ onBeforeUnmount(() => {
             "
           />
           <CoachButtonTimeout
+            v-if="enableRequestTimeouts"
             class="action"
             :game="game"
             :teamId="calls[index].teamId"
