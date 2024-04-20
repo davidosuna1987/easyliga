@@ -48,8 +48,6 @@ export const SANCTION_SEVERITY_MEMBER = [
 
 export const POINT_AGAINST_SEVERITIES = [
   SanctionSeverity.point,
-  SanctionSeverity.set,
-  SanctionSeverity.game,
 ] as SanctionSeverityKey[]
 
 export const EXPULSION_SEVERITIES = [
