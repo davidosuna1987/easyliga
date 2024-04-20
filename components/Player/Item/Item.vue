@@ -96,7 +96,7 @@ const iconsGap = computed(() => {
 
 const removeProfileTooltipText = computed(() => {
   return props.removeIcon === 'trash'
-    ? $i18n.t('profiles.delete')
+    ? $i18n.t('players.delete')
     : $i18n.t('forms.cancel')
 })
 </script>
