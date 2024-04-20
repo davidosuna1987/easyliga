@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Club } from '@/domain/club'
 import { Team, TeamMember } from '@/domain/team'
-import { Player, mapProfileToPlayer } from '@/domain/player'
+import { Player } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'
 import { ApiProfile } from 'types/api/profile'

@@ -12,9 +12,10 @@ import {
 } from '@/domain/game'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
-import { Profile, mapApiProfileToCoach } from '@/domain/profile'
+import { Profile } from '@/domain/profile'
 import { CallPlayerData } from '@/domain/call'
 import { Club, mapApiClubToClub } from '@/domain/club'
+import { User, mapApiUserToUser } from '@/domain/user'
 
 export type TeamRelations = {
   club?: Club
@@ -22,7 +23,7 @@ export type TeamRelations = {
   division?: Division
   category?: Category
   gender?: Gender
-  coach?: Coach
+  coach?: User
   players?: Player[]
 }
 
@@ -77,9 +78,7 @@ export const mapApiTeamToTeam = (
     ? mapApiCategoryToCategory(apiTeam.category)
     : undefined,
   gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
-  coach: apiTeam.coach?.profile
-    ? mapApiProfileToCoach(apiTeam.coach.profile)
-    : undefined,
+  coach: apiTeam.coach ? mapApiUserToUser(apiTeam.coach) : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)
     : undefined,
