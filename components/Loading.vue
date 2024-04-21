@@ -1,6 +1,6 @@
 <template>
   <div class="easy-loading-component">
-    <div class="spinner animate-spin"></div>
+    <Spinner />
   </div>
 </template>
 

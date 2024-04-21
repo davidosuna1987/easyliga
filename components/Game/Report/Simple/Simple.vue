@@ -16,13 +16,16 @@ const route = useRoute()
 const toast = useEasyToast()
 const gameService = new GameService()
 
+const loadingApi = ref(true)
 const report = ref<GameReportSimple | null>(null)
 const firstSet = ref<Set>()
 
 const getReport = async () => {
+  loadingApi.value = true
   const { data, error } = await gameService.reportSimple(
     Number(route.params.game_id),
   )
+  loadingApi.value = false
 
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -82,77 +85,86 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="report" class="easy-game-report-component">
-    <div class="report-wrapper max-w-[1220px] mx-auto">
-      <GameReportSimpleHeader
-        v-if="gameSidedTeams"
-        :game="report.game"
-        :division="report.division"
-        :category="report.category"
-        :gender="report.gender"
-        :sede="report.sede"
-        :court="report.court"
-        :localTeam="report.localTeam"
-        :visitorTeam="report.visitorTeam"
-        :leftSideTeam="gameSidedTeams.leftSideTeam"
-        :rightSideTeam="gameSidedTeams.rightSideTeam"
-      />
-
-      <main
-        class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3 items-start"
-      >
-        <GameReportSimpleCall
-          v-if="gameSidedTeams?.leftSideTeam"
-          :calls="report.calls"
+  <div class="easy-game-report-component">
+    <div
+      v-if="loadingApi"
+      class="flex justify-center items-center h-[calc(100dvh-250px)]"
+    >
+      <Spinner />
+      <span class="text-2xl ml-3">Cargando datos del partido</span>
+    </div>
+    <template v-else>
+      <div v-if="report" class="report-wrapper max-w-[1220px] mx-auto">
+        <GameReportSimpleHeader
+          v-if="gameSidedTeams"
+          :game="report.game"
+          :division="report.division"
+          :category="report.category"
+          :gender="report.gender"
+          :sede="report.sede"
+          :court="report.court"
           :localTeam="report.localTeam"
           :visitorTeam="report.visitorTeam"
           :leftSideTeam="gameSidedTeams.leftSideTeam"
+          :rightSideTeam="gameSidedTeams.rightSideTeam"
         />
-        <div class="grid gap-3">
-          <GameReportSimpleResult
-            v-if="gameSidedTeams && gameLocalVisitorCalls"
-            :game="report.game"
-            :localTeam="report.localTeam"
-            :visitorTeam="report.visitorTeam"
-            :leftSideTeam="gameSidedTeams.leftSideTeam"
-            :rightSideTeam="gameSidedTeams.rightSideTeam"
-            :localTeamCall="gameLocalVisitorCalls.localTeamCall"
-            :visitorTeamCall="gameLocalVisitorCalls.visitorTeamCall"
-            :sets="report.sets"
-          />
-          <GameReportSimpleSanction
-            v-if="gameSidedTeams"
-            :sets="report.sets"
-            :calls="report.calls"
-            :leftSideTeam="gameSidedTeams.leftSideTeam"
-            :rightSideTeam="gameSidedTeams.rightSideTeam"
-          />
-        </div>
-        <div class="flex flex-col gap-3">
-          <GameReportSimpleSignatures
-            v-if="gameSidedTeams"
-            :referee="report.referee"
-            :localTeam="report.localTeam"
-            :visitorTeam="report.visitorTeam"
-            :leftSideTeam="gameSidedTeams.leftSideTeam"
-            :rightSideTeam="gameSidedTeams.rightSideTeam"
-            :signatures="report.game.signatures ?? []"
-          />
-          <GameReportSimpleObservations
-            :observations="report.game.observations"
-          />
-        </div>
-      </main>
-    </div>
 
-    <Button
-      class="easy-game-report-print-button float-right mt-3 no-print"
-      @click="print"
-      size="small"
-      variant="primary"
-    >
-      {{ $t('forms.print') }}
-    </Button>
+        <main
+          class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3 items-start"
+        >
+          <GameReportSimpleCall
+            v-if="gameSidedTeams?.leftSideTeam"
+            :calls="report.calls"
+            :localTeam="report.localTeam"
+            :visitorTeam="report.visitorTeam"
+            :leftSideTeam="gameSidedTeams.leftSideTeam"
+          />
+          <div class="grid gap-3">
+            <GameReportSimpleResult
+              v-if="gameSidedTeams && gameLocalVisitorCalls"
+              :game="report.game"
+              :localTeam="report.localTeam"
+              :visitorTeam="report.visitorTeam"
+              :leftSideTeam="gameSidedTeams.leftSideTeam"
+              :rightSideTeam="gameSidedTeams.rightSideTeam"
+              :localTeamCall="gameLocalVisitorCalls.localTeamCall"
+              :visitorTeamCall="gameLocalVisitorCalls.visitorTeamCall"
+              :sets="report.sets"
+            />
+            <GameReportSimpleSanction
+              v-if="gameSidedTeams"
+              :sets="report.sets"
+              :calls="report.calls"
+              :leftSideTeam="gameSidedTeams.leftSideTeam"
+              :rightSideTeam="gameSidedTeams.rightSideTeam"
+            />
+          </div>
+          <div class="flex flex-col gap-3">
+            <GameReportSimpleSignatures
+              v-if="gameSidedTeams"
+              :referee="report.referee"
+              :localTeam="report.localTeam"
+              :visitorTeam="report.visitorTeam"
+              :leftSideTeam="gameSidedTeams.leftSideTeam"
+              :rightSideTeam="gameSidedTeams.rightSideTeam"
+              :signatures="report.game.signatures ?? []"
+            />
+            <GameReportSimpleObservations
+              :observations="report.game.observations"
+            />
+          </div>
+        </main>
+      </div>
+
+      <Button
+        class="easy-game-report-print-button float-right mt-3 no-print"
+        @click="print"
+        size="small"
+        variant="primary"
+      >
+        {{ $t('forms.print') }}
+      </Button>
+    </template>
   </div>
 </template>
 
