@@ -11,7 +11,7 @@ import { Rotation, mapApiRotationToRotation } from '@/domain/rotation'
 import { User, mapApiUserToUser } from '@/domain/user'
 
 export const MIN_CALL_PLAYERS = 6
-export const MAX_CALL_PLAYERS = 12
+export const MAX_CALL_PLAYERS = 13
 export const MAX_CALL_LIBERO_PLAYERS = 2
 
 export type CallPlayerData = {
