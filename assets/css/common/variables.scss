@@ -105,24 +105,24 @@ $min-width-desktop: 992px;
 $min-width-desktop-big: 1024px;
 $media-sidebars-min: 1285px;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --foreground-color: #000000;
-    --background-color: #121212;
-    --primary-color: #003932;
-    --primary-color-medium: #003932;
-    --primary-color-light: #004d40;
-    --primary-color-lightest: #003932;
-    --primary-color-dark: #003932;
-    --primary-color-darkest: #003932;
-    --text-color: #b9a7a7;
-    --text-color-secondary: #b9a7a7;
-    --primary-color-text: #b9a7a7;
-    --input-border-color: #343030;
-    --background-overlay-opacity: 0.9;
-  }
-}
+// @media (prefers-color-scheme: dark) {
+//   :root {
+//     color-scheme: dark;
+//     --foreground-color: #000000;
+//     --background-color: #121212;
+//     --primary-color: #003932;
+//     --primary-color-medium: #003932;
+//     --primary-color-light: #004d40;
+//     --primary-color-lightest: #003932;
+//     --primary-color-dark: #003932;
+//     --primary-color-darkest: #003932;
+//     --text-color: #b9a7a7;
+//     --text-color-secondary: #b9a7a7;
+//     --primary-color-text: #b9a7a7;
+//     --input-border-color: #343030;
+//     --background-overlay-opacity: 0.9;
+//   }
+// }
 
 @media (min-width: $min-width-tablet) {
   :root {
