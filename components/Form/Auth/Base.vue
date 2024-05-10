@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
@@ -13,11 +17,15 @@ const props = defineProps({
 
     <slot name="link" />
 
-    <Button class="mt-3" type="submit" :label="buttonLabel" />
+    <Button
+      class="mt-3"
+      type="submit"
+      :label="buttonLabel"
+      :loading="loading"
+      :disabled="loading"
+    />
   </form>
 </template>
-
-<style scoped></style>
 
 <script lang="ts">
 export default {

@@ -14,14 +14,18 @@ const form = ref<ApiRegisterRequest>({
   password_confirm: '',
 })
 
+const loadingApi = ref<boolean>(false)
+
 const errors = ref<ApiErrorObject | null>(null)
 
 async function handleRegister() {
+  loadingApi.value = true
   const { data, error } = await auth.register(form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
+    loadingApi.value = false
   } else {
     if (data.value) toast.success(data.value.data.message)
     navigateTo('/login')
@@ -33,6 +37,7 @@ async function handleRegister() {
   <FormAuthBase
     class="easy-form-auth-register"
     :buttonLabel="$t('auth.register')"
+    :loading="loadingApi"
     @submit="handleRegister"
   >
     <FormLabel
@@ -76,8 +81,6 @@ async function handleRegister() {
     />
   </FormAuthBase>
 </template>
-
-<style scoped></style>
 
 <script lang="ts">
 export default {

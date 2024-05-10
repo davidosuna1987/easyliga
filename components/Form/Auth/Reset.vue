@@ -14,14 +14,18 @@ const form = ref<ApiResetRequest>({
   password_confirm: '',
 })
 
+const loadingApi = ref<boolean>(false)
+
 const errors = ref<ApiErrorObject | null>(null)
 
 const handleReset = async () => {
+  loadingApi.value = true
   const { data, error } = await auth.reset(form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
+    loadingApi.value = false
   } else {
     if (data.value) toast.info(data.value.data.message)
     navigateTo('/login')
@@ -33,6 +37,7 @@ const handleReset = async () => {
   <FormAuthBase
     class="easy-form-auth-reset"
     :buttonLabel="$t('auth.reset')"
+    :loading="loadingApi"
     @submit="handleReset"
   >
     <FormLabel
@@ -69,8 +74,6 @@ const handleReset = async () => {
     />
   </FormAuthBase>
 </template>
-
-<style lang="scss" scoped></style>
 
 <script lang="ts">
 export default {

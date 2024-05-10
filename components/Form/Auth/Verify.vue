@@ -12,14 +12,18 @@ const form = ref<ApiVerifyRequest>({
   token: String(route.params.token),
 })
 
+const loadingApi = ref<boolean>(false)
+
 const errors = ref<ApiErrorObject | null>(null)
 
 const handleVerify = async () => {
+  loadingApi.value = true
   const { data, error } = await auth.verify(form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
+    loadingApi.value = false
   } else {
     if (data.value) toast.success(data.value.data.message)
   }
@@ -30,8 +34,6 @@ handleVerify()
 </script>
 
 <template></template>
-
-<style lang="scss" scoped></style>
 
 <script lang="ts">
 export default {

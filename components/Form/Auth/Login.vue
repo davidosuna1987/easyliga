@@ -11,14 +11,18 @@ const form = ref<ApiLoginRequest>({
   password: '',
 })
 
+const loadingApi = ref<boolean>(false)
+
 const errors = ref<ApiErrorObject | null>(null)
 
 async function handleLogin() {
+  loadingApi.value = true
   const { error } = await auth.login(form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
+    loadingApi.value = false
   } else {
     auth.loginRedirect()
   }
@@ -29,6 +33,7 @@ async function handleLogin() {
   <FormAuthBase
     class="easy-form-auth-login"
     :buttonLabel="$t('auth.login')"
+    :loading="loadingApi"
     @submitted="handleLogin"
   >
     <FormLabel
@@ -57,8 +62,6 @@ async function handleLogin() {
     </template>
   </FormAuthBase>
 </template>
-
-<style scoped></style>
 
 <script lang="ts">
 export default {
