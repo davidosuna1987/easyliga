@@ -4,7 +4,7 @@ html {
   font-weight: var(--font-weight);
   color: var(--text-color);
   margin: var(--app-margin);
-  // background-color: var(--background-color);
+  // background-color: var(--foreground-color);
 
   &:before {
     content: '';
@@ -17,6 +17,18 @@ html {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: top right;
+    z-index: -1;
+  }
+
+  &:after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: var(--background-overlay-opacity);
     z-index: -1;
   }
 }
@@ -38,6 +50,10 @@ pre {
 
 a {
   color: var(--link-color);
+}
+
+input {
+  border-color: var(--text-color);
 }
 
 .bg-img {

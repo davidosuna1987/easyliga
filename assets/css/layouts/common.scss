@@ -11,7 +11,7 @@
     @extend %container;
     height: 100%;
     padding: var(--easy-main-padding);
-    background: white;
+    background: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
   }

@@ -1,5 +1,5 @@
 .easy-navbar {
-  background: white;
+  background: var(--background-color);
   box-shadow: var(--box-shadow);
   margin: 0;
   position: fixed;
@@ -16,7 +16,7 @@
     @extend %container;
     max-width: calc(var(--main-max-width) - 2 * var(--easy-main-padding));
     border: none;
-    background: white;
+    background: var(--background-color);
   }
 
   &__logo {

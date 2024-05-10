@@ -126,7 +126,7 @@ $indexes: (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 }
 
 @mixin scrollbar(
-  $background: var(--background-color-foreground),
+  $background: var(--foreground-color),
   $deg: 0,
   $color1: $warning-color,
   $color2: $info-color,

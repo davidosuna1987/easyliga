@@ -33,6 +33,10 @@
   backdrop-filter: blur(3px);
 }
 
+.p-button {
+  color: var(--text-color);
+}
+
 .p-button-label {
   font-weight: var(--font-weight);
 }
