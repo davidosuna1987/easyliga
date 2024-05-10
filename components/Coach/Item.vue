@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { getFullName } from '@/domain/player'
-import { Coach, TeamMember } from '@/domain/team'
 import { Sanction } from '@/domain/sanction'
+import { User } from 'domain/user'
 
 const props = defineProps({
   coach: {
-    type: Object as PropType<Coach | TeamMember>,
+    type: Object as PropType<User>,
     required: true,
   },
   showAvatar: {
@@ -34,15 +34,16 @@ const props = defineProps({
       <Avatar
         v-if="showAvatar"
         class="player-avatar"
-        :image="coach?.avatar"
+        :image="coach?.profile?.avatar"
         shape="circle"
       />
       <IconShirtNumber :shirtNumber="$t('coaches.coach_one_char')" />
-      <span class="player-name">{{ getFullName(coach) }}</span>
+      <span class="player-name">{{ getFullName(coach.profile) }}</span>
     </div>
-    <div v-if="showIcon" class="team-player-captain grid gap-2 grid-cols-1">
-      <!-- Coach icon -->
-    </div>
+    <div
+      v-if="showIcon"
+      class="team-player-captain grid gap-2 grid-cols-1"
+    ></div>
   </div>
 </template>
 
