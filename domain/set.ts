@@ -6,9 +6,12 @@ import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 
 export const POINT_DIFFERENCE_TO_WIN = 2
-export const SET_POINTS_TO_WIN = 5
-export const LAST_SET_POINTS_TO_WIN = 3
-export const MAX_SETS_PER_MATCH = 3
+// export const SET_POINTS_TO_WIN = 5
+// export const LAST_SET_POINTS_TO_WIN = 3
+// export const MAX_SETS_PER_MATCH = 3
+export const SET_POINTS_TO_WIN = 25
+export const LAST_SET_POINTS_TO_WIN = 15
+export const MAX_SETS_PER_MATCH = 5
 
 export enum SetSide {
   LEFT = 'left',
