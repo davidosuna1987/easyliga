@@ -1,4 +1,4 @@
-import { ApiUser } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/user'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 
 export type UserRelations = {

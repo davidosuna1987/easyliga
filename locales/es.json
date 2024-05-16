@@ -118,7 +118,8 @@
     "sign": "Firmar",
     "search": "Buscar",
     "facility": "Instalación | Instalaciones",
-    "print": "Imprimir"
+    "print": "Imprimir",
+    "you_selected": "Has seleccionado"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -186,6 +187,25 @@
         "create": "Crear equipo"
       }
     }
+  },
+  "pages": {
+    "index": {
+      "welcome": "¡Bienvenid{'@'} a Easy Liga!"
+    }
+  },
+  "users": {
+    "user": "Usuario | Usuarios",
+    "create": "Crear usuario",
+    "created": "El usuario ha sido creado correctamente",
+    "edit": "Editar usuario",
+    "update": "Actualizar usuario",
+    "updated": "El usuario ha sido actualizado correctamente",
+    "delete": "Eliminar usuario",
+    "deleted": "El usuario ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el usuario?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona un usuario",
+    "search": "Buscar usuario | Buscar usuarios"
   },
   "profiles": {
     "profile": "Perfil | Perfiles",

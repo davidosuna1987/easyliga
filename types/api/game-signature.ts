@@ -1,5 +1,5 @@
 import { GameSignatureType } from '@/domain/game-signature'
-import { ApiUser } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/user'
 import { ApiGame } from '@/types/api/game'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiTeam } from '@/types/api/team'

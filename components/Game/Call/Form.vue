@@ -212,6 +212,8 @@ const getTeamPlayers = async () => {
     Number(route.params.team_id),
   )
 
+  loadingApi.value = false
+
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
@@ -222,8 +224,6 @@ const getTeamPlayers = async () => {
   call.value = mapApiCallToCall(data.value.data.call)
   selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
   players.value = mapApiPlayersToPlayers(data.value.data.players)
-
-  loadingApi.value = false
 
   window.Echo.leaveAllChannels()
   listenCallUnlockedEvent()

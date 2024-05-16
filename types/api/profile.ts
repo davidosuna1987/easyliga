@@ -1,4 +1,5 @@
-import { ApiFreshData, ApiUser } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/user'
+import { ApiFreshData } from '@/types/api/auth'
 import { ApiAddress, ApiAddressUpdateRequest } from '@/types/api/address'
 import { GenderType } from '@/domain/game'
 

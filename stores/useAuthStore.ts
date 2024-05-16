@@ -8,16 +8,16 @@ import {
   ApiMessageResponse,
   ApiRegisterRequest,
   ApiResetRequest,
-  ApiUser,
   ApiVerifyRequest,
   ApiFreshData,
   ApiLoginData,
+  ApiLoginAsRequest,
 } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/user'
 import { Profile } from '@/domain/profile'
 import { mapApiProfileToProfile } from '@/domain/profile'
 
 export const useAuthStore = defineStore('auth', () => {
-  const app = useNuxtApp()
   const easyStorage = useEasyStorage()
 
   const STAFF_ROLES = ['admin', 'staff']
@@ -92,6 +92,20 @@ export const useAuthStore = defineStore('auth', () => {
     return response
   }
 
+  const loginAs = async (data: ApiLoginAsRequest) => {
+    const response = await useApi<ApiLoginResponse>('auth/loginas', {
+      method: 'POST',
+      body: data,
+    })
+
+    if (response.data?.value?.data) {
+      refreshData(response.data.value.data)
+      refreshToken(response.data.value.data)
+    }
+
+    return response
+  }
+
   const refreshData = (data: ApiFreshData) => {
     user.value = data.user
     profile.value = mapApiProfileToProfile(data.profile)
@@ -99,7 +113,14 @@ export const useAuthStore = defineStore('auth', () => {
     roles.value = data.roles
   }
 
-  const refreshToken = (data: ApiLoginData) => (token.value = data.token)
+  const refreshToken = (data: ApiLoginData) => {
+    token.value = data.token
+  }
+
+  const refreshLoginData = (data: ApiLoginData) => {
+    refreshData(data)
+    refreshToken(data)
+  }
 
   const isAdmin = () => roles.value.includes('admin')
 
@@ -166,8 +187,10 @@ export const useAuthStore = defineStore('auth', () => {
     verify,
     forgot,
     reset,
+    loginAs,
     refreshData,
     refreshToken,
+    refreshLoginData,
     getAuthUser,
     isAdmin,
     isStaff,

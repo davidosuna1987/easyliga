@@ -51,8 +51,6 @@ const getCurrentGames = async () => {
     ...commonParams,
   })
 
-  console.log('localTeam', data.value?.data.games)
-
   currentGames.value = data.value?.data.games
     .map(mapApiGameToGame)
     .filter(isValidCoachPanelGame)
@@ -64,8 +62,6 @@ const getCurrentGames = async () => {
       where_has: `visitorTeam:coach_id:${auth.user.id}`,
       ...commonParams,
     })
-
-    console.log('visitorTeam', data.value?.data.games)
 
     currentGames.value = data.value?.data.games
       .map(mapApiGameToGame)

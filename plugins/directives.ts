@@ -1,3 +1,5 @@
+import { useAuthStore } from '@/stores/useAuthStore'
+
 export default defineNuxtPlugin(nuxtApp => {
   const easyStorage = useEasyStorage()
 
@@ -25,7 +27,9 @@ export default defineNuxtPlugin(nuxtApp => {
     const storedRoles = easyStorage.getNested('auth.roles') || []
     if (storedRoles.includes('admin')) return
 
-    const roles = binding.value.split(',')
+    const roles = Array.isArray(binding.value)
+      ? binding.value
+      : binding.value.split(',')
     const hasRole = roles.some((r: string) => storedRoles.includes(r))
 
     if (!hasRole) commentNode(el, binding, vnode)

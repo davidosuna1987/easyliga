@@ -2,7 +2,7 @@ import { ApiSet } from '@/types/api/set'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
 import { ApiPoint } from '@/types/api/point'
-import { ApiUser } from '@/types/api/auth'
+import { ApiUser } from '@/types/api/user'
 import { ApiProfile } from '@/types/api/profile'
 import { SanctionSeverityKey, SanctionTypeKey } from '@/domain/sanction'
 

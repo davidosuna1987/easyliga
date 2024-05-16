@@ -1,17 +1,5 @@
+import { ApiUser } from '@/types/api/user'
 import { ApiProfile } from '@/types/api/profile'
-
-export type ApiUserRelations = {
-  profile?: ApiProfile
-}
-
-export type ApiUser = {
-  id: number
-  email: string
-  email_verified_at: string | null
-  created_at: string | null
-  updated_at: string | null
-  deleted_at: string | null
-} & ApiUserRelations
 
 export type ApiPlayer = ApiProfile & {
   pivot: {
@@ -52,6 +40,10 @@ export type ApiResetRequest = {
   token: string
   password: string
   password_confirm: string
+}
+
+export type ApiLoginAsRequest = {
+  user_id: number
 }
 
 export type AuthuserResponse = {
