@@ -30,6 +30,8 @@ html {
     background-color: black;
     opacity: var(--background-overlay-opacity);
     z-index: -1;
+    user-select: none;
+    pointer-events: none;
   }
 }
 

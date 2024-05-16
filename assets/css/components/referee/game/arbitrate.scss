@@ -157,6 +157,16 @@
     }
   }
 
+  @media (prefers-color-scheme: dark) {
+    .easy-game-score-component {
+      background-color: var(--primary-color-dark);
+
+      .set {
+        color: var(--primary-color-lightest);
+      }
+    }
+  }
+
   @media (min-width: $media-sidebars-min) {
     .easy-game-sidebars-court-component {
       grid-template-columns: 330px 1fr 330px;

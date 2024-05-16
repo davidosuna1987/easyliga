@@ -1,11 +1,13 @@
 .easy-main {
   @extend %main-height;
+  position: relative;
   max-width: var(--main-max-width);
   margin-top: var(--container-margin-top);
   margin-inline: auto;
   margin-bottom: calc(var(--footer-height) - var(--app-margin));
   display: grid;
   border-radius: var(--border-radius);
+  z-index: 1;
 
   .easy-container {
     @extend %container;

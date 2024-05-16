@@ -223,15 +223,12 @@
       }
       .position-2 {
         grid-area: position-2;
-        border-right: solid 1px var(--primary-color-medium);
       }
       .position-3 {
         grid-area: position-3;
-        border-right: solid 1px var(--primary-color-medium);
       }
       .position-4 {
         grid-area: position-4;
-        border-right: solid 1px var(--primary-color-medium);
       }
       .position-5 {
         grid-area: position-5;
@@ -243,6 +240,7 @@
       .position-2,
       .position-3,
       .position-4 {
+        border-right: solid 1px var(--primary-color-medium);
         background-image: linear-gradient(
           45deg,
           var(--primary-color-medium) 8.33%,
@@ -266,6 +264,97 @@
             var(--primary-color-medium) 58.33%,
             var(--primary-color-medium) 100%
           );
+        }
+      }
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .court {
+      border: solid 1px var(--primary-color-dark);
+    }
+
+    .side {
+      .position-1,
+      .position-5,
+      .position-6 {
+        background-color: var(--primary-color-dark);
+
+        &:hover {
+          background-color: var(--primary-color-darkest);
+        }
+      }
+
+      &.left {
+        .position-1 {
+          border-right: solid 1px var(--primary-color-darkest);
+        }
+        .position-5 {
+          border-right: solid 1px var(--primary-color-darkest);
+        }
+        .position-6 {
+          border-right: solid 1px var(--primary-color-darkest);
+        }
+
+        .position-2,
+        .position-3,
+        .position-4 {
+          background-image: linear-gradient(
+            135deg,
+            var(--primary-color-darkest) 8.33%,
+            var(--primary-color-dark) 8.33%,
+            var(--primary-color-dark) 50%,
+            var(--primary-color-darkest) 50%,
+            var(--primary-color-darkest) 58.33%,
+            var(--primary-color-dark) 58.33%,
+            var(--primary-color-dark) 100%
+          );
+          background-size: 6.4px 6.4px;
+
+          &:hover {
+            background-image: linear-gradient(
+              135deg,
+              var(--primary-color-dark) 8.33%,
+              var(--primary-color-darkest) 8.33%,
+              var(--primary-color-darkest) 50%,
+              var(--primary-color-dark) 50%,
+              var(--primary-color-dark) 58.33%,
+              var(--primary-color-darkest) 58.33%,
+              var(--primary-color-darkest) 100%
+            );
+          }
+        }
+      }
+
+      &.right {
+        .position-2,
+        .position-3,
+        .position-4 {
+          border-right: solid 1px var(--primary-color-darkest);
+          background-image: linear-gradient(
+            45deg,
+            var(--primary-color-darkest) 8.33%,
+            var(--primary-color-dark) 8.33%,
+            var(--primary-color-dark) 50%,
+            var(--primary-color-darkest) 50%,
+            var(--primary-color-darkest) 58.33%,
+            var(--primary-color-dark) 58.33%,
+            var(--primary-color-dark) 100%
+          );
+          background-size: 6.4px 6.4px;
+
+          &:hover {
+            background-image: linear-gradient(
+              45deg,
+              var(--primary-color-dark) 8.33%,
+              var(--primary-color-darkest) 8.33%,
+              var(--primary-color-darkest) 50%,
+              var(--primary-color-dark) 50%,
+              var(--primary-color-dark) 58.33%,
+              var(--primary-color-darkest) 58.33%,
+              var(--primary-color-darkest) 100%
+            );
+          }
         }
       }
     }
