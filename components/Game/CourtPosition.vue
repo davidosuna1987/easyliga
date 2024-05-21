@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Player } from '@/domain/player'
 import { Sanction, EXPULSION_SEVERITIES } from '@/domain/sanction'
+import { ShirtColor } from '@/domain/team'
 
 const props = defineProps({
   position: {
@@ -23,7 +24,15 @@ const props = defineProps({
     type: Object as PropType<Sanction>,
     required: false,
   },
+  color: {
+    type: String as PropType<ShirtColor>,
+    required: false,
+  },
 })
+
+const styles = computed(() => ({
+  '--player-color': props.color,
+}))
 </script>
 
 <template>
@@ -38,8 +47,12 @@ const props = defineProps({
       },
     ]"
   >
-    <span class="shirt-number">
-      <IconShirtNumber :shirtNumber="player?.shirtNumber" size="lg" />
+    <span class="shirt-number" :style="styles">
+      <IconShirtNumber
+        :shirtNumber="player?.shirtNumber"
+        size="lg"
+        :color="color"
+      />
     </span>
     <IconEasyLiga v-if="serving" size="54" />
     <IconCaptain v-if="player?.profileId === captainProfileId" size="sm" />
@@ -57,3 +70,12 @@ export default {
   name: 'GameCourtPosition',
 }
 </script>
+
+<!-- <style scoped>
+.easy-game-court-component
+  .side
+  .shirt-number
+  .easy-icon-shirt-number-component {
+  background-color: var(--player-color);
+}
+</style> -->

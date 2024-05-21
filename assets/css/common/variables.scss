@@ -97,6 +97,27 @@
     100svh - var(--container-margin-top) - 2 * var(--app-margin)
   );
   --background-overlay-opacity: 0;
+
+  --shirt-red: #d52127;
+  --shirt-red-dark: #8c0000;
+  --shirt-orange: #f6851d;
+  --shirt-orange-dark: #b95f0a;
+  --shirt-yellow: #ffd700;
+  --shirt-yellow-dark: #e0b200;
+  --shirt-green: #06b251;
+  --shirt-green-dark: #015825;
+  --shirt-blue: #2357bb;
+  --shirt-blue-dark: #0f2f6a;
+  --shirt-purple: #733b97;
+  --shirt-purple-dark: #4f2664;
+  --shirt-pink: #f7a7c0;
+  --shirt-pink-dark: #d97a94;
+  --shirt-brown: #8b572a;
+  --shirt-brown-dark: #5a3a1a;
+  --shirt-gray: #8b8b8b;
+  --shirt-gray-dark: #5a5a5a;
+  --shirt-black: #000000;
+  --shirt-white: #ffffff;
 }
 
 $min-width-small: 640px;

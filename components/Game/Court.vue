@@ -23,16 +23,9 @@ import {
   getPlayerItemSanction,
 } from '@/domain/sanction'
 import { Timeout } from '@/domain/timeout'
-import {
-  GameSignature,
-  GameSignatureStoreRequest,
-  GameSignatureType,
-  GameSignatureTypes,
-  mapApiGameSignatureToGameSignature,
-  mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
-} from '@/domain/game-signature'
-import GameSignatureService from '@/services/game-signature'
+import { GameSignature } from '@/domain/game-signature'
 import moment from 'moment'
+import { Profile } from 'domain/profile'
 
 const auth = useAuthStore()
 
@@ -145,7 +138,10 @@ const leftSideTeamMembers = computed((): TeamMember[] =>
         ...props.leftSideTeamCall.playersData.map(
           mapCallPlayerDataToTeamMember,
         ),
-        mapProfileToTeamMember(props.leftSideTeam.coach, true),
+        mapProfileToTeamMember(
+          props.leftSideTeam.coach.profile as Profile,
+          true,
+        ),
       ]
     : props.leftSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
 )
@@ -156,7 +152,10 @@ const rightSideTeamMembers = computed((): TeamMember[] =>
         ...props.rightSideTeamCall.playersData.map(
           mapCallPlayerDataToTeamMember,
         ),
-        mapProfileToTeamMember(props.rightSideTeam.coach, true),
+        mapProfileToTeamMember(
+          props.rightSideTeam.coach.profile as Profile,
+          true,
+        ),
       ]
     : props.rightSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
 )

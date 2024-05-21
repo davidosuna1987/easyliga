@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ShirtColor } from '@/domain/team'
+
 const props = defineProps({
   shirtNumber: {
     type: [Number, String],
@@ -8,10 +10,18 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  color: {
+    type: String as PropType<ShirtColor>,
+    required: false,
+  },
 })
 
 const sizeClass = computed(() => {
   return props.size ? `size-${props.size}` : ''
+})
+
+const colorClass = computed(() => {
+  return props.color ? `color-${props.color}` : ''
 })
 </script>
 
@@ -19,7 +29,7 @@ const sizeClass = computed(() => {
   <div
     v-if="shirtNumber !== undefined"
     class="easy-icon-shirt-number-component"
-    :class="[sizeClass]"
+    :class="[sizeClass, colorClass]"
   >
     {{ shirtNumber }}
   </div>

@@ -62,6 +62,19 @@ export const TeamMemberTypes = {
   COACH: 'E',
 } as const
 
+export type ShirtColor =
+  | 'red'
+  | 'orange'
+  | 'yellow'
+  | 'green'
+  | 'blue'
+  | 'purple'
+  | 'pink'
+  | 'brown'
+  | 'gray'
+  | 'black'
+  | 'white'
+
 export const mapApiTeamToTeam = (
   apiTeam: ApiTeam,
   withProfiles: boolean = false,
