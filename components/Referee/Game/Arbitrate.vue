@@ -17,7 +17,7 @@ import {
   ApiRotationUpdatedEventResponse,
   ApiTimeoutStatusUpdatedEventResponse,
 } from '@/types/api/event'
-import { Coach, Team, TeamType } from '@/domain/team'
+import { Team, TeamType } from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
 import {
@@ -47,6 +47,7 @@ import {
   GameSignatureTypes,
   mapApiGameSignatureToGameSignature,
 } from '@/domain/game-signature'
+import { User } from '@/domain/user'
 
 const auth = useAuthStore()
 const route = useRoute()
@@ -95,11 +96,11 @@ const rightSideTeam = computed((): Team | undefined =>
 )
 
 const leftSideTeamCoach = computed(
-  (): Coach | undefined => leftSideTeam.value?.coach,
+  (): User | undefined => leftSideTeam.value?.coach,
 )
 
 const rightSideTeamCoach = computed(
-  (): Coach | undefined => rightSideTeam.value?.coach,
+  (): User | undefined => rightSideTeam.value?.coach,
 )
 
 const leftSideTeamCall = computed((): Call | undefined =>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Coach, Team, TeamSide, TeamSideEnum, TeamType } from '@/domain/team'
+import { Team, TeamSide, TeamType, mapProfileToTeamMember } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call, CallPlayerData } from '@/domain/call'
 import { Rotation } from '@/domain/rotation'
@@ -24,6 +24,7 @@ import {
   mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
 } from '@/domain/game-signature'
 import GameSignatureService from '@/services/game-signature'
+import { User } from '@/domain/user'
 
 const props = defineProps({
   team: {
@@ -39,7 +40,7 @@ const props = defineProps({
     required: true,
   },
   coach: {
-    type: Object as PropType<Coach>,
+    type: Object as PropType<User>,
     required: false,
   },
   call: {
@@ -157,18 +158,8 @@ const rotationSanctions = computed((): Sanction[] => {
   return mergeSanctionsRemovingDuplicates(rotationSetSanctions, gameSanctions)
 })
 
-// const getCallMemberSanction = (player: Player): Sanction | undefined =>
-//   getPlayerItemSanction(
-//     props.gameSanctions,
-//     undefined,
-//     props.team.id,
-//     player.profileId,
-//     SanctionMember.player as SanctionMemberKey,
-//     'game',
-//   )
-
 const getRotationMemberSanction = (
-  player: Player | Coach,
+  player: Player | User,
   memberType: SanctionMemberKey = 'player',
 ): Sanction | undefined =>
   getPlayerItemSanction(
@@ -308,7 +299,8 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
           <template v-if="props.coach">
             <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
             <CoachItem
-              :coach="props.coach"
+              v-if="props.coach.profile"
+              :coach="mapProfileToTeamMember(props.coach.profile, true)"
               :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
               @click="emit('member:clicked', { coach: props.coach })"
             />
@@ -347,7 +339,8 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
           <template v-if="props.coach">
             <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
             <CoachItem
-              :coach="props.coach"
+              v-if="props.coach.profile"
+              :coach="mapProfileToTeamMember(props.coach.profile, true)"
               :sanction="getRotationMemberSanction(props.coach, SanctionMember.coach as SanctionMemberKey)"
               @click="emit('member:clicked', { coach: props.coach })"
             />

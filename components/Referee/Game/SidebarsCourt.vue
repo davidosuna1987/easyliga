@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {
-  Coach,
   Team,
   TeamMember,
   TeamSide,
@@ -22,6 +21,7 @@ import {
 } from '@/domain/sanction'
 import { Player } from '@/domain/player'
 import { GameSignature } from '@/domain/game-signature'
+import { User } from '@/domain/user'
 
 const props = defineProps({
   game: {
@@ -37,11 +37,11 @@ const props = defineProps({
     required: true,
   },
   leftSideTeamCoach: {
-    type: Object as PropType<Coach>,
+    type: Object as PropType<User>,
     required: false,
   },
   rightSideTeamCoach: {
-    type: Object as PropType<Coach>,
+    type: Object as PropType<User>,
     required: false,
   },
   leftSideTeamCall: {
@@ -161,27 +161,30 @@ const rightSideTeamRotation = computed(() =>
   ),
 )
 
-const leftSideTeamMembers = computed((): TeamMember[] =>
-  props.leftSideTeam.coach
+const leftSideTeamMembers = computed((): TeamMember[] => {
+  const leftSideTeamCoachProfile = props.leftSideTeam.coach?.profile
+
+  return leftSideTeamCoachProfile
     ? [
         ...props.leftSideTeamCall.playersData.map(
           mapCallPlayerDataToTeamMember,
         ),
-        mapProfileToTeamMember(props.leftSideTeam.coach, true),
+        mapProfileToTeamMember(leftSideTeamCoachProfile, true),
       ]
-    : props.leftSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
-)
+    : props.leftSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember)
+})
 
-const rightSideTeamMembers = computed((): TeamMember[] =>
-  props.rightSideTeam.coach
+const rightSideTeamMembers = computed((): TeamMember[] => {
+  const rightSideTeamCoachProfile = props.rightSideTeam.coach?.profile
+  return rightSideTeamCoachProfile
     ? [
         ...props.rightSideTeamCall.playersData.map(
           mapCallPlayerDataToTeamMember,
         ),
-        mapProfileToTeamMember(props.rightSideTeam.coach, true),
+        mapProfileToTeamMember(rightSideTeamCoachProfile, true),
       ]
-    : props.rightSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember),
-)
+    : props.rightSideTeamCall.playersData.map(mapCallPlayerDataToTeamMember)
+})
 
 const setSanctions = computed((): Sanction[] =>
   mergeSanctionsRemovingDuplicates(
@@ -243,7 +246,7 @@ const toggleSidebars = (teamSide: TeamSide): void => {
 
 const setMemberToSanction = (
   side: TeamSide,
-  { player, coach }: { player: Player; coach: Coach },
+  { player }: { player: Player },
 ): void => {
   closeSidebars()
   sideTeamToSanction.value = side
