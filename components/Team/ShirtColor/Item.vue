@@ -6,18 +6,34 @@ const props = defineProps({
     type: String as PropType<ShirtColor>,
     required: false,
   },
+  bullet: {
+    type: Number,
+    default: 0,
+  },
+})
+
+const bulletClass = computed(() =>
+  props.bullet ? `rounded-full` : 'rounded-sm w-12 h-3 mr-2',
+)
+
+const style = computed(() => {
+  if (props.bullet) {
+    return {
+      width: `${props.bullet}px`,
+      height: `${props.bullet}px`,
+    }
+  }
 })
 </script>
 
 <template>
   <div class="flex items-center">
     <span
-      :class="[
-        `rounded-sm mr-2 w-12 h-3 inline-block shirt-item-${props.color}`,
-      ]"
+      :class="[`inline-block shirt-item-${props.color}`, bulletClass]"
+      :style="style"
     >
     </span>
-    <span>{{ $t(`shirt_colors.${props.color}`) }}</span>
+    <span v-if="!bullet">{{ $t(`shirt_colors.${props.color}`) }}</span>
   </div>
 </template>
 

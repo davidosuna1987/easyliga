@@ -17,7 +17,12 @@ import {
   ApiRotationUpdatedEventResponse,
   ApiTimeoutStatusUpdatedEventResponse,
 } from '@/types/api/event'
-import { Team, TeamType } from '@/domain/team'
+import {
+  CustomTeamsShirtColor,
+  ShirtColor,
+  Team,
+  TeamType,
+} from '@/domain/team'
 import { Point } from '@/domain/point'
 import { ApiPointStoreRequest } from '@/types/api/point'
 import {
@@ -69,6 +74,7 @@ const observationsForm = ref<GameObservationsRequest>({
 const undoPointButtonDisabled = ref<boolean>(true)
 const undoLastPointCountdown = ref<number>(0)
 const showObservationsDialog = ref<boolean>(false)
+const showShirtColorDialogWithTeam = ref<Team>()
 const loadingApi = ref<boolean>(false)
 const loadingTimeout = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
@@ -80,6 +86,11 @@ const pointInterval = ref<NodeJS.Timeout>()
 
 const formPoint = ref<ApiPointStoreRequest>()
 const showSetPointWillEndSetDialog = ref<boolean>()
+
+const customTeamsShirtColor = ref<CustomTeamsShirtColor>({
+  left: undefined,
+  right: undefined,
+})
 
 const leftSideTeam = computed((): Team | undefined =>
   !gameInitialData.value?.game.currentSet?.localTeamSide ||
@@ -443,6 +454,37 @@ const submitObservations = async () => {
   showObservationsDialog.value = false
 }
 
+const handleTeamShirtColorSelected = (shirtColor: ShirtColor) => {
+  if (!showShirtColorDialogWithTeam.value) return
+
+  setCustomTeamsShirtColor(showShirtColorDialogWithTeam.value.id, shirtColor)
+
+  showShirtColorDialogWithTeam.value = undefined
+}
+
+const setCustomTeamsShirtColor = (teamId?: number, shirtColor?: ShirtColor) => {
+  if (!leftSideTeam.value || !rightSideTeam.value) return
+
+  const leftSideTeamShirtColor =
+    teamId === leftSideTeam.value.id
+      ? shirtColor
+      : customTeamsShirtColor.value.left
+      ? customTeamsShirtColor.value.left
+      : leftSideTeam.value.shirtColor
+
+  const rightSideTeamShirtColor =
+    teamId === rightSideTeam.value.id
+      ? shirtColor
+      : customTeamsShirtColor.value.right
+      ? customTeamsShirtColor.value.right
+      : rightSideTeam.value.shirtColor
+
+  customTeamsShirtColor.value = {
+    left: leftSideTeamShirtColor,
+    right: rightSideTeamShirtColor,
+  }
+}
+
 const listenCallUpdatedEvent = () => {
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
     ApiEvents.CALL_UPDATED,
@@ -588,25 +630,6 @@ const listenGameSignatureCreatedEvent = () => {
   )
 }
 
-// INFO: replaced with window.Echo.leaveAllChannels()
-// const leaveCallUnlockedEvent = () => {
-//   window.Echo.leaveChannel(`game.${route.params.game_id}.call.updated`)
-// }
-
-// const leaveRotationCreateddEvent = () => {
-//   window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.created`)
-// }
-
-// const leaveRotationUpdateddEvent = () => {
-//   window.Echo.leaveChannel(`game.${route.params.game_id}.rotation.updated`)
-// }
-
-// const leaveTimeoutStatusUpdatedEvent = () => {
-//   window.Echo.leaveChannel(
-//     `game.${route.params.game_id}.timeout.status.updated`,
-//   )
-// }
-
 const listenEvents = () => {
   listenCallUpdatedEvent()
   listenRotationCreatedEvent()
@@ -615,13 +638,7 @@ const listenEvents = () => {
   listenGameSignatureCreatedEvent()
 }
 
-// INFO: replaced with window.Echo.leaveAllChannels()
-// const leaveEvents = () => {
-//   leaveCallUnlockedEvent()
-//   leaveRotationCreateddEvent()
-//   leaveRotationUpdateddEvent()
-//   leaveTimeoutStatusUpdatedEvent()
-// }
+watch(gameInitialData, () => setCustomTeamsShirtColor())
 
 onMounted(() => {
   getGameInitialData(true)
@@ -648,6 +665,8 @@ onMounted(() => {
       v-if="leftSideTeam && rightSideTeam"
       :leftSideTeam="leftSideTeam"
       :rightSideTeam="rightSideTeam"
+      :customTeamsShirtColor="customTeamsShirtColor"
+      @shirtColorDialog:open="showShirtColorDialogWithTeam = $event"
     />
     <RefereeGameSidebarsCourt
       v-if="
@@ -686,6 +705,7 @@ onMounted(() => {
       :gameEndedAt="gameInitialData.game.end ?? undefined"
       :timeoutRunning="timeoutRunning"
       :gameSignatures="gameInitialData.game.signatures"
+      :customTeamsShirtColor="customTeamsShirtColor"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
       @point:sum="createFormPoint"
@@ -704,6 +724,15 @@ onMounted(() => {
       @hide="showObservationsDialog = false"
       @observations:changed="setObservations"
       @observations:submit="submitObservations"
+    />
+
+    <TeamShirtColorDialog
+      v-if="showShirtColorDialogWithTeam"
+      :visible="!!showShirtColorDialogWithTeam"
+      :teamName="showShirtColorDialogWithTeam.name"
+      :shirtColor="showShirtColorDialogWithTeam.shirtColor"
+      @hide="showShirtColorDialogWithTeam = undefined"
+      @selected="handleTeamShirtColorSelected"
     />
 
     <DialogBottom

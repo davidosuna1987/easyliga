@@ -87,8 +87,20 @@
     margin-top: 4rem;
 
     .team-name {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
       font-size: 1.5rem;
       font-weight: 500;
+
+      .color-trigger {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        cursor: pointer;
+        background: var(--primary-color);
+        border: solid 1px var(--primary-color-dark);
+      }
 
       &:last-child {
         direction: rtl;

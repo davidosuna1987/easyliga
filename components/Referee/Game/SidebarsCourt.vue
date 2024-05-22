@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {
+  CustomTeamsShirtColor,
   Team,
   TeamMember,
   TeamSide,
@@ -114,6 +115,10 @@ const props = defineProps({
   },
   gameSignatures: {
     type: Array as PropType<GameSignature[]>,
+    required: true,
+  },
+  customTeamsShirtColor: {
+    type: Object as PropType<CustomTeamsShirtColor>,
     required: true,
   },
 })
@@ -339,6 +344,7 @@ onUnmounted(() => {
         :gameEndedAt="gameEndedAt"
         :timeoutRunning="timeoutRunning"
         :gameSignatures="gameSignatures"
+        :customTeamsShirtColor="customTeamsShirtColor"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"

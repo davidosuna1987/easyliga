@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { Call, CallPlayerData } from '@/domain/call'
 import { Player } from '@/domain/player'
 import {
+  CustomTeamsShirtColor,
   Team,
   TeamMember,
   TeamSide,
@@ -108,6 +109,10 @@ const props = defineProps({
   },
   gameSignatures: {
     type: Array as PropType<GameSignature[]>,
+    required: true,
+  },
+  customTeamsShirtColor: {
+    type: Object as PropType<CustomTeamsShirtColor>,
     required: true,
   },
 })
@@ -343,7 +348,7 @@ onMounted(setInitialShowCountdown)
             :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-            :color="leftSideTeam.shirtColor"
+            :color="customTeamsShirtColor.left"
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.left,
@@ -366,7 +371,7 @@ onMounted(setInitialShowCountdown)
             :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-            :color="rightSideTeam.shirtColor"
+            :color="customTeamsShirtColor.right"
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.right,

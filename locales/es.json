@@ -331,7 +331,8 @@
     "staff": "Oficiales",
     "members": "Miembros del equipo",
     "member_select": "Selecciona un miembro del equipo",
-    "shirt_color": "Color de la camiseta"
+    "shirt_color": "Color de la camiseta",
+    "color": "Color de {teamName}"
   },
   "players": {
     "player": "Jugador | Jugadores",

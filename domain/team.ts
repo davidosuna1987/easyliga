@@ -79,6 +79,11 @@ export const SHIRT_COLORS = [
 
 export type ShirtColor = (typeof SHIRT_COLORS)[number]
 
+export type CustomTeamsShirtColor = {
+  left: ShirtColor | undefined
+  right: ShirtColor | undefined
+}
+
 export const mapApiTeamToTeam = (
   apiTeam: ApiTeam,
   withProfiles: boolean = false,
