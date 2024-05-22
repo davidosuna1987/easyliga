@@ -739,7 +739,7 @@ onMounted(() => {
     </DialogBottom>
 
     <!-- TODO: remove in production -->
-    <div v-if="auth.hasRole('staff')" class="flex items-center mt-5">
+    <div v-if="auth.isAdminOrHasRole('staff')" class="flex items-center mt-5">
       <label for="disablePointTimeout" class="mr-2 cursor-pointer">
         Deshabilitar tiempo de deshabilitar punto:
       </label>

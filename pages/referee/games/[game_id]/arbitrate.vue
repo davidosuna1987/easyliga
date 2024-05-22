@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
   middleware: ['role'],
-  roles: ['referee'],
+  roles: ['admin', 'referee'],
   containerClass: 'referee-arbitrate',
 })
 </script>

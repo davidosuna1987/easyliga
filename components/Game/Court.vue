@@ -384,7 +384,7 @@ onMounted(setInitialShowCountdown)
       </div>
     </div>
 
-    <template v-if="auth.hasRole('referee')">
+    <template v-if="auth.isAdminOrHasRole('referee')">
       <template
         v-if="
           playersToBeReplacedForSanction.length ||
