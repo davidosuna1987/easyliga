@@ -30,7 +30,7 @@ const handleLoginAs = async () => {
 </script>
 
 <template>
-  <div v-role="['admin', 'staff']" class="easy-form-admin-loginas">
+  <div v-if="auth.isAdminOrHasRole('staff')" class="easy-form-admin-loginas">
     <UserSearchForm @selected="handleUserSelected" full />
   </div>
 </template>
