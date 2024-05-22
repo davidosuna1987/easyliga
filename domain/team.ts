@@ -31,6 +31,7 @@ export type Team = {
   id: number
   name: string
   clubId?: number
+  shirtColor?: ShirtColor
 } & TeamRelations
 
 export enum TeamType {
@@ -62,18 +63,21 @@ export const TeamMemberTypes = {
   COACH: 'E',
 } as const
 
-export type ShirtColor =
-  | 'red'
-  | 'orange'
-  | 'yellow'
-  | 'green'
-  | 'blue'
-  | 'purple'
-  | 'pink'
-  | 'brown'
-  | 'gray'
-  | 'black'
-  | 'white'
+export const SHIRT_COLORS = [
+  'red',
+  'orange',
+  'yellow',
+  'green',
+  'blue',
+  'purple',
+  'pink',
+  'brown',
+  'gray',
+  'black',
+  'white',
+] as const
+
+export type ShirtColor = (typeof SHIRT_COLORS)[number]
 
 export const mapApiTeamToTeam = (
   apiTeam: ApiTeam,
@@ -95,6 +99,7 @@ export const mapApiTeamToTeam = (
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)
     : undefined,
+  shirtColor: apiTeam.shirt_color ?? undefined,
 })
 
 export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
@@ -106,6 +111,7 @@ export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
   gender_id: team.gender?.id ?? null,
   coach_id: team.coach?.id ?? null,
   players: team.players ? team.players.map(mapPlayerToApiPlayerRequest) : null,
+  shirt_color: team.shirtColor ?? null,
 })
 
 export const mapProfileToTeamMember = (

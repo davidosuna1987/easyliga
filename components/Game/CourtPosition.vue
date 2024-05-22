@@ -29,10 +29,6 @@ const props = defineProps({
     required: false,
   },
 })
-
-const styles = computed(() => ({
-  '--player-color': props.color,
-}))
 </script>
 
 <template>
@@ -47,7 +43,7 @@ const styles = computed(() => ({
       },
     ]"
   >
-    <span class="shirt-number" :style="styles">
+    <span class="shirt-number">
       <IconShirtNumber
         :shirtNumber="player?.shirtNumber"
         size="lg"
@@ -70,12 +66,3 @@ export default {
   name: 'GameCourtPosition',
 }
 </script>
-
-<!-- <style scoped>
-.easy-game-court-component
-  .side
-  .shirt-number
-  .easy-icon-shirt-number-component {
-  background-color: var(--player-color);
-}
-</style> -->

@@ -330,7 +330,8 @@
     "libero_player": "Jugador líbero",
     "staff": "Oficiales",
     "members": "Miembros del equipo",
-    "member_select": "Selecciona un miembro del equipo"
+    "member_select": "Selecciona un miembro del equipo",
+    "shirt_color": "Color de la camiseta"
   },
   "players": {
     "player": "Jugador | Jugadores",
@@ -680,6 +681,20 @@
       "minutes": "m",
       "seconds": "s"
     }
+  },
+  "shirt_colors": {
+    "select": "Selecciona un color",
+    "red": "Rojo",
+    "orange": "Naranja",
+    "yellow": "Amarillo",
+    "green": "Verde",
+    "blue": "Azul",
+    "purple": "Morado",
+    "pink": "Rosa",
+    "brown": "Marrón",
+    "gray": "Gris",
+    "black": "Negro",
+    "white": "Blanco"
   },
   "events": {
     "call_updated": "{teamName} ha actualizado su convocatoria",

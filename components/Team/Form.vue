@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Club } from '@/domain/club'
-import { Team, TeamMember } from '@/domain/team'
+import { ShirtColor, Team, TeamMember } from '@/domain/team'
 import { Player } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'
@@ -34,6 +34,7 @@ const form = ref<Team>({
   gender: undefined,
   coach: undefined,
   players: undefined,
+  shirtColor: undefined,
 })
 
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
@@ -186,6 +187,10 @@ const handleAddPlayer = (player: Player) => {
   showPlayerSearchFormDialog.value = false
 }
 
+const handleShirtColorSelected = (color: ShirtColor) => {
+  form.value.shirtColor = color
+}
+
 watch(
   () => props.club,
   value => {
@@ -213,12 +218,20 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <div :class="[{ 'grid gap-3 sm:grid-cols-2': club && club.sedes }]">
+    <div
+      :class="[
+        'grid gap-3 sm:grid-cols-2',
+        { 'sm:grid-cols-3': club && club.sedes },
+      ]"
+    >
       <FormLabel :label="$t('forms.name')">
         <InputText v-model="form.name" />
       </FormLabel>
       <FormLabel v-if="club?.sedes" :label="$t('sedes.sede')">
         <SedeSelector :sedes="club.sedes" v-model="form.sede" />
+      </FormLabel>
+      <FormLabel :label="$t('teams.shirt_color')">
+        <TeamShirtColorSelector v-model="form.shirtColor" />
       </FormLabel>
     </div>
     <div class="grid gap-3 sm:grid-cols-3 mt-3">

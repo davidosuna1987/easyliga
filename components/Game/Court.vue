@@ -343,6 +343,7 @@ onMounted(setInitialShowCountdown)
             :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
+            :color="leftSideTeam.shirtColor"
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.left,
@@ -365,6 +366,7 @@ onMounted(setInitialShowCountdown)
             :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
+            :color="rightSideTeam.shirtColor"
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.right,

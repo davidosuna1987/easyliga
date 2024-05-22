@@ -6,6 +6,7 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
 import { ApiGender } from '@/types/api/gender'
 import { ApiPlayerRequest } from '@/types/api/player'
+import { ShirtColor } from 'domain/team'
 
 export type ApiTeamRelations = {
   club?: ApiClub
@@ -27,6 +28,7 @@ export type ApiTeam = {
   coach_id: number | null
   name: string
   slug: string
+  shirt_color: ShirtColor | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
@@ -57,4 +59,5 @@ export type ApiTeamRequest = {
   gender_id: number | null
   coach_id: number | null
   players: ApiPlayerRequest[] | null
+  shirt_color: ShirtColor | null
 }
