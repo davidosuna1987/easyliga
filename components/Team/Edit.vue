@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Team, mapApiTeamToTeam } from '@/domain/team'
-import { Club } from '@/domain/club'
 import TeamService from '@/services/team'
 
 const route = useRoute()
@@ -8,14 +7,13 @@ const toast = useEasyToast()
 const easyProps = useEasyProps()
 const teamService = new TeamService()
 
-const club = ref<Club>()
 const team = ref<Team>()
 const loadingApi = ref<boolean>(false)
 
 const getTeam = async () => {
   loadingApi.value = true
   const { data, error } = await teamService.get(Number(route.params.teamId), {
-    with: 'division,category,gender,coach.profile,players.address',
+    with: 'division,category,gender,sedes,coach.profile,players.address',
   })
 
   if (error.value) {
@@ -54,7 +52,7 @@ onMounted(setInitialClubTeam)
       <Heading tag="h3" class="mb-5">
         {{ $t('teams.edit') }}
       </Heading>
-      <TeamForm :club="club" :team="team" />
+      <TeamForm :team="team" />
     </template>
   </div>
 </template>

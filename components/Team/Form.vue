@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { Club } from '@/domain/club'
-import { ShirtColor, Team, TeamMember } from '@/domain/team'
+import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
 import { Player } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'
 import { ApiProfile } from 'types/api/profile'
 import TeamService from '@/services/team'
+import { Sede } from '@/domain/sede'
+import { Division } from '@/domain/division'
+import { Category, Gender } from '@/domain/game'
 
 const teamService = new TeamService()
 const toast = useEasyToast()
@@ -14,29 +16,29 @@ const { $i18n } = useNuxtApp()
 const emit = defineEmits(['created', 'updated'])
 
 const props = defineProps({
-  club: {
-    type: Object as PropType<Club>,
-    required: false,
-  },
   team: {
     type: Object as PropType<Team>,
     required: false,
   },
 })
 
-const form = ref<Team>({
+const form = ref<TeamFormRequest>({
   id: 0,
   name: '',
-  club: undefined,
-  sede: undefined,
-  division: undefined,
-  category: undefined,
-  gender: undefined,
-  coach: undefined,
-  players: undefined,
+  clubId: undefined,
+  sedeId: undefined,
+  divisionId: undefined,
+  categoryId: undefined,
+  genderId: undefined,
+  coachId: undefined,
   shirtColor: undefined,
+  players: [],
 })
 
+const selectedSede = ref<Sede>()
+const selectedDivision = ref<Division>()
+const selectedCategory = ref<Category>()
+const selectedGender = ref<Gender>()
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const playerToRemove = ref<Player>()
 const profileToEdit = ref<Profile>()
@@ -52,12 +54,24 @@ const clubTeamPlayerData: UpdateClubTeamPlayer =
       }
     : undefined
 
-const setFormDataClub = (club: Club) => {
-  form.value.club = club
-}
-
 const setFormData = (team: Team) => {
-  form.value = team
+  form.value = {
+    id: team.id,
+    name: team.name,
+    clubId: team.clubId ?? undefined,
+    sedeId: team.sedeId ?? undefined,
+    divisionId: team.divisionId ?? undefined,
+    categoryId: team.categoryId ?? undefined,
+    genderId: team.genderId ?? undefined,
+    coachId: team.coachId ?? undefined,
+    shirtColor: team.shirtColor ?? undefined,
+    players: team.players ?? [],
+  }
+
+  selectedSede.value = team.sedes?.find(sede => sede.id === team.sedeId)
+  selectedDivision.value = team.division
+  selectedCategory.value = team.category
+  selectedGender.value = team.gender
 }
 
 const setCaptain = (id: number) => {
@@ -187,22 +201,6 @@ const handleAddPlayer = (player: Player) => {
   showPlayerSearchFormDialog.value = false
 }
 
-const handleShirtColorSelected = (color: ShirtColor) => {
-  form.value.shirtColor = color
-}
-
-watch(
-  () => props.club,
-  value => {
-    if (value) {
-      setFormDataClub(value)
-    }
-  },
-  {
-    immediate: true,
-  },
-)
-
 watch(
   () => props.team,
   value => {
@@ -218,17 +216,12 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <div
-      :class="[
-        'grid gap-3 sm:grid-cols-2',
-        { 'sm:grid-cols-3': club && club.sedes },
-      ]"
-    >
+    <div class="grid gap-3 sm:grid-cols-3">
       <FormLabel :label="$t('forms.name')">
         <InputText v-model="form.name" />
       </FormLabel>
-      <FormLabel v-if="club?.sedes" :label="$t('sedes.sede')">
-        <SedeSelector :sedes="club.sedes" v-model="form.sede" />
+      <FormLabel :label="$t('sedes.sede')">
+        <SedeSelector :sedes="team?.sedes ?? []" v-model="selectedSede" />
       </FormLabel>
       <FormLabel :label="$t('teams.shirt_color')">
         <TeamShirtColorSelector v-model="form.shirtColor" />
@@ -236,13 +229,13 @@ watch(
     </div>
     <div class="grid gap-3 sm:grid-cols-3 mt-3">
       <FormLabel :label="$t('divisions.division')">
-        <DivisionSelector v-model="form.division" />
+        <DivisionSelector v-model="selectedDivision" />
       </FormLabel>
       <FormLabel :label="$t('categories.category')">
-        <CategorySelector v-model="form.category" />
+        <CategorySelector v-model="selectedCategory" />
       </FormLabel>
       <FormLabel :label="$t('genders.gender')">
-        <GenderSelector v-model="form.gender" />
+        <GenderSelector v-model="selectedGender" />
       </FormLabel>
     </div>
     <div class="players mt-10">
