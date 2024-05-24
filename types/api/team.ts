@@ -11,6 +11,7 @@ import { ShirtColor } from 'domain/team'
 export type ApiTeamRelations = {
   club?: ApiClub
   sede?: ApiSede
+  sedes?: ApiSede[]
   division?: ApiDivision
   category?: ApiCategory
   gender?: ApiGender

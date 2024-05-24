@@ -20,6 +20,7 @@ import { User, mapApiUserToUser } from '@/domain/user'
 export type TeamRelations = {
   club?: Club
   sede?: Sede
+  sedes?: Sede[]
   division?: Division
   category?: Category
   gender?: Gender
@@ -31,6 +32,11 @@ export type Team = {
   id: number
   name: string
   clubId?: number
+  sedeId?: number
+  divisionId?: number
+  categoryId?: number
+  genderId?: number
+  coachId?: number
   shirtColor?: ShirtColor
 } & TeamRelations
 
@@ -57,6 +63,19 @@ export type TeamMember = {
   captain?: boolean
   libero?: boolean
   coach: boolean
+}
+
+export type TeamFormRequest = {
+  id: number
+  name: string
+  clubId: number | undefined
+  sedeId: number | undefined
+  divisionId: number | undefined
+  categoryId: number | undefined
+  genderId: number | undefined
+  coachId: number | undefined
+  players: Player[]
+  shirtColor?: ShirtColor
 }
 
 export const TeamMemberTypes = {
@@ -91,8 +110,14 @@ export const mapApiTeamToTeam = (
   id: apiTeam.id,
   name: apiTeam.name,
   clubId: apiTeam.club_id ?? undefined,
+  sedeId: apiTeam.sede_id ?? undefined,
+  divisionId: apiTeam.division_id ?? undefined,
+  categoryId: apiTeam.category_id ?? undefined,
+  genderId: apiTeam.gender_id ?? undefined,
+  coachId: apiTeam.coach_id ?? undefined,
   club: apiTeam.club ? mapApiClubToClub(apiTeam.club) : undefined,
   sede: apiTeam.sede ? mapApiSedeToSede(apiTeam.sede) : undefined,
+  sedes: apiTeam.sedes ? apiTeam.sedes.map(mapApiSedeToSede) : undefined,
   division: apiTeam.division
     ? mapApiDivisionToDivision(apiTeam.division)
     : undefined,
