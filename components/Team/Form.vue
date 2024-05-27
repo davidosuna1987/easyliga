@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  TeamFormRequest,
-  Team,
-  TeamMember,
-  mapProfileToTeamMember,
-} from '@/domain/team'
+import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
 import { Player } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'

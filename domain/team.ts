@@ -134,12 +134,12 @@ export const mapApiTeamToTeam = (
 
 export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
   name: team.name,
-  club_id: team.club?.id ?? null,
-  sede_id: team.sede?.id ?? null,
-  division_id: team.division?.id ?? null,
-  category_id: team.category?.id ?? null,
-  gender_id: team.gender?.id ?? null,
-  coach_id: team.coach?.id ?? null,
+  club_id: team.clubId ?? null,
+  sede_id: team.sedeId ?? null,
+  division_id: team.divisionId ?? null,
+  category_id: team.categoryId ?? null,
+  gender_id: team.genderId ?? null,
+  coach_id: team.coachId ?? null,
   players: team.players ? team.players.map(mapPlayerToApiPlayerRequest) : null,
   shirt_color: team.shirtColor ?? null,
 })
