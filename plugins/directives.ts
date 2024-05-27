@@ -1,5 +1,3 @@
-import { useAuthStore } from '@/stores/useAuthStore'
-
 export default defineNuxtPlugin(nuxtApp => {
   const easyStorage = useEasyStorage()
 

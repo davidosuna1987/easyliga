@@ -11,7 +11,15 @@ export type ApiPlayer = ApiProfile & {
   }
 }
 
-export type Role = string
+export type Role =
+  | 'admin'
+  | 'staff'
+  | 'federation'
+  | 'club'
+  | 'referee'
+  | 'coach'
+  | 'player'
+  | 'user'
 
 export type ApiLoginRequest = {
   email: string
@@ -24,6 +32,10 @@ export type ApiRegisterRequest = {
   email: string
   password: string
   password_confirm: string
+}
+
+export type ApiRegisterByInviteRequest = ApiRegisterRequest & {
+  code: string
 }
 
 export type ApiVerifyRequest = {

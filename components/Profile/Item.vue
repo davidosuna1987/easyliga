@@ -83,7 +83,7 @@ const removeProfileTooltipText = computed(() => {
       :class="[`grid-cols-${iconsGap}`]"
     >
       <PlayerItemIcon
-        v-if="!!editable"
+        v-if="editable"
         class="hover:text-[var(--primary-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
         name="pepicons-pencil:pen-circle-filled"
         v-tooltip.top="{

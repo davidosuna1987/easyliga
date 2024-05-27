@@ -1,4 +1,5 @@
 import { ApiProfile } from '@/types/api/profile'
+import { Role } from '@/domain/role'
 
 export type ApiUserRelations = {
   profile?: ApiProfile
@@ -15,6 +16,11 @@ export type ApiUser = {
 
 export type ApiUserSearchRequest = {
   search: string
+}
+
+export type ApiInviteRequest = {
+  email: String
+  roles: Role[]
 }
 
 export type ApiUserResponse = {

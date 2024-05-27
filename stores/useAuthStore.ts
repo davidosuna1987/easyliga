@@ -12,6 +12,7 @@ import {
   ApiFreshData,
   ApiLoginData,
   ApiLoginAsRequest,
+  ApiRegisterByInviteRequest,
 } from '@/types/api/auth'
 import { ApiUser } from '@/types/api/user'
 import { Profile } from '@/domain/profile'
@@ -53,6 +54,21 @@ export const useAuthStore = defineStore('auth', () => {
       method: 'POST',
       body: data,
     })
+
+    return response
+  }
+
+  const registerByInvite = async (
+    invite: number,
+    data: ApiRegisterByInviteRequest,
+  ) => {
+    const response = await useApi<ApiMessageResponse>(
+      `auth/register-by-invite/${invite}`,
+      {
+        method: 'POST',
+        body: data,
+      },
+    )
 
     return response
   }
@@ -184,6 +200,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     register,
+    registerByInvite,
     verify,
     forgot,
     reset,

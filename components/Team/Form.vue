@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
+import {
+  TeamFormRequest,
+  Team,
+  TeamMember,
+  mapProfileToTeamMember,
+} from '@/domain/team'
 import { Player } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'
@@ -8,6 +13,7 @@ import TeamService from '@/services/team'
 import { Sede } from '@/domain/sede'
 import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
+import { User } from '@/domain/user'
 
 const teamService = new TeamService()
 const toast = useEasyToast()
@@ -39,10 +45,12 @@ const selectedSede = ref<Sede>()
 const selectedDivision = ref<Division>()
 const selectedCategory = ref<Category>()
 const selectedGender = ref<Gender>()
+const selectedCoach = ref<User>()
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const playerToRemove = ref<Player>()
 const profileToEdit = ref<Profile>()
 const showPlayerSearchFormDialog = ref<boolean>(false)
+const editingCoach = ref<boolean>(false)
 
 const loadingApi = ref<boolean>(false)
 
@@ -72,6 +80,7 @@ const setFormData = (team: Team) => {
   selectedDivision.value = team.division
   selectedCategory.value = team.category
   selectedGender.value = team.gender
+  selectedCoach.value = team.coach
 }
 
 const setCaptain = (id: number) => {
@@ -201,6 +210,24 @@ const handleAddPlayer = (player: Player) => {
   showPlayerSearchFormDialog.value = false
 }
 
+const handleCoachSelected = (coach: User) => {
+  selectedCoach.value = coach
+  form.value.coachId = coach.id
+  editingCoach.value = false
+}
+
+const toggleEditingCoach = () => {
+  if (editingCoach.value === false) {
+    setTimeout(() => {
+      const input = document.querySelector(
+        '.easy-user-search-form-component input',
+      ) as HTMLInputElement
+      input?.focus()
+    }, 100)
+  }
+  editingCoach.value = !editingCoach.value
+}
+
 watch(
   () => props.team,
   value => {
@@ -218,26 +245,71 @@ watch(
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
     <div class="grid gap-3 sm:grid-cols-3">
       <FormLabel :label="$t('forms.name')">
-        <InputText v-model="form.name" />
+        <InputText v-model="form.name" @mouseover="editingCoach = false" />
       </FormLabel>
       <FormLabel :label="$t('sedes.sede')">
-        <SedeSelector :sedes="team?.sedes ?? []" v-model="selectedSede" />
+        <SedeSelector
+          :sedes="team?.sedes ?? []"
+          v-model="selectedSede"
+          @mouseover="editingCoach = false"
+        />
       </FormLabel>
       <FormLabel :label="$t('teams.shirt_color')">
-        <TeamShirtColorSelector v-model="form.shirtColor" />
+        <TeamShirtColorSelector
+          v-model="form.shirtColor"
+          @mouseover="editingCoach = false"
+        />
       </FormLabel>
     </div>
+
     <div class="grid gap-3 sm:grid-cols-3 mt-3">
       <FormLabel :label="$t('divisions.division')">
-        <DivisionSelector v-model="selectedDivision" />
+        <DivisionSelector
+          v-model="selectedDivision"
+          @mouseover="editingCoach = false"
+        />
       </FormLabel>
       <FormLabel :label="$t('categories.category')">
-        <CategorySelector v-model="selectedCategory" />
+        <CategorySelector
+          v-model="selectedCategory"
+          @mouseover="editingCoach = false"
+        />
       </FormLabel>
       <FormLabel :label="$t('genders.gender')">
-        <GenderSelector v-model="selectedGender" />
+        <GenderSelector
+          v-model="selectedGender"
+          @mouseover="editingCoach = false"
+        />
       </FormLabel>
     </div>
+
+    <div class="mt-10">
+      <FormLabel
+        :label="editingCoach ? $t('coaches.search') : $t('coaches.coach')"
+      >
+        <div class="flex sm:grid sm:grid-cols-3 gap-3 h-[42px]">
+          <template v-if="selectedCoach?.profile && !editingCoach">
+            <ProfileItem class="flex-1" :profile="selectedCoach.profile" />
+          </template>
+          <template v-else>
+            <UserSearchForm
+              class="flex-1"
+              role="coach"
+              :showLabel="false"
+              invite
+              full
+              @selected="handleCoachSelected"
+            />
+          </template>
+          <Button
+            :label="editingCoach ? $t('forms.cancel') : $t('forms.edit')"
+            class="action w-min"
+            @click.prevent="toggleEditingCoach()"
+          />
+        </div>
+      </FormLabel>
+    </div>
+
     <div class="players mt-10">
       <header class="header flex justify-between">
         <FormLabel :label="$t('players.player', 2)" />
@@ -246,6 +318,7 @@ watch(
           size="small"
           class="action"
           @click.prevent="showPlayerSearchFormDialog = true"
+          @mouseover="editingCoach = false"
         />
       </header>
       <div class="players-list grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
@@ -259,6 +332,7 @@ watch(
           :removePlayer="removePlayerAlert"
           editable
           @profile:edit="setProfileToEdit"
+          @mouseover="editingCoach = false"
         />
       </div>
     </div>
@@ -268,6 +342,7 @@ watch(
         :loading="loadingApi"
         @click="handleSubmit"
         type="button"
+        @mouseover="editingCoach = false"
       />
     </div>
     <GameCallShirtNumberDialog

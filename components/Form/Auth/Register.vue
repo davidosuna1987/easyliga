@@ -1,7 +1,21 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
-import { ApiRegisterRequest } from '@/types/api/auth'
+import {
+  ApiRegisterRequest,
+  ApiRegisterByInviteRequest,
+} from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
+
+const props = defineProps({
+  invite: {
+    type: Number,
+    required: false,
+  },
+  code: {
+    type: String,
+    required: false,
+  },
+})
 
 const auth = useAuthStore()
 const toast = useEasyToast()
@@ -15,12 +29,21 @@ const form = ref<ApiRegisterRequest>({
 })
 
 const loadingApi = ref<boolean>(false)
-
 const errors = ref<ApiErrorObject | null>(null)
 
-async function handleRegister() {
+const formInvite = computed(
+  (): ApiRegisterByInviteRequest => ({
+    ...form.value,
+    code: props.code ?? '',
+  }),
+)
+
+const handleRegister = async () => {
   loadingApi.value = true
-  const { data, error } = await auth.register(form.value)
+  const { data, error } =
+    props.invite && props.code
+      ? await auth.registerByInvite(props.invite, formInvite.value)
+      : await auth.register(form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
@@ -79,6 +102,15 @@ async function handleRegister() {
       toggle-mask
       :feedback="false"
     />
+
+    <template v-if="props.invite && props.code">
+      <FormLabel
+        for="code"
+        :label="$t('auth.invite_code')"
+        :error="errors?.code?.[0]"
+      />
+      <InputText id="code" v-model="formInvite.code" type="text" disabled />
+    </template>
   </FormAuthBase>
 </template>
 
