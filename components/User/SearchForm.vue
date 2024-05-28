@@ -127,15 +127,15 @@ const handleUserInvited = () => {
         </template>
       </AutoComplete>
     </template>
-  </form>
 
-  <UserInviteDialog
-    v-if="showUserInviteDialog"
-    :visible="!!showUserInviteDialog"
-    :roles="[props.role]"
-    @hide="showUserInviteDialog = undefined"
-    @invited="handleUserInvited"
-  />
+    <UserInviteDialog
+      v-if="showUserInviteDialog"
+      :visible="!!showUserInviteDialog"
+      :roles="[props.role]"
+      @hide="showUserInviteDialog = undefined"
+      @invited="handleUserInvited"
+    />
+  </form>
 </template>
 
 <script lang="ts">
