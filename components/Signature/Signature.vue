@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { GameSignatureStoreRequest } from '@/domain/game-signature'
 import { SaveSignatureReturnType, VueSignaturePad } from 'vue-signature-pad'
 
 const props = defineProps({
@@ -126,6 +125,7 @@ defineExpose({
   .signature-wrapper {
     position: relative;
     aspect-ratio: 16/9;
+    background-color: var(--signature-background);
 
     .signature-placeholder {
       position: absolute;
@@ -145,10 +145,15 @@ defineExpose({
     flex: 1;
     border-radius: 0;
     border: none !important;
-    background-color: var(--primary-color-lightest);
+    background-color: var(--signature-button-background);
+    color: var(--signature-button-color);
 
     &:focus {
       box-shadow: none;
+    }
+
+    &:hover {
+      color: var(--signature-button-color);
     }
   }
 }

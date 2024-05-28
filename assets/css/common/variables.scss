@@ -118,6 +118,10 @@
   --shirt-gray-dark: #5a5a5a;
   --shirt-black: #000000;
   --shirt-white: #ffffff;
+
+  --signature-background: #ffffff;
+  --signature-button-background: var(--primary-color-lightest);
+  --signature-button-color: var(--primary-color);
 }
 
 $min-width-small: 640px;
@@ -150,6 +154,10 @@ $media-sidebars-min: 1285px;
     --primary-color-text: #b9a7a7;
     --input-border-color: #343030;
     --background-overlay-opacity: 0.9;
+
+    --signature-background: #aef7f0;
+    --signature-button-background: var(--primary-color-light);
+    --signature-button-color: var(--text-color);
   }
 }
 
