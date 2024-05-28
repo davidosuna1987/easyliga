@@ -13,7 +13,14 @@ import { ApiErrorObject } from '@/types/errors'
 import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/event'
 import { ApiEvents } from '@/types/api/event'
-import { TeamMember } from '@/domain/team'
+import { TeamMember, TeamType } from '@/domain/team'
+import {
+  GameSignatureTypes,
+  GameSignatureStoreRequest,
+  mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
+  mapApiGameSignatureToGameSignature,
+} from '@/domain/game-signature'
+import GameSignatureService from '@/services/game-signature'
 
 const app = useNuxtApp()
 const route = useRoute()
@@ -21,15 +28,20 @@ const toast = useEasyToast()
 
 const gameService = new GameService()
 const callService = new CallService()
+const gameSignatureService = new GameSignatureService()
 
 const game = ref<Game>()
 const call = ref<Call>()
+const teamType = ref<TeamType>()
 const players = ref<Player[]>([])
 const selectedPlayers = ref<Player[]>([])
 const selectedCaptain = ref<Player>()
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
+
+const showSignatureDialog = ref<boolean>(false)
+const loadingSignature = ref<boolean>(false)
 
 const form = computed(() => {
   return {
@@ -40,6 +52,17 @@ const form = computed(() => {
 const selectedLiberos = computed(() =>
   selectedPlayers.value.filter(player => player.libero),
 )
+
+const callSigned = computed(() => {
+  if (!call.value) return false
+
+  return game.value?.signatures?.some(
+    signature =>
+      signature.gameId === call.value?.gameId &&
+      signature.teamId === call.value?.teamId &&
+      signature.type === GameSignatureTypes.coach,
+  )
+})
 
 const showGameLockedToast = () => {
   toast.warn(app.$i18n.t('calls.locked_warning'))
@@ -224,12 +247,47 @@ const getTeamPlayers = async () => {
   call.value = mapApiCallToCall(data.value.data.call)
   selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
   players.value = mapApiPlayersToPlayers(data.value.data.players)
+  teamType.value = data.value.data.team_type
 
   window.Echo.leaveAllChannels()
   listenCallUnlockedEvent()
 }
 
-const submit = async () => {
+const handleSignOrSubmit = () => {
+  if (callSigned.value) {
+    handleSubmit()
+  } else {
+    showSignatureDialog.value = true
+  }
+}
+
+const handleSignatureCreated = async (signature: GameSignatureStoreRequest) => {
+  if (!game.value) return
+
+  loadingSignature.value = true
+
+  const { data, error } = await gameSignatureService.store(
+    game.value.id,
+    mapGameSignatureStoreRequestToApiGameSignatureStoreRequest(signature),
+  )
+
+  loadingSignature.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  game.value.signatures?.push(
+    mapApiGameSignatureToGameSignature(data.value.data.game_signature),
+  )
+
+  showSignatureDialog.value = false
+
+  handleSubmit()
+}
+
+const handleSubmit = async () => {
   if (!call.value) return
 
   if (call.value.locked) {
@@ -289,7 +347,7 @@ onMounted(getTeamPlayers)
     v-if="call"
     class="easy-game-call-form-component"
     :class="{ 'is-locked': call?.locked }"
-    @submit.prevent="submit"
+    @submit.prevent="handleSignOrSubmit()"
   >
     <FormLabel :label="$t('calls.select')">
       <GameCallList
@@ -329,6 +387,16 @@ onMounted(getTeamPlayers)
       @hide="shirtNumberUpdatePlayer = undefined"
     />
   </form>
+
+  <SignatureDialog
+    :visible="showSignatureDialog"
+    :loading="loadingSignature"
+    :save-inline="false"
+    :type="GameSignatureTypes.coach"
+    :team-type="teamType"
+    @hide="showSignatureDialog = false"
+    @signature:created="handleSignatureCreated"
+  />
 </template>
 
 <style scoped lang="scss">

@@ -16,6 +16,7 @@ import { ApiGameSignature } from '@/types/api/game-signature'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { ApiDuration } from '@/types/api/utils'
+import { TeamType } from '@/domain/team'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -133,6 +134,7 @@ export type ApiGameTeamPlayersResponse = {
     game: ApiGame
     call: ApiCall
     players: ApiPlayer[]
+    team_type: TeamType
   }
   errors: null
 }

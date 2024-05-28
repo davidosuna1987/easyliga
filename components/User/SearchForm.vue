@@ -53,8 +53,8 @@ const searchUsers = async () => {
   loadingApi.value = true
   const { data, error } = await userService.search({
     search: search.value,
-    where_has: `roles:name:${props.role}`,
     with: 'profile',
+    ...(props.role && { where_has: `roles:name:${props.role}` }),
   })
   loadingApi.value = false
 

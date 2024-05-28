@@ -59,7 +59,7 @@ const onActionButtonClick = () => {
   showSignatureDialog.value = true
 }
 
-const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
+const handleSignatureCreated = async (signature: GameSignatureStoreRequest) => {
   loadingSignature.value = true
 
   const { data, error } = await gameSignatureService.store(
@@ -99,7 +99,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
     :type="props.signatureType"
     :team-type="teamType"
     @hide="showSignatureDialog = false"
-    @signature:created="handleStoreSignature"
+    @signature:created="handleSignatureCreated"
   />
 </template>
 
