@@ -15,7 +15,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['hide', 'selected'])
+const emit = defineEmits(['hide', 'invited'])
 
 const toast = useEasyToast()
 const userService = new UserService()
@@ -39,7 +39,7 @@ const handleSubmit = async () => {
     loadingApi.value = false
   } else {
     toast.success($i18n.t('users.invited'))
-    emit('hide', true)
+    emit('invited', true)
   }
 }
 

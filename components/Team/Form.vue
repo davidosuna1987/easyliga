@@ -294,6 +294,7 @@ watch(
               invite
               full
               @selected="handleCoachSelected"
+              @invited="editingCoach = false"
             />
           </template>
           <Button

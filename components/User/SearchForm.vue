@@ -33,6 +33,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'selected', value: User): void
+  (e: 'invited', value: boolean): void
 }>()
 
 const userService = new UserService()
@@ -75,8 +76,9 @@ const handleUserSelected = (event: AutoCompleteItemSelectEvent) => {
   emit('selected', selectedUser.value)
 }
 
-const handleUserInvited = (user: User) => {
-  alert('User invited')
+const handleUserInvited = () => {
+  showUserInviteDialog.value = false
+  emit('invited', true)
 }
 </script>
 
