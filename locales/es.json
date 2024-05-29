@@ -726,5 +726,10 @@
       "coach": "El entrenador de {teamName} ha firmado el acta",
       "captain": "El capitán de {teamName} ha firmado el acta"
     }
+  },
+  "countries": {
+    "country": "País | Países",
+    "select": "Selecciona un país",
+    "search": "Buscar país"
   }
 }

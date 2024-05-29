@@ -88,3 +88,8 @@ a:-webkit-any-link {
 .p-tag-value {
   line-height: 1 !important;
 }
+
+.p-dropdown-panel .p-dropdown-header {
+  padding: 0.5rem 1rem;
+  background-color: var(--background-color);
+}

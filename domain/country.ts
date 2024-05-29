@@ -19,6 +19,9 @@ export const getCountryByCode = (code: CountryCode): Country | undefined => {
   return countries.find(country => country.alpha2Code === code)
 }
 
+export const getCountryFlagIconName = (code: CountryCode, squared = true) =>
+  `flag:${code.toLocaleLowerCase()}-${squared ? '1x1' : '4x3'}`
+
 export const countries = [
   {
     name: 'Afghanistan',
