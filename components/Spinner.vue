@@ -8,10 +8,14 @@
   width: 50px;
   height: 50px;
   border: 3px solid var(--primary-color);
-  border-radius: 50%;
   border-top-color: white;
+  border-radius: 50%;
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
+
+  @media (prefers-color-scheme: dark) {
+    border-top-color: black;
+  }
 }
 
 @keyframes spin {
