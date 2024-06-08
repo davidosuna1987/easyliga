@@ -81,3 +81,9 @@ export const mapDurationTo = (
     return duration.hours * 60 + duration.minutes
   return duration.hours * 3600 + duration.minutes * 60 + duration.seconds
 }
+
+export const getInitials = (segments: string[]): string =>
+  segments
+    .map(s => s[0])
+    .join('')
+    .toLocaleUpperCase()

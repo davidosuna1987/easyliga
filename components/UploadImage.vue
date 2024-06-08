@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { type Image } from '@/domain/profile'
-const emit = defineEmits({
-  image: (image: Image) => {
-    return image
-  },
-})
 
 const props = defineProps({
   preview: {
     type: String,
     required: true,
+  },
+  initials: {
+    type: String,
+    required: false,
+  },
+})
+
+const emit = defineEmits({
+  image: (image: Image) => {
+    return image
   },
 })
 
@@ -87,17 +92,23 @@ watch(image.value, () => emit('image', image.value))
 <template>
   <section class="easy-upload-image-component">
     <a
-      class="wrapper relative w-[6rem] h-[6rem] rounded-full border-solid border-2 text-primary cursor-pointer"
+      class="wrapper relative rounded-full border-solid border-2 text-primary cursor-pointer"
     >
       <div
         v-tooltip.top="
           image.file ? $t('forms.remove_image') : $t('forms.change_image')
         "
         :style="avatarStyle"
-        class="preview w-full h-full rounded-full inline-block bg-img"
+        class="preview w-full h-full rounded-full inline-block bg-img overflow-hidden"
         :class="{ 'hover-danger': image.file }"
         @click.prevent="imageItemClick"
-      ></div>
+      >
+        <Initials
+          v-if="initials && !image.preview"
+          :initials="initials"
+          :size="168"
+        />
+      </div>
       <div
         class="button absolute bottom-0 right-0 border-solid border-2 rounded-full w-[2rem] h-[2rem] flex justify-center items-center cursor-pointer text-white"
         :class="[image.file ? 'bg-danger' : 'bg-primary']"

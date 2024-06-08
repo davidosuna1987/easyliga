@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getFullName } from '@/domain/player'
-import { Profile } from '@/domain/profile'
+import { Profile, AVATAR_STYLES } from '@/domain/profile'
+import { getInitials } from '@/domain/utils'
 
 const RemoveIconTypes = {
   trash: 'pepicons-pencil:trash-circle-filled',
@@ -72,8 +73,14 @@ const removeProfileTooltipText = computed(() => {
     <div class="team-player-info">
       <Avatar
         v-if="showAvatar"
+        :label="
+          profile.avatar
+            ? undefined
+            : getInitials([profile.firstName, profile.lastName])
+        "
+        :style="AVATAR_STYLES"
         class="player-avatar"
-        :image="profile?.avatar"
+        :image="profile.avatar"
         shape="circle"
       />
       <span class="player-name">{{ getFullName(profile) }}</span>

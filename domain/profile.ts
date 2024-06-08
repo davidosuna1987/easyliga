@@ -8,6 +8,12 @@ import {
 import { GenderType } from '@/domain/game'
 import { Coach } from '@/domain/team'
 
+export const AVATAR_STYLES = {
+  background: '#333333',
+  color: '#ffffff',
+  fontWeight: 700,
+} as const
+
 export type Image = {
   preview: string | null
   file: File | null

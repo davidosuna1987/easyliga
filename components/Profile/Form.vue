@@ -11,6 +11,7 @@ import { Address } from '@/domain/address'
 import ClubService from '@/services/club'
 import ProfileService from '@/services/profile'
 import { GenderType } from '@/domain/game'
+import { getInitials } from '@/domain/utils'
 
 const clubService = new ClubService()
 const profileService = new ProfileService()
@@ -137,6 +138,7 @@ watch(
       v-if="!props.hideAvatar"
       :class="{ 'is-muted': loadingApi }"
       :preview="avatar.preview ?? ''"
+      :initials="getInitials([props.profile.firstName, props.profile.lastName])"
       @image="avatarChange"
     />
 

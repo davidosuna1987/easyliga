@@ -3,6 +3,8 @@ import { Player, getFullName } from '@/domain/player'
 import { CallPlayerData } from '@/domain/call'
 import { TeamMember } from '@/domain/team'
 import { Sanction } from '@/domain/sanction'
+import { getInitials } from '@/domain/utils'
+import { AVATAR_STYLES } from '@/domain/profile'
 
 const RemoveIconTypes = {
   trash: 'pepicons-pencil:trash-circle-filled',
@@ -118,9 +120,14 @@ const removeProfileTooltipText = computed(() => {
         size="1rem"
       />
       <Avatar
-        v-if="showAvatar"
+        :label="
+          player.avatar
+            ? undefined
+            : getInitials([player.firstName, player.lastName])
+        "
+        :style="AVATAR_STYLES"
         class="player-avatar"
-        :image="player?.avatar"
+        :image="player.avatar"
         shape="circle"
       />
       <IconShirtNumber

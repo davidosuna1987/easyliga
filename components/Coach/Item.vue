@@ -2,6 +2,8 @@
 import { getFullName } from '@/domain/player'
 import { Sanction } from '@/domain/sanction'
 import { TeamMember } from '@/domain/team'
+import { getInitials } from '@/domain/utils'
+import { AVATAR_STYLES } from '@/domain/profile'
 
 const props = defineProps({
   coach: {
@@ -33,6 +35,12 @@ const props = defineProps({
       />
       <Avatar
         v-if="showAvatar"
+        :label="
+          coach.avatar
+            ? undefined
+            : getInitials([coach.firstName, coach.lastName])
+        "
+        :style="AVATAR_STYLES"
         class="player-avatar"
         :image="coach.avatar"
         shape="circle"
