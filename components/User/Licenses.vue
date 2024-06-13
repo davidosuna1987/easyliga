@@ -45,15 +45,11 @@ onMounted(() => {
 
 <template>
   <section class="easy-user-licenses-component">
-    <div class="p-inputgroup flex justify-center">
-      <Button
-        v-for="filter in filters"
-        :key="filter"
-        :label="$t(`licenses.type.${filter}`)"
-        :outlined="selectedType !== filter"
-        @click.prevent="selectedType = filter"
-      />
-    </div>
+    <LicenseFilter
+      :options="filters"
+      :type="selectedType"
+      @type:selected="selectedType = $event"
+    />
 
     <LicenseList
       class="mt-6"
