@@ -21,12 +21,15 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
+const loadingApi = ref<boolean>(false)
 const licenseService = new LicenseService()
 const showLicenseDetails = ref<boolean>(false)
 const showRemoveLicenseDialog = ref<boolean>(false)
 
 const handleRemoveLicense = async () => {
+  loadingApi.value = true
   const { data } = await licenseService.destroy(props.license.id)
+  loadingApi.value = false
 
   if (data.value) {
     toast.success(t('licenses.deleted'))
@@ -87,6 +90,7 @@ const handleRemoveLicense = async () => {
       :message="$t('licenses.delete_alert')"
       :acceptLabel="$t('forms.delete')"
       severity="danger"
+      :disabled="loadingApi"
       @accepted="handleRemoveLicense"
       @hide="showRemoveLicenseDialog = false"
     />
@@ -102,12 +106,7 @@ const handleRemoveLicense = async () => {
 
       <LicenseShow class="mt-6" :license="license" />
 
-      <template #footer>
-        <Button
-          :label="$t('forms.close')"
-          @click="showLicenseDetails = false"
-        />
-      </template>
+      <template #footer></template>
     </DialogBottom>
   </div>
 </template>

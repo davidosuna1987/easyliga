@@ -61,12 +61,10 @@ watch(
     </div>
 
     <template #footer>
-      <Button
-        class="mt-3"
-        type="button"
-        :label="$t('shirts.number_change_short')"
-        :loading="false"
-        @click="emit('update:player', { ...player, shirtNumber })"
+      <FormFooterActions
+        :submitLabel="$t('shirts.number_change_short')"
+        @form:submit="emit('update:player', { ...player, shirtNumber })"
+        hideCancel
       />
     </template>
   </DialogBottom>

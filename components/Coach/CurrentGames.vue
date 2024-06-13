@@ -227,7 +227,7 @@ onBeforeUnmount(() => {
             v-if="reportAlreadySignedByCoachAndCaptain(game, calls[index])"
             class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
           >
-            {{ $t('reports.closed') }}
+            {{ t('reports.closed') }}
           </div>
           <template v-else>
             <CoachButtonSign
@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
               <div
                 class="text-xs text-[var(--danger-color)] flex items-center justify-center"
               >
-                {{ $t('reports.countdown') }}
+                {{ t('reports.countdown') }}
                 <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
               </div>
             </EasyCountdown>
@@ -268,22 +268,17 @@ onBeforeUnmount(() => {
       @hide="setToRequestTimeout = undefined"
     >
       <template #header>
-        <Heading tag="h6">{{ $t('timeouts.request') }}</Heading>
+        <Heading tag="h6">{{ t('timeouts.request') }}</Heading>
       </template>
 
-      <p>{{ $t('timeouts.request_alert') }}</p>
+      <p>{{ t('timeouts.request_alert') }}</p>
 
       <template #footer>
-        <div class="flex justify-end gap-3 mt-3">
-          <Button
-            class="grayscale"
-            :label="$t('forms.cancel')"
-            severity="info"
-            outlined
-            @click="setToRequestTimeout = undefined"
-          />
-          <Button :label="$t('forms.request')" @click="requestTimeout" />
-        </div>
+        <FormFooterActions
+          :submitLabel="t('forms.request')"
+          @form:submit="requestTimeout"
+          @form:cancel="setToRequestTimeout = undefined"
+        />
       </template>
     </DialogBottom>
   </div>

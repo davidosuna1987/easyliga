@@ -64,35 +64,27 @@ watch(
     @hide="emit('hide', true)"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('users.invite') }}</Heading>
+      <Heading tag="h6">{{ t('users.invite') }}</Heading>
     </template>
 
-    <p class="mt-3">{{ $t('users.invite_dialog') }}</p>
+    <p class="mt-3">{{ t('users.invite_dialog') }}</p>
 
     <div class="mt-2 flex gap-2">
       <Tag v-for="role in form.roles" :value="role" />
     </div>
 
     <div class="mt-6">
-      <FormLabel :label="$t('forms.email')" :error="errors?.email?.[0]" />
+      <FormLabel :label="t('forms.email')" :error="errors?.email?.[0]" />
       <InputText v-model="form.email" type="email" class="w-full" />
     </div>
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="emit('hide', true)"
-        />
-        <Button
-          :label="$t('forms.invite')"
-          :loading="loadingApi"
-          @click="handleSubmit"
-        />
-      </div>
+      <FormFooterActions
+        :submitLabel="t('forms.invite')"
+        :disabled="loadingApi"
+        @form:submit="handleSubmit"
+        @form:cancel="emit('hide', true)"
+      />
     </template>
   </DialogBottom>
 </template>

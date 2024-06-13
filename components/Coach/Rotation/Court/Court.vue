@@ -194,6 +194,14 @@ const initialRotationPlayersToBeReplacedForSanction = computed(
   },
 )
 
+const submitLabel = computed((): string =>
+  !!initialPlayerChangeToUndo.value &&
+  playerChangeToUndo.value?.inCourtProfileId ===
+    initialPlayerChangeToUndo.value.inCourtProfileId
+    ? t('rotations.do_player_change')
+    : t('rotations.cancel_player_change'),
+)
+
 const setRotationPlayersFromRtotation = () => {
   playerChanges.value = []
 
@@ -663,7 +671,7 @@ watch(
             !rotation?.locked
           "
           class="change-captain-button ml-3"
-          :label="$t('forms.change')"
+          :label="t('forms.change')"
           size="small"
         />
       </div>
@@ -690,8 +698,8 @@ watch(
     <template #header>
       <Heading tag="h6">{{
         playerToReplace
-          ? $t('players.replace_player', { name: getFullName(playerToReplace) })
-          : $t('players.select')
+          ? t('players.replace_player', { name: getFullName(playerToReplace) })
+          : t('players.select')
       }}</Heading>
     </template>
 
@@ -709,11 +717,11 @@ watch(
       />
     </template>
 
-    <Message v-else :closable="false">{{ $t('players.no_available') }}</Message>
+    <Message v-else :closable="false">{{ t('players.no_available') }}</Message>
 
     <template v-if="expelledPlayers.length">
       <Heading class="mt-5" tag="h6">
-        {{ $t('sanctions.expelled_player', 2) }}
+        {{ t('sanctions.expelled_player', 2) }}
       </Heading>
       <CoachRotationPlayer
         v-for="player in expelledPlayers"
@@ -731,7 +739,7 @@ watch(
     @hide="showCaptainSelector = false"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('teams.in_court_captain_select') }}</Heading>
+      <Heading tag="h6">{{ t('teams.in_court_captain_select') }}</Heading>
     </template>
 
     <CoachRotationPlayer
@@ -751,8 +759,8 @@ watch(
         initialPlayerChangeToUndo &&
         playerChangeToUndo?.inCourtProfileId ===
           initialPlayerChangeToUndo.inCourtProfileId
-          ? $t('rotations.do_player_change')
-          : $t('rotations.cancel_player_change')
+          ? t('rotations.do_player_change')
+          : t('rotations.cancel_player_change')
       }}</Heading>
     </template>
 
@@ -792,26 +800,13 @@ watch(
     />
 
     <template #footer>
-      <div class="flex items-center justify-end gap-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="hideUndoPlayerChangeDialog"
-        />
-        <Button
-          v-if="playerChangeToUndo"
-          :label="
-            initialPlayerChangeToUndo &&
-            playerChangeToUndo?.inCourtProfileId ===
-              initialPlayerChangeToUndo.inCourtProfileId
-              ? $t('rotations.do_player_change')
-              : $t('rotations.cancel_player_change')
-          "
-          @click="handlePlayerChangeUndo(playerChangeToUndo)"
-        />
-      </div>
+      <FormFooterActions
+        :submitLabel="submitLabel"
+        @form:submit="
+          playerChangeToUndo && handlePlayerChangeUndo(playerChangeToUndo)
+        "
+        @form:cancel="hideUndoPlayerChangeDialog"
+      />
     </template>
   </DialogBottom>
 </template>

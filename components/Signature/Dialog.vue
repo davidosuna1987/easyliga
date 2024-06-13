@@ -38,6 +38,8 @@ const emit = defineEmits<{
   (e: 'signature:created', value: GameSignatureStoreRequest): void
 }>()
 
+const { t } = useI18n()
+
 const signaturePad = ref<VueSignaturePad>()
 const showDialog = ref<boolean>(props.visible)
 
@@ -66,7 +68,7 @@ watch(
         {{
           props.title
             ? props.title
-            : $t(`reports.signature_type.short.${props.type}`)
+            : t(`reports.signature_type.short.${props.type}`)
         }}
       </Heading>
     </template>
@@ -80,23 +82,12 @@ watch(
     />
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          :loading="props.loading"
-          :disabled="props.loading"
-          @click="hide"
-        />
-        <Button
-          :label="$t('reports.sign')"
-          :loading="props.loading"
-          :disabled="props.loading"
-          @click="signaturePad?.saveSignature()"
-        />
-      </div>
+      <FormFooterActions
+        :disabled="props.loading"
+        :submitLabel="t('reports.sign')"
+        @form:submit="signaturePad?.saveSignature()"
+        @form:cancel="hide"
+      />
     </template>
   </DialogBottom>
 </template>

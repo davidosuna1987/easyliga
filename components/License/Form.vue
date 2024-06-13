@@ -25,6 +25,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'success', value: boolean): void
+  (e: 'loading', value: boolean): void
 }>()
 
 const { t } = useI18n()
@@ -126,6 +127,13 @@ onMounted(() => {
 defineExpose({
   handleSubmit,
 })
+
+watch(
+  () => loadingApi.value,
+  value => {
+    emit('loading', value)
+  },
+)
 </script>
 
 <template>

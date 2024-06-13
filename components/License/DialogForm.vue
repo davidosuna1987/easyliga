@@ -19,13 +19,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'license:created', value: License): void
-  (e: 'license:updated', value: License): void
   (e: 'hide', value: boolean): void
+  (e: 'loading', value: boolean): void
 }>()
 
 const showDialog = ref<boolean>(!!props.visible)
 const licenseFormRef = ref<HTMLFormElement>()
+const loading = ref<boolean>(false)
 
 const action = computed(() => (props.license ? 'edit' : 'add'))
 
@@ -33,16 +33,12 @@ const handleFormSubmit = () => {
   licenseFormRef.value?.handleSubmit()
 }
 
-const handleLicenseFormCreated = (apiLicense: ApiLicense) => {
-  emit('license:updated', mapApiLicenseToLicense(apiLicense))
-}
-
-const handleLicenseFormUpdated = (apiLicense: ApiLicense) => {
-  emit('license:updated', mapApiLicenseToLicense(apiLicense))
-}
-
 const handleSuccess = () => {
   emit('hide', true)
+}
+
+const handleLoading = (value: boolean) => {
+  loading.value = value
 }
 
 watch(
@@ -68,13 +64,13 @@ watch(
       class="mt-6"
       :type="type"
       :license="license"
-      @license:created="handleLicenseFormCreated"
-      @license:updated="handleLicenseFormUpdated"
+      @loading="handleLoading"
       @success="handleSuccess"
     />
 
     <template #footer>
       <FormFooterActions
+        :disabled="loading"
         @form:submit="handleFormSubmit"
         @form:cancel="emit('hide', true)"
       />

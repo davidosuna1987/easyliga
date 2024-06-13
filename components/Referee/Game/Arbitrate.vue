@@ -77,6 +77,7 @@ const showObservationsDialog = ref<boolean>(false)
 const showShirtColorDialogWithTeam = ref<Team>()
 const loadingApi = ref<boolean>(false)
 const loadingTimeout = ref<boolean>(false)
+const loadingObservations = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
 const disablePointTimeout = ref<boolean>(true)
@@ -439,10 +440,12 @@ const setObservations = (observations?: string) =>
   (observationsForm.value.observations = observations)
 
 const submitObservations = async () => {
+  loadingObservations.value = true
   const { data, error } = await gameService.observations(
     Number(route.params.game_id),
     observationsForm.value,
   )
+  loadingObservations.value = false
 
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -720,7 +723,8 @@ onMounted(() => {
     <ObservationsDialog
       :visible="!!showObservationsDialog"
       :observations="observationsForm.observations"
-      :submitLabel="$t('forms.store')"
+      :submitLabel="t('forms.store')"
+      :loading="loadingObservations"
       @hide="showObservationsDialog = false"
       @observations:changed="setObservations"
       @observations:submit="submitObservations"
@@ -741,30 +745,25 @@ onMounted(() => {
       @hide="showSetPointWillEndSetDialog = false"
     >
       <template #header>
-        <Heading tag="h6">{{ $t('sets.close') }}</Heading>
+        <Heading tag="h6">{{ t('sets.close') }}</Heading>
       </template>
 
       <p>
         {{
-          $t('games.point_will_end_set', {
+          t('games.point_will_end_set', {
             teamName: winnerTeamIfSumPoint?.name,
           })
         }}
       </p>
 
-      <p class="mt-3">{{ $t('games.point_will_end_set_alert') }}</p>
+      <p class="mt-3">{{ t('games.point_will_end_set_alert') }}</p>
 
       <template #footer>
-        <div class="flex justify-end gap-3 mt-3">
-          <Button
-            class="grayscale"
-            :label="$t('forms.cancel')"
-            severity="info"
-            outlined
-            @click="showSetPointWillEndSetDialog = false"
-          />
-          <Button :label="$t('forms.accept')" @click="sumPoint()" />
-        </div>
+        <FormFooterActions
+          :submitLabel="t('forms.accept')"
+          @form:submit="sumPoint"
+          @form:cancel="showSetPointWillEndSetDialog = false"
+        />
       </template>
     </DialogBottom>
 

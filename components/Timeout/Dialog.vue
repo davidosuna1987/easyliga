@@ -31,6 +31,7 @@ const props = defineProps({
 
 const emit = defineEmits(['hide', 'timeout:init'])
 
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const timeoutService = new TimeoutService()
@@ -68,25 +69,21 @@ watch(
     @hide="emit('hide')"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('timeouts.timeout') }}</Heading>
+      <Heading tag="h6">{{ t('timeouts.timeout') }}</Heading>
     </template>
 
-    <p class="text-center my-3">{{ $t('timeouts.init_alert') }}</p>
+    <p class="text-center my-3">{{ t('timeouts.init_alert') }}</p>
     <Heading tag="h5" class="mt-3 text-center">
       {{ props.team.name }}
     </Heading>
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="emit('hide')"
-        />
-        <Button :label="$t('timeouts.init')" @click="storeTimeout" />
-      </div>
+      <FormFooterActions
+        :submitLabel="t('timeouts.init')"
+        :disabled="loadingApi"
+        @form:submit="storeTimeout"
+        @form:cancel="emit('hide')"
+      />>
     </template>
   </DialogBottom>
 </template>

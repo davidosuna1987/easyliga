@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
@@ -61,16 +65,12 @@ watch(
     />
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="emit('hide')"
-        />
-        <Button :label="submitLabelText" @click="emit('observations:submit')" />
-      </div>
+      <FormFooterActions
+        :submitLabel="submitLabelText"
+        :disabled="loading"
+        @form:submit="emit('observations:submit')"
+        @form:cancel="emit('hide')"
+      />
     </template>
   </DialogBottom>
 </template>

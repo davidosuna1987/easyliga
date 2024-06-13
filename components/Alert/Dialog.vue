@@ -26,6 +26,14 @@ const props = defineProps({
     type: String as PropType<ButtonProps['severity']>,
     default: null,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -58,20 +66,15 @@ watch(
     <Heading tag="h6">{{ message }}</Heading>
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="cancelLabelText"
-          severity="info"
-          outlined
-          @click="emit('hide', true)"
-        />
-        <Button
-          :label="acceptLabelText"
-          :severity="severity"
-          @click="emit('accepted', true)"
-        />
-      </div>
+      <FormFooterActions
+        :submitSeverity="severity"
+        :submitLabel="acceptLabelText"
+        :cancelLabel="cancelLabelText"
+        :disabled="props.disabled"
+        :loading="props.loading"
+        @form:submit="emit('accepted', true)"
+        @form:cancel="emit('hide', true)"
+      />
     </template>
   </DialogBottom>
 </template>

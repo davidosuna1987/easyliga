@@ -53,7 +53,7 @@ const handleOpenFilepath = () => {
       <FormInputGroup>
         <InputText :value="license.originalFilename" readonly />
 
-        <Button @click="handleOpenFilepath">
+        <Button v-if="license.originalFilename" @click="handleOpenFilepath">
           <Icon :name="IconNames.link" size="18" />
         </Button>
       </FormInputGroup>

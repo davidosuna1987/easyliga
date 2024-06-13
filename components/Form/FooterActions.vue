@@ -14,6 +14,30 @@ const props = defineProps({
     type: String as PropType<ButtonProps['severity']>,
     required: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  hideSubmit: {
+    type: Boolean,
+    default: false,
+  },
+  hideCancel: {
+    type: Boolean,
+    default: false,
+  },
+  submitClass: {
+    type: Array as PropType<string[]>,
+    required: false,
+  },
+  size: {
+    type: String as PropType<ButtonProps['size']>,
+    required: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -32,15 +56,24 @@ const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
     class="easy-form-footer-actions-component flex justify-end gap-3 mt-3"
   >
     <Button
+      v-if="!hideCancel"
       class="grayscale"
       :label="cancelLabelText"
       severity="info"
+      :size="size"
+      :disabled="disabled"
+      :loading="loading"
       outlined
       @click="emit('form:cancel', true)"
     />
     <Button
+      v-if="!hideSubmit"
+      :class="submitClass?.join(' ')"
       :label="submitLabelText"
       :severity="submitSeverity"
+      :size="size"
+      :disabled="disabled"
+      :loading="loading"
       @click="emit('form:submit', true)"
     />
   </footer>

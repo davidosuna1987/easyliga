@@ -36,8 +36,9 @@ const emit = defineEmits<{
   (e: 'invited', value: boolean): void
 }>()
 
-const userService = new UserService()
+const { t } = useI18n()
 const toast = useEasyToast()
+const userService = new UserService()
 
 const search = ref<string>('')
 const selectedUser = ref<User | undefined>(props.user)
@@ -85,7 +86,7 @@ const handleUserInvited = () => {
 <template>
   <form class="easy-user-search-form-component">
     <template v-if="!!selectedUser?.profile">
-      <FormLabel v-if="showLabel" :label="$t('forms.you_selected')" />
+      <FormLabel v-if="showLabel" :label="t('forms.you_selected')" />
       <ProfileItem
         :profile="selectedUser.profile"
         :selectable="false"
@@ -94,7 +95,7 @@ const handleUserInvited = () => {
       />
     </template>
     <template v-else>
-      <FormLabel v-if="showLabel" :label="$t('users.search')" />
+      <FormLabel v-if="showLabel" :label="t('users.search')" />
       <AutoComplete
         v-model="search"
         :class="{ 'w-full': props.full }"
@@ -115,11 +116,11 @@ const handleUserInvited = () => {
 
         <template #empty>
           <div v-if="invite" class="py-4 px-7 text-center">
-            <p>{{ $t('users.not_found') }}</p>
-            <div v-if="invite" class="m-3 flex flex-col gap-3 items-center">
-              <p>{{ $t('users.invite_long') }}</p>
+            <p>{{ t('users.not_found') }}</p>
+            <div class="m-3 flex flex-col gap-3 items-center">
+              <p>{{ t('users.invite_long') }}</p>
               <Button
-                :label="$t('forms.invite')"
+                :label="t('forms.invite')"
                 @click="showUserInviteDialog = true"
               />
             </div>

@@ -93,3 +93,7 @@ a:-webkit-any-link {
   padding: 0.5rem 1rem;
   background-color: var(--background-color);
 }
+
+.p-dialog .p-dialog-footer button.w-full {
+  width: 100%;
+}

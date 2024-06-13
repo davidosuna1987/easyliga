@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { Player } from '@/domain/player'
 
-const emit = defineEmits(['add', 'hide'])
-
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
   },
 })
+
+const emit = defineEmits(['add', 'hide'])
+
+const { t } = useI18n()
 
 const selectedPlayer = ref<Player>()
 const showDialog = ref<boolean>(!!props.visible)
@@ -32,29 +34,18 @@ watch(
     @hide="$emit('hide', true)"
   >
     <template #header>
-      <Heading tag="h5">{{ $t('players.add') }}</Heading>
+      <Heading tag="h5">{{ t('players.add') }}</Heading>
     </template>
 
     <PlayerSearchForm class="min-h-[200px]" full @selected="handleSelected" />
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          class="grayscale"
-          :label="$t('forms.cancel')"
-          severity="info"
-          outlined
-          @click="emit('hide', true)"
-        />
-        <Button
-          :disabled="!selectedPlayer"
-          class="mt-3"
-          type="button"
-          :label="$t('players.add')"
-          :loading="false"
-          @click="emit('add', selectedPlayer)"
-        />
-      </div>
+      <FormFooterActions
+        :submitLabel="t('players.add')"
+        :disabled="!selectedPlayer"
+        @form:submit="emit('add', selectedPlayer)"
+        @form:cancel="emit('hide', true)"
+      />
     </template>
   </DialogBottom>
 </template>

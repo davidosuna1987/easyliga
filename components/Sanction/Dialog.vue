@@ -72,6 +72,7 @@ const showEnsureSubmitSanction = ref<boolean>(false)
 const showGameTeamIncomplete = ref<boolean>(false)
 const showCurrentSetTeamIncomplete = ref<boolean>(false)
 const loadingIncompleteTeam = ref<boolean>(false)
+const loadingApi = ref<boolean>(false)
 
 const form = computed((): SanctionStoreRequest => {
   return {
@@ -144,6 +145,26 @@ const availableSeverities = computed((): SanctionSeverityKey[] => {
   }
 })
 
+const submitLabel = computed((): string =>
+  showEnsureSubmitSanction.value
+    ? t('sanctions.to_sanction_name', { name: nameToSanction.value })
+    : t('sanctions.to_sanction'),
+)
+
+const submitSeverity = computed((): string | undefined =>
+  showEnsureSubmitSanction.value
+    ? loadingIncompleteTeam.value
+      ? 'info'
+      : 'danger'
+    : undefined,
+)
+
+const loadingDialog = computed(
+  (): boolean =>
+    showEnsureSubmitSanction.value &&
+    (loadingIncompleteTeam.value || loadingApi.value),
+)
+
 const hide = () => {
   selectedType.value = SanctionType.team
   selectedMember.value = undefined
@@ -213,7 +234,9 @@ const submitSanction = async () => {
     return
   }
 
+  loadingApi.value = true
   const { data, error } = await sanctionService.store(form.value)
+  loadingApi.value = false
 
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -230,6 +253,9 @@ const submitSanction = async () => {
 
   hide()
 }
+
+const handleSubmitSanction = () =>
+  showEnsureSubmitSanction.value ? submitSanction() : ensureSubmitSanction()
 
 watch(
   () => props.visible,
@@ -256,11 +282,11 @@ onMounted(() => {
     @hide="hide"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('sanctions.to_sanction') }}</Heading>
+      <Heading tag="h6">{{ t('sanctions.to_sanction') }}</Heading>
     </template>
 
     <div v-if="showEnsureSubmitSanction" class="flex flex-col items-center">
-      <p class="text-center my-3">{{ $t('sanctions.store_disclaimer') }}</p>
+      <p class="text-center my-3">{{ t('sanctions.store_disclaimer') }}</p>
       <Heading tag="h5" class="mt-3">
         {{ props.team.name }}
       </Heading>
@@ -293,14 +319,14 @@ onMounted(() => {
           v-model="observations"
           :rows="5"
           autoResize
-          :placeholder="$t('observations.record')"
+          :placeholder="t('observations.record')"
         />
         <a
           v-else
           class="cursor-pointer text-primary text-center block w-full"
           @click="showObservations = true"
         >
-          {{ $t('observations.record') }}
+          {{ t('observations.record') }}
         </a>
       </div>
       <div class="mt-6 -mb-10 w-full">
@@ -311,7 +337,7 @@ onMounted(() => {
           :icon="undefined"
         >
           {{
-            $t(
+            t(
               `sanctions.${
                 showGameTeamIncomplete ? 'game' : 'current_set'
               }_team_incomplete`,
@@ -333,7 +359,7 @@ onMounted(() => {
           @click="setSanctionType(key)"
         >
           <!-- <Icon :name="SanctionIcon[key]" size="1.5rem" class="mr-1" /> -->
-          {{ $t(`sanctions.${key}_user_friendly`) }}
+          {{ t(`sanctions.${key}_user_friendly`) }}
         </Button>
       </nav>
 
@@ -365,34 +391,21 @@ onMounted(() => {
     </template>
 
     <template #footer>
-      <div class="flex justify-end gap-3 mt-3">
-        <Button
-          v-if="showEnsureSubmitSanction"
-          :class="[
-            'ensure-sanction-button',
-            { grayscale: loadingIncompleteTeam },
-          ]"
-          :loading="loadingIncompleteTeam"
-          :disabled="loadingIncompleteTeam"
-          :label="$t('sanctions.to_sanction_name', { name: nameToSanction })"
-          :severity="loadingIncompleteTeam ? 'info' : 'danger'"
-          size="large"
-          @click="submitSanction"
-        />
-        <template v-else>
-          <Button
-            class="grayscale"
-            :label="$t('forms.cancel')"
-            severity="info"
-            outlined
-            @click="hide"
-          />
-          <Button
-            :label="$t('sanctions.to_sanction')"
-            @click="ensureSubmitSanction"
-          />
-        </template>
-      </div>
+      <FormFooterActions
+        :submitClass="
+          showEnsureSubmitSanction
+            ? ['w-full transition-none', ...[loadingDialog ? 'grayscale' : '']]
+            : undefined
+        "
+        :submitLabel="submitLabel"
+        :submitSeverity="submitSeverity"
+        :size="showEnsureSubmitSanction ? 'large' : undefined"
+        :disabled="loadingDialog"
+        :loading="loadingDialog"
+        :hideCancel="showEnsureSubmitSanction"
+        @form:submit="handleSubmitSanction"
+        @form:cancel="hide"
+      />
     </template>
   </DialogBottom>
 </template>
