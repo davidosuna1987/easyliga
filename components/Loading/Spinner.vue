@@ -33,6 +33,6 @@
 
 <script lang="ts">
 export default {
-  name: 'Spinner',
+  name: 'LoadingSpinner',
 }
 </script>

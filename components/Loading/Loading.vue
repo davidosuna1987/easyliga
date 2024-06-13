@@ -1,6 +1,6 @@
 <template>
   <div class="easy-loading-component">
-    <Spinner />
+    <LoadingSpinner />
   </div>
 </template>
 

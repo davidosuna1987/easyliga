@@ -25,6 +25,7 @@ const sizeDivider = computed((): number => props.initials.length)
 
 <template>
   <svg
+    class="easy-initials-component"
     :width="size"
     :height="size"
     :viewBox="`0 0 ${size} ${size}`"
@@ -54,6 +55,6 @@ svg {
 
 <script lang="ts">
 export default {
-  name: 'Initials',
+  name: 'EasyInitials',
 }
 </script>

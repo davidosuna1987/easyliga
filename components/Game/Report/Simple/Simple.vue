@@ -90,7 +90,7 @@ onMounted(() => {
       v-if="loadingApi"
       class="flex justify-center items-center h-[calc(100dvh-250px)]"
     >
-      <Spinner />
+      <LoadingSpinner />
       <span class="text-2xl ml-3">Cargando datos del partido</span>
     </div>
     <template v-else>

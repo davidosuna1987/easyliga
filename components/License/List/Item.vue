@@ -40,7 +40,7 @@ const handleRemoveLicense = async () => {
     class="easy-license-list-item-component flex justify-between items-center gap-3 px-4 py-2 rounded-md shadow"
   >
     <div class="flex items-center gap-2">
-      <Initials
+      <EasyInitials
         class="rounded-full"
         :initials="license.countryCode"
         :size="20"

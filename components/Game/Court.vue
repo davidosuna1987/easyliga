@@ -509,7 +509,7 @@ onMounted(setInitialShowCountdown)
       >
         {{ $t('observations.record') }}
       </a>
-      <Countdown
+      <EasyCountdown
         v-if="gameStatus === 'finished' && showCountdown"
         class="col-span-3"
         :target="gameObservationsCountdownTarget"
@@ -522,7 +522,7 @@ onMounted(setInitialShowCountdown)
           {{ $t('observations.countdown') }}
           <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
         </div>
-      </Countdown>
+      </EasyCountdown>
       <SanctionDialog
         v-if="teamToSanction && memberToSanction"
         :visible="!!teamToSanction"

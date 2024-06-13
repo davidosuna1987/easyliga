@@ -64,6 +64,6 @@ onMounted(() => {
 
 <script lang="ts">
 export default {
-  name: 'Countdown',
+  name: 'EasyCountdown',
 }
 </script>

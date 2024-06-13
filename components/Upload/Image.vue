@@ -101,7 +101,7 @@ watch(image.value, () => emit('image', image.value))
         :class="{ 'hover-danger': image.file }"
         @click.prevent="imageItemClick"
       >
-        <Initials
+        <EasyInitials
           v-if="initials && !image.preview"
           :initials="initials"
           :size="168"

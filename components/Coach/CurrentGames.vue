@@ -244,10 +244,10 @@ onBeforeUnmount(() => {
               "
               @signature:stored="handleSignatureStored"
             />
-            <Countdown
+            <EasyCountdown
               class="col-span-3"
-              :target="getGameObservationsCountdownTarget(game)"
               v-slot="{ minutes, seconds }"
+              :target="getGameObservationsCountdownTarget(game)"
               @countdown:ended="onCountdownEnded({ game, call: calls[index] })"
             >
               <div
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
                 {{ $t('reports.countdown') }}
                 <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
               </div>
-            </Countdown>
+            </EasyCountdown>
           </template>
         </template>
       </div>
