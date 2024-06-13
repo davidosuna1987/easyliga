@@ -13,11 +13,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits({
-  image: (image: Image) => {
-    return image
-  },
-})
+const emit = defineEmits<{
+  (e: 'image', value: Image): void
+}>()
+
+const { t } = useI18n()
 
 const maxMB = ref<number>(MAX_FILE_SIZE)
 const imageFileInput = ref<HTMLInputElement | null>(null)
@@ -56,7 +56,7 @@ const imageChange = (e: InputEvent | Event) => {
     let size = files[0].size
 
     if (size > maxMB.value * 1000000) {
-      alert(useNuxtApp().$i18n.t('errors.max_file_size', { mb: maxMB.value }))
+      alert(t('errors.max_file_size', { mb: maxMB.value }))
       return
     }
 

@@ -25,7 +25,7 @@ import { Rotation } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES } from '@/domain/sanction'
 import moment from 'moment'
 
-const { $i18n } = useNuxtApp()
+const { t } = useI18n()
 const auth = useAuthStore()
 const gameService = new GameService()
 const callService = new CallService()
@@ -131,7 +131,7 @@ const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
     1,
   )
 
-  toast.info($i18n.t('reports.closed', { gameName: game.name }))
+  toast.info(t('reports.closed', { gameName: game.name }))
 }
 
 const onReportSigned = (game: Game) => {
@@ -143,7 +143,7 @@ const onReportSigned = (game: Game) => {
     1,
   )
 
-  toast.info($i18n.t('reports.closed', { gameName: game.name }))
+  toast.info(t('reports.closed', { gameName: game.name }))
 }
 
 const currentSetRotation = (
@@ -160,8 +160,8 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
     (response: ApiCallUnlockedEventResponse) => {
       toast.info(
         response.call.locked
-          ? $i18n.t('events.call_locked')
-          : $i18n.t('events.call_unlocked'),
+          ? t('events.call_locked')
+          : t('events.call_unlocked'),
       )
       getCurrentGamesCalls()
     },
@@ -181,8 +181,8 @@ const listenRotationLockToggledEvent = (
     (response: ApiRotationLockToggledEventResponse) => {
       toast.info(
         response.rotation.locked
-          ? $i18n.t('events.rotation_locked')
-          : $i18n.t('events.rotation_unlocked'),
+          ? t('events.rotation_locked')
+          : t('events.rotation_unlocked'),
       )
       getCurrentGames()
     },
@@ -196,9 +196,9 @@ const listenGameStatusUpdatedEvent = (gameId: number) => {
       const game = currentGames.value?.find(game => game.id === gameId)
       if (game) {
         toast.info(
-          $i18n.t('events.game_status_updated', {
+          t('events.game_status_updated', {
             gameName: game.name,
-            status: $i18n.t(`games.status.${response.status}`),
+            status: t(`games.status.${response.status}`),
           }),
           {
             life: 30000,
@@ -219,7 +219,7 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
       if (game) {
         if (response.timeout.status === TimeoutStatusEnum.finished) {
           toast.info(
-            $i18n.t('events.timeout_status_finished_game', {
+            t('events.timeout_status_finished_game', {
               gameName: game.name,
             }),
           )
@@ -227,7 +227,7 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
 
         if (response.timeout.status === TimeoutStatusEnum.running) {
           toast.info(
-            $i18n.t('events.timeout_status_running_game', {
+            t('events.timeout_status_running_game', {
               gameName: game.name,
             }),
           )
@@ -262,7 +262,7 @@ const listenSanctionStoredEvent = (gameId: number) => {
         : undefined
 
       toast.error(
-        $i18n.t(`sanctions.sanctioned.${response.sanction.severity}`, {
+        t(`sanctions.sanctioned.${response.sanction.severity}`, {
           name: getFullName(sanctionedPlayer) ?? response.team.name,
         }),
       )
@@ -296,7 +296,7 @@ const listenGameSignatureCreatedEvent = (gameId: number) => {
   window.Echo.channel(`game.${gameId}.game_signature.created`).listen(
     ApiEvents.GAME_SIGNATURE_CREATED,
     (response: ApiGameSignatureCreatedEventResponse) => {
-      toast.info($i18n.t('reports.signed'))
+      toast.info(t('reports.signed'))
       getCurrentGames()
     },
   )

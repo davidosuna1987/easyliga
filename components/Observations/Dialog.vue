@@ -10,7 +10,7 @@ const props = defineProps({
   },
   submitLabel: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('forms.submit'),
+    required: false,
   },
 })
 
@@ -20,10 +20,14 @@ const emit = defineEmits([
   'observations:submit',
 ])
 
+const { t } = useI18n()
+
 const showDialog = ref<boolean>(props.visible)
 const form = ref<{ observations?: string }>({
   observations: props.observations,
 })
+
+const submitLabelText = computed(() => props.submitLabel ?? t('forms.submit'))
 
 watch(
   () => props.visible,
@@ -65,10 +69,7 @@ watch(
           outlined
           @click="emit('hide')"
         />
-        <Button
-          :label="props.submitLabel"
-          @click="emit('observations:submit')"
-        />
+        <Button :label="submitLabelText" @click="emit('observations:submit')" />
       </div>
     </template>
   </DialogBottom>

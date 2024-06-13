@@ -50,9 +50,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['hide', 'sanction:stored'])
+const emit = defineEmits<{
+  (e: 'hide', value: boolean): void
+  (e: 'sanction:stored', sanction: Sanction): void
+}>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const sanctionService = new SanctionService()
@@ -144,7 +147,7 @@ const availableSeverities = computed((): SanctionSeverityKey[] => {
 const hide = () => {
   selectedType.value = SanctionType.team
   selectedMember.value = undefined
-  emit('hide')
+  emit('hide', true)
 }
 
 const setSanctionType = (type: SanctionTypeKey) => {
@@ -162,7 +165,7 @@ const handleSeveritySelected = (severity: SanctionSeverityKey) => {
 
 const ensureSubmitSanction = async () => {
   if (!isValidForm.value) {
-    toast.error(app.$i18n.t('sanctions.invalid_form'))
+    toast.error(t('sanctions.invalid_form'))
     return
   }
 
@@ -206,7 +209,7 @@ const ensureSubmitSanction = async () => {
 
 const submitSanction = async () => {
   if (!isValidForm.value) {
-    toast.error(app.$i18n.t('sanctions.invalid_form'))
+    toast.error(t('sanctions.invalid_form'))
     return
   }
 
@@ -218,7 +221,7 @@ const submitSanction = async () => {
   }
 
   toast.success(
-    app.$i18n.t('sanctions.sanctioned.default', {
+    t('sanctions.sanctioned.default', {
       name: nameToSanction.value,
     }),
   )

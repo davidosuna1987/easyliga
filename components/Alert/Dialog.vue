@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ButtonProps } from 'primevue/button'
-const emit = defineEmits(['accepted', 'hide'])
 
 const props = defineProps({
   visible: {
@@ -17,11 +16,11 @@ const props = defineProps({
   },
   acceptLabel: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('forms.accept'),
+    required: false,
   },
   cancelLabel: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('forms.cancel'),
+    required: false,
   },
   severity: {
     type: String as PropType<ButtonProps['severity']>,
@@ -29,7 +28,17 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'accepted', value: boolean): void
+  (e: 'hide', value: boolean): void
+}>()
+
+const { t } = useI18n()
+
 const showDialog = ref<boolean>(!!props.visible)
+
+const acceptLabelText = computed(() => props.acceptLabel ?? t('forms.accept'))
+const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
 
 watch(
   () => props.visible,
@@ -52,13 +61,13 @@ watch(
       <div class="flex justify-end gap-3 mt-3">
         <Button
           class="grayscale"
-          :label="cancelLabel"
+          :label="cancelLabelText"
           severity="info"
           outlined
           @click="emit('hide', true)"
         />
         <Button
-          :label="acceptLabel"
+          :label="acceptLabelText"
           :severity="severity"
           @click="emit('accepted', true)"
         />

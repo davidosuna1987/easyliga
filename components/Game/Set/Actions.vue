@@ -21,12 +21,15 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['set:start'])
+const emit = defineEmits<{
+  (e: 'set:start', value: SetStartRequest): void
+}>()
 
+const { t } = useI18n()
 const showStartSetDialog = ref<boolean>(false)
 
 const actionLabel = computed(() =>
-  useNuxtApp().$i18n.t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
+  t(props.disabled ? 'rotations.waiting' : 'sets.start', 2),
 )
 
 const handleClick = () => {

@@ -45,8 +45,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['profile:edit'])
-const { $i18n } = useNuxtApp()
+const emit = defineEmits<{
+  (e: 'profile:edit', value: Profile): void
+}>()
+
+const { t } = useI18n()
 
 const iconsGap = computed(() => {
   let gap = 0
@@ -56,9 +59,7 @@ const iconsGap = computed(() => {
 })
 
 const removeProfileTooltipText = computed(() => {
-  return props.removeIcon === 'trash'
-    ? $i18n.t('profiles.delete')
-    : $i18n.t('forms.cancel')
+  return props.removeIcon === 'trash' ? t('profiles.delete') : t('forms.cancel')
 })
 </script>
 

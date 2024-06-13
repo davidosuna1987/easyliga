@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const toast = useEasyToast()
-
 const props = defineProps({
   gameId: {
     type: Number,
@@ -20,12 +18,17 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('calls.call'),
+    required: false,
   },
 })
 
+const { t } = useI18n()
+const toast = useEasyToast()
+
+const labelText = computed(() => props.label ?? t('calls.call'))
+
 const showCallLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('calls.locked_warning'))
+  toast.warn(t('calls.locked_warning'))
 }
 </script>
 
@@ -33,7 +36,7 @@ const showCallLockedToast = () => {
   <Button
     class="easy-coach-button-call-component"
     outlined
-    :label="props.label"
+    :label="labelText"
     :severity="
       props.severity ? props.severity : props.locked ? 'warning' : 'primary'
     "

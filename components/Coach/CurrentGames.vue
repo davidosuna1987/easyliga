@@ -17,10 +17,6 @@ import TimeoutService from '@/services/timeout'
 import moment from 'moment'
 import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
 
-const app = useNuxtApp()
-const toast = useEasyToast()
-const timeoutService = new TimeoutService()
-
 const props = defineProps({
   games: {
     type: Array as PropType<Game[]>,
@@ -37,6 +33,10 @@ const emit = defineEmits<{
   (e: 'countdown:ended', value: { game: Game; call: Call }): void
   (e: 'signature:stored', value: GameSignature): void
 }>()
+
+const { t } = useI18n()
+const toast = useEasyToast()
+const timeoutService = new TimeoutService()
 
 const gameSignatures = ref<GameSignature[]>(
   props.games.flatMap(game => game.signatures ?? []),
@@ -81,7 +81,7 @@ const requestTimeout = async () => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value?.data) {
-    toast.success(app.$i18n.t('timeouts.requested'))
+    toast.success(t('timeouts.requested'))
     emit('timeout:requested', mapApiTimeoutToTimeout(data.value.data.timeout))
   }
 }

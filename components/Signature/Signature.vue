@@ -12,11 +12,12 @@ const props = defineProps({
   },
 })
 
-const toast = useEasyToast()
-const { $i18n } = useNuxtApp()
 const emit = defineEmits<{
   (e: 'signature:created', value: string): void
 }>()
+
+const { t } = useI18n()
+const toast = useEasyToast()
 
 const signaturePad = ref<VueSignaturePad>()
 const showPlaceholder = ref<boolean>(true)
@@ -47,7 +48,7 @@ const saveSignature = (
     signaturePad.value.lockSignaturePad()
     emit('signature:created', data)
   } else {
-    toast.error($i18n.t('reports.signature_empty'))
+    toast.error(t('reports.signature_empty'))
   }
 }
 

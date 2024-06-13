@@ -18,10 +18,8 @@ const emit = defineEmits<{
   (e: 'file:changed', value: File | undefined): void
 }>()
 
+const { t } = useI18n()
 const toast = useEasyToast()
-const {
-  $i18n: { t: $t },
-} = useNuxtApp()
 
 const maxMB = ref<number>(MAX_FILE_SIZE)
 const fileInput = ref<HTMLInputElement>()
@@ -42,13 +40,13 @@ const fileChange = (e: InputEvent | Event) => {
     const file = files[0]
 
     if (file.size > maxMB.value * 1000000) {
-      toast.error($t('errors.max_file_size', { mb: maxMB.value }))
+      toast.error(t('errors.max_file_size', { mb: maxMB.value }))
       return
     }
 
     if (!props.accepted.includes(file.type)) {
       toast.error(
-        $t('errors.invalid_file_type', {
+        t('errors.invalid_file_type', {
           formats: props.accepted
             .map(type => type.split('/')[1])
             .join(' • ')
@@ -93,7 +91,7 @@ const reset = () => {
           <Icon :name="IconNames.delete" />
         </span>
         <span v-else>{{
-          fileName ? $t('forms.replace_file') : $t('forms.select_file')
+          fileName ? t('forms.replace_file') : t('forms.select_file')
         }}</span>
       </Button>
     </div>

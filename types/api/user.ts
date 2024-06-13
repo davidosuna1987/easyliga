@@ -44,7 +44,7 @@ export type ApiUserSearchRequest = {
 }
 
 export type ApiInviteRequest = {
-  email: String
+  email: string
   roles: Role[]
 }
 

@@ -22,7 +22,7 @@ import {
 } from '@/domain/game-signature'
 import GameSignatureService from '@/services/game-signature'
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 
@@ -65,7 +65,7 @@ const callSigned = computed(() => {
 })
 
 const showGameLockedToast = () => {
-  toast.warn(app.$i18n.t('calls.locked_warning'))
+  toast.warn(t('calls.locked_warning'))
 }
 
 const removeSelectedPlayer = (player: Player) => {
@@ -92,7 +92,7 @@ const addSelectedPlayer = (player: Player) => {
     selectedPlayer => selectedPlayer.shirtNumber === player.shirtNumber,
   )
   if (shirtNumberExists) {
-    toast.error(app.$i18n.t('shirts.already_in_use'))
+    toast.error(t('shirts.already_in_use'))
     return
   }
 
@@ -134,7 +134,7 @@ const setCaptain = (profileId: number) => {
   )
 
   if (!player?.captain && player?.libero) {
-    toast.error(app.$i18n.t('errors.libero_cannot_be_captain'))
+    toast.error(t('errors.libero_cannot_be_captain'))
     return
   }
 
@@ -160,7 +160,7 @@ const setLibero = (profileId: number) => {
     selectedLiberos.value.length >= MAX_CALL_LIBERO_PLAYERS
   ) {
     toast.error(
-      app.$i18n.t('errors.max_liberos', {
+      t('errors.max_liberos', {
         max: MAX_CALL_LIBERO_PLAYERS,
       }),
     )
@@ -168,7 +168,7 @@ const setLibero = (profileId: number) => {
   }
 
   if (!player?.libero && player?.captain) {
-    toast.error(app.$i18n.t('errors.libero_cannot_be_captain'))
+    toast.error(t('errors.libero_cannot_be_captain'))
     return
   }
 
@@ -195,7 +195,7 @@ const changePlayerShirtNumber = (player?: Player) => {
           p.profileId !== player.profileId,
       )
     ) {
-      toast.error(app.$i18n.t('shirts.already_in_use'))
+      toast.error(t('shirts.already_in_use'))
       return
     }
 
@@ -304,7 +304,7 @@ const handleSubmit = async () => {
     errors.value = error.value?.data?.errors
     loadingApi.value = false
   } else {
-    toast.success(app.$i18n.t('calls.submitted'))
+    toast.success(t('calls.submitted'))
     navigateTo(`/coach`)
   }
 }
@@ -317,8 +317,8 @@ const listenCallUnlockedEvent = () => {
     (response: ApiCallUnlockedEventResponse) => {
       toast.info(
         response.call.locked
-          ? app.$i18n.t('events.call_locked')
-          : app.$i18n.t('events.call_unlocked'),
+          ? t('events.call_locked')
+          : t('events.call_unlocked'),
       )
       getTeamPlayers()
     },

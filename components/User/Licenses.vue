@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { License } from '@/domain/license'
-import {
-  LICENSABLE_ROLES,
-  LICENSABLE_TYPE_MAPPER,
-  LicensableRole,
-  LicensableType,
-} from '@/domain/licensable'
+import { LICENSABLE_ROLES, LicensableType } from '@/domain/licensable'
 import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({
@@ -38,7 +33,6 @@ const handleLicenseEdit = (license: License) => {
 }
 
 const handleLicenseDialogFormHide = () => {
-  console.log('hide')
   formLicense.value = undefined
   showLicenseDialogForm.value = false
 }

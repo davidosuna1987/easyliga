@@ -27,8 +27,6 @@ import { getFullName } from '@/domain/player'
 import { mapApiProfileToProfile } from '@/domain/profile'
 import { ApiEvents, ApiSanctionStoredEventResponse } from '@/types/api/event'
 
-const emit = defineEmits(['update:set'])
-
 const props = defineProps({
   initialRotation: {
     type: Boolean,
@@ -36,7 +34,11 @@ const props = defineProps({
   },
 })
 
-const app = useNuxtApp()
+const emit = defineEmits<{
+  (e: 'update:set', value: Set): void
+}>()
+
+const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 
@@ -161,7 +163,7 @@ const handleSubmit = async (): Promise<void> => {
 
   if (form.value.players.length < ROTATION_PLAYERS_LENGTH) {
     toast.error(
-      useNuxtApp().$i18n.t('errors.assign_min_rotation_players', {
+      t('errors.assign_min_rotation_players', {
         num: MIN_CALL_PLAYERS,
       }),
     )
@@ -169,7 +171,7 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   if (!form.value.in_court_captain_profile_id) {
-    toast.error(useNuxtApp().$i18n.t('errors.assign_in_court_captain'))
+    toast.error(t('errors.assign_in_court_captain'))
     return
   }
 
@@ -181,7 +183,7 @@ const handleSubmit = async (): Promise<void> => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(useNuxtApp().$i18n.t('rotations.assign_success'))
+    toast.success(t('rotations.assign_success'))
     navigateTo(`/coach`)
   }
 }
@@ -195,7 +197,7 @@ const listenSanctionStoredEvent = (): void => {
         : undefined
 
       toast.error(
-        app.$i18n.t(`sanctions.sanctioned.${response.sanction.severity}`, {
+        t(`sanctions.sanctioned.${response.sanction.severity}`, {
           name: getFullName(sanctionedPlayer) ?? response.team.name,
         }),
       )

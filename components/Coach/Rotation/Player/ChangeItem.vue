@@ -46,9 +46,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
+const emit = defineEmits<{
+  (e: 'remove:playerChange', value: RotationPlayerChangeRequest): void
+  (e: 'undo:playerChange', value: RotationPlayerChangeRequest): void
+}>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const ICON_TYPE = {
@@ -136,7 +139,7 @@ const replacementPlayer = computed(() => {
 
 const handleActionClick = () => {
   if (replacementPlayerIsSanctioned.value) {
-    toast.error(app.$i18n.t('rotations.replacement_player_sanctioned'))
+    toast.error(t('rotations.replacement_player_sanctioned'))
     return
   }
   if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.REMOVE) {

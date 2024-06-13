@@ -9,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 const callService = new CallService()
 
@@ -26,7 +26,7 @@ const setObservations = (observations?: string) => {
 
 const onActionButtonClick = () => {
   if (props.call.signedAt) {
-    toast.error(app.$i18n.t('reports.closed'))
+    toast.error(t('reports.closed'))
     return
   }
   showObservationsDialog.value = true
@@ -47,7 +47,7 @@ const submit = async () => {
     return
   }
 
-  toast.success(app.$i18n.t('observations.stored'))
+  toast.success(t('observations.stored'))
 
   showObservationsDialog.value = false
 }

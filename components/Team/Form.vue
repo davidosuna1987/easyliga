@@ -9,12 +9,7 @@ import { Sede } from '@/domain/sede'
 import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
 import { User } from '@/domain/user'
-
-const teamService = new TeamService()
-const toast = useEasyToast()
-const { $i18n } = useNuxtApp()
-
-const emit = defineEmits(['created', 'updated'])
+import { ApiTeam } from '@/types/api/team'
 
 const props = defineProps({
   team: {
@@ -22,6 +17,15 @@ const props = defineProps({
     required: false,
   },
 })
+
+const emit = defineEmits<{
+  (e: 'created', value: ApiTeam): void
+  (e: 'updated', value: ApiTeam): void
+}>()
+
+const { t } = useI18n()
+const toast = useEasyToast()
+const teamService = new TeamService()
 
 const form = ref<TeamFormRequest>({
   id: 0,
@@ -125,7 +129,7 @@ const changePlayerShirtNumber = (player?: Player) => {
   } else {
     if (shirtNumberAlreadyTaken(player)) {
       toast.error(
-        $i18n.t('players.shirt_number_taken', {
+        t('players.shirt_number_taken', {
           shirtNumber: player.shirtNumber,
         }),
       )
@@ -141,7 +145,7 @@ const changePlayerShirtNumber = (player?: Player) => {
   }
 }
 
-const setProfileToEdit = (profile: Profile) => {
+const setProfileToEdit = (profile: Profile | undefined) => {
   profileToEdit.value = profile
 }
 
@@ -170,7 +174,7 @@ const handleStore = async () => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
-    toast.success($i18n.t('teams.created'))
+    toast.success(t('teams.created'))
     emit('created', data.value.data.team)
   }
 
@@ -184,7 +188,7 @@ const handleUpdate = async () => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
-    toast.success($i18n.t('teams.updated'))
+    toast.success(t('teams.updated'))
     emit('updated', data.value.data.team)
   }
 
@@ -197,7 +201,7 @@ const handleAddPlayer = (player: Player) => {
   }
 
   if (form.value.players.find(p => p.profileId === player.profileId)) {
-    toast.error($i18n.t('players.already_added'))
+    toast.error(t('players.already_added'))
     return
   }
 

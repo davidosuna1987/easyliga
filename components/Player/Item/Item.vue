@@ -4,7 +4,7 @@ import { CallPlayerData } from '@/domain/call'
 import { TeamMember } from '@/domain/team'
 import { Sanction } from '@/domain/sanction'
 import { getInitials } from '@/domain/utils'
-import { AVATAR_STYLES } from '@/domain/profile'
+import { AVATAR_STYLES, Profile } from '@/domain/profile'
 
 const RemoveIconTypes = {
   trash: 'pepicons-pencil:trash-circle-filled',
@@ -80,8 +80,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['profile:edit'])
-const { $i18n } = useNuxtApp()
+const emit = defineEmits<{
+  (e: 'profile:edit', value: Profile | undefined): void
+}>()
+
+const { t } = useI18n()
 
 const tooltipDisabled = computed(
   () => !!props.tooltipsDisabled || (props.selectable && !props.selected),
@@ -97,9 +100,7 @@ const iconsGap = computed(() => {
 })
 
 const removeProfileTooltipText = computed(() => {
-  return props.removeIcon === 'trash'
-    ? $i18n.t('players.delete')
-    : $i18n.t('forms.cancel')
+  return props.removeIcon === 'trash' ? t('players.delete') : t('forms.cancel')
 })
 </script>
 

@@ -34,7 +34,7 @@ const emit = defineEmits<{
   (e: 'signature:stored', value: GameSignature): void
 }>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const gameSignatureService = new GameSignatureService()
@@ -53,7 +53,7 @@ const teamType = computed<TeamType>(() =>
 
 const onActionButtonClick = () => {
   if (props.call.signedAt) {
-    toast.error(app.$i18n.t('reports.closed'))
+    toast.error(t('reports.closed'))
     return
   }
   showSignatureDialog.value = true

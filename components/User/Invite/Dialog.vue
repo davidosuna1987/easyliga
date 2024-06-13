@@ -15,11 +15,14 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['hide', 'invited'])
+const emit = defineEmits<{
+  (e: 'hide', value: boolean): void
+  (e: 'invited', value: boolean): void
+}>()
 
+const { t } = useI18n()
 const toast = useEasyToast()
 const userService = new UserService()
-const { $i18n } = useNuxtApp()
 
 const showDialog = ref<boolean>(props.visible)
 const loadingApi = ref<boolean>(false)
@@ -38,7 +41,7 @@ const handleSubmit = async () => {
     errors.value = error.value.data?.errors
     loadingApi.value = false
   } else {
-    toast.success($i18n.t('users.invited'))
+    toast.success(t('users.invited'))
     emit('invited', true)
   }
 }
@@ -58,7 +61,7 @@ watch(
   <DialogBottom
     class="easy-user-invite-dialog-component"
     :visible="!!showDialog"
-    @hide="emit('hide')"
+    @hide="emit('hide', true)"
   >
     <template #header>
       <Heading tag="h6">{{ $t('users.invite') }}</Heading>

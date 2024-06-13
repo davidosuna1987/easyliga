@@ -26,7 +26,7 @@ import { CallPlayerData } from '@/domain/call'
 import { getFullName } from '@/domain/player'
 import { mapApiProfileToProfile } from '@/domain/profile'
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 
@@ -182,12 +182,12 @@ const handleSubmit = async () => {
   if (!form.value) return
 
   if (form.value.locked) {
-    toast.warn(app.$i18n.t('rotations.locked_warning'))
+    toast.warn(t('rotations.locked_warning'))
     return
   }
 
   if (!form.value.inCourtCaptainProfileId) {
-    toast.error(app.$i18n.t('errors.assign_in_court_captain'))
+    toast.error(t('errors.assign_in_court_captain'))
     return
   }
   loadingApi.value = true
@@ -210,7 +210,7 @@ const handleSubmit = async () => {
     loadingApi.value = false
     return
   } else {
-    toast.success(app.$i18n.t('rotations.player_change_requested'))
+    toast.success(t('rotations.player_change_requested'))
     navigateTo(`/coach`)
   }
 
@@ -230,8 +230,8 @@ const listenRotationLockToggledEvent = (
     (response: ApiRotationLockToggledEventResponse) => {
       toast.info(
         response.rotation.locked
-          ? app.$i18n.t('events.rotation_locked')
-          : app.$i18n.t('events.rotation_unlocked'),
+          ? t('events.rotation_locked')
+          : t('events.rotation_unlocked'),
       )
       getRotation()
     },
@@ -249,7 +249,7 @@ const listenSanctionStoredEvent = (gameId?: number) => {
         : undefined
 
       toast.error(
-        app.$i18n.t(`sanctions.sanctioned.${response.sanction.severity}`, {
+        t(`sanctions.sanctioned.${response.sanction.severity}`, {
           name: getFullName(sanctionedPlayer) ?? response.team.name,
         }),
       )

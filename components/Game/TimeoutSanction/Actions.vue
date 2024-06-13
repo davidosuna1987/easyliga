@@ -44,9 +44,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['timeout:init', 'sanction:stored', 'sidebar:toggle'])
+const emit = defineEmits<{
+  (e: 'timeout:init', value: Timeout): void
+  (e: 'sanction:stored', value: Sanction): void
+  (e: 'sidebar:toggle', value: TeamSide): void
+}>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const sideTeamToSanction = ref<TeamSide>()
@@ -98,9 +102,7 @@ const teamToTimeoutTimeouts = computed((): Timeout[] => {
 
 const setSideTeamToTimeout = (side: TeamSide) => {
   if (props[`${side}SideTeamTimeouts`]?.length >= MAX_TIMEOUTS_PER_SET) {
-    toast.error(
-      app.$i18n.t('errors.max_timeouts', { max: MAX_TIMEOUTS_PER_SET }),
-    )
+    toast.error(t('errors.max_timeouts', { max: MAX_TIMEOUTS_PER_SET }))
     return
   }
   sideTeamToTimeout.value = side

@@ -13,7 +13,7 @@ const props = defineProps({
   },
 })
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const showInjuriesDialog = ref<boolean>(false)
@@ -22,7 +22,7 @@ const actionButtonDisabled = computed(() => !!props.call.signedAt)
 
 const onActionButtonClick = () => {
   if (props.call.signedAt) {
-    toast.error(app.$i18n.t('reports.closed'))
+    toast.error(t('reports.closed'))
     return
   }
   showInjuriesDialog.value = true

@@ -54,10 +54,10 @@ import {
 } from '@/domain/game-signature'
 import { User } from '@/domain/user'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const route = useRoute()
 const toast = useEasyToast()
-const { $i18n } = useNuxtApp()
 
 const gameService = new GameService()
 const pointService = new PointService()
@@ -287,7 +287,7 @@ const sumPoint = async () => {
       loadingApi.value = false
       return
     } else {
-      toast.success($i18n.t('points.added'), {
+      toast.success(t('points.added'), {
         life: 3000,
       })
       await getGameInitialData()
@@ -326,7 +326,7 @@ const undoLastPoint = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     loadingApi.value = false
   } else {
-    toast.success($i18n.t('points.deleted'))
+    toast.success(t('points.deleted'))
     resetPointInterval()
     getGameInitialData()
   }
@@ -389,7 +389,7 @@ const startSet = async (setStartRequest: SetStartRequest) => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success($i18n.t('sets.started'))
+    toast.success(t('sets.started'))
     getGameInitialData()
   }
 }
@@ -419,7 +419,7 @@ const showTimeoutStatusUpdatedToast = (
 ) => {
   if (status === TimeoutStatusEnum.requested) {
     toast.info(
-      $i18n.t('events.timeout_status_requested_team', {
+      t('events.timeout_status_requested_team', {
         teamName: teamName,
       }),
       {
@@ -428,10 +428,10 @@ const showTimeoutStatusUpdatedToast = (
     )
   }
   if (status === TimeoutStatusEnum.running) {
-    toast.info($i18n.t('events.timeout_status_running'))
+    toast.info(t('events.timeout_status_running'))
   }
   if (status === TimeoutStatusEnum.finished) {
-    toast.info($i18n.t('events.timeout_status_finished'))
+    toast.info(t('events.timeout_status_finished'))
   }
 }
 
@@ -449,7 +449,7 @@ const submitObservations = async () => {
     return
   }
 
-  toast.success($i18n.t('observations.stored'))
+  toast.success(t('observations.stored'))
 
   showObservationsDialog.value = false
 }
@@ -490,7 +490,7 @@ const listenCallUpdatedEvent = () => {
     ApiEvents.CALL_UPDATED,
     (response: ApiCallUpdatedEventResponse) => {
       toast.info(
-        $i18n.t('events.call_updated', {
+        t('events.call_updated', {
           teamName: response.team.name,
         }),
         {
@@ -511,7 +511,7 @@ const listenRotationCreatedEvent = () => {
     ApiEvents.ROTATION_CREATED,
     (response: ApiRotationCreatedEventResponse) => {
       toast.info(
-        $i18n.t('events.rotation_created', {
+        t('events.rotation_created', {
           teamName: response.team.name,
         }),
         {
@@ -544,7 +544,7 @@ const listenRotationUpdatedEvent = () => {
     ApiEvents.ROTATION_UPDATED,
     (response: ApiRotationUpdatedEventResponse) => {
       toast.info(
-        $i18n.t('events.rotation_updated', {
+        t('events.rotation_updated', {
           teamName: response.team.name,
         }),
         {
@@ -618,7 +618,7 @@ const listenGameSignatureCreatedEvent = () => {
         response.game_signature,
       )
       toast.info(
-        $i18n.t(
+        t(
           `events.game_signature_created.${newSignature.type}`,
           newSignature.type !== GameSignatureTypes.referee
             ? { teamName: response.team.name }

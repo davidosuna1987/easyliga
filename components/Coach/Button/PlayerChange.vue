@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { Rotation } from '@/domain/rotation'
 
-const router = useRouter()
-const toast = useEasyToast()
-
 const props = defineProps({
   gameId: {
     type: Number,
@@ -27,9 +24,14 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('games.player_change', 2),
+    required: false,
   },
 })
+
+const { t } = useI18n()
+const toast = useEasyToast()
+
+const labelText = computed(() => props.label ?? t('games.player_change', 2))
 
 const handleLockedToast = () => {
   props.rotation?.locked
@@ -38,17 +40,17 @@ const handleLockedToast = () => {
 }
 
 const showLockedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('rotations.locked_changes'), {
+  toast.warn(t('rotations.locked_changes'), {
     life: 10000,
   })
 }
 
 const showMaxPlayerChangesReachedToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('rotations.max_player_changes_reached'))
+  toast.warn(t('rotations.max_player_changes_reached'))
 }
 
 const showNoRotationToast = () => {
-  toast.warn(useNuxtApp().$i18n.t('rotations.no_rotation'))
+  toast.warn(t('rotations.no_rotation'))
 }
 </script>
 
@@ -56,7 +58,7 @@ const showNoRotationToast = () => {
   <Button
     class="easy-coach-button-player-change-component"
     outlined
-    :label="props.label"
+    :label="labelText"
     :severity="
       props.severity
         ? props.severity

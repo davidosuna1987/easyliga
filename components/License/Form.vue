@@ -27,12 +27,10 @@ const emit = defineEmits<{
   (e: 'success', value: boolean): void
 }>()
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const licenseService = new LicenseService()
 const toast = useEasyToast()
-const {
-  $i18n: { t: $t },
-} = useNuxtApp()
 
 const selectedCountry = ref<Country>()
 const selectedExpiryDate = ref<Date | undefined>(
@@ -57,7 +55,7 @@ const form = ref<LicenseStoreRequest>(
 )
 
 const successMessage = computed(() =>
-  props.license ? $t('licenses.updated') : $t('licenses.created'),
+  props.license ? t('licenses.updated') : t('licenses.created'),
 )
 
 const handleSubmit = () => {
@@ -85,9 +83,9 @@ const handleResponse = (data: any, error: any) => {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else if (data.value) {
-    auth.fresh()
     toast.success(successMessage.value)
     emit('success', true)
+    auth.fresh()
   }
 
   loadingApi.value = false

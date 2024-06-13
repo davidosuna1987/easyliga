@@ -4,11 +4,11 @@ import { ButtonProps } from 'primevue/button'
 const props = defineProps({
   submitLabel: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('forms.store'),
+    required: false,
   },
   cancelLabel: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('forms.cancel'),
+    required: false,
   },
   submitSeverity: {
     type: String as PropType<ButtonProps['severity']>,
@@ -20,6 +20,11 @@ const emit = defineEmits<{
   (e: 'form:submit', value: boolean): void
   (e: 'form:cancel', value: boolean): void
 }>()
+
+const { t } = useI18n()
+
+const submitLabelText = computed(() => props.submitLabel ?? t('forms.store'))
+const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
 </script>
 
 <template>
@@ -28,13 +33,13 @@ const emit = defineEmits<{
   >
     <Button
       class="grayscale"
-      :label="cancelLabel"
+      :label="cancelLabelText"
       severity="info"
       outlined
       @click="emit('form:cancel', true)"
     />
     <Button
-      :label="submitLabel"
+      :label="submitLabelText"
       :severity="submitSeverity"
       @click="emit('form:submit', true)"
     />

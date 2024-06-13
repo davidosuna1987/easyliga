@@ -16,11 +16,13 @@ import { ApiCourt } from '@/types/api/court'
 import { GameStorePreviewData } from '@/types/game'
 import { FederationScope } from '@/domain/federation'
 
-const emit = defineEmits(['changed'])
+const emit = defineEmits<{
+  (e: 'changed', value: GameStorePreviewData): void
+}>()
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
-const { $i18n } = useNuxtApp()
 
 const teamService = new TeamService()
 const federationService = new FederationService()
@@ -93,7 +95,7 @@ const submit = async () => {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else {
-    toast.success($i18n.t('games.created'))
+    toast.success(t('games.created'))
     navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
   }
 

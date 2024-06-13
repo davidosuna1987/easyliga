@@ -24,22 +24,25 @@ const props = defineProps({
   },
   label: {
     type: String,
-    default: () => useNuxtApp().$i18n.t('rotations.rotation'),
+    required: false,
   },
 })
 
-const showRotationLockedToast = () =>
-  toast.warn(useNuxtApp().$i18n.t('rotations.locked'))
+const { t } = useI18n()
+
+const labelText = computed(() => props.label ?? t('rotations.rotation'))
+
+const showRotationLockedToast = () => toast.warn(t('rotations.locked'))
 
 const showCallUnlockedLockedToast = () =>
-  toast.warn(useNuxtApp().$i18n.t('rotations.unable_to_set_rotation'))
+  toast.warn(t('rotations.unable_to_set_rotation'))
 </script>
 
 <template>
   <Button
     class="easy-coach-button-rotation-component"
     outlined
-    :label="props.label"
+    :label="labelText"
     :severity="
       props.severity
         ? props.severity

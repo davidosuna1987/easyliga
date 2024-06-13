@@ -54,9 +54,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:players', 'update:captain', 'change:players'])
+const emit = defineEmits<{
+  (e: 'update:players', value: RotationPlayer[]): void
+  (e: 'update:captain', value: number): void
+  (e: 'change:players', value: RotationPlayerChangeRequest[]): void
+}>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const rotationPlayers = ref<RotationPlayer[]>([])
@@ -224,7 +228,10 @@ const setRotationCaptain = (profileId: number) => {
     rp => rp.inCourtProfileId === profileId,
   )
 
-  emit('update:captain', selectedRotationInCourtCaptain.value?.inCourtProfileId)
+  emit(
+    'update:captain',
+    selectedRotationInCourtCaptain.value?.inCourtProfileId ?? 0,
+  )
 
   showCaptainSelector.value = false
 }
@@ -273,7 +280,7 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   if (!!props.rotation?.players) return
 
   if (!!props.isInitialRotationAssignment && !!player.libero) {
-    toast.warn(app.$i18n.t('rotations.libero_not_allowed_in_initial_rotation'))
+    toast.warn(t('rotations.libero_not_allowed_in_initial_rotation'))
     return
   }
 
@@ -320,7 +327,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
   const playerChangesHasLibero = !!playerChanges.value.find(pc => pc.libero)
 
   if (playerChangesHasLibero && replacementPlayer.libero) {
-    toast.error(app.$i18n.t('rotations.only_one_libero_in_court_allowed'))
+    toast.error(t('rotations.only_one_libero_in_court_allowed'))
     return
   }
 
@@ -330,7 +337,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     ATTACK_POSITIONS.includes(selectedPosition.value)
 
   if (isReplacementPlayerLiberoInAttackPosition) {
-    toast.error(app.$i18n.t('rotations.libero_not_allowed_in_attack_positions'))
+    toast.error(t('rotations.libero_not_allowed_in_attack_positions'))
     return
   }
 
@@ -351,7 +358,7 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     rotationPlayerToReplace.replacementProfileId === replacementPlayer.profileId
   ) {
     toast.error(
-      app.$i18n.t('rotations.replacement_taken', {
+      t('rotations.replacement_taken', {
         name: getFullName(playerToReplace.value),
       }),
     )
@@ -489,7 +496,7 @@ const handleRotationCourtPositionClick = (position: number) => {
 
   if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
     toast.warn(
-      app.$i18n.t('rotations.max_changes_reached', {
+      t('rotations.max_changes_reached', {
         num: MAX_ROTATION_PLAYER_CHANGES,
       }),
     )
@@ -507,7 +514,7 @@ const handleRotationCourtPositionClick = (position: number) => {
       .includes(playerChange?.profileId ?? 0)
 
   if (replacementPlayerSanctioned) {
-    toast.error(app.$i18n.t('rotations.replacement_player_sanctioned'))
+    toast.error(t('rotations.replacement_player_sanctioned'))
     return
   }
 
@@ -522,7 +529,7 @@ const handleRotationCourtPositionClick = (position: number) => {
 
 const showMaxChangesReachedToast = (playerData: CallPlayerData) => {
   toast.warn(
-    app.$i18n.t('rotations.max_player_change_changes_reached', {
+    t('rotations.max_player_change_changes_reached', {
       name: getFullName(playerData),
     }),
   )

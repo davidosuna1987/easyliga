@@ -22,9 +22,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['timeout:dialog'])
+const emit = defineEmits<{
+  (e: 'timeout:dialog', value: number | undefined): void
+}>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const toast = useEasyToast()
 
 const timeouts = computed((): Timeout[] | undefined =>
@@ -50,7 +52,7 @@ const gameTimeoutsByStatus = (
 
 const checkIfCanRequestTimeout = (currentTeam?: boolean) => {
   if (props.game.status !== 'playing') {
-    toast.error(app.$i18n.t('errors.timeout_game_not_playing'))
+    toast.error(t('errors.timeout_game_not_playing'))
     return
   }
 
@@ -59,7 +61,7 @@ const checkIfCanRequestTimeout = (currentTeam?: boolean) => {
     currentTeam,
   )
   if (!!requestedTimeout) {
-    toast.warn(app.$i18n.t('errors.timeout_requested'))
+    toast.warn(t('errors.timeout_requested'))
     return
   }
 
@@ -68,13 +70,13 @@ const checkIfCanRequestTimeout = (currentTeam?: boolean) => {
     currentTeam,
   )
   if (!!runningTimeout) {
-    toast.warn(app.$i18n.t('errors.timeout_running'))
+    toast.warn(t('errors.timeout_running'))
     return
   }
 
   if (teamTimeouts.value?.length === MAX_TIMEOUTS_PER_SET) {
     toast.error(
-      app.$i18n.t('errors.max_timeouts', {
+      t('errors.max_timeouts', {
         max: MAX_TIMEOUTS_PER_SET,
       }),
     )

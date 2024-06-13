@@ -18,7 +18,7 @@ const emit = defineEmits<{
   (e: 'license:delete', value: License): void
 }>()
 
-const app = useNuxtApp()
+const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
 const licenseService = new LicenseService()
@@ -29,7 +29,7 @@ const handleRemoveLicense = async () => {
   const { data } = await licenseService.destroy(props.license.id)
 
   if (data.value) {
-    toast.success(app.$i18n.t('licenses.deleted'))
+    toast.success(t('licenses.deleted'))
     auth.fresh()
   }
 }
