@@ -120,7 +120,13 @@
     "facility": "Instalación | Instalaciones",
     "print": "Imprimir",
     "you_selected": "Has seleccionado",
-    "invite": "Invitar"
+    "invite": "Invitar",
+    "expiry_date": "Fecha de expiración",
+    "upload_file": "Subir archivo",
+    "select_file": "Seleccionr archivo | Seleccionar archivos",
+    "file": "Archivo | Archivos",
+    "change_file": "Cambiar archivo | Cambiar archivos",
+    "replace_file": "Reemplazar archivo | Reemplazar archivos"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -150,7 +156,8 @@
     "max_timeouts": "No puedes solicitar más de {max} tiempos muertos por set",
     "timeout_running": "Hay un tiempo muerto en marcha",
     "timeout_requested": "Hay un tiempo muerto solicitado que está pendiente de aprobar por el árbitro",
-    "timeout_game_not_playing": "No puedes solicitar un tiempo muerto en un partido que no está en juego"
+    "timeout_game_not_playing": "No puedes solicitar un tiempo muerto en un partido que no está en juego",
+    "invalid_file_type": "El formato del archivo es inválido. Los formatos permitodos son: {formats}"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -681,6 +688,66 @@
       "coach": "Firma del entrenador de {teamName}",
       "captain": "Firma del capitán de {teamName}"
     }
+  },
+  "licenses": {
+    "license": "Licencia | Licencias",
+    "owned": "Mis licencias",
+    "no_licenses": "No tienes ninguna licencia",
+    "no_licenses_type": "No tienes ninguna licencia de tipo {type}",
+    "create": "Crear licencia",
+    "created": "La licencia ha sido creada correctamente",
+    "edit": "Editar licencia",
+    "update": "Actualizar licencia",
+    "updated": "La licencia ha sido actualizada correctamente",
+    "delete": "Eliminar licencia",
+    "deleted": "La licencia ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la licencia?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona una licencia",
+    "search": "Buscar licencia | Buscar licencias",
+    "select_type": "Selecciona un tipo de licencia",
+    "type_label": "Tipo de licencia",
+    "assign_name": "Asigna un nombre para la licencia",
+    "type": {
+      "all": "Todas",
+      "federation": "Federación",
+      "club": "Club",
+      "team": "Equipo",
+      "referee": "Árbitro",
+      "coach": "Entrenador",
+      "player": "Jugador"
+    },
+    "type_long": {
+      "all": "Todas las Licencias",
+      "federation": "Licencia de federación | Licencias de federación",
+      "club": "Licencia de club | Licencias de club",
+      "team": "Licencia de equipo | Licencias de equipo",
+      "referee": "Licencia de árbitro | Licencias de árbitro",
+      "coach": "Licencia de entrenador | Licencias de entrenador",
+      "player": "Licencia de jugador | Licencias de jugador"
+    },
+    "model": {
+      "select": {
+        "all": "Selecciona una opción",
+        "federation": "Selecciona una federación",
+        "club": "Selecciona un club",
+        "team": "Selecciona un equipo",
+        "referee": "Selecciona un perfil de árbitro",
+        "coach": "Selecciona un perfil de entrenador",
+        "player": "Selecciona un perfil de jugador"
+      }
+    },
+    "add": "Añadir licencia | Añadir licencias",
+    "show": "Mostrar licencia | Mostrar licencias",
+    "number": "Nº de licencia",
+    "country": "País en vigor",
+    "all": "Todas las licencias",
+    "details": "Detalles de la licencia | Detalles de las licencias",
+    "name": "Nombre de la licencia"
+  },
+  "licensables": {
+    "licensable": "Licenciable | Licenciables",
+    "unlicensable": "No puedes agregar licencias a tu perfil"
   },
   "duration": {
     "hours": "hora | horas",

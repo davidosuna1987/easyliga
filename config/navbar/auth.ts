@@ -2,11 +2,21 @@ import { useAuthStore } from '@/stores/useAuthStore'
 
 const auth = useAuthStore()
 
-export default [
+export const authItems = [
   {
     label: 'profiles.profile',
     to: '/profile',
   },
+]
+
+export const licensableItems = [
+  {
+    label: 'licenses.owned',
+    to: '/profile/licenses',
+  },
+]
+
+export const logoutItems = [
   {
     separator: true,
   },

@@ -4,6 +4,7 @@ import { ApiFederation } from '@/types/api/federation'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
+import { ApiLicense } from '@/types/api/license'
 
 export type ApiClubRelations = {
   address?: ApiAddress
@@ -12,6 +13,7 @@ export type ApiClubRelations = {
   responsible?: ApiProfile
   teams?: ApiTeam[]
   games?: ApiGame[]
+  licenses?: ApiLicense[]
 }
 
 export type ApiClub = {

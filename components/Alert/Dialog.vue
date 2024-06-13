@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ButtonProps } from 'primevue/button'
 const emit = defineEmits(['accepted', 'hide'])
 
 const props = defineProps({
@@ -23,7 +24,7 @@ const props = defineProps({
     default: () => useNuxtApp().$i18n.t('forms.cancel'),
   },
   severity: {
-    type: String,
+    type: String as PropType<ButtonProps['severity']>,
     default: null,
   },
 })

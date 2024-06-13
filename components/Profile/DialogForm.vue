@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Profile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from '@/components/Profile/Form.vue'
-import { ApiProfile } from 'types/api/profile'
+import { ApiProfile } from '@/types/api/profile'
 
 const emit = defineEmits(['updated', 'hide'])
 

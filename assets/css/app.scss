@@ -3,6 +3,7 @@
 @import '@/assets/css/common/tailwind.scss';
 @import '@/assets/css/common/reset.scss';
 @import '@/assets/css/common/variables.scss';
+@import '@/assets/css/common/generate-color-classes.scss';
 @import '@/assets/css/common/global.scss';
 @import '@/assets/css/common/overrides.scss';
 @import '@/assets/css/common/mixins.scss';
@@ -46,3 +47,5 @@
 @import '@/assets/css/components/icon/shirt-number.scss';
 
 @import '@/assets/css/components/profile/form.scss';
+
+@import '@/assets/css/components/license/list-item.scss';

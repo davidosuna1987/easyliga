@@ -64,58 +64,6 @@ input {
   background-position: center;
 }
 
-.bg-primary,
-.background-primary {
-  background-color: var(--primary-color);
-}
-
-.bg-danger,
-.background-danger {
-  background-color: var(--danger-color);
-}
-
-.bg-success,
-.background-success {
-  background-color: var(--primary-color);
-}
-
-.bg-tertiary,
-.background-tertiary {
-  background-color: var(--tertiary-color);
-}
-
-.bg-tertiary-dark,
-.background-tertiary-dark {
-  background-color: var(--tertiary-color-dark);
-}
-
-.color-primary,
-.text-primary {
-  color: var(--primary-color);
-}
-
-.color-danger,
-.text-danger {
-  color: var(--danger-color);
-}
-
-.color-success,
-.text-success {
-  color: var(--primary-color);
-}
-
-.color-warning,
-.color-tertiary,
-.text-warning,
-.text-tertiary {
-  color: var(--tertiary-color);
-}
-
-.color-tertiary-dark,
-.text-tertiary-dark {
-  color: var(--tertiary-color-dark);
-}
-
 .is-muted {
   pointer-events: none;
   cursor: default;

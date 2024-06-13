@@ -13,10 +13,18 @@ import {
   ApiLoginData,
   ApiLoginAsRequest,
   ApiRegisterByInviteRequest,
+  ApiManagedModelsResponse,
+  ApiManagedModelsMappedResponse,
+  ApiManagedModelResponse,
+  ApiManagedModelMappedResponse,
+  ApiFreshResponse,
 } from '@/types/api/auth'
 import { ApiUser } from '@/types/api/user'
 import { Profile } from '@/domain/profile'
 import { mapApiProfileToProfile } from '@/domain/profile'
+import { Role } from '@/domain/role'
+import { ApiLicense } from '@/types/api/license'
+import { LicensableModelType } from '@/domain/licensable'
 
 export const useAuthStore = defineStore('auth', () => {
   const easyStorage = useEasyStorage()
@@ -26,7 +34,8 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<ApiUser | null>(null)
   const profile = ref<Profile | null>(null)
   const profiles = ref<Profile[]>([])
-  const roles = ref<string[]>([])
+  const roles = ref<Role[]>([])
+  const licenses = ref<ApiLicense[]>([])
   const token = ref<string | null>(null)
   const isLoggedIn = computed(() => !!user.value)
 
@@ -122,11 +131,33 @@ export const useAuthStore = defineStore('auth', () => {
     return response
   }
 
+  const fresh = async () => {
+    const { data } = await useApi<ApiFreshResponse>(`auth/fresh`)
+    data.value && refreshData(data.value.data)
+  }
+
+  const managedModel = async (type: LicensableModelType) =>
+    await useApi<ApiManagedModelResponse>(`auth/managed/${type}`)
+
+  const managedModelMapped = async (type: LicensableModelType) =>
+    await useApi<ApiManagedModelMappedResponse>(
+      `auth/managed/${type}?mapped=true`,
+    )
+
+  const managedModels = async () =>
+    await useApi<ApiManagedModelsResponse>('auth/managed/models')
+
+  const managedModelsMapped = async () =>
+    await useApi<ApiManagedModelsMappedResponse>(
+      'auth/managed/models?mapped=true',
+    )
+
   const refreshData = (data: ApiFreshData) => {
     user.value = data.user
     profile.value = mapApiProfileToProfile(data.profile)
     profiles.value = data.profiles.map(mapApiProfileToProfile)
     roles.value = data.roles
+    licenses.value = data.licenses
   }
 
   const refreshToken = (data: ApiLoginData) => {
@@ -142,7 +173,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isStaff = () => roles.value.some(role => STAFF_ROLES.includes(role))
 
-  const isAdminOrHasRole = (searchedRole: string) => {
+  const isAdminOrHasRole = (searchedRole: Role) => {
     if (isAdmin()) return true
     return hasRole(searchedRole)
   }
@@ -152,7 +183,7 @@ export const useAuthStore = defineStore('auth', () => {
     return hasAnyRole(searchedRoles)
   }
 
-  const isStaffOrHasRole = (searchedRole: string) => {
+  const isStaffOrHasRole = (searchedRole: Role) => {
     if (isStaff()) return true
     return hasRole(searchedRole)
   }
@@ -162,7 +193,7 @@ export const useAuthStore = defineStore('auth', () => {
     return hasAnyRole(searchedRoles)
   }
 
-  const hasRole = (searchedRole: string) => roles.value.includes(searchedRole)
+  const hasRole = (searchedRole: Role) => roles.value.includes(searchedRole)
 
   const hasAnyRole = (searchedRoles: string[]) =>
     roles.value.some(role => searchedRoles.includes(role))
@@ -195,8 +226,10 @@ export const useAuthStore = defineStore('auth', () => {
     profile,
     profiles,
     roles,
+    licenses,
     token,
     isLoggedIn,
+    fresh,
     login,
     logout,
     register,
@@ -205,6 +238,10 @@ export const useAuthStore = defineStore('auth', () => {
     forgot,
     reset,
     loginAs,
+    managedModel,
+    managedModelMapped,
+    managedModels,
+    managedModelsMapped,
     refreshData,
     refreshToken,
     refreshLoginData,

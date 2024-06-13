@@ -2,10 +2,12 @@ import { ApiUser } from '@/types/api/user'
 import { ApiFreshData } from '@/types/api/auth'
 import { ApiAddress, ApiAddressUpdateRequest } from '@/types/api/address'
 import { GenderType } from '@/domain/game'
+import { ApiLicense } from '@/types/api/license'
 
 export type ProfileRelations = {
   user?: ApiUser
   address?: ApiAddress
+  licenses?: ApiLicense[]
 }
 
 export type ApiProfile = {

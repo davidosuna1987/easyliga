@@ -1,0 +1,11 @@
+.easy-license-list-item-component {
+  .header {
+    .action {
+      padding-block: 0.25rem;
+    }
+  }
+
+  &:hover {
+    background-color: var(--primary-color-light);
+  }
+}

@@ -2,6 +2,8 @@ import { ApiDuration } from '@/types/api/utils'
 
 const app = useNuxtApp()
 
+export type NestedArray<T = any> = T | NestedArray<T>[]
+
 export type Duration = {
   hours: number
   minutes: number
@@ -20,12 +22,15 @@ export const mapApiDurationToDuration = (
   apiDuration: ApiDuration | null,
 ): Duration | undefined => (apiDuration ? { ...apiDuration } : undefined)
 
-export const formatDate = (date: string, separator = '.') => {
+export const formatDate = (date?: string, separator = '.', reverse = false) => {
+  if (!date) return ''
   const d = new Date(date)
   const day = d.getDate().toString().padStart(2, '0')
   const month = (d.getMonth() + 1).toString().padStart(2, '0')
   const year = d.getFullYear()
-  return `${day}${separator}${month}${separator}${year}`
+  return reverse
+    ? `${year}${separator}${month}${separator}${day}`
+    : `${day}${separator}${month}${separator}${year}`
 }
 
 export const formatTime = (

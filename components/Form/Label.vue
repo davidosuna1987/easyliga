@@ -12,27 +12,28 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  required: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
-  <div class="easy-form-label-component">
-    <div class="easy-form-label-component__label">
-      <label :class="{ 'font-bold': strong }">{{ label }}</label>
+  <label
+    :class="[
+      'easy-form-label-component flex flex-col',
+      { 'font-bold': strong },
+    ]"
+  >
+    <div class="flex items-end mb-1">
+      <span>{{ label }}</span>
+      <span v-if="required">*</span>
       <small v-if="error" class="text-red-400 ml-2">{{ error }}</small>
     </div>
-    <div class="easy-form-label-component__children grid mt-1">
-      <slot />
-    </div>
-  </div>
+    <slot />
+  </label>
 </template>
-
-<style scoped>
-.easy-form-label-component__children > :first-child {
-  max-width: 100%;
-  overflow: hidden;
-}
-</style>
 
 <script lang="ts">
 export default {

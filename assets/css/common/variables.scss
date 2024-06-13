@@ -23,6 +23,8 @@
   --danger-color-medium: #fe6f6f;
   --danger-color-dark: #dc3023;
   --danger-color-darkest: #901632;
+  --info-color: #72add5;
+  --info-color-dark: #69a8db;
   --icon-easy-liga-color: #ffeb3b;
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
@@ -31,11 +33,13 @@
   --surface-e: #ffffff;
   --surface-f: #ffffff;
   --text-color: #2e3135;
+  --text-color-invert: #ffffff;
   --text-color-secondary: #b9a7a7;
   --primary-color-text: #ffffff;
   --input-border-color: #e0d7d7;
-  --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
-    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol;
   --font-size: 14px;
   --font-weight: 400;
   --font-size-2xs: 0.5rem;
@@ -141,15 +145,13 @@ $media-sidebars-min: 1285px;
     --primary-color-lightest: #003932;
     --primary-color-dark: #002e29;
     --primary-color-darkest: #00231f;
-
-    // --primary-color: #003932;
-    // --primary-color-medium: #00423b;
-    // --primary-color-light: #005149;
-    // --primary-color-lightest: #00685d;
-    // --primary-color-dark: #00322c;
-    // --primary-color-darkest: #002420;
+    --danger-color: #901632;
+    --danger-color-dark: #7b122b;
+    --info-color: #4c78c4;
+    --info-color-dark: #3960a4;
 
     --text-color: #b9a7a7;
+    --text-color-invert: #2e3135;
     --text-color-secondary: #b9a7a7;
     --primary-color-text: #b9a7a7;
     --input-border-color: #343030;

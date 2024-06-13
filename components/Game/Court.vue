@@ -25,8 +25,8 @@ import {
 } from '@/domain/sanction'
 import { Timeout } from '@/domain/timeout'
 import { GameSignature } from '@/domain/game-signature'
+import { Profile } from '@/domain/profile'
 import moment from 'moment'
-import { Profile } from 'domain/profile'
 
 const auth = useAuthStore()
 

@@ -1,5 +1,13 @@
-import { ApiUser } from '@/types/api/user'
+import {
+  ApiManagedModel,
+  ApiManagedModels,
+  ApiManagedModelMapped,
+  ApiManagedModelsMapped,
+  ApiUser,
+} from '@/types/api/user'
 import { ApiProfile } from '@/types/api/profile'
+import { ApiLicense } from '@/types/api/license'
+import { LicensableModelType } from '@/domain/licensable'
 
 export type ApiPlayer = ApiProfile & {
   pivot: {
@@ -71,6 +79,7 @@ export type ApiFreshData = {
   profile: ApiProfile
   profiles: ApiProfile[]
   roles: Role[]
+  licenses: ApiLicense[]
 }
 
 export type ApiLoginData = ApiFreshData & {
@@ -80,6 +89,44 @@ export type ApiLoginData = ApiFreshData & {
 export type ApiLoginResponse = {
   success: boolean
   data: ApiLoginData
+  errors: null
+}
+
+export type ApiFreshResponse = {
+  success: boolean
+  data: ApiFreshData
+  errors: null
+}
+
+export type ApiManagedModelResponse = {
+  success: boolean
+  data: {
+    managed: ApiManagedModel[]
+  }
+  errors: null
+}
+
+export type ApiManagedModelMappedResponse = {
+  success: boolean
+  data: {
+    managed: ApiManagedModelMapped[]
+  }
+  errors: null
+}
+
+export type ApiManagedModelsResponse = {
+  success: boolean
+  data: {
+    managed: ApiManagedModels
+  }
+  errors: null
+}
+
+export type ApiManagedModelsMappedResponse = {
+  success: boolean
+  data: {
+    managed: ApiManagedModelsMapped
+  }
   errors: null
 }
 

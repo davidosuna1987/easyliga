@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import authItems from '@/config/navbar/auth'
+import { authItems, licensableItems, logoutItems } from '@/config/navbar/auth'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { getInitials } from '@/domain/utils'
 import { AVATAR_STYLES } from '@/domain/profile'
+import { LICENSABLE_ROLES } from '@/domain/licensable'
 
 const auth = useAuthStore()
+
 const authMenu = ref()
+
+const items = computed(() =>
+  auth.hasAnyRole(LICENSABLE_ROLES)
+    ? [...authItems, ...licensableItems, ...logoutItems]
+    : [...authItems, ...logoutItems],
+)
 </script>
 
 <template>
@@ -24,7 +32,7 @@ const authMenu = ref()
     size="normal"
     @click="authMenu.toggle($event)"
   />
-  <TieredMenu ref="authMenu" :model="authItems" popup>
+  <TieredMenu ref="authMenu" :model="items" popup>
     <template #item="props">
       <NavbarItem :item="props.item" />
     </template>

@@ -1,0 +1,70 @@
+$backgrounds: (
+  'primary': var(--primary-color),
+  'primary-dark': var(--primary-color-dark),
+  'secondary': var(--secondary-color),
+  'secondary-dark': var(--secondary-color-dark),
+  'tertiary': var(--tertiary-color),
+  'tertiary-dark': var(--tertiary-color-dark),
+  'success': var(--primary-color),
+  'success-dark': var(--primary-color-dark),
+  'warning': var(--tertiary-color),
+  'warning-dark': var(--tertiary-color-dark),
+  'danger': var(--danger-color),
+  'danger-dark': var(--danger-color-dark),
+  'info': var(--info-color),
+  'info-dark': var(--info-color-dark),
+);
+$colors: (
+  'primary': var(--primary-color-text),
+  'primary-dark': var(--primary-color-text),
+  'secondary': var(--text-color),
+  'secondary-dark': var(--text-color),
+  'tertiary': var(--text-color),
+  'tertiary-dark': var(--text-color),
+  'success': var(--primary-color-text),
+  'success-dark': var(--primary-color-text),
+  'warning': var(--text-color),
+  'warning-dark': var(--text-color),
+  'danger': var(--primary-color-text),
+  'danger-dark': var(--primary-color-text),
+  'info': var(--text-color),
+  'info-dark': var(--primary-color-text),
+);
+
+@mixin generate-color-classes($background-map, $color-map) {
+  @each $name, $background in $background-map {
+    $color: map-get($color-map, $name);
+
+    .bg-#{$name},
+    .background-#{$name} {
+      background-color: $background;
+      color: $color;
+    }
+    .hover\:bg-#{$name}:hover,
+    .hover\:background-#{$name}:hover {
+      background-color: $background;
+      color: $color;
+    }
+
+    .text-#{$name},
+    .color-#{$name} {
+      color: $background;
+    }
+    .hover\:text-#{$name}:hover,
+    .hover\:color-#{$name}:hover {
+      color: $background;
+    }
+
+    .border-color-#{$name} {
+      border: solid 1px $background;
+    }
+
+    @for $i from 1 through 5 {
+      .border-#{$name}-#{$i} {
+        border: solid #{$i}px $background;
+      }
+    }
+  }
+}
+
+@include generate-color-classes($backgrounds, $colors);

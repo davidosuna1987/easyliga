@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type Image } from '@/domain/profile'
+import { MAX_FILE_SIZE, humanFileSize } from '@/domain/upload'
 
 const props = defineProps({
   preview: {
@@ -18,7 +19,7 @@ const emit = defineEmits({
   },
 })
 
-const maxMB = ref<number>(5)
+const maxMB = ref<number>(MAX_FILE_SIZE)
 const imageFileInput = ref<HTMLInputElement | null>(null)
 
 const image = ref<Image>({
@@ -60,10 +61,7 @@ const imageChange = (e: InputEvent | Event) => {
     }
 
     let fileName = files[0].name
-    let fileSize =
-      size > 1000000
-        ? Math.round((size / 1000000) * 10) / 10 + ' MB'
-        : Math.round((size / 1000) * 10) / 10 + ' KB'
+    let fileSize = humanFileSize(size)
 
     image.value.name = fileName
     image.value.size = Number(fileSize)
