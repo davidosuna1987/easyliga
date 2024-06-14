@@ -22,6 +22,7 @@ import {
   isMembeSanction,
   mergeSanctionsRemovingDuplicates,
 } from '@/domain/sanction'
+import { GridBreakpoints } from 'domain/grid'
 
 const props = defineProps({
   call: {
@@ -200,6 +201,10 @@ const submitLabel = computed((): string =>
     initialPlayerChangeToUndo.value.inCourtProfileId
     ? t('rotations.do_player_change')
     : t('rotations.cancel_player_change'),
+)
+
+const breakpoints = computed((): GridBreakpoints | undefined =>
+  !!playerChanges.value.length ? { xs: 1, lg: 2 } : undefined,
 )
 
 const setRotationPlayersFromRtotation = () => {
@@ -592,9 +597,10 @@ watch(
 </script>
 
 <template>
-  <div
-    class="easy-coach-rotation-court-changes-wrapper grid gap-6 mt-10 relative"
-    :class="{ 'lg:grid-cols-2': playerChanges.length }"
+  <EasyGrid
+    class="easy-coach-rotation-court-changes-wrapper mt-10 relative"
+    :breakpoints="breakpoints"
+    :gap="6"
   >
     <RotationPlayerSanctionedMessage
       v-if="initialRotationPlayersToBeReplacedForSanction.length"
@@ -688,7 +694,7 @@ watch(
         @undo:playerChange="setPlayerChangeToUndo"
       />
     </div>
-  </div>
+  </EasyGrid>
 
   <DialogBottom
     class="easy-coach-rotation-players-dialog-component"

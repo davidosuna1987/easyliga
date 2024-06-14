@@ -37,7 +37,7 @@ const emit = defineEmits<{
       />
     </header>
 
-    <div class="grid gap-3">
+    <EasyGrid :gap="3">
       <template
         v-if="!!licenses.length"
         v-for="license in licenses"
@@ -53,7 +53,7 @@ const emit = defineEmits<{
           $t(`licenses.no_licenses_type`, { type: $t(`licenses.type.${type}`) })
         }}
       </template>
-    </div>
+    </EasyGrid>
   </div>
 </template>
 

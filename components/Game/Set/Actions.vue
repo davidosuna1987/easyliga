@@ -55,7 +55,7 @@ const startSet = (setStartRequest: SetStartRequest) => {
 
 <template>
   <div class="easy-game-set-actions-component">
-    <div class="actions grid place-content-center">
+    <EasyGrid class="actions" center>
       <Button
         class="px-12"
         :label="actionLabel"
@@ -64,7 +64,7 @@ const startSet = (setStartRequest: SetStartRequest) => {
         :disabled="disabled"
         @click="handleClick"
       />
-    </div>
+    </EasyGrid>
 
     <DialogBottom
       class="easy-game-set-start-dialog-component"

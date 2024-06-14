@@ -347,9 +347,11 @@ onMounted(() => {
       </div>
     </div>
     <template v-else>
-      <nav
+      <EasyGrid
         v-if="!props.type"
-        class="sanction-navbar grid grid-cols-2 gap-3 mt-2"
+        class="sanction-navbarmt-2"
+        :cols="2"
+        :gap="3"
       >
         <Button
           v-for="key in SanctionType"
@@ -361,7 +363,7 @@ onMounted(() => {
           <!-- <Icon :name="SanctionIcon[key]" size="1.5rem" class="mr-1" /> -->
           {{ t(`sanctions.${key}_user_friendly`) }}
         </Button>
-      </nav>
+      </EasyGrid>
 
       <SanctionGrid
         v-if="selectedType === SanctionType.team"

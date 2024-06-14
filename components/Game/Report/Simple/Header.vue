@@ -77,7 +77,7 @@ const config = useRuntimeConfig()
     <div
       class="report-header-data border-solid border-y-0 p-4 flex-1 flex flex-col justify-between"
     >
-      <div class="grid grid-cols-2 mb-2">
+      <EasyGrid class="mb-2" :cols="2">
         <p class="report-date">
           <strong class="mr-1">{{ $t('forms.date') }}:</strong>
           <span v-if="game.date">{{ formatDate(game.date) }}</span>
@@ -86,8 +86,8 @@ const config = useRuntimeConfig()
           <strong class="mr-1">{{ $t('forms.time') }}:</strong>
           <span v-if="game.date">{{ formatTime(game.date) }}</span>
         </p>
-      </div>
-      <div class="grid grid-cols-2 mb-2">
+      </EasyGrid>
+      <EasyGrid class="mb-2" :cols="2">
         <p class="report-local-team">
           <strong class="mr-1">{{ $t('teams.local') }}:</strong>
           <span>{{ localTeam.name }}</span>
@@ -96,9 +96,9 @@ const config = useRuntimeConfig()
           <strong class="mr-1">{{ $t('teams.visitor') }}:</strong>
           <span>{{ visitorTeam.name }}</span>
         </p>
-      </div>
+      </EasyGrid>
       <div>
-        <div class="report-teams grid grid-cols-2">
+        <EasyGrid class="report-teams" :cols="2">
           <div class="report-team flex justify-start items-end">
             <p
               class="report-team-side text-5xl font-semibold mr-3 text-primary"
@@ -119,7 +119,7 @@ const config = useRuntimeConfig()
               {{ rightSideTeam.name }}
             </p>
           </div>
-        </div>
+        </EasyGrid>
       </div>
     </div>
     <div

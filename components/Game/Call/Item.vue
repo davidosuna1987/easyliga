@@ -43,7 +43,7 @@ const props = defineProps({
       />
       {{ player.firstName }} {{ player.lastName }}
     </div>
-    <div class="team-player-captain grid gap-2 grid-cols-2">
+    <EasyGrid class="team-player-captain" :cols="2" :gap="2">
       <IconLibero
         v-tooltip.top="$t('teams.libero_assign')"
         @click.stop="setLibero(player.profileId)"
@@ -52,7 +52,7 @@ const props = defineProps({
         v-tooltip.top="$t('teams.captain_assign')"
         @click.stop="setCaptain(player.profileId)"
       />
-    </div>
+    </EasyGrid>
   </div>
 </template>
 

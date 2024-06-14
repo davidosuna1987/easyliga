@@ -397,9 +397,10 @@ onMounted(setInitialShowCountdown)
           timeoutRunning
         "
       >
-        <div
+        <EasyGrid
           v-if="playersToBeReplacedForSanction.length"
-          class="actions grid place-content-center"
+          class="actions place-content-center"
+          :cols="0"
         >
           <Button
             class="px-12 mb-3"
@@ -408,10 +409,11 @@ onMounted(setInitialShowCountdown)
             outlined
             :disabled="true"
           />
-        </div>
-        <div
+        </EasyGrid>
+        <EasyGrid
           v-if="waitingForPlayerChanges"
-          class="actions grid place-content-center"
+          class="actions place-content-center"
+          :cols="0"
         >
           <Button
             class="px-12 mb-3"
@@ -420,8 +422,12 @@ onMounted(setInitialShowCountdown)
             :loading="true"
             :disabled="true"
           />
-        </div>
-        <div v-if="timeoutRunning" class="actions grid place-content-center">
+        </EasyGrid>
+        <EasyGrid
+          v-if="timeoutRunning"
+          class="actions place-content-center"
+          :cols="0"
+        >
           <Button
             class="px-12 mb-3"
             :label="$t('timeouts.running')"
@@ -430,7 +436,7 @@ onMounted(setInitialShowCountdown)
             :loading="true"
             :disabled="true"
           />
-        </div>
+        </EasyGrid>
       </template>
       <template v-else>
         <GameSetActions
@@ -482,9 +488,10 @@ onMounted(setInitialShowCountdown)
             @sidebar:toggle="emit('sidebar:toggle', $event)"
           />
         </div>
-        <div
+        <EasyGrid
           v-if="gameStatus === 'finished'"
-          class="actions grid place-content-center"
+          class="actions place-content-center"
+          :cols="0"
         >
           <GameSignatureActions
             v-if="pendingGameSignatures"
@@ -499,7 +506,7 @@ onMounted(setInitialShowCountdown)
             outlined
             disabled
           />
-        </div>
+        </EasyGrid>
       </template>
       <a
         v-if="gameStatus !== 'finished' || showCountdown"

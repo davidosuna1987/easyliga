@@ -185,8 +185,11 @@ watch(onChangeData, data => {
     class="easy-game-form-component grid gap-x-2 gap-y-4"
     @submit.prevent="submit"
   >
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-2 gap-y-4 items-end"
+    <EasyGrid
+      :breakpoints="{ xs: 1, sm: 2, xl: 3 }"
+      :gapX="2"
+      :gapY="4"
+      items="end"
     >
       <FormLabel :label="$t('categories.category')">
         <CategorySelector @selected="setCategory" />
@@ -227,15 +230,15 @@ watch(onChangeData, data => {
           @court:selected="setSedeAndCourt"
         />
       </FormLabel>
-    </div>
-    <div class="grid justify-end">
+    </EasyGrid>
+    <EasyGrid justify="end">
       <Button
         class="mt-3"
         type="submit"
         :label="$t('games.create')"
         :loading="loadingStore"
       />
-    </div>
+    </EasyGrid>
   </form>
 </template>
 

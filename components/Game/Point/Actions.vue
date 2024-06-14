@@ -30,7 +30,7 @@ const undoLastPoint = () => {
 
 <template>
   <div class="easy-game-point-actions-component">
-    <div class="actions grid grid-cols-3 gap-4">
+    <EasyGrid class="actions" :cols="3" :gap="4">
       <Button
         class="col-span-3/10 transition-none"
         :class="undoPointButtonDisabled ? '' : 'grayscale p-button-outlined'"
@@ -66,7 +66,7 @@ const undoLastPoint = () => {
           )
         "
       />
-    </div>
+    </EasyGrid>
     <small v-if="!undoPointButtonDisabled" class="countdown inline-block mt-2">
       {{ $t('points.undo_countdown', { seconds: undoLastPointCountdown }) }}
     </small>

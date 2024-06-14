@@ -33,13 +33,14 @@ const countPlayerCaptainIcons = (player: CallPlayerData) => {
         size="1rem"
       />
     </div>
-    <div
-      class="team-player-captain grid gap-2"
-      :class="[`grid-cols-${countPlayerCaptainIcons(player)}`]"
+    <EasyGrid
+      class="team-player-captain"
+      :cols="countPlayerCaptainIcons(player)"
+      :gap="2"
     >
       <IconLibero v-if="player.libero" />
       <IconCaptain v-if="player.captain" />
-    </div>
+    </EasyGrid>
   </div>
 </template>
 

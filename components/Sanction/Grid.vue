@@ -34,7 +34,7 @@ const handleSanctionSelected = (severity: SanctionSeverityKey) => {
 </script>
 
 <template>
-  <div class="easy-sanction-grid-component grid grid-cols-2 gap-3 mt-3">
+  <EasyGrid class="easy-sanction-grid-component mt-3" :cols="2" :gap="3">
     <SanctionItem
       v-for="key in iterationSeverities"
       :key="key"
@@ -43,7 +43,7 @@ const handleSanctionSelected = (severity: SanctionSeverityKey) => {
       :selected="selectedSanction === key"
       @sanction:selected="handleSanctionSelected"
     />
-  </div>
+  </EasyGrid>
 </template>
 
 <style scoped lang="scss">

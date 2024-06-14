@@ -38,6 +38,14 @@ const { t } = useI18n()
 const toast = useEasyToast()
 const timeoutService = new TimeoutService()
 
+const ACTIONS_GRID_COLS: Record<string, number> = {
+  default: 1,
+  warmup: 2,
+  resting: 1,
+  playing: 1,
+  finished: 2,
+}
+
 const gameSignatures = ref<GameSignature[]>(
   props.games.flatMap(game => game.signatures ?? []),
 )
@@ -175,17 +183,10 @@ onBeforeUnmount(() => {
     <div v-for="(game, index) in games" class="game">
       <header class="name text-center">{{ game.name }}</header>
       <GameStatus :status="game.status" />
-      <div
-        class="actions grid gap-2 mt-3"
-        :class="[
-          game.status === 'finished'
-            ? 'grid-cols-2'
-            : game.status === 'warmup'
-            ? 'grid-cols-2'
-            : game.status === 'resting'
-            ? 'grid-cols-1'
-            : 'grid-cols-1', // grid-cols-2 if timeouts are enabled
-        ]"
+      <EasyGrid
+        class="actions mt-3"
+        :gap="2"
+        :cols="ACTIONS_GRID_COLS[game.status] ?? ACTIONS_GRID_COLS.default"
       >
         <CoachButtonCall
           v-if="game.status === 'warmup'"
@@ -259,7 +260,7 @@ onBeforeUnmount(() => {
             </EasyCountdown>
           </template>
         </template>
-      </div>
+      </EasyGrid>
     </div>
 
     <DialogBottom

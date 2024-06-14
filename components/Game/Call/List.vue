@@ -49,9 +49,7 @@ const getPlayer = (player: Player) => {
 </script>
 
 <template>
-  <div
-    class="easy-game-call-list-component grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 mt-2"
-  >
+  <EasyGrid :breakpoints="{ xs: 1, md: 2, lg: 3 }" :gap="1">
     <PlayerItem
       v-for="(player, i) in players"
       :key="player.profileId"
@@ -65,7 +63,7 @@ const getPlayer = (player: Player) => {
       :setCaptainToggleDisabledProfileId="setCaptainToggleDisabledProfileId"
       :tooltipsDisabled="tooltipsDisabled"
     />
-  </div>
+  </EasyGrid>
 </template>
 
 <script lang="ts">

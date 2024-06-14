@@ -117,7 +117,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
 
 <template>
   <div class="easy-game-changes-actions-component">
-    <div class="actions grid grid-cols-2 gap-4">
+    <EasyGrid class="actions" :cols="2" :gap="4">
       <Button
         class="col-span-5/10"
         :label="$t('games.show_player_change', 2)"
@@ -134,7 +134,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
         outlined
         @click.prevent="selectedTeamSide = TeamSideEnum.right"
       />
-    </div>
+    </EasyGrid>
 
     <DialogBottom
       class="easy-coach-rotation-captain-selector-dialog-component"

@@ -80,9 +80,9 @@ defineExpose({
         }"
       />
 
-      <div v-if="showPlaceholder" class="signature-placeholder">
+      <EasyGrid v-if="showPlaceholder" class="signature-placeholder" center>
         <span>{{ $t('reports.sign_here') }}</span>
-      </div>
+      </EasyGrid>
     </div>
 
     <footer class="flex gap-x-0.5">
@@ -131,8 +131,6 @@ defineExpose({
     .signature-placeholder {
       position: absolute;
       inset: 0;
-      display: grid;
-      place-content: center;
       font-size: 3rem;
       font-weight: 100;
       color: gainsboro;

@@ -242,7 +242,7 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <div class="grid gap-3 sm:grid-cols-3">
+    <EasyGrid :breakpoints="{ sm: 3 }" :gap="3">
       <FormLabel :label="$t('forms.name')">
         <InputText v-model="form.name" @mouseover="editingCoach = false" />
       </FormLabel>
@@ -259,9 +259,9 @@ watch(
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-    </div>
+    </EasyGrid>
 
-    <div class="grid gap-3 sm:grid-cols-3 mt-3">
+    <EasyGrid class="mt-3" :breakpoints="{ sm: 3 }" :gap="3">
       <FormLabel :label="$t('divisions.division')">
         <DivisionSelector
           v-model="selectedDivision"
@@ -280,7 +280,7 @@ watch(
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-    </div>
+    </EasyGrid>
 
     <div class="mt-10">
       <FormLabel
@@ -321,7 +321,7 @@ watch(
           @mouseover="editingCoach = false"
         />
       </header>
-      <div class="players-list grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+      <EasyGrid class="players-list" :breakpoints="{ lg: 2, xl: 3 }" :gap="3">
         <PlayerItem
           v-for="player in form.players"
           :key="player.profileId"
@@ -334,7 +334,7 @@ watch(
           @profile:edit="setProfileToEdit"
           @mouseover="editingCoach = false"
         />
-      </div>
+      </EasyGrid>
     </div>
     <div class="flex justify-end mt-10">
       <Button

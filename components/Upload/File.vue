@@ -80,7 +80,7 @@ const reset = () => {
 
 <template>
   <section class="easy-upload-file-component">
-    <div class="p-inputgroup">
+    <FormInputGroup>
       <InputText v-if="inputFileName" v-model="inputFileName" readonly />
       <Button
         size="small"
@@ -94,7 +94,7 @@ const reset = () => {
           fileName ? t('forms.replace_file') : t('forms.select_file')
         }}</span>
       </Button>
-    </div>
+    </FormInputGroup>
     <input
       ref="fileInput"
       type="file"

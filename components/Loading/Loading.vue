@@ -1,7 +1,7 @@
 <template>
-  <div class="easy-loading-component">
+  <EasyGrid class="easy-loading-component" center>
     <LoadingSpinner />
-  </div>
+  </EasyGrid>
 </template>
 
 <style lang="scss">
@@ -13,8 +13,6 @@
   width: 100%;
   height: 100%;
   background-color: rgba(255, 255, 255, 0.5);
-  display: grid;
-  place-content: center;
 
   @media (prefers-color-scheme: dark) {
     background-color: rgba(25, 25, 25, 0.5);

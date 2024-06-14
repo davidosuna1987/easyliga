@@ -48,10 +48,7 @@ const props = defineProps({
       <IconShirtNumber :shirtNumber="$t('coaches.coach_one_char')" />
       <span class="player-name">{{ getFullName(coach) }}</span>
     </div>
-    <div
-      v-if="showIcon"
-      class="team-player-captain grid gap-2 grid-cols-1"
-    ></div>
+    <EasyGrid v-if="showIcon" class="team-player-captain" :gap="2" />
   </div>
 </template>
 

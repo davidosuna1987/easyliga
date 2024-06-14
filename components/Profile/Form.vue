@@ -38,6 +38,8 @@ const clubService = new ClubService()
 const profileService = new ProfileService()
 const toast = useEasyToast()
 
+const breakpoints = { xs: 1, md: 2 }
+
 const address = ref<Address>(
   props.profile.address ?? {
     line1: undefined,
@@ -147,7 +149,7 @@ watch(
     />
 
     <p class="text-lg mb-3">{{ $t('forms.personal_data') }}</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <EasyGrid :breakpoints="breakpoints" :gap="3">
       <FormLabel
         class="mb-3"
         :label="$t('forms.email')"
@@ -211,10 +213,10 @@ watch(
           :disabled="!!loadingApi || !props.profile"
         />
       </FormLabel>
-    </div>
+    </EasyGrid>
 
     <p class="text-lg mt-6 mb-3">{{ $t('addresses.address') }}</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <EasyGrid :breakpoints="breakpoints" :gap="3">
       <FormLabel
         class="mb-3"
         :label="$t('addresses.line1')"
@@ -257,7 +259,7 @@ watch(
       >
         <InputText v-model="address.postalCode" class="w-full" type="text" />
       </FormLabel>
-    </div>
+    </EasyGrid>
 
     <footer
       class="be-user-form-footer flex justify-content-between align-items-center w-full mt-4"

@@ -361,16 +361,20 @@ onMounted(getTeamPlayers)
         :tooltipsDisabled="!!call?.locked"
       />
     </FormLabel>
-    <div class="grid gap-4 md:grid-cols-2 items-start mt-4">
+    <EasyGrid
+      class="mt-4"
+      :gap="4"
+      :breakpoints="{ xs: 1, md: 2 }"
+      items="start"
+    >
       <div>
-        <!-- <GameCallSelectedCaptain :player="selectedCaptain" class="mb-3" /> -->
         <GameCallSelectedLibero
           v-for="libero in selectedLiberos"
           class="mb-3"
           :player="libero"
         />
       </div>
-      <div v-if="!call?.locked" class="grid justify-end">
+      <EasyGrid v-if="!call?.locked" justify="end">
         <Button
           class="mt-3"
           type="submit"
@@ -378,8 +382,8 @@ onMounted(getTeamPlayers)
           :disabled="call?.locked"
           :loading="loadingApi"
         />
-      </div>
-    </div>
+      </EasyGrid>
+    </EasyGrid>
     <GameCallShirtNumberDialog
       :call="call"
       :player="shirtNumberUpdatePlayer"
