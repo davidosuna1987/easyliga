@@ -270,7 +270,7 @@ onBeforeUnmount((): void => {
       <p class="text-center mb-8">
         {{ $t('rotations.assign_call') }}
       </p>
-      <EasyGrid class="place-content-center" :cols="0">
+      <EasyGrid center>
         <CoachButtonCall
           v-if="call"
           :gameId="call.gameId"

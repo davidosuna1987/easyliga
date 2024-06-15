@@ -361,12 +361,7 @@ onMounted(getTeamPlayers)
         :tooltipsDisabled="!!call?.locked"
       />
     </FormLabel>
-    <EasyGrid
-      class="mt-4"
-      :gap="4"
-      :breakpoints="{ xs: 1, md: 2 }"
-      items="start"
-    >
+    <EasyGrid class="mt-4" :gap="4" :breakpoints="{ md: 2 }" items="start">
       <div>
         <GameCallSelectedLibero
           v-for="libero in selectedLiberos"

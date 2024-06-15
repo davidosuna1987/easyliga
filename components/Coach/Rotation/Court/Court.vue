@@ -204,7 +204,7 @@ const submitLabel = computed((): string =>
 )
 
 const breakpoints = computed((): GridBreakpoints | undefined =>
-  !!playerChanges.value.length ? { xs: 1, lg: 2 } : undefined,
+  !!playerChanges.value.length ? { lg: 2 } : undefined,
 )
 
 const setRotationPlayersFromRtotation = () => {

@@ -42,7 +42,7 @@ const ACTIONS_GRID_COLS: Record<string, number> = {
   default: 1,
   warmup: 2,
   resting: 1,
-  playing: 1,
+  playing: 1, // grid-cols-2 if timeouts are enabled
   finished: 2,
 }
 

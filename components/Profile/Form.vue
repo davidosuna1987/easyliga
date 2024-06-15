@@ -38,8 +38,6 @@ const clubService = new ClubService()
 const profileService = new ProfileService()
 const toast = useEasyToast()
 
-const breakpoints = { xs: 1, md: 2 }
-
 const address = ref<Address>(
   props.profile.address ?? {
     line1: undefined,
@@ -149,7 +147,7 @@ watch(
     />
 
     <p class="text-lg mb-3">{{ $t('forms.personal_data') }}</p>
-    <EasyGrid :breakpoints="breakpoints" :gap="3">
+    <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel
         class="mb-3"
         :label="$t('forms.email')"
@@ -216,7 +214,7 @@ watch(
     </EasyGrid>
 
     <p class="text-lg mt-6 mb-3">{{ $t('addresses.address') }}</p>
-    <EasyGrid :breakpoints="breakpoints" :gap="3">
+    <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel
         class="mb-3"
         :label="$t('addresses.line1')"

@@ -6,5 +6,9 @@ export const mapBreakpointsToClasses = (
   breakpoints: GridBreakpoints,
 ): string[] =>
   Object.entries(breakpoints).map(([key, value]) =>
-    key === 'xs' ? `grid-cols-${value}` : `${key}:grid-cols-${value}`,
+    key !== 'xs'
+      ? `${key}:grid-cols-${value}`
+      : value > 0
+      ? `grid-cols-${value}`
+      : '',
   )

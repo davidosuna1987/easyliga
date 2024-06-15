@@ -399,8 +399,8 @@ onMounted(setInitialShowCountdown)
       >
         <EasyGrid
           v-if="playersToBeReplacedForSanction.length"
-          class="actions place-content-center"
-          :cols="0"
+          class="actions"
+          center
         >
           <Button
             class="px-12 mb-3"
@@ -410,11 +410,7 @@ onMounted(setInitialShowCountdown)
             :disabled="true"
           />
         </EasyGrid>
-        <EasyGrid
-          v-if="waitingForPlayerChanges"
-          class="actions place-content-center"
-          :cols="0"
-        >
+        <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
           <Button
             class="px-12 mb-3"
             :label="$t('rotations.waiting_player_changes')"
@@ -423,11 +419,7 @@ onMounted(setInitialShowCountdown)
             :disabled="true"
           />
         </EasyGrid>
-        <EasyGrid
-          v-if="timeoutRunning"
-          class="actions place-content-center"
-          :cols="0"
-        >
+        <EasyGrid v-if="timeoutRunning" class="actions" center>
           <Button
             class="px-12 mb-3"
             :label="$t('timeouts.running')"
@@ -488,11 +480,7 @@ onMounted(setInitialShowCountdown)
             @sidebar:toggle="emit('sidebar:toggle', $event)"
           />
         </div>
-        <EasyGrid
-          v-if="gameStatus === 'finished'"
-          class="actions place-content-center"
-          :cols="0"
-        >
+        <EasyGrid v-if="gameStatus === 'finished'" class="actions" center>
           <GameSignatureActions
             v-if="pendingGameSignatures"
             :gameId="currentSet.gameId"

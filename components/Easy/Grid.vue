@@ -4,11 +4,11 @@ import { GridBreakpoints, mapBreakpointsToClasses } from '@/domain/grid'
 const props = defineProps({
   cols: {
     type: Number,
-    default: 0,
+    required: false,
   },
   gap: {
     type: Number,
-    default: 0,
+    required: false,
   },
   gapX: {
     type: Number,
@@ -36,6 +36,14 @@ const props = defineProps({
   },
 })
 
+const columns = computed(() =>
+  !!props.breakpoints?.xs
+    ? props.breakpoints.xs
+    : !!props.cols
+    ? props.cols
+    : undefined,
+)
+
 const mappedBreakpoints = computed(() =>
   props.breakpoints ? mapBreakpointsToClasses(props.breakpoints) : undefined,
 )
@@ -44,14 +52,15 @@ const mappedBreakpoints = computed(() =>
 <template>
   <div
     :class="[
-      'easy-grid-component',
-      `grid grid-cols-${breakpoints?.xs ?? cols} gap-${gap}`,
-      gapX && `gap-x-${gapX}`,
-      gapY && `gap-y-${gapY}`,
+      'easy-grid-component grid',
+      !!columns && `grid-cols-${columns}`,
+      !!gap && `gap-${gap}`,
+      !!gapX && `gap-x-${gapX}`,
+      !!gapY && `gap-y-${gapY}`,
       !!mappedBreakpoints && mappedBreakpoints,
-      center && 'place-content-center',
-      justify && `justify-${justify}`,
-      items && `items-${items}`,
+      !!center && 'place-content-center',
+      !!justify && `justify-${justify}`,
+      !!items && `items-${items}`,
     ]"
   >
     <slot />

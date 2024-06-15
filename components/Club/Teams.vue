@@ -53,7 +53,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
   <div class="easy-club-teams-component">
     <Loading v-if="loadingApi" />
     <template v-else>
-      <EasyGrid v-if="clubManagesAnyTeam">
+      <EasyGrid v-if="clubManagesAnyTeam" :gap="2">
         <div class="club" v-for="club in clubsWithTeams">
           <header class="header flex justify-between">
             <Heading tag="h5" class="club__name">{{ club.name }}</Heading>
@@ -65,7 +65,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
             />
           </header>
           <template v-for="sede in club.sedes">
-            <EasyGrid v-if="sedeContainsTeams(sede)" class="sede mt-3">
+            <EasyGrid v-if="sedeContainsTeams(sede)" class="sede mt-3" :gap="2">
               <Heading tag="h6">{{ sede.name }}</Heading>
               <div
                 v-for="team in sede.teams"
