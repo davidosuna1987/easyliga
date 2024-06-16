@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
-import { ApiFreshData } from '@/types/api/auth'
+import { ApiProfile } from '@/types/api/profile'
+import { mapApiProfileToProfile } from '@/domain/profile'
 
 definePageMeta({
   middleware: ['auth'],
@@ -8,7 +9,7 @@ definePageMeta({
 
 const auth = useAuthStore()
 
-const handleUpdated = (data: ApiFreshData) => auth.refreshData(data)
+const handleUpdated = (data: ApiProfile) => auth.refreshProfile(data)
 </script>
 
 <template>

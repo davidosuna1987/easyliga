@@ -25,6 +25,7 @@ import { mapApiProfileToProfile } from '@/domain/profile'
 import { Role } from '@/domain/role'
 import { ApiLicense } from '@/types/api/license'
 import { LicensableModelType } from '@/domain/licensable'
+import { ApiProfile } from 'types/api/profile'
 
 export const useAuthStore = defineStore('auth', () => {
   const easyStorage = useEasyStorage()
@@ -169,6 +170,15 @@ export const useAuthStore = defineStore('auth', () => {
     refreshToken(data)
   }
 
+  const refreshProfile = (data: ApiProfile) => {
+    profile.value = mapApiProfileToProfile(data)
+
+    const index = profiles.value.findIndex(p => p.id === data.id)
+    if (index !== -1) {
+      profiles.value[index] = mapApiProfileToProfile(data)
+    }
+  }
+
   const isAdmin = () => roles.value.includes('admin')
 
   const isStaff = () => roles.value.some(role => STAFF_ROLES.includes(role))
@@ -245,6 +255,7 @@ export const useAuthStore = defineStore('auth', () => {
     refreshData,
     refreshToken,
     refreshLoginData,
+    refreshProfile,
     getAuthUser,
     isAdmin,
     isStaff,
