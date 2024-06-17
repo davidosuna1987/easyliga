@@ -7,13 +7,24 @@ import {
   mapApiManagedModelMappedToLicensableModelMapped,
   mapApiManagedModelsMappedToLicensableModelsMapped,
   mapMappedToLicensableModelsMappedToGroupedByTypeLicensableModelsMapped,
+  LicensableModel,
 } from '@/domain/licensable'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { getFullName } from '@/domain/player'
+import { Profile } from '@/domain/profile'
 
 const props = defineProps({
   type: {
     type: String as PropType<LicensableType | 'all'>,
     required: true,
+  },
+  licensable: {
+    type: Object as PropType<LicensableModel>,
+    required: false,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -28,7 +39,36 @@ const selectableModel = ref<LicensableModelMapped[]>()
 const selectableModels = ref<LicensableModelsMapped>()
 const loadingApi = ref<boolean>(false)
 
+const isReadonly = computed(
+  () => !!props.readonly || selectableModel.value?.length === 1,
+)
+
 const setSelectableModels = async () => {
+  if (props.licensable && props.type !== 'all') {
+    const licensableModelType = mapLicensableTypeToLicensableModelType(
+      props.type,
+    )
+    const licensableModelName =
+      licensableModelType === 'profile'
+        ? getFullName(props.licensable as Profile)
+        : 'name' in props.licensable
+        ? props.licensable.name
+        : undefined
+
+    if (licensableModelName) {
+      selectableModel.value = [
+        {
+          id: props.licensable.id,
+          name: licensableModelName,
+          type: licensableModelType,
+        },
+      ]
+      selectedModel.value = selectableModel.value[0]
+      emit('model:selected', selectedModel.value)
+      return
+    }
+  }
+
   loadingApi.value = true
   if (props.type === 'all') {
     const { data } = await managedModelsMapped()
@@ -73,6 +113,7 @@ watch(() => props.type, setSelectableModels, { immediate: true })
   <Dropdown
     v-if="loadingApi || selectableModel"
     class="easy-license-model-selector-component"
+    :panelClass="!!isReadonly ? 'hidden pointer-events-none' : ''"
     v-model="selectedModel"
     :options="selectableModel"
     :optionLabel="model => model.name"
@@ -80,10 +121,13 @@ watch(() => props.type, setSelectableModels, { immediate: true })
     :placeholder="$t(`licenses.model.select.${type}`)"
     :loading="loadingApi"
     @update:modelValue="$emit('model:selected', $event)"
-  />
+  >
+    <template v-if="!!isReadonly" #dropdownicon>&nbsp;</template>
+  </Dropdown>
   <Dropdown
     v-else-if="selectableModels"
     class="easy-license-model-selector-component"
+    :panelClass="!!isReadonly ? 'hidden pointer-events-none' : ''"
     v-model="selectedModel"
     :options="selectableModelsGroup"
     optionLabel="name"
@@ -93,7 +137,9 @@ watch(() => props.type, setSelectableModels, { immediate: true })
     :placeholder="$t(`licenses.model.select.${type}`)"
     :loading="loadingApi"
     @update:modelValue="$emit('model:selected', $event)"
-  />
+  >
+    <template v-if="!!isReadonly" #dropdownicon>&nbsp;</template>
+  </Dropdown>
 </template>
 
 <script lang="ts">

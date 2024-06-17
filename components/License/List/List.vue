@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LicensableType } from '@/domain/licensable'
+import { LicensableModel, LicensableType } from '@/domain/licensable'
 import { License } from '@/domain/license'
 
 const props = defineProps({
@@ -9,14 +9,47 @@ const props = defineProps({
   },
   licenses: {
     type: Array as PropType<License[]>,
-    required: true,
+    default: [],
+  },
+  licensable: {
+    type: Object as PropType<LicensableModel>,
+    required: false,
   },
 })
 
 const emit = defineEmits<{
-  (e: 'license:create', value: LicensableType | 'all'): void
-  (e: 'license:edit', value: License): void
+  (e: 'license:success', value: string): void
 }>()
+
+const { t } = useI18n()
+
+const showLicenseDialogForm = ref<boolean>(false)
+const licenseToShow = ref<License>()
+const formLicense = ref<License>()
+
+const handleLicenseShow = (license: License) => {
+  licenseToShow.value = license
+}
+
+const handleLicenseCreate = () => {
+  formLicense.value = undefined
+  showLicenseDialogForm.value = true
+}
+
+const handleLicenseEdit = (license: License) => {
+  formLicense.value = license
+  showLicenseDialogForm.value = true
+}
+
+const handleLicenseDialogFormSuccess = (action: string) => {
+  emit('license:success', action)
+  handleLicenseDialogFormHide()
+}
+
+const handleLicenseDialogFormHide = () => {
+  formLicense.value = undefined
+  showLicenseDialogForm.value = false
+}
 </script>
 
 <template>
@@ -25,15 +58,15 @@ const emit = defineEmits<{
       <Heading tag="h6" position="center">
         {{
           type === 'all'
-            ? $t('licenses.all')
-            : $t(`licenses.type_long.${type}`, 2)
+            ? t('licenses.all')
+            : t(`licenses.type_long.${type}`, 2)
         }}
       </Heading>
       <Button
         class="action"
-        :label="$t('licenses.add')"
+        :label="t('licenses.add')"
         size="small"
-        @click.prevent="emit('license:create', type)"
+        @click.prevent="handleLicenseCreate"
       />
     </header>
 
@@ -45,15 +78,40 @@ const emit = defineEmits<{
       >
         <LicenseListItem
           :license="license"
-          @license:edit="emit('license:edit', license)"
+          @license:show="handleLicenseShow"
+          @license:edit="handleLicenseEdit(license)"
+          @license:deleted="handleLicenseDialogFormSuccess('deleted')"
         />
       </template>
       <template v-else-if="type">
         {{
-          $t(`licenses.no_licenses_type`, { type: $t(`licenses.type.${type}`) })
+          t(`licenses.no_licenses_type`, { type: t(`licenses.type.${type}`) })
         }}
       </template>
     </EasyGrid>
+
+    <LicenseDialogForm
+      :visible="showLicenseDialogForm"
+      :type="type"
+      :license="formLicense"
+      :licensable="licensable"
+      @hide="handleLicenseDialogFormHide"
+      @success="handleLicenseDialogFormSuccess"
+    />
+
+    <DialogBottom
+      class="easy-alert-dialog-component"
+      :visible="!!licenseToShow"
+      @hide="licenseToShow = undefined"
+    >
+      <template #header>
+        <Heading tag="h5">{{ t('licenses.details') }}</Heading>
+      </template>
+
+      <LicenseShow v-if="licenseToShow" class="mt-6" :license="licenseToShow" />
+
+      <template #footer></template>
+    </DialogBottom>
   </div>
 </template>
 

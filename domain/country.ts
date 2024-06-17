@@ -1,3 +1,6 @@
+export const DEFAULT_COUNTRY_CODE = 'ES'
+export const DEFAULT_TRANSLATION_LOCALE = 'es'
+
 export type Country = {
   name: string
   alpha2Code: CountryCode
@@ -21,6 +24,15 @@ export const getCountryByCode = (code: CountryCode): Country | undefined => {
 
 export const getCountryFlagIconName = (code: CountryCode, squared = true) =>
   `flag:${code.toLocaleLowerCase()}-${squared ? '1x1' : '4x3'}`
+
+export const getCountryNameByLocale = (country?: Country, locale?: string) => {
+  if (!country || !locale) return
+
+  const translationLocale =
+    locale in country.translations ? locale : DEFAULT_TRANSLATION_LOCALE
+
+  return country.translations[translationLocale]
+}
 
 export const countries = [
   {

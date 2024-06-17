@@ -339,7 +339,7 @@ onMounted(getTeamPlayers)
   <Heading tag="h5" position="center" class="mb-5">{{ game?.name }}</Heading>
 
   <Message v-if="call?.locked" :closable="false">{{
-    $t('calls.locked_warning')
+    t('calls.locked_warning')
   }}</Message>
 
   <Loading v-if="loadingApi" />
@@ -349,7 +349,7 @@ onMounted(getTeamPlayers)
     :class="{ 'is-locked': call?.locked }"
     @submit.prevent="handleSignOrSubmit()"
   >
-    <FormLabel :label="$t('calls.select')">
+    <FormLabel :label="t('calls.select')">
       <GameCallList
         :players="players"
         :selectedPlayers="selectedPlayers"
@@ -361,7 +361,7 @@ onMounted(getTeamPlayers)
         :tooltipsDisabled="!!call?.locked"
       />
     </FormLabel>
-    <EasyGrid class="mt-4" :gap="4" :breakpoints="{ md: 2 }" items="start">
+    <EasyGrid class="mt-4" :gap="3" :breakpoints="{ md: 2 }" items="start">
       <div>
         <GameCallSelectedLibero
           v-for="libero in selectedLiberos"
@@ -373,7 +373,7 @@ onMounted(getTeamPlayers)
         <Button
           class="mt-3"
           type="submit"
-          :label="call?.locked ? $t('calls.locked') : $t('calls.submit')"
+          :label="call?.locked ? t('calls.locked') : t('calls.submit')"
           :disabled="call?.locked"
           :loading="loadingApi"
         />

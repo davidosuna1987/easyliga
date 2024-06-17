@@ -21,10 +21,14 @@ const props = defineProps({
     type: String as PropType<LicensableType | 'all'>,
     required: false,
   },
+  licensable: {
+    type: Object as PropType<LicensableModel>,
+    required: false,
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'success', value: boolean): void
+  (e: 'success', value: string): void
   (e: 'loading', value: boolean): void
 }>()
 
@@ -67,7 +71,7 @@ const handleSubmit = () => {
 const handleStore = async () => {
   loadingApi.value = true
   const { data, error } = await licenseService.store(form.value)
-  handleResponse(data, error)
+  handleResponse(data, error, 'created')
 }
 
 const handleUpdate = async () => {
@@ -76,16 +80,16 @@ const handleUpdate = async () => {
     form.value.id,
     mapLicenseStoreRequestToLicenseUpdateRequest(form.value),
   )
-  handleResponse(data, error)
+  handleResponse(data, error, 'updated')
 }
 
-const handleResponse = (data: any, error: any) => {
+const handleResponse = (data: any, error: any, action: string) => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else if (data.value) {
     toast.success(successMessage.value)
-    emit('success', true)
+    emit('success', action)
     auth.fresh()
   }
 
@@ -142,17 +146,17 @@ watch(
     @submit.prevent="handleSubmit"
   >
     <FormLabel
-      :label="$t('licenses.assign_name')"
+      :label="t('licenses.assign_name')"
       :error="errors?.name?.[0]"
       required
     >
       <InputText v-model="form.name" />
     </FormLabel>
 
-    <EasyGrid :cols="!!license || !!type ? 1 : 2" :gap="4">
+    <EasyGrid :cols="!!license || !!type ? 1 : 2" :gap="3">
       <FormLabel
         v-if="!license && !type"
-        :label="$t('licenses.type_label')"
+        :label="t('licenses.type_label')"
         :error="errors?.type?.[0]"
         required
       >
@@ -164,7 +168,7 @@ watch(
       </FormLabel>
 
       <FormLabel
-        :label="$t('licenses.country')"
+        :label="t('licenses.country')"
         :error="errors?.country_code?.[0]"
         required
       >
@@ -176,19 +180,21 @@ watch(
     </EasyGrid>
 
     <FormLabel
-      :label="$t(`licenses.model.select.${type}`)"
+      :label="t(`licenses.model.select.${type}`)"
       :error="errors?.licensable_id?.[0]"
     >
       <LicenseModelSelector
         v-model="selectedModel"
         :type="type ? type : form.type"
+        :licensable="licensable"
+        :readonly="!!licensable"
         @model:selected="handleModelSelected"
       />
     </FormLabel>
 
-    <EasyGrid :cols="2" :gap="4">
+    <EasyGrid :cols="2" :gap="3">
       <FormLabel
-        :label="$t('licenses.number')"
+        :label="t('licenses.number')"
         :error="errors?.license_number?.[0]"
         required
       >
@@ -196,7 +202,7 @@ watch(
       </FormLabel>
 
       <FormLabel
-        :label="$t('forms.expiry_date')"
+        :label="t('forms.expiry_date')"
         :error="errors?.expiry_date?.[0]"
         required
       >
@@ -204,7 +210,7 @@ watch(
           v-model="selectedExpiryDate"
           class="w-full"
           :minDate="new Date()"
-          :dateFormat="`dd '${$t('forms.of')}' MM '${$t('forms.of')}' yy`"
+          :dateFormat="`dd '${t('forms.of')}' MM '${t('forms.of')}' yy`"
           :touchUI="true"
           @update:modelValue="handleExpiryDateSelected($event as string)"
         />
@@ -212,13 +218,13 @@ watch(
     </EasyGrid>
 
     <FormLabel
-      :label="$t('observations.observation', 2)"
+      :label="t('observations.observation', 2)"
       :error="errors?.observations?.[0]"
     >
       <Textarea v-model="form.observations" :rows="5" autoResize />
     </FormLabel>
 
-    <FormLabel :label="$t('forms.file')" :error="errors?.file?.[0]">
+    <FormLabel :label="t('forms.file')" :error="errors?.file?.[0]">
       <UploadFile
         :fileName="form.originalFilename"
         @file:changed="handleFileChanged"

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { License, mapApiLicenseToLicense } from '@/domain/license'
-import { LicensableType } from '@/domain/licensable'
-import { ApiLicense } from '@/types/api/license'
+import { License } from '@/domain/license'
+import { LicensableModel, LicensableType } from '@/domain/licensable'
 
 const props = defineProps({
   visible: {
@@ -16,12 +15,19 @@ const props = defineProps({
     type: Object as PropType<License>,
     required: false,
   },
+  licensable: {
+    type: Object as PropType<LicensableModel>,
+    required: false,
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'hide', value: boolean): void
+  (e: 'success', value: string): void
   (e: 'loading', value: boolean): void
+  (e: 'hide', value: boolean): void
 }>()
+
+const { t } = useI18n()
 
 const showDialog = ref<boolean>(!!props.visible)
 const licenseFormRef = ref<HTMLFormElement>()
@@ -31,10 +37,6 @@ const action = computed(() => (props.license ? 'edit' : 'add'))
 
 const handleFormSubmit = () => {
   licenseFormRef.value?.handleSubmit()
-}
-
-const handleSuccess = () => {
-  emit('hide', true)
 }
 
 const handleLoading = (value: boolean) => {
@@ -56,7 +58,7 @@ watch(
     @hide="emit('hide', true)"
   >
     <template #header>
-      <Heading tag="h5">{{ $t(`licenses.${action}`) }}</Heading>
+      <Heading tag="h5">{{ t(`licenses.${action}`) }}</Heading>
     </template>
 
     <LicenseForm
@@ -64,8 +66,9 @@ watch(
       class="mt-6"
       :type="type"
       :license="license"
+      :licensable="licensable"
       @loading="handleLoading"
-      @success="handleSuccess"
+      @success="emit('success', $event)"
     />
 
     <template #footer>

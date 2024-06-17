@@ -1,6 +1,10 @@
-import { Country, CountryCode, countries } from '@/domain/country'
 import {
-  LICENSABLE_TYPE_MAPPER,
+  Country,
+  CountryCode,
+  DEFAULT_COUNTRY_CODE,
+  countries,
+} from '@/domain/country'
+import {
   LicensableModel,
   LicensableType,
   // mapLicensableByType,
@@ -12,8 +16,6 @@ import {
   ApiLicenseStoreRequest,
   ApiLicenseUpdateRequest,
 } from '@/types/api/license'
-
-export const DEFAULT_LICENSE_COUNTRY_CODE = 'ES'
 
 export type LicenseRelations = {
   licensable?: LicensableModel
@@ -112,7 +114,7 @@ export const mapLicenseToLicenseStoreRequest = ({
   name: license?.name ?? '',
   type: license ? license.type : type,
   licenseNumber: license?.licenseNumber ?? '',
-  countryCode: license?.countryCode ?? DEFAULT_LICENSE_COUNTRY_CODE,
+  countryCode: license?.countryCode ?? DEFAULT_COUNTRY_CODE,
   expiryDate: license?.expiryDate ?? '',
   observations: license?.observations,
   filepath: license?.filepath,

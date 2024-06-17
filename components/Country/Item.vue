@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Country, CountryCode, countries } from '@/domain/country'
+import {
+  Country,
+  CountryCode,
+  countries,
+  getCountryNameByLocale,
+} from '@/domain/country'
 
 const props = defineProps({
   countryCode: {
@@ -24,7 +29,7 @@ const country = computed((): Country | undefined =>
     class="easy-country-item-component flex gap-2 justify-start items-center"
   >
     <FlagIcon :countryCode="countryCode" :size="size" />
-    <span>{{ country?.translations[locale] ?? countryCode }}</span>
+    <span>{{ getCountryNameByLocale(country, locale) ?? countryCode }}</span>
   </div>
 </template>
 

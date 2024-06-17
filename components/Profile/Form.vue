@@ -40,11 +40,13 @@ const toast = useEasyToast()
 
 const address = ref<Address>(
   props.profile.address ?? {
+    id: 0,
     line1: undefined,
     line2: undefined,
     city: undefined,
     state: undefined,
     country: undefined,
+    countryCode: undefined,
     postalCode: undefined,
   },
 )
@@ -146,25 +148,25 @@ watch(
       @image="avatarChange"
     />
 
-    <p class="text-lg mb-3">{{ $t('forms.personal_data') }}</p>
+    <p class="text-lg mb-3">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel
         class="mb-3"
-        :label="$t('forms.email')"
+        :label="t('forms.email')"
         :error="errors?.email?.[0]"
       >
         <InputText v-model="form.email" class="w-full" type="email" />
       </FormLabel>
       <FormLabel
         class="mb-3"
-        :label="$t('forms.name')"
+        :label="t('forms.name')"
         :error="errors?.firstName?.[0]"
       >
         <InputText v-model="form.firstName" class="w-full" type="text" />
       </FormLabel>
       <FormLabel
         class="mb-3"
-        :label="$t('forms.surnames')"
+        :label="t('forms.surnames')"
         :error="errors?.lastName?.[0]"
       >
         <InputText
@@ -176,19 +178,19 @@ watch(
       </FormLabel>
       <FormLabel
         class="mb-3"
-        :label="$t('forms.birth_date')"
+        :label="t('forms.birth_date')"
         :error="errors?.birthDate?.[0]"
       >
         <Calendar
           v-model="form.birthDate"
           class="w-full"
-          :dateFormat="`dd '${$t('forms.of')}' MM '${$t('forms.of')}' yy`"
+          :dateFormat="`dd '${t('forms.of')}' MM '${t('forms.of')}' yy`"
           :touchUI="true"
         />
       </FormLabel>
       <FormLabel
         class="mb-3"
-        :label="$t('forms.gender')"
+        :label="t('forms.gender')"
         :error="errors?.gender?.[0]"
       >
         <Dropdown
@@ -201,7 +203,7 @@ watch(
       </FormLabel>
       <FormLabel
         class="mb-3"
-        :label="$t('forms.phone')"
+        :label="t('forms.phone')"
         :error="errors?.phone?.[0]"
       >
         <InputText
@@ -213,51 +215,12 @@ watch(
       </FormLabel>
     </EasyGrid>
 
-    <p class="text-lg mt-6 mb-3">{{ $t('addresses.address') }}</p>
-    <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.line1')"
-        :error="errors?.line1?.[0]"
-      >
-        <InputText v-model="address.line1" class="w-full" type="text" />
-      </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.line2')"
-        :error="errors?.line2?.[0]"
-      >
-        <InputText v-model="address.line2" class="w-full" type="text" />
-      </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.city')"
-        :error="errors?.city?.[0]"
-      >
-        <InputText v-model="address.city" class="w-full" type="text" />
-      </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.state')"
-        :error="errors?.state?.[0]"
-      >
-        <InputText v-model="address.state" class="w-full" type="text" />
-      </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.country')"
-        :error="errors?.country?.[0]"
-      >
-        <InputText v-model="address.country" class="w-full" type="text" />
-      </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="$t('addresses.postal_code')"
-        :error="errors?.postalCode?.[0]"
-      >
-        <InputText v-model="address.postalCode" class="w-full" type="text" />
-      </FormLabel>
-    </EasyGrid>
+    <p class="text-lg mt-6 mb-3">{{ t('addresses.address') }}</p>
+    <AddressForm
+      :address="address"
+      :disabled="!!loadingApi || !props.profile"
+      @address:changed="address = $event"
+    />
 
     <footer
       class="be-user-form-footer flex justify-content-between align-items-center w-full mt-4"
@@ -267,7 +230,7 @@ watch(
         class="px-5 ml-auto mr-0"
         :class="{ 'is-loading': loadingApi }"
         :disabled="!!loadingApi || !props.profile"
-        >{{ $t('forms.update') }}</Button
+        >{{ t('forms.update') }}</Button
       >
     </footer>
   </form>

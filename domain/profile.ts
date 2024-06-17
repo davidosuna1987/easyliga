@@ -100,6 +100,7 @@ export const mapProfileUpdateRequestToApiProfileUpdateRequest = (
     city: apiAddress?.city ?? null,
     state: apiAddress?.state ?? null,
     country: apiAddress?.country ?? null,
+    country_code: apiAddress?.country_code ?? null,
     postal_code: apiAddress?.postal_code ?? null,
   }
 }
@@ -134,6 +135,7 @@ export const mapApiProfileUpdateRequestToFormData = (
   formData.append('city', data.city ?? '')
   formData.append('state', data.state ?? '')
   formData.append('country', data.country ?? '')
+  formData.append('country_code', data.country_code ?? '')
   formData.append('postal_code', data.postal_code ?? '')
 
   return formData

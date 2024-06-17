@@ -57,4 +57,4 @@ export type ApiProfileUpdateRequest = {
   gender: GenderType | null
   avatar: File | null
   phone: string | null
-} & ApiAddressUpdateRequest
+} & Omit<ApiAddressUpdateRequest, 'id'>

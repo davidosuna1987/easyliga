@@ -19,6 +19,8 @@ const props = defineProps({
 
 const emit = defineEmits(['point:sum', 'point:undo'])
 
+const { t } = useI18n()
+
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
 }
@@ -30,11 +32,11 @@ const undoLastPoint = () => {
 
 <template>
   <div class="easy-game-point-actions-component">
-    <EasyGrid class="actions" :cols="3" :gap="4">
+    <EasyGrid class="actions" :cols="3" :gap="3">
       <Button
         class="col-span-3/10 transition-none"
         :class="undoPointButtonDisabled ? '' : 'grayscale p-button-outlined'"
-        :label="$t('points.sum')"
+        :label="t('points.sum')"
         :disabled="!undoPointButtonDisabled"
         @click="
           sumPoint(
@@ -47,7 +49,7 @@ const undoLastPoint = () => {
       <Button
         class="col-span-4/10"
         :class="undoPointButtonDisabled ? 'grayscale' : ''"
-        :label="$t('points.undo')"
+        :label="t('points.undo')"
         outlined
         severity="danger"
         :disabled="undoPointButtonDisabled"
@@ -56,7 +58,7 @@ const undoLastPoint = () => {
       <Button
         class="col-span-3/10 transition-none"
         :class="undoPointButtonDisabled ? '' : 'grayscale p-button-outlined'"
-        :label="$t('points.sum')"
+        :label="t('points.sum')"
         :disabled="!undoPointButtonDisabled"
         @click="
           sumPoint(
@@ -68,7 +70,7 @@ const undoLastPoint = () => {
       />
     </EasyGrid>
     <small v-if="!undoPointButtonDisabled" class="countdown inline-block mt-2">
-      {{ $t('points.undo_countdown', { seconds: undoLastPointCountdown }) }}
+      {{ t('points.undo_countdown', { seconds: undoLastPointCountdown }) }}
     </small>
   </div>
 </template>

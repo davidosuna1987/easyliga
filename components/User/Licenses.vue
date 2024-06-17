@@ -10,31 +10,18 @@ const props = defineProps({
   },
 })
 
+const auth = useAuthStore()
 const { roles } = useAuthStore()
 
 const filters = ref<LicensableType[]>([])
 const selectedType = ref<LicensableType | 'all'>('all')
-const showLicenseDialogForm = ref<boolean>(false)
-const formLicense = ref<License>()
 
 const filteredLicenses = computed(() =>
   props.licenses.filter(license => license.type === selectedType.value),
 )
 
-const handleLicenseCreate = (type: LicensableType | 'all') => {
-  selectedType.value = type
-  formLicense.value = undefined
-  showLicenseDialogForm.value = true
-}
-
-const handleLicenseEdit = (license: License) => {
-  formLicense.value = license
-  showLicenseDialogForm.value = true
-}
-
-const handleLicenseDialogFormHide = () => {
-  formLicense.value = undefined
-  showLicenseDialogForm.value = false
+const handleLicenseSuccess = () => {
+  auth.fresh()
 }
 
 onMounted(() => {
@@ -55,15 +42,7 @@ onMounted(() => {
       class="mt-6"
       :type="selectedType"
       :licenses="filteredLicenses"
-      @license:create="handleLicenseCreate"
-      @license:edit="handleLicenseEdit"
-    />
-
-    <LicenseDialogForm
-      :visible="showLicenseDialogForm"
-      :type="selectedType"
-      :license="formLicense"
-      @hide="handleLicenseDialogFormHide"
+      @license:success="handleLicenseSuccess"
     />
   </section>
 </template>

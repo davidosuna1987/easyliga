@@ -28,6 +28,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const selectedTeamSide = ref<TeamSide>()
 
 const playerChanges = computed((): RotationPlayerChange[] => {
@@ -117,10 +119,10 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
 
 <template>
   <div class="easy-game-changes-actions-component">
-    <EasyGrid class="actions" :cols="2" :gap="4">
+    <EasyGrid class="actions" :cols="2" :gap="3">
       <Button
         class="col-span-5/10"
-        :label="$t('games.show_player_change', 2)"
+        :label="t('games.show_player_change', 2)"
         :badge="numberToString(leftSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
@@ -128,7 +130,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
       />
       <Button
         class="col-span-5/10"
-        :label="$t('games.show_player_change', 2)"
+        :label="t('games.show_player_change', 2)"
         :badge="numberToString(rightSideTeamRotation?.playerChangesCount)"
         badgeClass="is-primary"
         outlined
@@ -142,11 +144,11 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
       @hide="selectedTeamSide = undefined"
     >
       <template #header>
-        <Heading tag="h6">{{ $t('rotations.player_change_done', 2) }}</Heading>
+        <Heading tag="h6">{{ t('rotations.player_change_done', 2) }}</Heading>
       </template>
 
       <Message v-if="playerChanges?.length === 0" :closable="false">{{
-        $t('rotations.player_change_done', 0)
+        t('rotations.player_change_done', 0)
       }}</Message>
 
       <!-- <template v-if="playerChanges">
@@ -174,7 +176,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
           class="mt-3 mb-6"
         >
           <Heading tag="h6">
-            {{ $t('games.change_window_num', { num: changeWindow }) }}
+            {{ t('games.change_window_num', { num: changeWindow }) }}
           </Heading>
 
           <RotationPlayerChangeItem

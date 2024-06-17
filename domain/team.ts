@@ -16,6 +16,7 @@ import { Profile } from '@/domain/profile'
 import { CallPlayerData } from '@/domain/call'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { User, mapApiUserToUser } from '@/domain/user'
+import { License, mapApiLicenseToLicense } from '@/domain/license'
 
 export type TeamRelations = {
   club?: Club
@@ -26,6 +27,7 @@ export type TeamRelations = {
   gender?: Gender
   coach?: User
   players?: Player[]
+  licenses?: License[]
 }
 
 export type Team = {
@@ -128,6 +130,9 @@ export const mapApiTeamToTeam = (
   coach: apiTeam.coach ? mapApiUserToUser(apiTeam.coach) : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)
+    : undefined,
+  licenses: apiTeam.licenses
+    ? apiTeam.licenses.map(mapApiLicenseToLicense)
     : undefined,
   shirtColor: apiTeam.shirt_color ?? undefined,
 })

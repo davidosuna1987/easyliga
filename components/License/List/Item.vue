@@ -15,15 +15,13 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'license:show', value: License): void
   (e: 'license:edit', value: License): void
-  (e: 'license:delete', value: License): void
+  (e: 'license:deleted', value: License): void
 }>()
 
 const { t } = useI18n()
-const auth = useAuthStore()
 const toast = useEasyToast()
 const loadingApi = ref<boolean>(false)
 const licenseService = new LicenseService()
-const showLicenseDetails = ref<boolean>(false)
 const showRemoveLicenseDialog = ref<boolean>(false)
 
 const handleRemoveLicense = async () => {
@@ -33,7 +31,7 @@ const handleRemoveLicense = async () => {
 
   if (data.value) {
     toast.success(t('licenses.deleted'))
-    auth.fresh()
+    emit('license:deleted', props.license)
   }
 }
 </script>
@@ -60,15 +58,15 @@ const handleRemoveLicense = async () => {
           :icon="IconNames.show"
           type="primary"
           v-tooltip.top="{
-            value: $t('licenses.show'),
+            value: t('licenses.show'),
           }"
-          @click.stop="showLicenseDetails = true"
+          @click.stop="emit('license:show', license)"
         />
         <FormActionIcon
           :icon="IconNames.edit"
           type="info-dark"
           v-tooltip.top="{
-            value: $t('licenses.edit'),
+            value: t('licenses.edit'),
           }"
           @click.stop="emit('license:edit', license)"
         />
@@ -77,7 +75,7 @@ const handleRemoveLicense = async () => {
           type="danger"
           :outlined="false"
           v-tooltip.top="{
-            value: $t('licenses.delete'),
+            value: t('licenses.delete'),
           }"
           @click.stop="showRemoveLicenseDialog = true"
         />
@@ -86,28 +84,14 @@ const handleRemoveLicense = async () => {
 
     <AlertDialog
       :visible="!!showRemoveLicenseDialog"
-      :title="$t('licenses.delete')"
-      :message="$t('licenses.delete_alert')"
-      :acceptLabel="$t('forms.delete')"
+      :title="t('licenses.delete')"
+      :message="t('licenses.delete_alert')"
+      :acceptLabel="t('forms.delete')"
       severity="danger"
       :disabled="loadingApi"
       @accepted="handleRemoveLicense"
       @hide="showRemoveLicenseDialog = false"
     />
-
-    <DialogBottom
-      class="easy-alert-dialog-component"
-      :visible="showLicenseDetails"
-      @hide="showLicenseDetails = false"
-    >
-      <template #header>
-        <Heading tag="h5">{{ $t('licenses.details') }}</Heading>
-      </template>
-
-      <LicenseShow class="mt-6" :license="license" />
-
-      <template #footer></template>
-    </DialogBottom>
   </div>
 </template>
 

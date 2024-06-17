@@ -10,6 +10,8 @@ import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
 import { User } from '@/domain/user'
 import { ApiTeam } from '@/types/api/team'
+import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
+import { License } from '@/domain/license'
 
 const props = defineProps({
   team: {
@@ -21,6 +23,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'created', value: ApiTeam): void
   (e: 'updated', value: ApiTeam): void
+  (e: 'refresh', value: boolean): void
 }>()
 
 const { t } = useI18n()
@@ -40,6 +43,7 @@ const form = ref<TeamFormRequest>({
   players: [],
 })
 
+const teamLicenses = ref<License[]>([])
 const selectedSede = ref<Sede>()
 const selectedDivision = ref<Division>()
 const selectedCategory = ref<Category>()
@@ -53,13 +57,14 @@ const editingCoach = ref<boolean>(false)
 
 const loadingApi = ref<boolean>(false)
 
-const clubTeamPlayerData: UpdateClubTeamPlayer =
+const clubTeamPlayerData = computed((): UpdateClubTeamPlayer | undefined =>
   props.team?.id && props.team?.clubId
     ? {
         clubId: props.team.clubId,
         teamId: props.team.id,
       }
-    : undefined
+    : undefined,
+)
 
 const setFormData = (team: Team) => {
   form.value = {
@@ -75,6 +80,7 @@ const setFormData = (team: Team) => {
     players: team.players ?? [],
   }
 
+  teamLicenses.value = team.licenses ?? []
   selectedSede.value = team.sedes?.find(sede => sede.id === team.sedeId)
   selectedDivision.value = team.division
   selectedCategory.value = team.category
@@ -243,17 +249,17 @@ watch(
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
     <EasyGrid :breakpoints="{ sm: 3 }" :gap="3">
-      <FormLabel :label="$t('forms.name')">
+      <FormLabel :label="t('forms.name')">
         <InputText v-model="form.name" @mouseover="editingCoach = false" />
       </FormLabel>
-      <FormLabel :label="$t('sedes.sede')">
+      <FormLabel :label="t('sedes.sede')">
         <SedeSelector
           :sedes="team?.sedes ?? []"
           v-model="selectedSede"
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-      <FormLabel :label="$t('teams.shirt_color')">
+      <FormLabel :label="t('teams.shirt_color')">
         <TeamShirtColorSelector
           v-model="form.shirtColor"
           @mouseover="editingCoach = false"
@@ -262,19 +268,19 @@ watch(
     </EasyGrid>
 
     <EasyGrid class="mt-3" :breakpoints="{ sm: 3 }" :gap="3">
-      <FormLabel :label="$t('divisions.division')">
+      <FormLabel :label="t('divisions.division')">
         <DivisionSelector
           v-model="selectedDivision"
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-      <FormLabel :label="$t('categories.category')">
+      <FormLabel :label="t('categories.category')">
         <CategorySelector
           v-model="selectedCategory"
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-      <FormLabel :label="$t('genders.gender')">
+      <FormLabel :label="t('genders.gender')">
         <GenderSelector
           v-model="selectedGender"
           @mouseover="editingCoach = false"
@@ -283,8 +289,17 @@ watch(
     </EasyGrid>
 
     <div class="mt-10">
+      <LicenseList
+        :type="LICENSABLE_TYPE_MAPPER.team"
+        :licenses="teamLicenses"
+        :licensable="team"
+        @license:success="emit('refresh', true)"
+      />
+    </div>
+
+    <div class="mt-10">
       <FormLabel
-        :label="editingCoach ? $t('coaches.search') : $t('coaches.coach')"
+        :label="editingCoach ? t('coaches.search') : t('coaches.coach')"
       >
         <div class="flex sm:grid sm:grid-cols-3 gap-3 h-[42px]">
           <template v-if="selectedCoach?.profile && !editingCoach">
@@ -302,7 +317,7 @@ watch(
             />
           </template>
           <Button
-            :label="editingCoach ? $t('forms.cancel') : $t('forms.edit')"
+            :label="editingCoach ? t('forms.cancel') : t('forms.edit')"
             class="action w-min"
             @click.prevent="toggleEditingCoach()"
           />
@@ -312,9 +327,9 @@ watch(
 
     <div class="players mt-10">
       <header class="header flex justify-between">
-        <FormLabel :label="$t('players.player', 2)" />
+        <FormLabel :label="t('players.player', 2)" />
         <Button
-          :label="$t('players.add')"
+          :label="t('players.add')"
           size="small"
           class="action"
           @click.prevent="showPlayerSearchFormDialog = true"
@@ -338,7 +353,7 @@ watch(
     </div>
     <div class="flex justify-end mt-10">
       <Button
-        :label="team ? $t('teams.update') : $t('teams.create')"
+        :label="team ? t('teams.update') : t('teams.create')"
         :loading="loadingApi"
         @click="handleSubmit"
         type="button"
@@ -353,8 +368,8 @@ watch(
     <AlertDialog
       :visible="!!playerToRemove"
       :title="`${playerToRemove?.firstName} ${playerToRemove?.lastName}`"
-      :message="$t('players.delete_alert')"
-      :acceptLabel="$t('forms.delete')"
+      :message="t('players.delete_alert')"
+      :acceptLabel="t('forms.delete')"
       severity="danger"
       @accepted="removePlayer(playerToRemove?.profileId)"
       @hide="playerToRemove = undefined"
