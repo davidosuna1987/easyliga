@@ -6,6 +6,8 @@ definePageMeta({
   roles: ['referee'],
 })
 
+const { t } = useI18n()
+
 const game = ref(<GameStorePreviewData>{
   category: null,
   gender: null,
@@ -27,7 +29,7 @@ const setGame = (data: GameStorePreviewData) => {
       <RefereeGameFormSidebar :game="game" />
     </template>
     <div class="easy-referee-game-create-page">
-      <Heading class="mb-5" position="center">{{ $t('games.create') }}</Heading>
+      <Heading class="mb-5" position="center">{{ t('games.create') }}</Heading>
       <RefereeGameForm @changed="setGame" />
     </div>
   </NuxtLayout>

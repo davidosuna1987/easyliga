@@ -4,8 +4,6 @@ import { ApiFederation } from '@/types/api/federation'
 import FederationService from '@/services/federation'
 import { FederationScope } from '@/domain/federation'
 
-const federationService = new FederationService()
-
 const props = defineProps({
   groupedLeagues: {
     type: Array as PropType<ApiFederation[]>,
@@ -24,6 +22,13 @@ const props = defineProps({
     default: false,
   },
 })
+
+const emit = defineEmits<{
+  (e: 'selected', value: ApiLeague): void
+}>()
+
+const { t } = useI18n()
+const federationService = new FederationService()
 
 const selectedLeague = ref<ApiLeague | null>(null)
 const loadingApi = ref<boolean>(false)
@@ -71,8 +76,8 @@ onMounted(async () => {
     optionGroupChildren="leagues"
     optionGroupLabel="name"
     scrollHeight="210px"
-    :placeholder="$t('leagues.select')"
-    @update:modelValue="$emit('selected', $event)"
+    :placeholder="t('leagues.select')"
+    @update:modelValue="emit('selected', $event)"
   />
 </template>
 

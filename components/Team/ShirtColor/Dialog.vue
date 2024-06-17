@@ -18,6 +18,8 @@ const props = defineProps({
 
 const emit = defineEmits(['hide', 'selected'])
 
+const { t } = useI18n()
+
 const showDialog = ref<boolean>(props.visible)
 const form = ref<{ shirtColor?: ShirtColor }>({
   shirtColor: props.shirtColor,
@@ -41,9 +43,7 @@ watch(
     @hide="emit('hide')"
   >
     <template #header>
-      <Heading tag="h6">{{
-        $t('teams.color', { teamName: teamName })
-      }}</Heading>
+      <Heading tag="h6">{{ t('teams.color', { teamName: teamName }) }}</Heading>
     </template>
 
     <div class="flex flex-wrap justify-center gap-5 mt-6">

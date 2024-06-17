@@ -27,6 +27,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -35,7 +37,7 @@ const props = defineProps({
       <Avatar class="player-avatar" :image="player?.avatar" shape="circle" />
       <IconShirtNumber
         v-tooltip.top="{
-          value: $t('shirts.number_change'),
+          value: t('shirts.number_change'),
           disabled: !selectable && !selected,
         }"
         :shirtNumber="player.shirtNumber"
@@ -45,11 +47,11 @@ const props = defineProps({
     </div>
     <EasyGrid class="team-player-captain" :cols="2" :gap="2">
       <IconLibero
-        v-tooltip.top="$t('teams.libero_assign')"
+        v-tooltip.top="t('teams.libero_assign')"
         @click.stop="setLibero(player.profileId)"
       />
       <IconCaptain
-        v-tooltip.top="$t('teams.captain_assign')"
+        v-tooltip.top="t('teams.captain_assign')"
         @click.stop="setCaptain(player.profileId)"
       />
     </EasyGrid>

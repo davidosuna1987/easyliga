@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiLoginRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
 
@@ -32,20 +33,20 @@ async function handleLogin() {
 <template>
   <FormAuthBase
     class="easy-form-auth-login"
-    :buttonLabel="$t('auth.login')"
+    :buttonLabel="t('auth.login')"
     :loading="loadingApi"
     @submitted="handleLogin"
   >
     <FormLabel
       for="email"
-      :label="$t('forms.email')"
+      :label="t('forms.email')"
       :error="errors?.email?.[0]"
     />
     <InputText id="email" v-model="form.email" type="email" />
 
     <FormLabel
       for="password"
-      :label="$t('forms.password')"
+      :label="t('forms.password')"
       :error="errors?.password?.[0]"
     />
     <Password
@@ -57,7 +58,7 @@ async function handleLogin() {
 
     <template #link>
       <NuxtLink class="text-end mb-3" to="/forgot">
-        {{ $t('auth.forgot') }}
+        {{ t('auth.forgot') }}
       </NuxtLink>
     </template>
   </FormAuthBase>

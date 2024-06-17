@@ -13,8 +13,9 @@ const props = defineProps({
 
 const emit = defineEmits(['selected'])
 
-const profileService = new ProfileService()
+const { t } = useI18n()
 const toast = useEasyToast()
+const profileService = new ProfileService()
 
 const search = ref<string>('')
 const selectedPlayer = ref<Player>()
@@ -79,7 +80,7 @@ const changePlayerShirtNumber = (player?: Player) => {
 <template>
   <form class="easy-player-search-form-component">
     <template v-if="!!selectedPlayer">
-      <FormLabel :label="$t('players.you_selected')" />
+      <FormLabel :label="t('players.you_selected')" />
       <PlayerItem
         :player="selectedPlayer"
         :selectable="false"
@@ -89,7 +90,7 @@ const changePlayerShirtNumber = (player?: Player) => {
         :setLibero="setLibero"
         :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
       />
-      <Message :closable="false">{{ $t('players.add_disclaimer') }}</Message>
+      <Message :closable="false">{{ t('players.add_disclaimer') }}</Message>
       <GameCallShirtNumberDialog
         :player="shirtNumberUpdatePlayer"
         @update:player="changePlayerShirtNumber"
@@ -97,7 +98,7 @@ const changePlayerShirtNumber = (player?: Player) => {
       />
     </template>
     <template v-else>
-      <FormLabel :label="$t('players.type_name')" />
+      <FormLabel :label="t('players.type_name')" />
       <AutoComplete
         v-model="search"
         optionLabel="first_name"

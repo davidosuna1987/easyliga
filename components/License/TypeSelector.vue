@@ -12,6 +12,8 @@ const emit = defineEmits<{
   (e: 'type:selected', value: LicensableType): void
 }>()
 
+const { t } = useI18n()
+
 const selectedType = ref<LicensableType | undefined>(props.type)
 
 const setSeslectedType = () => {
@@ -28,14 +30,14 @@ watch(() => props.type, setSeslectedType, { immediate: true })
     v-model="selectedType"
     :options="type ? [type] : LICENSABLE_TYPES"
     scrollHeight="210px"
-    :placeholder="$t('licenses.select_type')"
+    :placeholder="t('licenses.select_type')"
     @update:modelValue="emit('type:selected', $event)"
   >
     <template #value="slotProps">
-      {{ $t(`licenses.type.${slotProps.value}`) }}
+      {{ t(`licenses.type.${slotProps.value}`) }}
     </template>
     <template #option="slotProps">
-      {{ $t(`licenses.type.${slotProps.option}`) }}
+      {{ t(`licenses.type.${slotProps.option}`) }}
     </template>
   </Dropdown>
 </template>

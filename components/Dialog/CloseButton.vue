@@ -1,10 +1,14 @@
+<script setup lang="ts">
+const { t } = useI18n()
+</script>
+
 <template>
   <div class="p-dialog easy-dialog-close-button-component">
     <div class="p-dialog-header p-0">
       <div class="p-dialog-hdader-icons">
         <button
           class="p-dialog-header-icon p-dialog-header-close p-link"
-          :aria-label="$t('forms.close')"
+          :aria-label="t('forms.close')"
           type="button"
           data-pc-section="closebutton"
           data-pc-group-section="headericon"

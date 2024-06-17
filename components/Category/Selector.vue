@@ -16,6 +16,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const selectedCategory = ref<Category | null>(null)
 const loadingApi = ref<boolean>(false)
 
@@ -41,9 +43,9 @@ onMounted(async () => {
     v-model="selectedCategory"
     :loading="props.loading || loadingApi"
     :options="options"
-    :optionLabel="category => $t(`categories.${category.name}`)"
+    :optionLabel="category => t(`categories.${category.name}`)"
     scrollHeight="210px"
-    :placeholder="$t('categories.select')"
+    :placeholder="t('categories.select')"
     @update:modelValue="$emit('selected', $event)"
   />
 </template>

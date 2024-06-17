@@ -12,6 +12,7 @@ import {
 import { Set } from '@/domain/set'
 import GameService from '@/services/game'
 
+const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 const gameService = new GameService()
@@ -162,7 +163,7 @@ onMounted(() => {
         size="small"
         variant="primary"
       >
-        {{ $t('forms.print') }}
+        {{ t('forms.print') }}
       </Button>
     </template>
   </div>

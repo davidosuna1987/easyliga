@@ -8,6 +8,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const selectedColor = ref<ShirtColor>()
 </script>
 
@@ -16,14 +18,14 @@ const selectedColor = ref<ShirtColor>()
     v-model="selectedColor"
     class="easy-team-shirt-color-selector-component"
     :options="[...SHIRT_COLORS]"
-    :placeholder="$t('teams.shirt_color')"
+    :placeholder="t('teams.shirt_color')"
   >
     <template #value="slotProps">
       <template v-if="slotProps.value">
         <TeamShirtColorItem :color="slotProps.value" />
       </template>
       <template v-else>
-        {{ $t('shirt_colors.select') }}
+        {{ t('shirt_colors.select') }}
       </template>
     </template>
     <template #option="slotProps">

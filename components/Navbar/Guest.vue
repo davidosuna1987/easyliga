@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const items = useMenuItems()
 </script>
 
@@ -6,10 +7,10 @@ const items = useMenuItems()
   <NavbarContainer class="easy-navbar-guest" :items="items">
     <template #end>
       <NuxtLink to="/register">
-        <Button :label="$t('auth.register')" size="small" outlined />
+        <Button :label="t('auth.register')" size="small" outlined />
       </NuxtLink>
       <NuxtLink to="/login">
-        <Button :label="$t('auth.login')" size="small" class="ml-3" />
+        <Button :label="t('auth.login')" size="small" class="ml-3" />
       </NuxtLink>
     </template>
   </NavbarContainer>

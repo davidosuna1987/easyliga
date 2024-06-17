@@ -133,7 +133,7 @@ const removeProfileTooltipText = computed(() => {
       />
       <IconShirtNumber
         v-tooltip.top="{
-          value: $t('shirts.number_change'),
+          value: t('shirts.number_change'),
           disabled: tooltipDisabled,
         }"
         :shirtNumber="player.shirtNumber"
@@ -150,8 +150,8 @@ const removeProfileTooltipText = computed(() => {
         v-if="showIcons || showLibero"
         v-tooltip.top="{
           value: player.libero
-            ? $t('teams.libero_remove')
-            : $t('teams.libero_assign'),
+            ? t('teams.libero_remove')
+            : t('teams.libero_assign'),
           disabled: tooltipDisabled,
         }"
         :class="{
@@ -163,8 +163,8 @@ const removeProfileTooltipText = computed(() => {
         v-if="showIcons || showCaptain"
         v-tooltip.top="{
           value: player.captain
-            ? $t('teams.captain_remove')
-            : $t('teams.captain_assign'),
+            ? t('teams.captain_remove')
+            : t('teams.captain_assign'),
           disabled:
             tooltipDisabled ||
             player.profileId === setCaptainToggleDisabledProfileId,
@@ -181,7 +181,7 @@ const removeProfileTooltipText = computed(() => {
         class="hover:text-[var(--primary-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
         name="pepicons-pencil:pen-circle-filled"
         v-tooltip.top="{
-          value: $t('profiles.edit'),
+          value: t('profiles.edit'),
           disabled: tooltipDisabled,
         }"
         @click.stop="emit('profile:edit', (player as Player).profile)"

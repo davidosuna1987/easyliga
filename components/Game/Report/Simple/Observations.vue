@@ -5,6 +5,8 @@ const props = defineProps({
     required: false,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -12,7 +14,7 @@ const props = defineProps({
     <header
       class="report-observations-header border-solid p-2 grid place-content-center"
     >
-      <strong class="uppercase">{{ $t('observations.observation', 2) }}</strong>
+      <strong class="uppercase">{{ t('observations.observation', 2) }}</strong>
     </header>
     <main class="report-observations-main border-solid p-2 min-h-[110px]">
       <p>{{ observations }}</p>

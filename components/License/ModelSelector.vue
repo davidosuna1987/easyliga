@@ -32,6 +32,7 @@ const emit = defineEmits<{
   (e: 'model:selected', value: LicensableModelMapped): void
 }>()
 
+const { t } = useI18n()
 const { managedModelMapped, managedModelsMapped } = useAuthStore()
 
 const selectedModel = ref<LicensableModelMapped>()
@@ -118,7 +119,7 @@ watch(() => props.type, setSelectableModels, { immediate: true })
     :options="selectableModel"
     :optionLabel="model => model.name"
     scrollHeight="210px"
-    :placeholder="$t(`licenses.model.select.${type}`)"
+    :placeholder="t(`licenses.model.select.${type}`)"
     :loading="loadingApi"
     @update:modelValue="$emit('model:selected', $event)"
   >
@@ -132,9 +133,9 @@ watch(() => props.type, setSelectableModels, { immediate: true })
     :options="selectableModelsGroup"
     optionLabel="name"
     optionGroupChildren="items"
-    :optionGroupLabel="model => $t(`licenses.type.${model.items[0].type}`)"
+    :optionGroupLabel="model => t(`licenses.type.${model.items[0].type}`)"
     scrollHeight="210px"
-    :placeholder="$t(`licenses.model.select.${type}`)"
+    :placeholder="t(`licenses.model.select.${type}`)"
     :loading="loadingApi"
     @update:modelValue="$emit('model:selected', $event)"
   >

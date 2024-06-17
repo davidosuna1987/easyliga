@@ -16,11 +16,13 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="col-span-12 text-center p-2 border-solid">
-    <strong class="uppercase">{{ $t('calls.call') }}</strong>
+    <strong class="uppercase">{{ t('calls.call') }}</strong>
   </div>
   <GameReportSimpleSidedTeam
     class="col-span-6 p-2 border-solid border-t-0 border-r-0"
@@ -34,16 +36,16 @@ const props = defineProps({
     direction="right"
   />
   <div class="col-span-1 p-2 border-solid border-t-0 text-center">
-    <strong>{{ $t('reports.player_number') }}</strong>
+    <strong>{{ t('reports.player_number') }}</strong>
   </div>
   <div class="col-span-5 p-2 border-solid border-t-0 border-x-0">
-    <strong>{{ $t('players.name') }}</strong>
+    <strong>{{ t('players.name') }}</strong>
   </div>
   <div class="col-span-1 p-2 border-solid border-t-0 text-center">
-    <strong>{{ $t('reports.player_number') }}</strong>
+    <strong>{{ t('reports.player_number') }}</strong>
   </div>
   <div class="col-span-5 p-2 border-solid border-t-0 border-l-0">
-    <strong>{{ $t('players.name') }}</strong>
+    <strong>{{ t('players.name') }}</strong>
   </div>
 </template>
 

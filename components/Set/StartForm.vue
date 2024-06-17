@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Team } from '@/domain/team'
 import { SetSide, SetStartRequest } from '@/domain/set'
+import { IconNames } from '@/domain/icon'
 
 const props = defineProps({
   leftSideTeam: {
@@ -14,6 +15,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['set:start'])
+
+const { t } = useI18n()
 
 const form = ref<SetStartRequest>({
   localTeamSide: SetSide.LEFT,
@@ -53,18 +56,18 @@ const setFirstServeTeam = () => {
     class="easy-set-start-form-component"
     @submit.prevent="emit('set:start', form)"
   >
-    <FormLabel :label="$t('sets.select_team_sides')" />
+    <FormLabel :label="t('sets.select_team_sides')" />
     <div class="team-sides-container">
       <div class="team">
         {{ leftSideTeam.name }}
       </div>
-      <Icon name="ic:round-loop" class="switch" @click="switchTeamSides" />
+      <Icon :name="IconNames.refresh" class="switch" @click="switchTeamSides" />
       <div class="team">
         {{ rightSideTeam.name }}
       </div>
     </div>
 
-    <FormLabel class="mt-6" :label="$t('sets.select_first_serve_team')" />
+    <FormLabel class="mt-6" :label="t('sets.select_first_serve_team')" />
     <Dropdown
       class="easy-teams-selector-component"
       v-model="firstServeTeam"
@@ -72,7 +75,7 @@ const setFirstServeTeam = () => {
       optionLabel="name"
       :optionValue="team => team"
       scrollHeight="210px"
-      :placeholder="$t('teams.select')"
+      :placeholder="t('teams.select')"
       @update:modelValue="setFirstServeTeam"
     />
 
@@ -80,7 +83,7 @@ const setFirstServeTeam = () => {
       <Button
         type="submit"
         class="px-12"
-        :label="$t('sets.start')"
+        :label="t('sets.start')"
         :disabled="
           !form.firstServeTeamId || !form.localTeamSide || !form.visitorTeamSide
         "

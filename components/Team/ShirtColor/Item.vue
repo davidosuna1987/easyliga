@@ -12,6 +12,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const bulletClass = computed(() =>
   props.bullet ? `rounded-full` : 'rounded-sm w-12 h-3 mr-2',
 )
@@ -33,7 +35,7 @@ const style = computed(() => {
       :style="style"
     >
     </span>
-    <span v-if="!bullet">{{ $t(`shirt_colors.${props.color}`) }}</span>
+    <span v-if="!bullet">{{ t(`shirt_colors.${props.color}`) }}</span>
   </div>
 </template>
 

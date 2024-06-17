@@ -2,9 +2,6 @@
 import { useFederationStore } from '@/stores/useFederationStore'
 import { ApiFederation } from '@/types/api/federation'
 
-const easyStorage = useEasyStorage()
-const federationStore = useFederationStore()
-
 const props = defineProps({
   federations: {
     type: Array as PropType<ApiFederation[]>,
@@ -15,6 +12,14 @@ const props = defineProps({
     default: false,
   },
 })
+
+const emit = defineEmits<{
+  (e: 'selected', value: ApiFederation): void
+}>()
+
+const { t } = useI18n()
+const easyStorage = useEasyStorage()
+const federationStore = useFederationStore()
 
 const selectedFederation = ref<ApiFederation>()
 const loadingApi = ref<boolean>(false)
@@ -46,8 +51,8 @@ onMounted(async () => {
     optionLabel="name"
     optionValue="id"
     scrollHeight="210px"
-    :placeholder="$t('federations.select')"
-    @update:modelValue="$emit('selected', $event)"
+    :placeholder="t('federations.select')"
+    @update:modelValue="emit('selected', $event)"
   />
 </template>
 

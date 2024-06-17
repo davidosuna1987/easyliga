@@ -6,13 +6,15 @@ definePageMeta({
   roles: ['coach'],
 })
 
+const { t } = useI18n()
+
 const set = ref<Set>()
 </script>
 
 <template>
   <NuxtLayout name="default">
     <Heading tag="h3" position="center">{{
-      $t('rotations.assign_set_rotation', { num: set?.number })
+      t('rotations.assign_set_rotation', { num: set?.number })
     }}</Heading>
     <CoachRotationForm initialRotation @update:set="set = $event" />
   </NuxtLayout>

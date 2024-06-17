@@ -23,6 +23,8 @@ const props = defineProps({
     required: false,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -45,7 +47,7 @@ const props = defineProps({
         :image="coach.avatar"
         shape="circle"
       />
-      <IconShirtNumber :shirtNumber="$t('coaches.coach_one_char')" />
+      <IconShirtNumber :shirtNumber="t('coaches.coach_one_char')" />
       <span class="player-name">{{ getFullName(coach) }}</span>
     </div>
     <EasyGrid v-if="showIcon" class="team-player-captain" :cols="1" :gap="2" />

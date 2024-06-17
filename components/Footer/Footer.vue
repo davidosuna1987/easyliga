@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const config = useRuntimeConfig()
 </script>
 
@@ -13,7 +14,7 @@ const config = useRuntimeConfig()
       fit="contain"
     />
 
-    <small>{{ config.public.appName }} — {{ $t('footer.copyright') }}</small>
+    <small>{{ config.public.appName }} — {{ t('footer.copyright') }}</small>
   </footer>
 </template>
 

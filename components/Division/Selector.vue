@@ -15,6 +15,12 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'selected', value: Division): void
+}>()
+
+const { t } = useI18n()
+
 const selectedDivision = ref<Division>()
 const loadingApi = ref<boolean>(false)
 
@@ -40,8 +46,8 @@ onMounted(async () => {
     :options="options"
     optionLabel="name"
     scrollHeight="210px"
-    :placeholder="$t('divisions.select')"
-    @update:modelValue="$emit('selected', $event)"
+    :placeholder="t('divisions.select')"
+    @update:modelValue="emit('selected', $event)"
   />
 </template>
 

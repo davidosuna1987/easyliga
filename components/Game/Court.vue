@@ -28,8 +28,6 @@ import { GameSignature } from '@/domain/game-signature'
 import { Profile } from '@/domain/profile'
 import moment from 'moment'
 
-const auth = useAuthStore()
-
 const props = defineProps({
   currentSet: {
     type: Object as PropType<Set>,
@@ -127,6 +125,9 @@ const emit = defineEmits([
   'sanction:stored',
   'sidebar:toggle',
 ])
+
+const { t } = useI18n()
+const auth = useAuthStore()
 
 const showCountdown = ref<boolean>(false)
 const sideTeamToSanction = ref<TeamSide>()
@@ -404,7 +405,7 @@ onMounted(setInitialShowCountdown)
         >
           <Button
             class="px-12 mb-3"
-            :label="$t('sanctions.players_to_replace')"
+            :label="t('sanctions.players_to_replace')"
             severity="danger"
             outlined
             :disabled="true"
@@ -413,7 +414,7 @@ onMounted(setInitialShowCountdown)
         <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
           <Button
             class="px-12 mb-3"
-            :label="$t('rotations.waiting_player_changes')"
+            :label="t('rotations.waiting_player_changes')"
             outlined
             :loading="true"
             :disabled="true"
@@ -422,7 +423,7 @@ onMounted(setInitialShowCountdown)
         <EasyGrid v-if="timeoutRunning" class="actions" center>
           <Button
             class="px-12 mb-3"
-            :label="$t('timeouts.running')"
+            :label="t('timeouts.running')"
             severity="danger"
             outlined
             :loading="true"
@@ -490,7 +491,7 @@ onMounted(setInitialShowCountdown)
           <Button
             v-else
             class="px-12 mb-3"
-            :label="$t('games.finished')"
+            :label="t('games.finished')"
             outlined
             disabled
           />
@@ -502,7 +503,7 @@ onMounted(setInitialShowCountdown)
         class="w-full text-center block mt-5 mb-3 text-primary"
         @click.prevent="emit('observations:dialog')"
       >
-        {{ $t('observations.record') }}
+        {{ t('observations.record') }}
       </a>
       <EasyCountdown
         v-if="gameStatus === 'finished' && showCountdown"
@@ -514,7 +515,7 @@ onMounted(setInitialShowCountdown)
         <div
           class="text-xs text-[var(--danger-color)] flex items-center justify-center"
         >
-          {{ $t('observations.countdown') }}
+          {{ t('observations.countdown') }}
           <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
         </div>
       </EasyCountdown>

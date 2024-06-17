@@ -95,7 +95,7 @@ const removeProfileTooltipText = computed(() => {
         class="hover:text-[var(--primary-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
         name="pepicons-pencil:pen-circle-filled"
         v-tooltip.top="{
-          value: $t('profiles.edit'),
+          value: t('profiles.edit'),
           disabled: tooltipDisabled,
         }"
         @click.stop="emit('profile:edit', profile)"

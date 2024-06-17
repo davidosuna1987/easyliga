@@ -229,7 +229,7 @@ onBeforeUnmount((): void => {
     <Loading v-if="loadingApi" />
 
     <Message v-if="currentSetHasRotation" :closable="false">{{
-      $t('rotations.created_warning')
+      t('rotations.created_warning')
     }}</Message>
 
     <RotationPlayerSanctionedMessage
@@ -239,7 +239,7 @@ onBeforeUnmount((): void => {
 
     <template v-if="call?.locked">
       <p v-if="!currentSetHasRotation" class="text-center mb-8">
-        {{ $t('rotations.assign_howto') }}
+        {{ t('rotations.assign_howto') }}
       </p>
       <form @submit.prevent="handleSubmit">
         <CoachRotationCourt
@@ -261,14 +261,14 @@ onBeforeUnmount((): void => {
             type="submit"
             class="easy-coach-rotation-court-component__button"
           >
-            {{ $t('rotations.assign') }}
+            {{ t('rotations.assign') }}
           </Button>
         </div>
       </form>
     </template>
     <template v-else>
       <p class="text-center mb-8">
-        {{ $t('rotations.assign_call') }}
+        {{ t('rotations.assign_call') }}
       </p>
       <EasyGrid center>
         <CoachButtonCall

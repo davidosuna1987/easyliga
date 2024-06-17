@@ -7,10 +7,6 @@ import { MAX_ROTATION_PLAYER_CHANGES, Rotation } from '@/domain/rotation'
 import { Timeout } from '@/domain/timeout'
 import { GameStatus } from '@/domain/game'
 
-const toast = useEasyToast()
-const rotationService = new RotationService()
-const emit = defineEmits(['rotation:lock-toggled'])
-
 const props = defineProps({
   rotation: {
     type: Object as PropType<Rotation>,
@@ -29,6 +25,12 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['rotation:lock-toggled'])
+
+const { t } = useI18n()
+const toast = useEasyToast()
+const rotationService = new RotationService()
 
 const loadingApi = ref<boolean>(false)
 
@@ -87,7 +89,7 @@ const lock = async () => {
       "
       class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
       :severity="props.rotation.locked ? 'primary' : 'danger'"
-      :label="props.rotation.locked ? $t('forms.unlock') : $t('forms.lock')"
+      :label="props.rotation.locked ? t('forms.unlock') : t('forms.lock')"
       @click="props.rotation.locked ? unlock() : lock()"
     />
     <template
@@ -98,10 +100,10 @@ const lock = async () => {
       <FormSpinner size="0.75rem" />
       <small>{{
         props.requestedTimeout
-          ? $t('timeouts.requested_short')
+          ? t('timeouts.requested_short')
           : props.runningTimeout
-          ? $t('timeouts.running')
-          : $t('rotations.waiting_player_changes', 2)
+          ? t('timeouts.running')
+          : t('rotations.waiting_player_changes', 2)
       }}</small>
     </template>
   </div>

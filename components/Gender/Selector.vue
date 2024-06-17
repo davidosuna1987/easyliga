@@ -2,6 +2,7 @@
 import { useGenderStore } from '@/stores/useGenderStore'
 import { Gender, mapApiGenderToGender } from '@/domain/game'
 
+const { t } = useI18n()
 const easyStorage = useEasyStorage()
 const genderStore = useGenderStore()
 
@@ -41,9 +42,9 @@ onMounted(async () => {
     v-model="selectedGender"
     :loading="props.loading || loadingApi"
     :options="options"
-    :optionLabel="gender => $t(`genders.${gender.name}`)"
+    :optionLabel="gender => t(`genders.${gender.name}`)"
     scrollHeight="210px"
-    :placeholder="$t('genders.select')"
+    :placeholder="t('genders.select')"
     @update:modelValue="$emit('selected', $event)"
   />
 </template>

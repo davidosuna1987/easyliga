@@ -191,13 +191,13 @@ watch(onChangeData, data => {
       :gapY="4"
       items="end"
     >
-      <FormLabel :label="$t('categories.category')">
+      <FormLabel :label="t('categories.category')">
         <CategorySelector @selected="setCategory" />
       </FormLabel>
-      <FormLabel :label="$t('genders.gender')">
+      <FormLabel :label="t('genders.gender')">
         <GenderSelector :disabled="!selectedCategory" @selected="setGender" />
       </FormLabel>
-      <FormLabel :label="$t('leagues.league')" :error="errors?.league_id?.[0]">
+      <FormLabel :label="t('leagues.league')" :error="errors?.league_id?.[0]">
         <FederationLeagueSelector
           :grouped-leagues="groupedLeagues"
           :categoryId="selectedCategory?.id"
@@ -207,7 +207,7 @@ watch(onChangeData, data => {
           @selected="setLeague"
         />
       </FormLabel>
-      <FormLabel :label="$t('teams.local')">
+      <FormLabel :label="t('teams.local')">
         <TeamSelector
           :disabled="!selectedLeague || loadingTeams"
           :teams="localTeams"
@@ -215,7 +215,7 @@ watch(onChangeData, data => {
           @selected="setLocalTeam"
         />
       </FormLabel>
-      <FormLabel :label="$t('teams.visitor')">
+      <FormLabel :label="t('teams.visitor')">
         <TeamSelector
           :disabled="!form.local_team_id || loadingTeams"
           :teams="visitorTeams"
@@ -223,7 +223,7 @@ watch(onChangeData, data => {
           @selected="setVisitorTeam"
         />
       </FormLabel>
-      <FormLabel :label="$t('courts.court')" :error="errors?.court_id?.[0]">
+      <FormLabel :label="t('courts.court')" :error="errors?.court_id?.[0]">
         <SedeCourtSelector
           :grouped-courts="groupedCourts"
           :disabled="!form.local_team_id"
@@ -235,7 +235,7 @@ watch(onChangeData, data => {
       <Button
         class="mt-3"
         type="submit"
-        :label="$t('games.create')"
+        :label="t('games.create')"
         :loading="loadingStore"
       />
     </EasyGrid>

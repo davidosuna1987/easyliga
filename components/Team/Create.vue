@@ -2,6 +2,7 @@
 import { Club, mapApiClubToClub } from '@/domain/club'
 import ClubService from '@/services/club'
 
+const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 const clubService = new ClubService()
@@ -32,7 +33,7 @@ onMounted(getClub)
     <Loading v-if="loadingApi" />
     <template v-else-if="club">
       <Heading tag="h3" class="mb-5">
-        {{ $t('teams.create') }}
+        {{ t('teams.create') }}
       </Heading>
       <Heading tag="h5" class="mb-5 font-bold">
         {{ club.name }}

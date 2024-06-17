@@ -33,7 +33,7 @@ const onActionButtonClick = () => {
   <Button
     class="action"
     outlined
-    :label="$t('games.injury', 2)"
+    :label="t('games.injury', 2)"
     :disabled="actionButtonDisabled"
     @click="onActionButtonClick"
   />

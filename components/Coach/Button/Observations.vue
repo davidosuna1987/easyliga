@@ -57,7 +57,7 @@ const submit = async () => {
   <Button
     class="action"
     outlined
-    :label="$t('observations.observation', 2)"
+    :label="t('observations.observation', 2)"
     :disabled="actionButtonDisabled"
     @click="onActionButtonClick"
   />

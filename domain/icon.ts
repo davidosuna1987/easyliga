@@ -9,6 +9,7 @@ export const IconNames = {
   upload: 'pepicons-pencil:cloud-up',
   search: 'pepicons-pencil:loop',
   link: 'pepicons-pencil:chain',
+  refresh: 'ic:round-loop',
 } as const
 
 export type IconName = keyof typeof IconNames

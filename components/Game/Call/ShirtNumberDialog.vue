@@ -3,8 +3,6 @@ import { Player, getFullName } from '@/domain/player'
 import { Call } from '@/domain/call'
 import { TeamMember } from '@/domain/team'
 
-const emit = defineEmits(['update:player', 'hide'])
-
 const props = defineProps({
   player: {
     type: Object as PropType<Player | TeamMember>,
@@ -15,6 +13,10 @@ const props = defineProps({
     default: null,
   },
 })
+
+const emit = defineEmits(['update:player', 'hide'])
+
+const { t } = useI18n()
 
 const showDialog = ref<boolean>(!!props.player)
 const shirtNumber = ref<number>(0)
@@ -37,9 +39,9 @@ watch(
     <template #header>
       <Heading tag="h5">{{ getFullName(player) }}</Heading>
     </template>
-    <Heading tag="h6">{{ $t('shirts.number_select') }}</Heading>
+    <Heading tag="h6">{{ t('shirts.number_select') }}</Heading>
     <Message v-if="call" :closable="false" :icon="undefined">
-      <small>{{ $t('shirts.call_number_update_disclaimer') }}</small>
+      <small>{{ t('shirts.call_number_update_disclaimer') }}</small>
     </Message>
 
     <div class="flex justify-center items-center">
@@ -62,7 +64,7 @@ watch(
 
     <template #footer>
       <FormFooterActions
-        :submitLabel="$t('shirts.number_change_short')"
+        :submitLabel="t('shirts.number_change_short')"
         @form:submit="emit('update:player', { ...player, shirtNumber })"
         hideCancel
       />

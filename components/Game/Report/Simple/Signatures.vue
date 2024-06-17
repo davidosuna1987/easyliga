@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { GameReportTeamTypes } from '@/domain/game'
 import { Team } from '@/domain/team'
 import { Profile } from '@/domain/profile'
 import { getFullName } from '@/domain/player'
@@ -35,6 +34,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const refereeSignature = computed((): GameSignature | undefined => {
   return getSignatureByType(props.signatures, GameSignatureTypes.referee)
@@ -86,7 +86,7 @@ const visitorTeamSignatures = computed(
     <header
       class="report-signature-header border-solid p-2 grid place-content-center"
     >
-      <strong class="uppercase">{{ $t('reports.approval') }}</strong>
+      <strong class="uppercase">{{ t('reports.approval') }}</strong>
     </header>
     <main class="report-signature-main">
       <div
@@ -95,12 +95,12 @@ const visitorTeamSignatures = computed(
         <div
           class="h-[29.5px] border-solid border-x-0 grid place-content-center"
         >
-          <span>{{ $t('game_signatures.type.referee') }}</span>
+          <span>{{ t('game_signatures.type.referee') }}</span>
         </div>
         <div class="p-2 pb-0 flex justify-between">
           <span>{{ getFullName(referee) }}</span>
           <!-- <span v-if="referee.license">
-            <strong>{{ $t('referees.license') }}:</strong>{{referee.license}}
+            <strong>{{ t('referees.license') }}:</strong>{{referee.license}}
           </span> -->
         </div>
         <figure class="p-2 grid grid-cols-4">
@@ -108,7 +108,7 @@ const visitorTeamSignatures = computed(
             v-if="refereeSignature"
             class="col-span-2 col-start-2 w-[90%] mx-auto"
             :src="refereeSignature.signature"
-            :alt="$t('game_signatures.alt_text.referee')"
+            :alt="t('game_signatures.alt_text.referee')"
           />
         </figure>
       </div>
@@ -128,7 +128,7 @@ const visitorTeamSignatures = computed(
             <div
               class="h-[29.5px] border-solid border-x-0 border-t-0 grid place-content-center"
             >
-              <span>{{ $t('game_signatures.type.coach') }}</span>
+              <span>{{ t('game_signatures.type.coach') }}</span>
             </div>
             <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
@@ -136,7 +136,7 @@ const visitorTeamSignatures = computed(
                 v-if="localTeamSignatures.coach"
                 :src="localTeamSignatures.coach.signature"
                 :alt="
-                  $t('game_signatures.alt_text.coach', {
+                  t('game_signatures.alt_text.coach', {
                     teamName: localTeam.name,
                   })
                 "
@@ -150,7 +150,7 @@ const visitorTeamSignatures = computed(
             <div
               class="h-[29.5px] border-solid border-x-0 border-t-0 grid place-content-center"
             >
-              <span>{{ $t('game_signatures.type.captain') }}</span>
+              <span>{{ t('game_signatures.type.captain') }}</span>
             </div>
             <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
@@ -158,7 +158,7 @@ const visitorTeamSignatures = computed(
                 v-if="localTeamSignatures.captain"
                 :src="localTeamSignatures.captain.signature"
                 :alt="
-                  $t('game_signatures.alt_text.captain', {
+                  t('game_signatures.alt_text.captain', {
                     teamName: localTeam.name,
                   })
                 "
@@ -180,7 +180,7 @@ const visitorTeamSignatures = computed(
             <div
               class="h-[29.5px] border-solid border-x-0 border-t-0 grid place-content-center"
             >
-              <span>{{ $t('game_signatures.type.coach') }}</span>
+              <span>{{ t('game_signatures.type.coach') }}</span>
             </div>
             <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
@@ -188,7 +188,7 @@ const visitorTeamSignatures = computed(
                 v-if="visitorTeamSignatures.coach"
                 :src="visitorTeamSignatures.coach.signature"
                 :alt="
-                  $t('game_signatures.alt_text.coach', {
+                  t('game_signatures.alt_text.coach', {
                     teamName: visitorTeam.name,
                   })
                 "
@@ -200,7 +200,7 @@ const visitorTeamSignatures = computed(
             <div
               class="h-[29.5px] border-solid border-x-0 border-t-0 grid place-content-center"
             >
-              <span>{{ $t('game_signatures.type.captain') }}</span>
+              <span>{{ t('game_signatures.type.captain') }}</span>
             </div>
             <figure class="p-2 grid grid-cols-4 min-h-[51.5px]">
               <img
@@ -208,7 +208,7 @@ const visitorTeamSignatures = computed(
                 v-if="visitorTeamSignatures.captain"
                 :src="visitorTeamSignatures.captain.signature"
                 :alt="
-                  $t('game_signatures.alt_text.captain', {
+                  t('game_signatures.alt_text.captain', {
                     teamName: visitorTeam.name,
                   })
                 "

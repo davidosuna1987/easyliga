@@ -17,6 +17,7 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
 
@@ -59,41 +60,41 @@ const handleRegister = async () => {
 <template>
   <FormAuthBase
     class="easy-form-auth-register"
-    :buttonLabel="$t('auth.register')"
+    :buttonLabel="t('auth.register')"
     :loading="loadingApi"
     @submit="handleRegister"
   >
     <FormLabel
       for="first_name"
-      :label="$t('forms.name')"
+      :label="t('forms.name')"
       :error="errors?.first_name?.[0]"
     />
     <InputText id="first_name" v-model="form.first_name" type="text" />
 
     <FormLabel
       for="last_name"
-      :label="$t('forms.surnames')"
+      :label="t('forms.surnames')"
       :error="errors?.last_name?.[0]"
     />
     <InputText id="last_name" v-model="form.last_name" type="text" />
 
     <FormLabel
       for="email"
-      :label="$t('forms.email')"
+      :label="t('forms.email')"
       :error="errors?.email?.[0]"
     />
     <InputText id="email" v-model="form.email" type="email" />
 
     <FormLabel
       for="password"
-      :label="$t('forms.password')"
+      :label="t('forms.password')"
       :error="errors?.password?.[0]"
     />
     <Password input-id="password" v-model="form.password" toggleMask />
 
     <FormLabel
       for="password_confirm"
-      :label="$t('forms.password_confirm')"
+      :label="t('forms.password_confirm')"
       :error="errors?.password_confirm?.[0]"
     />
     <Password
@@ -106,7 +107,7 @@ const handleRegister = async () => {
     <template v-if="props.invite && props.code">
       <FormLabel
         for="code"
-        :label="$t('auth.invite_code')"
+        :label="t('auth.invite_code')"
         :error="errors?.code?.[0]"
       />
       <InputText id="code" v-model="formInvite.code" type="text" disabled />

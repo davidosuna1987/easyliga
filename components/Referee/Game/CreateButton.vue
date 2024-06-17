@@ -1,8 +1,12 @@
+<script setup lang="ts">
+const { t } = useI18n()
+</script>
+
 <template>
   <div class="easy-referee-create-game-button-component">
     <Button
       class="create-game-button"
-      :label="$t('games.create')"
+      :label="t('games.create')"
       size="large"
       @click.prevent="navigateTo('/referee/games/create')"
     >
@@ -14,7 +18,7 @@
         height="25"
         fit="contain"
       />
-      <span class="create-game-button__label">{{ $t('games.create') }}</span>
+      <span class="create-game-button__label">{{ t('games.create') }}</span>
     </Button>
   </div>
 </template>

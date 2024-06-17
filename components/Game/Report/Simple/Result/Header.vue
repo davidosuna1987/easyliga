@@ -15,11 +15,13 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
   <header class="col-span-10 border-solid p-2 grid place-content-center">
-    <strong class="uppercase">{{ $t('reports.result.title') }}</strong>
+    <strong class="uppercase">{{ t('reports.result.title') }}</strong>
   </header>
 
   <GameReportSimpleSidedTeam
@@ -36,44 +38,44 @@ const props = defineProps({
   />
 
   <div class="grid place-content-center p-2 border-solid border-r-0 border-t-0">
-    <strong>{{ $t('reports.result.timeouts') }}</strong>
+    <strong>{{ t('reports.result.timeouts') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>{{ $t('reports.result.replacements') }}</strong>
+    <strong>{{ t('reports.result.replacements') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <strong>{{ $t('reports.result.won_points') }}</strong>
+    <strong>{{ t('reports.result.won_points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>{{ $t('reports.result.points') }}</strong>
+    <strong>{{ t('reports.result.points') }}</strong>
   </div>
 
   <div
     class="grid grid-cols-2 place-content-center col-span-2 p-2 border-solid border-x-0 text-center border-t-0"
   >
-    <strong class="uppercase">{{ $t('reports.result.set') }}</strong>
+    <strong class="uppercase">{{ t('reports.result.set') }}</strong>
     <span class="font-2xs place-self-center">
-      ({{ $t('reports.result.duration').toLocaleLowerCase() }})
+      ({{ t('reports.result.duration').toLocaleLowerCase() }})
     </span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>{{ $t('reports.result.points') }}</strong>
+    <strong>{{ t('reports.result.points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <strong>{{ $t('reports.result.won_points') }}</strong>
+    <strong>{{ t('reports.result.won_points') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <strong>{{ $t('reports.result.replacements') }}</strong>
+    <strong>{{ t('reports.result.replacements') }}</strong>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-l-0 border-t-0">
-    <strong>{{ $t('reports.result.timeouts') }}</strong>
+    <strong>{{ t('reports.result.timeouts') }}</strong>
   </div>
 
   <div class="col-span-10 border-solid border-b-0"></div>

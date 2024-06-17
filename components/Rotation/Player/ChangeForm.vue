@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
     <Heading tag="h5" position="center" class="mb-5">{{ game?.name }}</Heading>
 
     <Message v-if="rotation?.locked" :closable="false">{{
-      $t('rotations.locked_warning')
+      t('rotations.locked_warning')
     }}</Message>
 
     <RotationPlayerSanctionedMessage
@@ -309,8 +309,8 @@ onBeforeUnmount(() => {
           :disabled="!requestedPlayerChanges.length"
           :label="
             form?.locked
-              ? $t('rotations.locked')
-              : $t('rotations.player_change', requestedPlayerChanges.length)
+              ? t('rotations.locked')
+              : t('rotations.player_change', requestedPlayerChanges.length)
           "
         />
       </footer>

@@ -51,10 +51,10 @@ watch(
     @hide="emit('hide')"
   >
     <template #header>
-      <Heading tag="h6">{{ $t('observations.observation', 2) }}</Heading>
+      <Heading tag="h6">{{ t('observations.observation', 2) }}</Heading>
     </template>
 
-    <p>{{ $t('observations.record_text') }}</p>
+    <p>{{ t('observations.record_text') }}</p>
 
     <Textarea
       class="mt-6 w-full"

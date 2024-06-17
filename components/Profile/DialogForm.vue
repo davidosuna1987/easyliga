@@ -3,8 +3,6 @@ import { Profile } from '@/domain/profile'
 import { UpdateClubTeamPlayer } from '@/components/Profile/Form.vue'
 import { ApiProfile } from '@/types/api/profile'
 
-const emit = defineEmits(['updated', 'hide'])
-
 const props = defineProps({
   profile: {
     type: Object as PropType<Profile>,
@@ -15,6 +13,9 @@ const props = defineProps({
     required: false,
   },
 })
+
+const { t } = useI18n()
+const emit = defineEmits(['updated', 'hide'])
 
 const showDialog = ref<boolean>(!!props.profile)
 
@@ -37,7 +38,7 @@ watch(
     @hide="$emit('hide', true)"
   >
     <template #header>
-      <Heading tag="h5">{{ $t('profiles.edit') }}</Heading>
+      <Heading tag="h5">{{ t('profiles.edit') }}</Heading>
     </template>
 
     <ProfileForm
@@ -46,16 +47,6 @@ watch(
       hideAvatar
       @updated="handleProfileFormUpdated"
     />
-
-    <!-- <template #footer>
-      <Button
-        class="mt-3"
-        type="button"
-        :label="$t('shirts.number_change_short')"
-        :loading="false"
-        @click="updateProfile"
-      />
-    </template> -->
   </DialogBottom>
 </template>
 

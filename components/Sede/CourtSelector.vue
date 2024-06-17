@@ -3,8 +3,6 @@ import { ApiCourt } from '@/types/api/court'
 import { ApiSede } from '@/types/api/sede'
 import SedeService from '@/services/sede'
 
-const sedeService = new SedeService()
-
 const props = defineProps({
   groupedCourts: {
     type: Array as PropType<ApiSede[]>,
@@ -17,6 +15,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['court:selected'])
+
+const { t } = useI18n()
+const sedeService = new SedeService()
 
 const selectedCourt = ref<ApiCourt | null>(null)
 const loadingApi = ref<boolean>(false)
@@ -53,7 +54,7 @@ onMounted(async () => {
     optionGroupChildren="courts"
     optionGroupLabel="name"
     scrollHeight="210px"
-    :placeholder="$t('courts.select')"
+    :placeholder="t('courts.select')"
     @update:modelValue="selectCourt"
   />
 </template>

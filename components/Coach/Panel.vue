@@ -343,8 +343,8 @@ onBeforeUnmount(() => {
     <Heading class="mb-5" position="center">
       {{
         auth.profile?.firstName
-          ? $t('coaches.welcome', { name: auth.profile.firstName })
-          : $t('coaches.welcome_no_name')
+          ? t('coaches.welcome', { name: auth.profile.firstName })
+          : t('coaches.welcome_no_name')
       }}
     </Heading>
     <Loading v-if="loadingApi" />
@@ -357,7 +357,7 @@ onBeforeUnmount(() => {
         @countdown:ended="onCountdownEnded"
         @report:signed="onReportSigned"
       />
-      <p v-else class="text-center">{{ $t('coaches.no_current_games') }}</p>
+      <p v-else class="text-center">{{ t('coaches.no_current_games') }}</p>
     </template>
   </div>
 </template>

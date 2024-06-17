@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiResetRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
+const { t } = useI18n()
 const route = useRoute()
 const auth = useAuthStore()
 const toast = useEasyToast()
@@ -36,34 +37,34 @@ const handleReset = async () => {
 <template>
   <FormAuthBase
     class="easy-form-auth-reset"
-    :buttonLabel="$t('auth.reset')"
+    :buttonLabel="t('auth.reset')"
     :loading="loadingApi"
     @submit="handleReset"
   >
     <FormLabel
       for="email"
-      :label="$t('forms.email')"
+      :label="t('forms.email')"
       :error="errors?.email?.[0]"
     />
     <InputText id="email" v-model="form.email" type="email" />
 
     <FormLabel
       for="token"
-      :label="$t('forms.token')"
+      :label="t('forms.token')"
       :error="errors?.token?.[0]"
     />
     <InputText id="token" v-model="form.token" type="string" disabled />
 
     <FormLabel
       for="password"
-      :label="$t('forms.password')"
+      :label="t('forms.password')"
       :error="errors?.password?.[0]"
     />
     <Password input-id="password" v-model="form.password" toggleMask />
 
     <FormLabel
       for="password_confirm"
-      :label="$t('forms.password_confirm')"
+      :label="t('forms.password_confirm')"
       :error="errors?.password_confirm?.[0]"
     />
     <Password

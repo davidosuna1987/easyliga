@@ -9,6 +9,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -47,7 +49,7 @@ const props = defineProps({
       </svg>
     </div>
     <span v-if="!reduced" class="label" :class="props.status">
-      {{ $t(`games.status.${status}`) }}
+      {{ t(`games.status.${status}`) }}
     </span>
   </div>
 </template>

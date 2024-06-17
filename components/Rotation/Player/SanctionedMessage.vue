@@ -8,12 +8,14 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
   <Message :closable="false" severity="error">
     {{
-      $t(
+      t(
         'sanctions.player_change_needed',
         {
           name: getFullName(props.playersData[0]),

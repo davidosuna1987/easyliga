@@ -8,6 +8,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const translationKey: string = props.item.label as string
 </script>
 
@@ -17,7 +19,7 @@ const translationKey: string = props.item.label as string
     class="easy-navbar__link p-menuitem-link"
     @click="item.command"
   >
-    {{ $t(translationKey) }}
+    {{ t(translationKey) }}
   </NuxtLink>
 </template>
 

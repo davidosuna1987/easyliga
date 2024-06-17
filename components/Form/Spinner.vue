@@ -22,6 +22,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const styles = computed(() => ({
   container: {
     display: 'inline-flex',
@@ -42,6 +44,6 @@ const styles = computed(() => ({
 <template>
   <div class="easy-form-spinner" role="status" :style="styles.container">
     <span class="icon animate-spin" :style="styles.icon"></span>
-    <span class="sr-only">{{ $t('forms.loading') }}...</span>
+    <span class="sr-only">{{ t('forms.loading') }}...</span>
   </div>
 </template>

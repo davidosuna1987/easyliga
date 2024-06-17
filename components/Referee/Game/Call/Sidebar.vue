@@ -85,6 +85,7 @@ const emit = defineEmits([
   'signature:stored',
 ])
 
+const { t } = useI18n()
 const toast = useEasyToast()
 const gameSignatureService = new GameSignatureService()
 
@@ -219,7 +220,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
               GameSignatureTypes.captain,
             ]"
             class="flex-1"
-            :label="$t(`reports.signature_type.short.${gameSignatureType}`)"
+            :label="t(`reports.signature_type.short.${gameSignatureType}`)"
             outlined
             :disabled="
               !!gameSignatures.find(
@@ -240,7 +241,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
           :type="selectedSignatureType"
           :team-type="teamType"
           :title="
-            $t(`reports.signature_type.long.${selectedSignatureType}`, {
+            t(`reports.signature_type.long.${selectedSignatureType}`, {
               teamName: team.name,
             })
           "
@@ -250,7 +251,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
       </template>
       <template v-else>
         <template v-if="props.rotation && props.rotation.players.length === 6">
-          <Heading tag="h6">{{ $t('rotations.in_court') }}</Heading>
+          <Heading tag="h6">{{ t('rotations.in_court') }}</Heading>
           <PlayerItem
             v-for="player in inCourtPlayers"
             :key="player.profileId"
@@ -265,7 +266,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             @click="emit('member:clicked', { player })"
           />
           <template v-if="benchPlayers.length">
-            <Heading tag="h6">{{ $t('rotations.bench') }}</Heading>
+            <Heading tag="h6">{{ t('rotations.bench') }}</Heading>
             <PlayerItem
               v-for="player in benchPlayers"
               :key="player.profileId"
@@ -282,7 +283,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
           </template>
           <template v-if="expelledPlayers.length">
             <Heading class="mb-1" tag="h6">{{
-              $t('sanctions.expelled_player', 2)
+              t('sanctions.expelled_player', 2)
             }}</Heading>
             <PlayerItem
               v-for="player in expelledPlayers"
@@ -297,7 +298,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             />
           </template>
           <template v-if="props.coach">
-            <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
+            <Heading tag="h6">{{ t('coaches.coach') }}</Heading>
             <CoachItem
               v-if="props.coach.profile"
               :coach="mapProfileToTeamMember(props.coach.profile, true)"
@@ -318,13 +319,13 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             <Button
               class="w-full"
               severity="danger"
-              :label="$t('timeouts.init')"
+              :label="t('timeouts.init')"
               @click.prevent="emit('timeout:start', requestedTimeout)"
             />
           </div>
         </template>
         <template v-else>
-          <Heading tag="h6">{{ $t('calls.call') }}</Heading>
+          <Heading tag="h6">{{ t('calls.call') }}</Heading>
           <PlayerItem
             v-for="player in props.call.playersData"
             :key="player.profileId"
@@ -337,7 +338,7 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             @click="emit('member:clicked', { player })"
           />
           <template v-if="props.coach">
-            <Heading tag="h6">{{ $t('coaches.coach') }}</Heading>
+            <Heading tag="h6">{{ t('coaches.coach') }}</Heading>
             <CoachItem
               v-if="props.coach.profile"
               :coach="mapProfileToTeamMember(props.coach.profile, true)"

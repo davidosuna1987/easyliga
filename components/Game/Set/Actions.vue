@@ -72,7 +72,7 @@ const startSet = (setStartRequest: SetStartRequest) => {
       @hide="showStartSetDialog = false"
     >
       <template #header>
-        <Heading tag="h6">{{ $t('sets.start') }}</Heading>
+        <Heading tag="h6">{{ t('sets.start') }}</Heading>
       </template>
 
       <SetStartForm

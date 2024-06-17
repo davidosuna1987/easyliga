@@ -7,13 +7,15 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="easy-referee-current-games-component">
     <div
       v-for="game in games"
-      v-tooltip.top="$t('games.arbitrate')"
+      v-tooltip.top="t('games.arbitrate')"
       class="game"
       @click="navigateTo(`/referee/games/${game.id}/arbitrate`)"
     >

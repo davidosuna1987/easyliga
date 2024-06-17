@@ -81,7 +81,7 @@ defineExpose({
       />
 
       <EasyGrid v-if="showPlaceholder" class="signature-placeholder" center>
-        <span>{{ $t('reports.sign_here') }}</span>
+        <span>{{ t('reports.sign_here') }}</span>
       </EasyGrid>
     </div>
 
@@ -92,7 +92,7 @@ defineExpose({
         :disabled="buttonsDisabled"
         @click="undo"
       >
-        {{ $t('forms.undo') }}
+        {{ t('forms.undo') }}
       </Button>
       <Button
         :class="['signature-button', { grayscale: buttonsDisabled }]"
@@ -100,7 +100,7 @@ defineExpose({
         :disabled="buttonsDisabled"
         @click="clearSignature"
       >
-        {{ $t('forms.clear') }}
+        {{ t('forms.clear') }}
       </Button>
       <Button
         v-if="props.saveInline"
@@ -109,7 +109,7 @@ defineExpose({
         :disabled="buttonsDisabled"
         @click="saveSignature()"
       >
-        {{ $t('forms.save') }}
+        {{ t('forms.save') }}
       </Button>
     </footer>
   </div>

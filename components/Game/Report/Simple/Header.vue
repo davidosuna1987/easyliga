@@ -51,6 +51,7 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
 const config = useRuntimeConfig()
 </script>
 
@@ -62,14 +63,14 @@ const config = useRuntimeConfig()
       </p>
       <div>
         <p class="mb-2">
-          <strong class="mr-1">{{ $t('forms.facility', 2) }}:</strong>
+          <strong class="mr-1">{{ t('forms.facility', 2) }}:</strong>
           <span>{{ sede.name }} ({{ court.name }})</span>
         </p>
         <p>
-          <strong class="mr-1">{{ $t('categories.category') }}:</strong>
+          <strong class="mr-1">{{ t('categories.category') }}:</strong>
           <span>
-            {{ $t(`categories.${category.name}`) }} -
-            {{ $t(`genders.${gender.name}`) }}
+            {{ t(`categories.${category.name}`) }} -
+            {{ t(`genders.${gender.name}`) }}
           </span>
         </p>
       </div>
@@ -79,21 +80,21 @@ const config = useRuntimeConfig()
     >
       <EasyGrid class="mb-2" :cols="2">
         <p class="report-date">
-          <strong class="mr-1">{{ $t('forms.date') }}:</strong>
+          <strong class="mr-1">{{ t('forms.date') }}:</strong>
           <span v-if="game.date">{{ formatDate(game.date) }}</span>
         </p>
         <p class="report-time">
-          <strong class="mr-1">{{ $t('forms.time') }}:</strong>
+          <strong class="mr-1">{{ t('forms.time') }}:</strong>
           <span v-if="game.date">{{ formatTime(game.date) }}</span>
         </p>
       </EasyGrid>
       <EasyGrid class="mb-2" :cols="2">
         <p class="report-local-team">
-          <strong class="mr-1">{{ $t('teams.local') }}:</strong>
+          <strong class="mr-1">{{ t('teams.local') }}:</strong>
           <span>{{ localTeam.name }}</span>
         </p>
         <p class="report-visitor-team">
-          <strong class="mr-1">{{ $t('teams.visitor') }}:</strong>
+          <strong class="mr-1">{{ t('teams.visitor') }}:</strong>
           <span>{{ visitorTeam.name }}</span>
         </p>
       </EasyGrid>

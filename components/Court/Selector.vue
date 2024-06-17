@@ -2,8 +2,6 @@
 import { ApiCourt } from '@/types/api/court'
 import CourtService from '@/services/court'
 
-const courtService = new CourtService()
-
 const props = defineProps({
   courts: {
     type: Array as PropType<ApiCourt[]>,
@@ -15,10 +13,13 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+const courtService = new CourtService()
+
 const selectedCourt = ref<ApiCourt | null>(null)
 const loadingApi = ref<boolean>(false)
-
 const courts = ref<ApiCourt[]>([])
+
 const options = computed((): ApiCourt[] => props.courts ?? courts.value)
 
 onMounted(async () => {
@@ -40,7 +41,7 @@ onMounted(async () => {
     optionLabel="name"
     optionValue="id"
     scrollHeight="210px"
-    :placeholder="$t('courts.select')"
+    :placeholder="t('courts.select')"
     @update:modelValue="$emit('selected', $event)"
   />
 </template>

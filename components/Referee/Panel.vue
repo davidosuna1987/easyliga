@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import { Game, mapApiGameToGame } from '@/domain/game'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const gameService = new GameService()
 
@@ -35,14 +36,14 @@ onMounted(getCurrentGames)
     <Heading class="mb-5" position="center">
       {{
         auth.profile?.firstName
-          ? $t('referees.welcome', { name: auth.profile.firstName })
-          : $t('referees.welcome_no_name')
+          ? t('referees.welcome', { name: auth.profile.firstName })
+          : t('referees.welcome_no_name')
       }}
     </Heading>
     <LoadingLabel
       v-if="loadingApi"
       size="1.25rem"
-      :label="$t('games.loading', 2)"
+      :label="t('games.loading', 2)"
       class="flex justify-center"
     />
     <template v-else>

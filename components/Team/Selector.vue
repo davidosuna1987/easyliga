@@ -15,10 +15,12 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
+const teams = ref<ApiTeam[]>([])
 const selectedTeam = ref<ApiTeam | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const teams = ref<ApiTeam[]>([])
 const options = computed((): ApiTeam[] => props.teams ?? teams.value)
 
 onMounted(async () => {
@@ -40,7 +42,7 @@ onMounted(async () => {
     optionLabel="name"
     :optionValue="team => team"
     scrollHeight="210px"
-    :placeholder="$t('teams.select')"
+    :placeholder="t('teams.select')"
     @update:modelValue="$emit('selected', $event)"
   />
 </template>

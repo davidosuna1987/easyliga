@@ -43,6 +43,8 @@ const props = defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const gameTimeouts = computed((): Timeout[] => {
   return props.sets.flatMap(set => set.timeouts ?? [])
 })
@@ -151,7 +153,7 @@ const gameDuration = computed((): Duration | undefined => {
   <div
     class="flex flex-col justify-center items-center col-span-2 border-solid border-x-0 text-center"
   >
-    <span class="font-2xs">{{ $t('reports.result.total_duration') }}</span>
+    <span class="font-2xs">{{ t('reports.result.total_duration') }}</span>
     <strong>
       {{ setsDuration ? formatDuration(setsDuration) : '—' }}
     </strong>
@@ -175,24 +177,24 @@ const gameDuration = computed((): Duration | undefined => {
 
   <div class="col-span-10 grid grid-cols-3">
     <div class="flex flex-col justify-center items-center border-solid p-1">
-      <span class="font-2xs">{{ $t('reports.result.start_time') }}</span>
+      <span class="font-2xs">{{ t('reports.result.start_time') }}</span>
       <span v-if="gameStart">{{ formatTime(gameStart) }}</span>
     </div>
     <div
       class="flex flex-col justify-center items-center border-solid border-x-0 p-1"
     >
-      <span class="font-2xs">{{ $t('reports.result.end_time') }}</span>
+      <span class="font-2xs">{{ t('reports.result.end_time') }}</span>
       <span v-if="gameEnd">{{ formatTime(gameEnd) }}</span>
     </div>
     <div class="flex flex-col justify-center items-center border-solid p-1">
-      <span class="font-2xs">{{ $t('reports.result.total_duration') }}</span>
+      <span class="font-2xs">{{ t('reports.result.total_duration') }}</span>
       <span>{{ gameDuration ? formatDuration(gameDuration) : '—' }}</span>
     </div>
   </div>
 
   <div class="col-span-10 flex justify-between border-solid py-2 px-4">
     <div class="flex-min text-center">
-      <strong class="uppercase">{{ $t('reports.result.winner') }}</strong>
+      <strong class="uppercase">{{ t('reports.result.winner') }}</strong>
     </div>
     <div class="text-center flex-1">
       <span>{{ winnerTeam.name }}</span>

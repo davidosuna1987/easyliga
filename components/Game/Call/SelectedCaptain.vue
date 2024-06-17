@@ -11,6 +11,8 @@ const props = defineProps({
     type: Boolean,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -24,8 +26,8 @@ const props = defineProps({
       player
         ? getFullName(player)
         : props.inCourtCaptain
-        ? $t('teams.in_court_captain_select')
-        : $t('teams.captain_select')
+        ? t('teams.in_court_captain_select')
+        : t('teams.captain_select')
     }}
   </div>
 </template>

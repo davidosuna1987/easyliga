@@ -12,10 +12,11 @@ const props = defineProps({
   },
 })
 
-const selectedSede = ref<Sede>()
-const loadingApi = ref<boolean>(false)
+const { t } = useI18n()
 
+const selectedSede = ref<Sede>()
 const sedes = ref<Sede[]>(props.sedes)
+const loadingApi = ref<boolean>(false)
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const sedes = ref<Sede[]>(props.sedes)
     :options="sedes"
     optionLabel="name"
     scrollHeight="210px"
-    :placeholder="$t('sedes.select')"
+    :placeholder="t('sedes.select')"
     @update:modelValue="$emit('selected', $event)"
   />
 </template>

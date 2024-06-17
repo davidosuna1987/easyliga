@@ -5,6 +5,7 @@ import { Club, mapApiClubToClub } from '@/domain/club'
 import { Sede } from '@/domain/sede'
 import { Team } from '@/domain/team'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 // const easyProps = useEasyProps()
 const clubService = new ClubService()
@@ -58,7 +59,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           <header class="header flex justify-between">
             <Heading tag="h5" class="club__name">{{ club.name }}</Heading>
             <Button
-              :label="$t('teams.create')"
+              :label="t('teams.create')"
               size="small"
               class="action"
               @click.prevent="goToCreateClubTeam(club)"
@@ -76,7 +77,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                   <p>{{ team.name }}</p>
                   <Tag
                     class="font-light ml-2 border-solid border-primary bg-transparent text-primary border py-[2px] px-2"
-                    :value="`${$t(`categories.${team.category?.name}`)} ${$t(
+                    :value="`${t(`categories.${team.category?.name}`)} ${t(
                       `genders.${team.gender?.name}`,
                     )}`"
                     rounded
@@ -87,7 +88,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                 >
                   <small v-if="team.players" class="mr-3">
                     {{
-                      $t(
+                      t(
                         'players.count',
                         { num: team.players?.length },
                         team.players?.length,
@@ -95,7 +96,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                     }}
                   </small>
                   <Button
-                    :label="$t('forms.edit')"
+                    :label="t('forms.edit')"
                     size="small"
                     class="action"
                     @click.prevent="goToEditClubTeam(club, team)"
@@ -106,7 +107,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           </template>
         </div>
       </EasyGrid>
-      <p v-else class="text-center">{{ $t('clubs.no_managed_teams') }}</p>
+      <p v-else class="text-center">{{ t('clubs.no_managed_teams') }}</p>
     </template>
   </div>
 </template>

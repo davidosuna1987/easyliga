@@ -23,6 +23,7 @@ const emit = defineEmits<{
   (e: 'signature:stored', value: GameSignature): void
 }>()
 
+const { t } = useI18n()
 const toast = useEasyToast()
 const gameSignatureService = new GameSignatureService()
 
@@ -73,7 +74,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
       ]"
       class="px-8"
       :label="
-        $t(`reports.signature_type.long.${gameSignatureType}`, {
+        t(`reports.signature_type.long.${gameSignatureType}`, {
           teamName: teams.local.name,
         })
       "
@@ -91,7 +92,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
     />
     <Button
       class="px-8"
-      :label="$t(`reports.signature_type.long.${GameSignatureTypes.referee}`)"
+      :label="t(`reports.signature_type.long.${GameSignatureTypes.referee}`)"
       :data-type="GameSignatureTypes.referee"
       outlined
       :disabled="
@@ -110,7 +111,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
       :data-team-name="teams.visitor.name"
       class="px-8"
       :label="
-        $t(`reports.signature_type.long.${gameSignatureType}`, {
+        t(`reports.signature_type.long.${gameSignatureType}`, {
           teamName: teams.visitor.name,
         })
       "
@@ -132,7 +133,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
       :type="selectedSignatureType"
       :team-type="selectedTeamType"
       :title="
-        $t(
+        t(
           `reports.signature_type.long.${selectedSignatureType}`,
           selectedTeamType &&
             selectedSignatureType !== GameSignatureTypes.referee

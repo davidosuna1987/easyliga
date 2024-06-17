@@ -99,7 +99,7 @@ const checkIfCanRequestTimeout = (currentTeam?: boolean) => {
         : 'primary'
     "
     outlined
-    :label="$t('timeouts.timeout')"
+    :label="t('timeouts.timeout')"
     :disabled="props.loading || !props.game.currentSet?.id"
     @click.prevent="checkIfCanRequestTimeout()"
   />

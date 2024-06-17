@@ -87,7 +87,7 @@ const handleSignatureCreated = async (signature: GameSignatureStoreRequest) => {
   <Button
     class="action"
     outlined
-    :label="$t(`reports.signature_type.short.${props.signatureType}`)"
+    :label="t(`reports.signature_type.short.${props.signatureType}`)"
     :disabled="actionButtonDisabled"
     @click="onActionButtonClick"
   />

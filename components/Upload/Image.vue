@@ -94,7 +94,7 @@ watch(image.value, () => emit('image', image.value))
     >
       <div
         v-tooltip.top="
-          image.file ? $t('forms.remove_image') : $t('forms.change_image')
+          image.file ? t('forms.remove_image') : t('forms.change_image')
         "
         :style="avatarStyle"
         class="preview w-full h-full rounded-full inline-block bg-img overflow-hidden"

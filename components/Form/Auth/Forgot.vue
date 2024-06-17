@@ -3,6 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiForgotRequest } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
 
+const { t } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
 
@@ -32,13 +33,13 @@ async function handleForgot() {
 <template>
   <FormAuthBase
     class="easy-form-auth-forgot"
-    :buttonLabel="$t('auth.forgot')"
+    :buttonLabel="t('auth.forgot')"
     :loading="loadingApi"
     @submitted="handleForgot"
   >
     <FormLabel
       for="email"
-      :label="$t('forms.email')"
+      :label="t('forms.email')"
       :error="errors?.email?.[0]"
     />
     <InputText id="email" v-model="form.email" type="email" />

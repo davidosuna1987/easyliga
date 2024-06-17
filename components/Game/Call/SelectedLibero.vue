@@ -8,6 +8,8 @@ const props = defineProps({
     required: false,
   },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const props = defineProps({
   >
     <IconLibero />
     <IconShirtNumber v-if="player" :shirtNumber="player.shirtNumber" />
-    {{ player ? getFullName(player) : $t('teams.libero_select') }}
+    {{ player ? getFullName(player) : t('teams.libero_select') }}
   </div>
 </template>
 

@@ -9,7 +9,7 @@ const props = defineProps({
   },
 })
 
-const { locale } = useI18n()
+const { t, locale } = useI18n()
 const countryStore = useCountryStore()
 
 const countries = ref<Country[]>(props.readonly ? [] : countryStore.countries)
@@ -25,11 +25,11 @@ const selectedCountry = ref<Country>()
     :optionLabel="`translations.${locale}`"
     :filter="true"
     :filterLocale="locale"
-    :filterPlaceholder="$t('countries.search')"
-    :emptyFilterMessage="$t('forms.no_results_found')"
+    :filterPlaceholder="t('countries.search')"
+    :emptyFilterMessage="t('forms.no_results_found')"
     :showClear="!readonly"
     scrollHeight="230px"
-    :placeholder="$t('countries.select')"
+    :placeholder="t('countries.select')"
     @update:modelValue="$emit('selected', $event)"
   >
     <template #value="slotProps">

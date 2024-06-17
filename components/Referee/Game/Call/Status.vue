@@ -4,10 +4,6 @@ import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
 import { GameStatus } from '@/domain/game'
 
-const toast = useEasyToast()
-const callService = new CallService()
-const emit = defineEmits(['call:unlocked'])
-
 const props = defineProps({
   call: {
     type: Object as PropType<Call>,
@@ -22,6 +18,12 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['call:unlocked'])
+
+const { t } = useI18n()
+const toast = useEasyToast()
+const callService = new CallService()
 
 const unlock = async () => {
   if (!props.call || !props.call.locked) return
@@ -45,18 +47,18 @@ const unlock = async () => {
     <template v-if="props.call.locked">
       <div class="flex items-center">
         <FormSpinner size="0.75rem" />
-        <small>{{ $t('rotations.waiting') }}</small>
+        <small>{{ t('rotations.waiting') }}</small>
       </div>
       <Button
         v-if="props.currentSet.number === 1 && props.gameStatus !== 'finished'"
         class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
-        :label="$t('forms.unlock')"
+        :label="t('forms.unlock')"
         @click="unlock()"
       />
     </template>
     <template v-else>
       <FormSpinner size="0.75rem" />
-      <small>{{ $t('calls.waiting') }}</small>
+      <small>{{ t('calls.waiting') }}</small>
     </template>
   </div>
 </template>

@@ -29,6 +29,8 @@ const props = defineProps({
 
 const emit = defineEmits(['member:selected'])
 
+const { t } = useI18n()
+
 const selectedMember = ref<TeamMember | undefined>(props.member)
 
 watch(
@@ -49,7 +51,7 @@ watch(
       'is-unselectable': !!props.member,
     }"
     :options="props.members"
-    :placeholder="$t('teams.members')"
+    :placeholder="t('teams.members')"
   >
     <template #value="slotProps">
       <template v-if="slotProps.value">
@@ -89,7 +91,7 @@ watch(
         />
       </template>
       <template v-else>
-        {{ $t('teams.member_select') }}
+        {{ t('teams.member_select') }}
       </template>
     </template>
     <template #option="slotProps">
