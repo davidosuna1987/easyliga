@@ -8,7 +8,10 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['add', 'hide'])
+const emit = defineEmits<{
+  (e: 'hide', value: boolean): void
+  (e: 'add', value: Player): void
+}>()
 
 const { t } = useI18n()
 
@@ -17,6 +20,12 @@ const showDialog = ref<boolean>(!!props.visible)
 
 const handleSelected = (player: Player) => {
   selectedPlayer.value = player
+}
+
+const handleFormSubmit = () => {
+  if (!selectedPlayer.value) return
+
+  emit('add', selectedPlayer.value)
 }
 
 watch(
@@ -37,13 +46,18 @@ watch(
       <Heading tag="h5">{{ t('players.add') }}</Heading>
     </template>
 
-    <PlayerSearchForm class="min-h-[200px]" full @selected="handleSelected" />
+    <PlayerSearchForm
+      class="min-h-[200px]"
+      full
+      @selected="handleSelected"
+      @invited="emit('hide', true)"
+    />
 
     <template #footer>
       <FormFooterActions
         :submitLabel="t('players.add')"
         :disabled="!selectedPlayer"
-        @form:submit="emit('add', selectedPlayer)"
+        @form:submit="handleFormSubmit"
         @form:cancel="emit('hide', true)"
       />
     </template>

@@ -308,7 +308,7 @@ watch(
           <template v-else>
             <UserSearchForm
               class="flex-1"
-              role="coach"
+              whereRole="coach"
               :showLabel="false"
               invite
               full

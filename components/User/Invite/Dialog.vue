@@ -70,7 +70,7 @@ watch(
     <p class="mt-3">{{ t('users.invite_dialog') }}</p>
 
     <div class="mt-2 flex gap-2">
-      <Tag v-for="role in form.roles" :value="role" />
+      <Tag v-for="role in form.roles" :value="t(`roles.type.${role}`)" />
     </div>
 
     <div class="mt-6">

@@ -9,9 +9,13 @@ const props = defineProps({
     type: Object as PropType<User>,
     required: false,
   },
-  role: {
+  whereRole: {
     type: String as PropType<Role>,
     default: '',
+  },
+  with: {
+    type: Array as PropType<string[]>,
+    default: [],
   },
   invite: {
     type: Boolean,
@@ -45,6 +49,12 @@ const selectedUser = ref<User | undefined>(props.user)
 const matchUsers = ref<User[]>()
 const loadingApi = ref<boolean>(false)
 
+const withPelations = computed((): string =>
+  props.with.includes('profile')
+    ? props.with.join(',')
+    : [...props.with].concat('profile').join(','),
+)
+
 const searchAvailable = computed((): boolean => search.value.length >= 3)
 
 const showUserInviteDialog = ref<boolean>()
@@ -54,8 +64,8 @@ const searchUsers = async () => {
   loadingApi.value = true
   const { data, error } = await userService.search({
     search: search.value,
-    with: 'profile',
-    ...(props.role && { where_has: `roles:name:${props.role}` }),
+    with: withPelations.value,
+    ...(props.whereRole && { where_has: `roles:name:${props.whereRole}` }),
   })
   loadingApi.value = false
 
@@ -132,21 +142,21 @@ const handleUserInvited = () => {
     <UserInviteDialog
       v-if="showUserInviteDialog"
       :visible="!!showUserInviteDialog"
-      :roles="[props.role]"
+      :roles="[props.whereRole]"
       @hide="showUserInviteDialog = undefined"
       @invited="handleUserInvited"
     />
   </form>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'UserSearchForm',
-}
-</script>
-
 <style scoped lang="scss">
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
   padding: 0;
 }
 </style>
+
+<script lang="ts">
+export default {
+  name: 'UserSearchForm',
+}
+</script>

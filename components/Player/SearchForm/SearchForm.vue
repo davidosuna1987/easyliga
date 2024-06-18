@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import ProfileService from '@/services/profile'
-import { Profile, mapApiProfileToProfile } from '@/domain/profile'
-import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
 import { Player, mapProfileToPlayer } from '@/domain/player'
+import { User } from '@/domain/user'
+import { ROLE_MAPPER } from '@/domain/role'
 
 const props = defineProps({
   full: {
@@ -11,41 +10,24 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['selected'])
+const emit = defineEmits<{
+  (e: 'selected', value: Player): void
+  (e: 'invited', value: boolean): void
+}>()
 
 const { t } = useI18n()
-const toast = useEasyToast()
-const profileService = new ProfileService()
 
-const search = ref<string>('')
 const selectedPlayer = ref<Player>()
-const matchProfiles = ref<Profile[]>()
 const shirtNumberUpdatePlayer = ref<Player>()
-const loadingApi = ref<boolean>(false)
-
-const searchPlayers = async () => {
-  if (search.value.length < 3) return
-  loadingApi.value = true
-  const { data, error } = await profileService.search({
-    search: search.value,
-  })
-
-  if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-  } else if (data.value) {
-    matchProfiles.value = data.value.data.profiles.map(mapApiProfileToProfile)
-  }
-
-  loadingApi.value = false
-}
 
 const handleRemoveProfile = () => {
   selectedPlayer.value = undefined
-  search.value = ''
 }
 
-const handlePlayerSelected = (event: AutoCompleteItemSelectEvent) => {
-  selectedPlayer.value = mapProfileToPlayer(event.value)
+const handlePlayerSelected = (user: User) => {
+  if (!user.profile) return
+
+  selectedPlayer.value = mapProfileToPlayer(user.profile)
   emit('selected', selectedPlayer.value)
 }
 
@@ -99,23 +81,20 @@ const changePlayerShirtNumber = (player?: Player) => {
     </template>
     <template v-else>
       <FormLabel :label="t('players.type_name')" />
-      <AutoComplete
-        v-model="search"
-        optionLabel="first_name"
-        :class="{ 'w-full': props.full }"
-        :input-class="{ 'w-full': props.full }"
-        :suggestions="matchProfiles"
-        @complete="searchPlayers"
-        @item-select="handlePlayerSelected"
-      >
-        <template #option="slotProps">
-          <ProfileItem
-            class="pointer-events-none"
-            :profile="slotProps.option"
-            :selectable="false"
-          />
-        </template>
-      </AutoComplete>
+      <UserSearchForm
+        :whereRole="ROLE_MAPPER.player"
+        :full="props.full"
+        :showLabel="false"
+        invite
+        @selected="handlePlayerSelected"
+        @invited="emit('invited', true)"
+      />
     </template>
   </form>
 </template>
+
+<script lang="ts">
+export default {
+  name: 'PlayerSearchForm',
+}
+</script>

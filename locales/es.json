@@ -232,6 +232,36 @@
     "delete_alert": "¿Seguro que quieres eliminar el perfil?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer"
   },
+  "roles": {
+    "role": "Rol | Roles",
+    "create": "Crear rol",
+    "created": "El rol ha sido creado correctamente",
+    "edit": "Editar rol",
+    "update": "Actualizar rol",
+    "updated": "El rol ha sido actualizado correctamente",
+    "delete": "Eliminar rol",
+    "deleted": "El rol ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el rol?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona un rol",
+    "search": "Buscar rol | Buscar roles",
+    "not_found": "No se han encontrado roles con ese criterio de búsqueda",
+    "assign": "Asignar rol",
+    "assign_success": "El rol ha sido asignado correctamente",
+    "assign_role": "Asignar rol a {name}",
+    "assign_howto": "Haz click en un rol para asignarlo",
+    "type": {
+      "admin": "Administrador",
+      "staff": "Oficial",
+      "federation": "Federación",
+      "club": "Club",
+      "referee": "Árbitro",
+      "coach": "Entrenador",
+      "player": "Jugador",
+      "user": "Usuario",
+      "guest": "Invitado"
+    }
+  },
   "referees": {
     "referee": "Árbitro | Árbitros",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
