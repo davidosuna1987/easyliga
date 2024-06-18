@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
-import { Player } from '@/domain/player'
+import { Player, UpdateClubTeamPlayer } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
-import { UpdateClubTeamPlayer } from 'components/Profile/Form.vue'
 import { ApiProfile } from '@/types/api/profile'
 import TeamService from '@/services/team'
 import { Sede } from '@/domain/sede'
@@ -326,7 +325,7 @@ watch(
     </div>
 
     <div class="players mt-10">
-      <header class="header flex justify-between">
+      <header class="header flex justify-between items-center mb-3">
         <FormLabel :label="t('players.player', 2)" />
         <Button
           :label="t('players.add')"

@@ -47,7 +47,7 @@ watch(
     </template>
 
     <PlayerSearchForm
-      class="min-h-[200px]"
+      class="min-h-[200px] mt-5"
       full
       @selected="handleSelected"
       @invited="emit('hide', true)"

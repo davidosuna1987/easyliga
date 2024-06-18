@@ -6,6 +6,7 @@ import {
   mapProfileToProfileUpdateRequest,
   mapProfileUpdateRequestToApiProfileUpdateRequest,
 } from '@/domain/profile'
+import { UpdateClubTeamPlayer } from '@/domain/player'
 import { ApiErrorObject } from '@/types/errors'
 import { Address } from '@/domain/address'
 import ClubService from '@/services/club'
@@ -148,6 +149,15 @@ watch(
       @image="avatarChange"
     />
 
+    <Heading
+      v-if="profile.playerId"
+      tag="h5"
+      position="center"
+      class="player-id"
+    >
+      {{ `${t('profiles.player_id')}: ${profile.playerId}` }}
+    </Heading>
+
     <p class="text-lg mb-3">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel
@@ -237,13 +247,6 @@ watch(
 </template>
 
 <script lang="ts">
-export type UpdateClubTeamPlayer =
-  | {
-      clubId: number
-      teamId: number
-    }
-  | undefined
-
 export default {
   name: 'ProfileForm',
 }

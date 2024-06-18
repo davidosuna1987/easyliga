@@ -15,6 +15,13 @@ export type Player = {
   profile?: Profile
 }
 
+export type UpdateClubTeamPlayer =
+  | {
+      clubId: number
+      teamId: number
+    }
+  | undefined
+
 export const mapProfileToPlayer = (profile: Profile): Player => ({
   profileId: profile.id,
   firstName: profile.firstName,

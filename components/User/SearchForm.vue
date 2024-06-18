@@ -109,7 +109,7 @@ const handleUserInvited = () => {
       <AutoComplete
         v-model="search"
         :class="{ 'w-full': props.full }"
-        :panelStyle="{ maxWidth: '450px' }"
+        :panelStyle="{ maxWidth: '401px' }"
         :input-class="{ 'w-full': props.full }"
         :suggestions="matchUsers"
         :auto-option-focus="false"
@@ -139,6 +139,7 @@ const handleUserInvited = () => {
             <div class="m-3 flex flex-col gap-3 items-center">
               <p>{{ t('users.invite_long') }}</p>
               <Button
+                class="mt-5"
                 :label="t('forms.invite')"
                 @click="showUserInviteDialog = true"
               />

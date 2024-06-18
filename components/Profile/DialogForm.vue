@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Profile } from '@/domain/profile'
-import { UpdateClubTeamPlayer } from '@/components/Profile/Form.vue'
+import { UpdateClubTeamPlayer } from '@/domain/player'
 import { ApiProfile } from '@/types/api/profile'
 
 const props = defineProps({

@@ -219,7 +219,7 @@
     "not_found": "No se han encontrado usuarios con ese criterio de búsqueda",
     "not_found_role": "No se han encontrado usuarios con ese criterio de búsqueda y que tengan el rol de {role}",
     "invite": "Invitar usuario",
-    "invite_long": "Invita al usuario a formar parte de la familia de Easy Liga",
+    "invite_long": "Invita al usuario a formar parte de Easy Liga",
     "invite_dialog": "Se mandará una invitación al usuario con los siguientes roles:",
     "invited": "La invitación se ha mandado correctamente"
   },
@@ -231,7 +231,8 @@
     "delete": "Eliminar perfil",
     "deleted": "El perfil ha sido eliminado correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el perfil?",
-    "delete_alert_disclaimer": "Esta acción no se puede deshacer"
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "player_id": "ID de jugador"
   },
   "roles": {
     "role": "Rol | Roles",
@@ -402,6 +403,7 @@
     "search": "Buscar jugador | Buscar jugadores",
     "name": "Nombre del jugador",
     "type_name": "Escribe el nombre del jugador",
+    "find_by": "Escribe el nombre, email o ID del jugador",
     "you_selected": "Has seleccionado al siguiente jugador",
     "add_disclaimer": "Si deseas añadirlo a tu equipo haz clic en el botón \"Añadir jugador\" y cuando se cierre esta ventana deberás hacer click en el botón \"Actualizar equipo\" para que la operación finalice correctamente.",
     "already_added": "El jugador que intentas añadir ya forma parte de tu equipo"

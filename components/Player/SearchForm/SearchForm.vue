@@ -80,7 +80,7 @@ const changePlayerShirtNumber = (player?: Player) => {
       />
     </template>
     <template v-else>
-      <FormLabel :label="t('players.type_name')" />
+      <FormLabel :label="t('players.find_by')" />
       <UserSearchForm
         :whereRole="ROLE_MAPPER.player"
         :full="props.full"

@@ -22,6 +22,7 @@ export type ApiProfile = {
   avatar: string | null
   phone: string | null
   email: string
+  player_id: number | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null

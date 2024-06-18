@@ -37,6 +37,7 @@ export type Profile = {
   avatar?: string
   email: string
   phone?: string
+  playerId?: number
 } & ProfileRelations
 
 export type ProfileUpdateRequest = {
@@ -69,6 +70,7 @@ export const mapApiProfileToProfile = (apiProfile: ApiProfile): Profile => ({
   avatar: apiProfile.avatar ?? undefined,
   email: apiProfile.email ?? undefined,
   phone: apiProfile.phone ?? undefined,
+  playerId: apiProfile.player_id ?? undefined,
   address: apiProfile.address
     ? mapApiAddressToAddress(apiProfile.address)
     : undefined,
