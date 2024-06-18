@@ -33,6 +33,7 @@ onMounted(() => {
 <template>
   <section class="easy-user-licenses-component">
     <LicenseFilter
+      v-if="filters.length > 1"
       :options="filters"
       :type="selectedType"
       @type:selected="selectedType = $event"
