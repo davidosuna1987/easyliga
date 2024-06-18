@@ -29,7 +29,7 @@ const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 const form = ref<ApiInviteRequest>({
   email: '',
-  roles: [...props.roles, ROLE_MAPPER['user']],
+  roles: [...props.roles],
 })
 
 const handleSubmit = async () => {
