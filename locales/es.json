@@ -157,7 +157,8 @@
     "timeout_running": "Hay un tiempo muerto en marcha",
     "timeout_requested": "Hay un tiempo muerto solicitado que está pendiente de aprobar por el árbitro",
     "timeout_game_not_playing": "No puedes solicitar un tiempo muerto en un partido que no está en juego",
-    "invalid_file_type": "El formato del archivo es inválido. Los formatos permitodos son: {formats}"
+    "invalid_file_type": "El formato del archivo es inválido. Los formatos permitodos son: {formats}",
+    "shirt_number_no_zero": "El número de la camiseta no puede ser 0"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -385,6 +386,7 @@
   "players": {
     "player": "Jugador | Jugadores",
     "add": "Añadir jugador",
+    "added": "El jugador ha sido añadido correctamente",
     "create": "Crear jugador",
     "created": "El jugador ha sido creada correctamente",
     "edit": "Editar jugador",

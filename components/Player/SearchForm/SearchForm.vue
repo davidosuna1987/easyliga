@@ -8,6 +8,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  unavailableShirtNumbers: {
+    type: Array as PropType<number[]>,
+    required: true,
+  },
 })
 
 const emit = defineEmits<{
@@ -16,6 +20,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const toast = useEasyToast()
 
 const selectedPlayer = ref<Player>()
 const shirtNumberUpdatePlayer = ref<Player>()
@@ -45,6 +50,10 @@ const setShirtNumberUpdatePlayer = () => {
   shirtNumberUpdatePlayer.value = selectedPlayer.value
 }
 
+const shirtNumberAlreadyTaken = (shirtNumber: number) => {
+  return props.unavailableShirtNumbers.includes(shirtNumber)
+}
+
 const changePlayerShirtNumber = (player?: Player) => {
   if (
     !player ||
@@ -53,6 +62,15 @@ const changePlayerShirtNumber = (player?: Player) => {
   ) {
     shirtNumberUpdatePlayer.value = undefined
   } else {
+    if (shirtNumberAlreadyTaken(player.shirtNumber)) {
+      toast.error(
+        t('players.shirt_number_taken', {
+          shirtNumber: player.shirtNumber,
+        }),
+      )
+      return
+    }
+
     selectedPlayer.value.shirtNumber = player.shirtNumber
     shirtNumberUpdatePlayer.value = undefined
   }
@@ -63,6 +81,7 @@ const changePlayerShirtNumber = (player?: Player) => {
   <form class="easy-player-search-form-component">
     <template v-if="!!selectedPlayer">
       <FormLabel :label="t('players.you_selected')" />
+
       <PlayerItem
         :player="selectedPlayer"
         :selectable="false"
@@ -72,15 +91,17 @@ const changePlayerShirtNumber = (player?: Player) => {
         :setLibero="setLibero"
         :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
       />
-      <Message :closable="false">{{ t('players.add_disclaimer') }}</Message>
+
       <GameCallShirtNumberDialog
         :player="shirtNumberUpdatePlayer"
         @update:player="changePlayerShirtNumber"
         @hide="shirtNumberUpdatePlayer = undefined"
       />
     </template>
+
     <template v-else>
       <FormLabel :label="t('players.find_by')" />
+
       <UserSearchForm
         :whereRole="ROLE_MAPPER.player"
         :full="props.full"

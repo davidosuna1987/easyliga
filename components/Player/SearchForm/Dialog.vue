@@ -6,14 +6,23 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  unavailableShirtNumbers: {
+    type: Array as PropType<number[]>,
+    required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
+  (e: 'player:add', value: Player): void
   (e: 'hide', value: boolean): void
-  (e: 'add', value: Player): void
 }>()
 
 const { t } = useI18n()
+const toast = useEasyToast()
 
 const selectedPlayer = ref<Player>()
 const showDialog = ref<boolean>(!!props.visible)
@@ -25,7 +34,12 @@ const handleSelected = (player: Player) => {
 const handleFormSubmit = () => {
   if (!selectedPlayer.value) return
 
-  emit('add', selectedPlayer.value)
+  if (selectedPlayer.value.shirtNumber === 0) {
+    toast.error(t('errors.shirt_number_no_zero'))
+    return
+  }
+
+  emit('player:add', selectedPlayer.value)
 }
 
 watch(
@@ -47,7 +61,8 @@ watch(
     </template>
 
     <PlayerSearchForm
-      class="min-h-[200px] mt-5"
+      class="mt-5"
+      :unavailableShirtNumbers="unavailableShirtNumbers"
       full
       @selected="handleSelected"
       @invited="emit('hide', true)"
@@ -56,7 +71,7 @@ watch(
     <template #footer>
       <FormFooterActions
         :submitLabel="t('players.add')"
-        :disabled="!selectedPlayer"
+        :disabled="!selectedPlayer || loading"
         @form:submit="handleFormSubmit"
         @form:cancel="emit('hide', true)"
       />

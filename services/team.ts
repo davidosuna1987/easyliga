@@ -1,5 +1,6 @@
 import { ApiTeamResponse, ApiTeamsResponse } from '@/types/api/team'
 import { Team, mapTeamToApiTeamRequest } from '@/domain/team'
+import { ApiPlayerRequest } from '@/types/api/player'
 
 export default class TeamService {
   fetch(params?: Record<string, string>) {
@@ -10,19 +11,24 @@ export default class TeamService {
     return useApi<ApiTeamResponse>(`teams/${teamId}`, { params })
   }
 
-  store(data: Team, params?: Record<string, string>) {
+  store(data: Team) {
     return useApi<ApiTeamResponse>(`teams`, {
       method: 'POST',
       body: mapTeamToApiTeamRequest(data),
-      params,
     })
   }
 
-  update(teamId: number, data: Team, params?: Record<string, string>) {
+  update(teamId: number, data: Team) {
     return useApi<ApiTeamResponse>(`teams/${teamId}`, {
       method: 'PUT',
       body: mapTeamToApiTeamRequest(data),
-      params,
+    })
+  }
+
+  addPlayer(teamId: number, data: ApiPlayerRequest) {
+    return useApi<ApiTeamResponse>(`teams/${teamId}/players`, {
+      method: 'POST',
+      body: data,
     })
   }
 }

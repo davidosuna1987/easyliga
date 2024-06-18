@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
-import { Player, UpdateClubTeamPlayer } from '@/domain/player'
+import {
+  Player,
+  UpdateClubTeamPlayer,
+  mapPlayerToApiPlayerRequest,
+} from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { ApiProfile } from '@/types/api/profile'
 import TeamService from '@/services/team'
@@ -63,6 +67,10 @@ const clubTeamPlayerData = computed((): UpdateClubTeamPlayer | undefined =>
         teamId: props.team.id,
       }
     : undefined,
+)
+
+const unavailableShirtNumbers = computed(() =>
+  form.value.players?.map(player => player.shirtNumber),
 )
 
 const setFormData = (team: Team) => {
@@ -200,18 +208,32 @@ const handleUpdate = async () => {
   loadingApi.value = false
 }
 
-const handleAddPlayer = (player: Player) => {
-  if (!form.value.players) {
-    form.value.players = []
+const handleAddPlayer = async (player: Player) => {
+  loadingApi.value = true
+  const { data, error } = await teamService.addPlayer(
+    form.value.id,
+    mapPlayerToApiPlayerRequest(player),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    if (!form.value.players) {
+      form.value.players = []
+    }
+
+    if (form.value.players.find(p => p.profileId === player.profileId)) {
+      toast.error(t('players.already_added'))
+      return
+    }
+
+    form.value.players.push(player)
+    showPlayerSearchFormDialog.value = false
+
+    toast.success(t('players.added'))
   }
 
-  if (form.value.players.find(p => p.profileId === player.profileId)) {
-    toast.error(t('players.already_added'))
-    return
-  }
-
-  form.value.players.push(player)
-  showPlayerSearchFormDialog.value = false
+  loadingApi.value = false
 }
 
 const handleCoachSelected = (coach: User) => {
@@ -251,6 +273,7 @@ watch(
       <FormLabel :label="t('forms.name')">
         <InputText v-model="form.name" @mouseover="editingCoach = false" />
       </FormLabel>
+
       <FormLabel :label="t('sedes.sede')">
         <SedeSelector
           :sedes="team?.sedes ?? []"
@@ -258,6 +281,7 @@ watch(
           @mouseover="editingCoach = false"
         />
       </FormLabel>
+
       <FormLabel :label="t('teams.shirt_color')">
         <TeamShirtColorSelector
           v-model="form.shirtColor"
@@ -273,12 +297,14 @@ watch(
           @mouseover="editingCoach = false"
         />
       </FormLabel>
+
       <FormLabel :label="t('categories.category')">
         <CategorySelector
           v-model="selectedCategory"
           @mouseover="editingCoach = false"
         />
       </FormLabel>
+
       <FormLabel :label="t('genders.gender')">
         <GenderSelector
           v-model="selectedGender"
@@ -304,6 +330,7 @@ watch(
           <template v-if="selectedCoach?.profile && !editingCoach">
             <ProfileItem class="flex-1" :profile="selectedCoach.profile" />
           </template>
+
           <template v-else>
             <UserSearchForm
               class="flex-1"
@@ -315,6 +342,7 @@ watch(
               @invited="editingCoach = false"
             />
           </template>
+
           <Button
             :label="editingCoach ? t('forms.cancel') : t('forms.edit')"
             class="action w-min"
@@ -335,6 +363,7 @@ watch(
           @mouseover="editingCoach = false"
         />
       </header>
+
       <EasyGrid class="players-list" :breakpoints="{ lg: 2, xl: 3 }" :gap="3">
         <PlayerItem
           v-for="player in form.players"
@@ -350,6 +379,7 @@ watch(
         />
       </EasyGrid>
     </div>
+
     <div class="flex justify-end mt-10">
       <Button
         :label="team ? t('teams.update') : t('teams.create')"
@@ -359,11 +389,13 @@ watch(
         @mouseover="editingCoach = false"
       />
     </div>
+
     <GameCallShirtNumberDialog
       :player="shirtNumberUpdatePlayer"
       @update:player="changePlayerShirtNumber"
       @hide="shirtNumberUpdatePlayer = undefined"
     />
+
     <AlertDialog
       :visible="!!playerToRemove"
       :title="`${playerToRemove?.firstName} ${playerToRemove?.lastName}`"
@@ -373,16 +405,20 @@ watch(
       @accepted="removePlayer(playerToRemove?.profileId)"
       @hide="playerToRemove = undefined"
     />
+
     <ProfileDialogForm
       :profile="profileToEdit"
       :club-team-player="clubTeamPlayerData"
       @updated="replaceUpdatedProfile"
       @hide="profileToEdit = undefined"
     />
+
     <PlayerSearchFormDialog
       :visible="!!showPlayerSearchFormDialog"
+      :unavailableShirtNumbers="unavailableShirtNumbers"
+      :loading="loadingApi"
       @hide="showPlayerSearchFormDialog = false"
-      @add="handleAddPlayer"
+      @player:add="handleAddPlayer"
     />
   </form>
 </template>
