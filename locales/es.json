@@ -217,6 +217,7 @@
     "select": "Selecciona un usuario",
     "search": "Buscar usuario | Buscar usuarios",
     "not_found": "No se han encontrado usuarios con ese criterio de búsqueda",
+    "not_found_role": "No se han encontrado usuarios con ese criterio de búsqueda y que tengan el rol de {role}",
     "invite": "Invitar usuario",
     "invite_long": "Invita al usuario a formar parte de la familia de Easy Liga",
     "invite_dialog": "Se mandará una invitación al usuario con los siguientes roles:",

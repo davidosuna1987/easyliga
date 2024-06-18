@@ -109,6 +109,7 @@ const handleUserInvited = () => {
       <AutoComplete
         v-model="search"
         :class="{ 'w-full': props.full }"
+        :panelStyle="{ maxWidth: '450px' }"
         :input-class="{ 'w-full': props.full }"
         :suggestions="matchUsers"
         :auto-option-focus="false"
@@ -126,7 +127,15 @@ const handleUserInvited = () => {
 
         <template #empty>
           <div v-if="invite" class="py-4 px-7 text-center">
-            <p>{{ t('users.not_found') }}</p>
+            <p>
+              {{
+                props.whereRole
+                  ? t('users.not_found_role', {
+                      role: t(`roles.type.${props.whereRole}`),
+                    })
+                  : t('users.not_found')
+              }}
+            </p>
             <div class="m-3 flex flex-col gap-3 items-center">
               <p>{{ t('users.invite_long') }}</p>
               <Button
