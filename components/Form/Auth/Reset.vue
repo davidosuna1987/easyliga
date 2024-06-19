@@ -45,34 +45,42 @@ const handleReset = async () => {
       for="email"
       :label="t('forms.email')"
       :error="errors?.email?.[0]"
-    />
-    <InputText id="email" v-model="form.email" type="email" />
+      required
+    >
+      <InputText id="email" v-model="form.email" type="email" />
+    </FormLabel>
 
     <FormLabel
       for="token"
       :label="t('forms.token')"
       :error="errors?.token?.[0]"
-    />
-    <InputText id="token" v-model="form.token" type="string" disabled />
+      required
+    >
+      <InputText id="token" v-model="form.token" type="string" disabled />
+    </FormLabel>
 
     <FormLabel
       for="password"
       :label="t('forms.password')"
       :error="errors?.password?.[0]"
-    />
-    <Password input-id="password" v-model="form.password" toggleMask />
+      required
+    >
+      <Password input-id="password" v-model="form.password" toggleMask />
+    </FormLabel>
 
     <FormLabel
       for="password_confirm"
       :label="t('forms.password_confirm')"
       :error="errors?.password_confirm?.[0]"
-    />
-    <Password
-      input-id="password_confirm"
-      v-model="form.password_confirm"
-      toggle-mask
-      :feedback="false"
-    />
+      required
+    >
+      <Password
+        input-id="password_confirm"
+        v-model="form.password_confirm"
+        toggle-mask
+        :feedback="false"
+      />
+    </FormLabel>
   </FormAuthBase>
 </template>
 

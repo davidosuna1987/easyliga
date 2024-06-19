@@ -41,8 +41,10 @@ async function handleForgot() {
       for="email"
       :label="t('forms.email')"
       :error="errors?.email?.[0]"
-    />
-    <InputText id="email" v-model="form.email" type="email" />
+      required
+    >
+      <InputText id="email" v-model="form.email" type="email" />
+    </FormLabel>
   </FormAuthBase>
 </template>
 

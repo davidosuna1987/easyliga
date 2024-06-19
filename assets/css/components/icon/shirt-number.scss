@@ -91,4 +91,31 @@
     border-color: var(--shirt-white) !important;
     color: black !important;
   }
+
+  &.is-icon {
+    border: solid 1px var(--text-color);
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+
+    &.size-sm {
+      padding: 0.3rem;
+      font-size: 0.7rem;
+    }
+
+    &.size-md {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+
+    &.size-lg {
+      padding: 0.5rem;
+      font-size: 1.75rem;
+    }
+
+    &.size-xl {
+      padding: 1rem;
+      font-size: 2.25rem;
+    }
+  }
 }

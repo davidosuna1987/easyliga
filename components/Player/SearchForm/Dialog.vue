@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { Player } from '@/domain/player'
+import { Team } from '@/domain/team'
 
 const props = defineProps({
   visible: {
     type: Boolean,
     default: false,
+  },
+  team: {
+    type: Object as PropType<Team>,
+    required: true,
   },
   unavailableShirtNumbers: {
     type: Array as PropType<number[]>,
@@ -62,6 +67,7 @@ watch(
 
     <PlayerSearchForm
       class="mt-5"
+      :team="team"
       :unavailableShirtNumbers="unavailableShirtNumbers"
       full
       @selected="handleSelected"

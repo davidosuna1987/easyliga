@@ -1,13 +1,14 @@
 .easy-form-component {
   display: flex;
   flex-direction: column;
+  gap: 0.85rem;
 
   .p-inputtext {
     width: 100%;
-    margin-top: 0.25rem;
+    // margin-top: 0.25rem;
 
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
+    // &:not(:last-child) {
+    //   margin-bottom: 1rem;
+    // }
   }
 }

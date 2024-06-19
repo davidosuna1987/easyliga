@@ -1,4 +1,5 @@
-import { ApiInviteRequest, ApiUsersResponse } from '@/types/api/user'
+import { ApiUsersResponse } from '@/types/api/user'
+import { ApiInviteRequest } from '@/types/api/invite'
 import { ApiMessageResponse } from '@/types/api/auth'
 
 const PREFIX = 'users'

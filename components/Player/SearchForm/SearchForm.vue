@@ -2,8 +2,13 @@
 import { Player, mapProfileToPlayer } from '@/domain/player'
 import { User } from '@/domain/user'
 import { ROLE_MAPPER } from '@/domain/role'
+import { Team } from '@/domain/team'
 
 const props = defineProps({
+  team: {
+    type: Object as PropType<Team>,
+    required: true,
+  },
   full: {
     type: Boolean,
     default: false,
@@ -106,7 +111,7 @@ const changePlayerShirtNumber = (player?: Player) => {
         :whereRole="ROLE_MAPPER.player"
         :full="props.full"
         :showLabel="false"
-        invite
+        :invitedToId="props.team.id"
         @selected="handlePlayerSelected"
         @invited="emit('invited', true)"
       />

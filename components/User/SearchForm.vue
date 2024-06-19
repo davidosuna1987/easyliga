@@ -2,7 +2,11 @@
 import UserService from '@/services/user'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
-import { Role } from '@/domain/role'
+import {
+  InvitedRole,
+  InvitedToType,
+  ROLE_TO_INVITED_TO_TYPE_MAPPER,
+} from '@/domain/invite'
 
 const props = defineProps({
   user: {
@@ -10,15 +14,15 @@ const props = defineProps({
     required: false,
   },
   whereRole: {
-    type: String as PropType<Role>,
+    type: String as PropType<InvitedRole>,
     default: '',
   },
   with: {
     type: Array as PropType<string[]>,
     default: [],
   },
-  invite: {
-    type: Boolean,
+  invitedToId: {
+    type: Number,
     default: false,
   },
   full: {
@@ -55,6 +59,7 @@ const withPelations = computed((): string =>
     : [...props.with].concat('profile').join(','),
 )
 
+const invite = computed((): boolean => !!props.invitedToId)
 const searchAvailable = computed((): boolean => search.value.length >= 3)
 
 const showUserInviteDialog = ref<boolean>()
@@ -150,9 +155,11 @@ const handleUserInvited = () => {
     </template>
 
     <UserInviteDialog
-      v-if="showUserInviteDialog"
+      v-if="invite"
       :visible="!!showUserInviteDialog"
       :roles="[props.whereRole]"
+      :invitedToType="ROLE_TO_INVITED_TO_TYPE_MAPPER[props.whereRole]"
+      :invitedToId="props.invitedToId"
       @hide="showUserInviteDialog = undefined"
       @invited="handleUserInvited"
     />

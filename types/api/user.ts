@@ -43,11 +43,6 @@ export type ApiUserSearchRequest = {
   search: string
 }
 
-export type ApiInviteRequest = {
-  email: string
-  roles: Role[]
-}
-
 export type ApiUserResponse = {
   success: boolean
   data: {

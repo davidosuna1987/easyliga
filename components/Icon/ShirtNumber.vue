@@ -14,6 +14,10 @@ const props = defineProps({
     type: String as PropType<ShirtColor>,
     required: false,
   },
+  isIcon: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const sizeClass = computed(() => {
@@ -29,7 +33,7 @@ const colorClass = computed(() => {
   <div
     v-if="shirtNumber !== undefined"
     class="easy-icon-shirt-number-component"
-    :class="[sizeClass, colorClass]"
+    :class="[sizeClass, colorClass, { 'is-icon': !!isIcon }]"
   >
     {{ shirtNumber }}
   </div>

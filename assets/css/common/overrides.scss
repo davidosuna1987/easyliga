@@ -97,3 +97,10 @@ a:-webkit-any-link {
 .p-dialog .p-dialog-footer button.w-full {
   width: 100%;
 }
+
+.p-message.p-message-primary {
+  background: var(--primary-color-light);
+  border: solid var(--primary-color);
+  border-width: 0 0 0 6px;
+  color: var(--text-color);
+}

@@ -41,20 +41,24 @@ async function handleLogin() {
       for="email"
       :label="t('forms.email')"
       :error="errors?.email?.[0]"
-    />
-    <InputText id="email" v-model="form.email" type="email" />
+      required
+    >
+      <InputText id="email" v-model="form.email" type="email" />
+    </FormLabel>
 
     <FormLabel
       for="password"
       :label="t('forms.password')"
       :error="errors?.password?.[0]"
-    />
-    <Password
-      input-id="password"
-      v-model="form.password"
-      toggle-mask
-      :feedback="false"
-    />
+      required
+    >
+      <Password
+        input-id="password"
+        v-model="form.password"
+        toggle-mask
+        :feedback="false"
+      />
+    </FormLabel>
 
     <template #link>
       <NuxtLink class="text-end mb-3" to="/forgot">

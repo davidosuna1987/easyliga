@@ -419,7 +419,9 @@
     "number_change": "Cambiar número de camiseta",
     "number_change_short": "Cambiar número",
     "call_number_update_disclaimer": "El número de camiseta sólo se cambiará para esta convocatoria pero el jugador mantendrá su número de camiseta habitual",
-    "already_in_use": "El número de camiseta {shirtNumber} ya está asignado a otro jugador de esta convocatoria"
+    "already_in_use": "El número de camiseta {shirtNumber} ya está asignado a otro jugador de esta convocatoria",
+    "unavailable": "Dorsales no disponibles",
+    "show_unavailable": "Ver dorsales no disponibles"
   },
   "courts": {
     "court": "Pista | Pistas",
@@ -833,5 +835,9 @@
     "country": "País | Países",
     "select": "Selecciona un país",
     "search": "Buscar país"
+  },
+  "invites": {
+    "invited_by": "Has sido invitado por el equipo {name} para formar parte de su plantilla",
+    "invited_by_fill": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo"
   }
 }

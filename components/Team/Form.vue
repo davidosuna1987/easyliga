@@ -15,6 +15,7 @@ import { User } from '@/domain/user'
 import { ApiTeam } from '@/types/api/team'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
 import { License } from '@/domain/license'
+import { ROLE_MAPPER } from '@/domain/role'
 
 const props = defineProps({
   team: {
@@ -334,9 +335,9 @@ watch(
           <template v-else>
             <UserSearchForm
               class="flex-1"
-              whereRole="coach"
+              :whereRole="ROLE_MAPPER.coach"
               :showLabel="false"
-              invite
+              :invitedToId="props.team?.id ?? undefined"
               full
               @selected="handleCoachSelected"
               @invited="editingCoach = false"
@@ -414,7 +415,9 @@ watch(
     />
 
     <PlayerSearchFormDialog
+      v-if="team"
       :visible="!!showPlayerSearchFormDialog"
+      :team="team"
       :unavailableShirtNumbers="unavailableShirtNumbers"
       :loading="loadingApi"
       @hide="showPlayerSearchFormDialog = false"

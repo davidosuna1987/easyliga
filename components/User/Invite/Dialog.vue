@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Role, ROLE_MAPPER } from '@/domain/role'
+import { InvitedRole, InvitedToType } from '@/domain/invite'
 import { ApiErrorObject } from '@/types/errors'
-import { ApiInviteRequest } from '@/types/api/user'
+import { ApiInviteRequest } from '@/types/api/invite'
 import UserService from '@/services/user'
 
 const props = defineProps({
@@ -10,8 +10,16 @@ const props = defineProps({
     default: false,
   },
   roles: {
-    type: Array as PropType<Role[]>,
-    default: [],
+    type: Array as PropType<Array<InvitedRole | 'user'>>,
+    default: ['user'],
+  },
+  invitedToType: {
+    type: String as PropType<InvitedToType>,
+    required: false,
+  },
+  invitedToId: {
+    type: Number,
+    required: false,
   },
 })
 
@@ -30,6 +38,8 @@ const errors = ref<ApiErrorObject | null>(null)
 const form = ref<ApiInviteRequest>({
   email: '',
   roles: [...props.roles],
+  invited_to_type: props.invitedToType ?? null,
+  invited_to_id: props.invitedToId ?? null,
 })
 
 const handleSubmit = async () => {

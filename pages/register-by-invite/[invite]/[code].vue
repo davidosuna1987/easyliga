@@ -14,7 +14,7 @@ const route = useRoute()
         {{ t('auth.register_by_invite') }}
       </Heading>
       <FormAuthRegister
-        :invite="Number(route.params.invite as String)"
+        :inviteId="Number(route.params.invite as String)"
         :code="(route.params.code as string)"
       />
     </div>

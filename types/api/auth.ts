@@ -40,6 +40,7 @@ export type ApiRegisterRequest = {
   email: string
   password: string
   password_confirm: string
+  shirt_number?: number
 }
 
 export type ApiRegisterByInviteRequest = ApiRegisterRequest & {
