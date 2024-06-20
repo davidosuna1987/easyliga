@@ -193,10 +193,10 @@
     },
     "club": {
       "label": "Club",
-      "teams": {
-        "label": "Equipos",
-        "list": "Listado de equipos",
-        "create": "Crear equipo"
+      "list": {
+        "create": "Crear club",
+        "label": "Listado de clubs",
+        "teams": "Listado de equipos"
       }
     }
   },
@@ -382,7 +382,8 @@
     "members": "Miembros del equipo",
     "member_select": "Selecciona un miembro del equipo",
     "shirt_color": "Color de la camiseta",
-    "color": "Color de {teamName}"
+    "color": "Color de {teamName}",
+    "add": "Añadir equipo"
   },
   "players": {
     "player": "Jugador | Jugadores",

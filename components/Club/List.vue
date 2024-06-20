@@ -37,6 +37,10 @@ const clubManagesAnyTeam = computed(() => !!clubsWithTeams.value?.length)
 
 const sedeContainsTeams = (sede: Sede) => !!sede.teams?.length
 
+const goToEditClub = (club: Club) => {
+  navigateTo(`/club/${club.id}/edit`)
+}
+
 const goToEditClubTeam = (club: Club, team: Team) => {
   // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
   navigateTo(`/club/${club.id}/teams/${team.id}/edit`)
@@ -59,10 +63,10 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           <header class="header flex justify-between">
             <Heading tag="h5" class="club__name">{{ club.name }}</Heading>
             <Button
-              :label="t('teams.create')"
+              :label="t('clubs.edit')"
               size="small"
               class="action"
-              @click.prevent="goToCreateClubTeam(club)"
+              @click.prevent="goToEditClub(club)"
             />
           </header>
           <template v-for="sede in club.sedes">
@@ -104,6 +108,15 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                 </div>
               </div>
             </EasyGrid>
+
+            <div class="flex justify-end mt-3">
+              <Button
+                :label="t('teams.add')"
+                size="small"
+                class="action"
+                @click.prevent="goToCreateClubTeam(club)"
+              />
+            </div>
           </template>
         </div>
       </EasyGrid>
@@ -114,6 +127,6 @@ onMounted(getAuthuserClubWithSedesAndTeams)
 
 <script lang="ts">
 export default {
-  name: 'ClubTeams',
+  name: 'ClubList',
 }
 </script>

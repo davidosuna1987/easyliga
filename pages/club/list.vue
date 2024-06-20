@@ -7,8 +7,8 @@ definePageMeta({
 
 <template>
   <NuxtLayout name="default">
-    <div class="easy-club-teams-page">
-      <ClubTeams />
+    <div class="easy-club-list-page">
+      <ClubList />
     </div>
   </NuxtLayout>
 </template>

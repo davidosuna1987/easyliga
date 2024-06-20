@@ -3,8 +3,8 @@ export default [
     label: 'navbar.club.label',
     items: [
       {
-        label: 'navbar.club.teams.label',
-        to: '/club/teams',
+        label: 'navbar.club.list.label',
+        to: '/club/list',
         // items: [
         //   {
         //     label: 'navbar.club.teams.list',
