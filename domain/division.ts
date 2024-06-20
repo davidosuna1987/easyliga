@@ -1,12 +1,12 @@
 import { Game, mapApiGameToGame } from '@/domain/game'
-import { Responsible, mapApiProfileToResponsible } from '@/domain/profile'
+import { User, mapApiUserToUser } from '@/domain/user'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { ApiDivision } from '@/types/api/division'
 
 export type DivisionRelations = {
   federation?: Federation
-  responsible?: Responsible
+  responsible?: User
   teams?: Team[]
   games?: Game[]
 }
@@ -27,7 +27,7 @@ export const mapApiDivisionToDivision = (
     ? mapApiFederationToFederation(apiDivision.federation)
     : undefined,
   responsible: apiDivision.responsible
-    ? mapApiProfileToResponsible(apiDivision.responsible)
+    ? mapApiUserToUser(apiDivision.responsible)
     : undefined,
   teams: apiDivision.teams
     ? apiDivision.teams.map(team => mapApiTeamToTeam(team))

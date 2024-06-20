@@ -230,6 +230,7 @@ watch(
       :address="address"
       :disabled="!!loadingApi || !props.profile"
       @address:changed="address = $event"
+      reduced
     />
 
     <footer

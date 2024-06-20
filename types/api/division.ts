@@ -1,11 +1,11 @@
 import { ApiFederation } from '@/types/api/federation'
 import { ApiGame } from '@/types/api/game'
-import { ApiProfile } from '@/types/api/profile'
+import { ApiUser } from '@/types/api/user'
 import { ApiTeam } from '@/types/api/team'
 
 export type ApiDivisionRelations = {
   federation?: ApiFederation
-  responsible?: ApiProfile
+  responsible?: ApiUser
   teams?: ApiTeam[]
   games?: ApiGame[]
 }

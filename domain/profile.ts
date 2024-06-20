@@ -142,14 +142,3 @@ export const mapApiProfileUpdateRequestToFormData = (
 
   return formData
 }
-
-export const mapApiProfileToResponsible = (
-  apiProfile: ApiProfile,
-): Responsible => ({
-  id: apiProfile.id,
-  firstName: apiProfile.first_name,
-  lastName: apiProfile.last_name,
-  email: apiProfile.email,
-  phone: apiProfile.phone || undefined,
-  avatar: apiProfile.avatar || undefined,
-})

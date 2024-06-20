@@ -1,16 +1,16 @@
 import { ApiSede } from '@/types/api/sede'
 import { ApiAddress } from '@/types/api/address'
 import { ApiFederation } from '@/types/api/federation'
-import { ApiProfile } from '@/types/api/profile'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
 import { ApiLicense } from '@/types/api/license'
+import { ApiUser } from '@/types/api/user'
 
 export type ApiClubRelations = {
   address?: ApiAddress
   sedes?: ApiSede[]
   federation?: ApiFederation
-  responsible?: ApiProfile
+  responsible?: ApiUser
   teams?: ApiTeam[]
   games?: ApiGame[]
   licenses?: ApiLicense[]
@@ -19,7 +19,7 @@ export type ApiClubRelations = {
 export type ApiClub = {
   id: number
   federation_id: number | null
-  resposnsible_id: number | null
+  responsible_id: number | null
   address_id: number | null
   name: string
   short_name: string | null
@@ -31,6 +31,19 @@ export type ApiClub = {
   updated_at: string | null
   deleted_at: string | null
 } & ApiClubRelations
+
+export type ApiClubFormRequest = {
+  id: number
+  federation_id: number | null
+  responsible_id: number | null
+  address_id: number | null
+  name: string
+  short_name: string | null
+  email: string | null
+  phone: string | null
+  website: string | null
+  address: ApiAddress
+}
 
 export type ApiClubResponse = {
   success: boolean

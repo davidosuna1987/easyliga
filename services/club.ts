@@ -1,17 +1,30 @@
-import { ApiClubResponse, ApiClubsResponse } from '@/types/api/club'
+import {
+  ApiClubFormRequest,
+  ApiClubResponse,
+  ApiClubsResponse,
+} from '@/types/api/club'
 import {
   ApiClubTeamPlayerProfileUpdateResponse,
   ApiProfileUpdateRequest,
 } from '@/types/api/profile'
 import { mapApiProfileUpdateRequestToFormData } from '@/domain/profile'
 
+const PREFIX = 'clubs'
+
 export default class ClubService {
   get(clubId: number, params?: Record<string, string>) {
-    return useApi<ApiClubResponse>(`clubs/${clubId}`, { params })
+    return useApi<ApiClubResponse>(`${PREFIX}/${clubId}`, { params })
   }
 
   fetch(params?: Record<string, string>) {
-    return useApi<ApiClubsResponse>(`clubs/fetch`, { params })
+    return useApi<ApiClubsResponse>(`${PREFIX}/fetch`, { params })
+  }
+
+  update(clubId: number, data: ApiClubFormRequest) {
+    return useApi<ApiClubResponse>(`${PREFIX}/${clubId}`, {
+      method: 'PUT',
+      body: data,
+    })
   }
 
   updateTeamPlayerProfile(

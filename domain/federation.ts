@@ -1,6 +1,6 @@
 import { ApiFederation } from '@/types/api/federation'
 import { Address, mapApiAddressToAddress } from '@/domain/address'
-import { Responsible, mapApiProfileToResponsible } from '@/domain/profile'
+import { User, mapApiUserToUser } from '@/domain/user'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
@@ -15,7 +15,7 @@ export enum FederationScope {
 }
 
 export type FederationRelations = {
-  responsible?: Responsible
+  responsible?: User
   federation?: Federation
   federations?: Federation[]
   divisions?: Division[]
@@ -46,7 +46,7 @@ export const mapApiFederationToFederation = (
   phone: apiFederation.phone ?? undefined,
   website: apiFederation.website ?? undefined,
   responsible: apiFederation.responsible
-    ? mapApiProfileToResponsible(apiFederation.responsible)
+    ? mapApiUserToUser(apiFederation.responsible)
     : undefined,
 
   federation: apiFederation.federation

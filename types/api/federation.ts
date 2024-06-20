@@ -1,5 +1,5 @@
 import { ApiLeague } from '@/types/api/league'
-import { ApiProfile } from '@/types/api/profile'
+import { ApiUser } from '@/types/api/user'
 import { ApiDivision } from '@/types/api/division'
 import { ApiClub } from '@/types/api/club'
 import { ApiSede } from '@/types/api/sede'
@@ -8,7 +8,7 @@ import { FederationScope } from '@/domain/federation'
 import { ApiLicense } from '@/types/api/license'
 
 export type ApiFederationRelations = {
-  responsible?: ApiProfile
+  responsible?: ApiUser
   federation?: ApiFederation
   federations?: ApiFederation[]
   divisions?: ApiDivision[]

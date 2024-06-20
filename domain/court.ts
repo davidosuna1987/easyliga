@@ -1,11 +1,11 @@
 import { Game, mapApiGameToGame } from '@/domain/game'
-import { Responsible, mapApiProfileToResponsible } from '@/domain/profile'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { ApiCourt } from '@/types/api/court'
+import { User, mapApiUserToUser } from '@/domain/user'
 
 export type CourtRelations = {
   sede?: Sede
-  responsible?: Responsible
+  responsible?: User
   games?: Game[]
 }
 
@@ -21,7 +21,7 @@ export const mapApiCourtToCourt = (apiCourt: ApiCourt): Court => ({
   number: apiCourt.number,
   sede: apiCourt.sede ? mapApiSedeToSede(apiCourt.sede) : undefined,
   responsible: apiCourt.responsible
-    ? mapApiProfileToResponsible(apiCourt.responsible)
+    ? mapApiUserToUser(apiCourt.responsible)
     : undefined,
   games: apiCourt.games ? apiCourt.games.map(mapApiGameToGame) : undefined,
 })

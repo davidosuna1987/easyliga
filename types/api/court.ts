@@ -1,10 +1,10 @@
 import { ApiGame } from '@/types/api/game'
-import { ApiProfile } from '@/types/api/profile'
+import { ApiUser } from '@/types/api/user'
 import { ApiSede } from '@/types/api/sede'
 
 export type ApiCourtRelations = {
   sede?: ApiSede
-  responsible?: ApiProfile
+  responsible?: ApiUser
   games?: ApiGame[]
 }
 

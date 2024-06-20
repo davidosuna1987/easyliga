@@ -1,14 +1,14 @@
 import { ApiCourt } from '@/types/api/court'
 import { ApiAddress } from '@/types/api/address'
 import { ApiClub } from '@/types/api/club'
-import { ApiProfile } from '@/types/api/profile'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
+import { ApiUser } from '@/types/api/user'
 
 export type ApiSedeRelations = {
   address?: ApiAddress
   club?: ApiClub
-  responsible?: ApiProfile
+  responsible?: ApiUser
   courts?: ApiCourt[]
   teams?: ApiTeam[]
   games?: ApiGame[]

@@ -126,7 +126,8 @@
     "select_file": "Seleccionr archivo | Seleccionar archivos",
     "file": "Archivo | Archivos",
     "change_file": "Cambiar archivo | Cambiar archivos",
-    "replace_file": "Reemplazar archivo | Reemplazar archivos"
+    "replace_file": "Reemplazar archivo | Reemplazar archivos",
+    "website": "Sitio web"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -254,10 +255,10 @@
     "assign_role": "Asignar rol a {name}",
     "assign_howto": "Haz click en un rol para asignarlo",
     "type": {
-      "admin": "Administrador",
-      "staff": "Oficial",
-      "federation": "Federación",
-      "club": "Club",
+      "admin": "Admin",
+      "staff": "Staff",
+      "federation": "Responsable de Federación",
+      "club": "Responsable de Club",
       "referee": "Árbitro",
       "coach": "Entrenador",
       "player": "Jugador",
@@ -588,7 +589,11 @@
     "delete_alert": "¿Seguro que quieres eliminar el club?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un club",
-    "no_managed_teams": "El club no gestiona ningún equipo"
+    "no_managed_teams": "El club no gestiona ningún equipo",
+    "name": "Nombre del club",
+    "short_name": "Nombre corto",
+    "responsible": "Responsable del club",
+    "search_responsible": "Buscar responsable del club"
   },
   "sedes": {
     "sede": "Sede | Sedes",

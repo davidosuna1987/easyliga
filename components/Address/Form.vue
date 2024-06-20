@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Address } from '@/domain/address'
+import { Address, mapAddress } from '@/domain/address'
 import { ApiErrorObject } from '@/types/errors'
 import {
   Country,
@@ -20,6 +20,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  reduced: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -28,18 +32,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 
-const form = ref<Address>(
-  props.address ?? {
-    id: 0,
-    line1: undefined,
-    line2: undefined,
-    city: undefined,
-    state: undefined,
-    country: undefined,
-    countryCode: undefined,
-    postalCode: undefined,
-  },
-)
+const form = ref<Address>(mapAddress(props.address))
 
 const selectedCountry = ref<Country>()
 const apiErrors = ref<ApiErrorObject | null>(null)
@@ -85,7 +78,10 @@ onMounted(() => {
 
 <template>
   <form class="easy-address-form-component">
-    <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
+    <EasyGrid
+      :breakpoints="{ sm: reduced ? 1 : 2, md: 2, lg: reduced ? 2 : 3 }"
+      :gap="3"
+    >
       <FormLabel
         class="mb-3"
         :label="t('addresses.line1')"
