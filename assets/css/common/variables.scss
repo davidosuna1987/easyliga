@@ -93,7 +93,7 @@
   --footer-height: 84px;
   --navbar-avatar-size: 38px;
   --easy-main-padding: 1rem;
-  --easy-main-padding-tablet: 4rem;
+  --easy-main-padding-tablet: 1rem;
   --layout-sidebar-width: 350px;
   --court-max-width: 550px;
   --background-image: url('/images/background.svg');
@@ -160,6 +160,12 @@ $media-sidebars-min: 1285px;
     --signature-background: #aef7f0;
     --signature-button-background: var(--primary-color-light);
     --signature-button-color: var(--text-color);
+  }
+}
+
+@media (min-width: 530px) {
+  :root {
+    --easy-main-padding-tablet: 4rem;
   }
 }
 

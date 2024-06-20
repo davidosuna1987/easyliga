@@ -270,7 +270,7 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <EasyGrid :breakpoints="{ sm: 3 }" :gap="3">
+    <EasyGrid :breakpoints="{ sm: 2, lg: 3 }" :gap="3">
       <FormLabel :label="t('forms.name')">
         <InputText v-model="form.name" @mouseover="editingCoach = false" />
       </FormLabel>
@@ -289,9 +289,7 @@ watch(
           @mouseover="editingCoach = false"
         />
       </FormLabel>
-    </EasyGrid>
 
-    <EasyGrid class="mt-3" :breakpoints="{ sm: 3 }" :gap="3">
       <FormLabel :label="t('divisions.division')">
         <DivisionSelector
           v-model="selectedDivision"
