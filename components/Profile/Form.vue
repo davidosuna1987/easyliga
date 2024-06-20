@@ -149,12 +149,7 @@ watch(
       @image="avatarChange"
     />
 
-    <Heading
-      v-if="profile.playerId"
-      tag="h5"
-      position="center"
-      class="player-id"
-    >
+    <Heading tag="h5" position="center" class="player-id">
       {{ `${t('profiles.player_id')}: ${profile.playerId}` }}
     </Heading>
 
