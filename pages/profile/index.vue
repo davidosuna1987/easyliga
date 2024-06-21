@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiProfile } from '@/types/api/profile'
-import { mapApiProfileToProfile } from '@/domain/profile'
 
 definePageMeta({
   middleware: ['auth'],

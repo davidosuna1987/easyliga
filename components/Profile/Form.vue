@@ -14,6 +14,7 @@ import ProfileService from '@/services/profile'
 import { GenderType } from '@/domain/game'
 import { getInitials } from '@/domain/utils'
 import { ApiProfile } from '@/types/api/profile'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({
   profile: {
@@ -35,9 +36,10 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
+const toast = useEasyToast()
 const clubService = new ClubService()
 const profileService = new ProfileService()
-const toast = useEasyToast()
 
 const address = ref<Address>(
   props.profile.address ?? {
@@ -153,7 +155,14 @@ watch(
       {{ `${t('profiles.player_id')}: ${profile.playerId}` }}
     </Heading>
 
-    <p class="text-lg mb-3">{{ t('forms.personal_data') }}</p>
+    <p class="text-lg mb-3">{{ t('roles.role', 2) }}</p>
+    <Tag
+      v-for="role in auth.roles"
+      :key="role"
+      :value="t(`roles.type.${role}`)"
+    />
+
+    <p class="text-lg mb-3 mt-6">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel
         class="mb-3"

@@ -209,18 +209,18 @@ export const useAuthStore = defineStore('auth', () => {
     roles.value.some(role => searchedRoles.includes(role))
 
   const loginRedirect = () => {
-    if (!isLoggedIn) return navigateTo('/login')
-
     const storedLoginRedirect = easyStorage.get('loginRedirect')
     if (storedLoginRedirect) {
       easyStorage.remove('loginRedirect')
       return navigateTo(storedLoginRedirect)
+    } else {
+      if (!isLoggedIn) return navigateTo('/login')
+
+      if (roles.value.includes('referee')) return navigateTo('/referee')
+      if (roles.value.includes('coach')) return navigateTo('/coach')
+
+      return navigateTo('/')
     }
-
-    if (roles.value.includes('referee')) return navigateTo('/referee')
-    if (roles.value.includes('coach')) return navigateTo('/coach')
-
-    return navigateTo('/')
   }
 
   const setInitialState = () => {

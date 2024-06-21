@@ -21,7 +21,7 @@ async function handleLogin() {
   const { error } = await auth.login(form.value)
 
   if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value.data?.errors
     loadingApi.value = false
   } else {

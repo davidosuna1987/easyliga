@@ -30,6 +30,8 @@ export type InviteRelations = {
 
 export type InviteAppends = {
   unavailableShirtNumbers: number[] | undefined
+  emailRoleNames: string | undefined
+  roleNames: string | undefined
 }
 
 export type Invite = {
@@ -40,6 +42,7 @@ export type Invite = {
   email: string
   roles: string
   code: string
+  usedAt: string | undefined
 } & InviteRelations &
   InviteAppends
 
@@ -51,6 +54,9 @@ export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
   email: apiInvite.email,
   roles: apiInvite.roles,
   code: apiInvite.code,
+  usedAt: apiInvite.used_at ?? undefined,
+  emailRoleNames: apiInvite.email_role_names ?? undefined,
+  roleNames: apiInvite.role_names ?? undefined,
 
   invitor: apiInvite.invitor ? mapApiUserToUser(apiInvite.invitor) : undefined,
   invitedTo: apiInvite.invited_to

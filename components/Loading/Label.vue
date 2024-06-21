@@ -21,7 +21,7 @@ const styles = computed(() => ({
 </script>
 
 <template>
-  <div class="easy-loading-label-component">
+  <div class="easy-loading-label-component flex items-center">
     <FormSpinner :size="size" :borderWidth="borderWidth" />
     <span class="label" :style="styles.label">{{ label }}</span>
   </div>

@@ -9,7 +9,7 @@ const route = useRoute()
 
 <template>
   <NuxtLayout name="mini">
-    <div class="easy-auth-page easy-register-page">
+    <div class="easy-auth-page easy-invite-register-page">
       <Heading class="mb-5" position="center">
         {{ t('auth.register_by_invite') }}
       </Heading>

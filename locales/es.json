@@ -843,7 +843,14 @@
     "search": "Buscar país"
   },
   "invites": {
+    "invite": "Invitación | Invitaciones",
     "invited_by": "Has sido invitado por el equipo {name} para formar parte de su plantilla",
-    "invited_by_fill": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo"
+    "invited_by_fill": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo",
+    "add_roles": "Añadir roles mediante invitación",
+    "adding_roles": "Añadiendo roles mediante invitación",
+    "login_to_accept": "Para poder añadir roles mediante invitación tienes que iniciar sesión"
+  },
+  "invite": {
+    "added_roles": "El rol {roles} se ha añadido correctamente | Los roles {roles} se han añadido correctamente"
   }
 }

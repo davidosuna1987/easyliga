@@ -10,6 +10,8 @@ export type ApiInviteRelations = {
 
 export type ApiInviteAppends = {
   unavailable_shirt_numbers: number[] | null
+  email_role_names: string | null
+  role_names: string | null
 }
 
 export type ApiInvite = {
@@ -20,9 +22,9 @@ export type ApiInvite = {
   email: string
   roles: string
   code: string
+  used_at: string | null
   created_at: string
   updated_at: string
-  deleted_at: string | null
 } & ApiInviteRelations &
   ApiInviteAppends
 
@@ -31,6 +33,10 @@ export type ApiInviteRequest = {
   roles: Role[]
   invited_to_type: InvitedToType | null
   invited_to_id: number | null
+}
+
+export type ApiAddRolesRequest = {
+  roles: Role[]
 }
 
 export type ApiInviteResponse = {
