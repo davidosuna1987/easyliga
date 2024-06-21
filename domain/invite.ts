@@ -40,8 +40,9 @@ export type Invite = {
   invitedToType: InvitedToType | undefined
   invitedToId: number | undefined
   email: string
-  roles: string
+  roles: Role[]
   code: string
+  type: InvitedToType | undefined
   usedAt: string | undefined
 } & InviteRelations &
   InviteAppends
@@ -54,6 +55,7 @@ export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
   email: apiInvite.email,
   roles: apiInvite.roles,
   code: apiInvite.code,
+  type: apiInvite.type ?? undefined,
   usedAt: apiInvite.used_at ?? undefined,
   emailRoleNames: apiInvite.email_role_names ?? undefined,
   roleNames: apiInvite.role_names ?? undefined,
@@ -63,5 +65,33 @@ export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
     ? mapApiTeamToTeam(apiInvite.invited_to)
     : undefined,
 
-  unavailableShirtNumbers: apiInvite.unavailable_shirt_numbers ?? undefined,
+  unavailableShirtNumbers: apiInvite.unavailable_shirt_numbers
+    ? sortShirtNumbers(apiInvite.unavailable_shirt_numbers)
+    : undefined,
 })
+
+export const sortShirtNumbers = (
+  shirtNumbers: number[],
+  desc = false,
+): number[] => shirtNumbers.sort((a, b) => (desc ? b - a : a - b))
+
+export const invitedAsRole = (invite: Invite, role: InvitedRole): boolean =>
+  invite.roles.includes(role)
+
+export const invitedAsPlayer = (invite: Invite): boolean =>
+  invitedAsRole(invite, 'player')
+
+export const invitedAsCoach = (invite: Invite): boolean =>
+  invitedAsRole(invite, 'coach')
+
+export const invitedAsClub = (invite: Invite): boolean =>
+  invitedAsRole(invite, 'club')
+
+export const invitedToType = (invite: Invite, type: InvitedToType): boolean =>
+  invite.type === type
+
+export const invitedToTeam = (invite: Invite): boolean =>
+  invitedToType(invite, 'team')
+
+export const invitedToClub = (invite: Invite): boolean =>
+  invitedToType(invite, 'club')

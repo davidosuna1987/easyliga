@@ -20,8 +20,9 @@ export type ApiInvite = {
   invited_to_type: InvitedToType | null
   invited_to_id: number | null
   email: string
-  roles: string
+  roles: Role[]
   code: string
+  type: InvitedToType | null
   used_at: string | null
   created_at: string
   updated_at: string
@@ -37,6 +38,7 @@ export type ApiInviteRequest = {
 
 export type ApiAddRolesRequest = {
   roles: Role[]
+  shirt_number: number | null
 }
 
 export type ApiInviteResponse = {

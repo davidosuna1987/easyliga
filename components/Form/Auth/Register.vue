@@ -5,7 +5,7 @@ import {
   ApiRegisterByInviteRequest,
 } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
-import { Invite, mapApiInviteToInvite } from '@/domain/invite'
+import { Invite, invitedAsPlayer, mapApiInviteToInvite } from '@/domain/invite'
 import InviteService from '@/services/invite'
 
 const props = defineProps({
@@ -45,9 +45,8 @@ const formInvite = computed(
   }),
 )
 
-const showShirtNumberInput = computed(
-  (): boolean =>
-    !!invite.value?.roles.split(',').some(role => role === 'player'),
+const showShirtNumberInput = computed((): boolean =>
+  !!invite.value ? invitedAsPlayer(invite.value) : false,
 )
 
 const getInvite = async () => {

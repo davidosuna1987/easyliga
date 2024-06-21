@@ -156,11 +156,13 @@ watch(
     </Heading>
 
     <p class="text-lg mb-3">{{ t('roles.role', 2) }}</p>
-    <Tag
-      v-for="role in auth.roles"
-      :key="role"
-      :value="t(`roles.type.${role}`)"
-    />
+    <div class="flex flex-wrap gap-1">
+      <Tag
+        v-for="role in auth.roles"
+        :key="role"
+        :value="t(`roles.type.${role}`)"
+      />
+    </div>
 
     <p class="text-lg mb-3 mt-6">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
