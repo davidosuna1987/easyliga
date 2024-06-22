@@ -423,7 +423,8 @@
     "call_number_update_disclaimer": "El dorsal sólo se cambiará para esta convocatoria pero el jugador mantendrá su dorsal habitual",
     "already_in_use": "El dorsal {shirtNumber} ya está asignado a otro jugador de esta convocatoria",
     "unavailable": "Dorsales no disponibles",
-    "show_unavailable": "Ver dorsales no disponibles"
+    "show_unavailable": "Ver dorsales no disponibles",
+    "required": "Debes seleccionar un dorsal"
   },
   "courts": {
     "court": "Pista | Pistas",
@@ -844,13 +845,13 @@
   },
   "invites": {
     "invite": "Invitación | Invitaciones",
-    "invited_by": "Has sido invitado por el equipo {name} para formar parte de su plantilla",
-    "invited_by_fill": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo",
+    "invited_by": "El equipo {teamName} quiere invitarte a formar parte de Easy Liga para que seas <strong>{roles}</strong>",
+    "invited_by_fill_player": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo",
+    "invited_by_fill_coach": "Rellena todos los campos para formar parte del equipo",
     "add_roles": "Añadir roles mediante invitación",
     "adding_roles": "Añadiendo roles mediante invitación",
     "login_to_accept": "Para poder añadir roles mediante invitación tienes que iniciar sesión",
     "loading": "Cargando invitación",
-    "select_team_shirt_number": "{teamName} te ha invitado para que seas jugador de su plantilla, pero para ello debes elegir un dorsal con el que jugar.",
     "show_unavailable_shirt_numbers": "Si tienes dudas sobre los dorsales disponibles puedes hacer click en el enlace de debajo del selector y verás los dorsales que ya están en posesión de algún otro jugador.",
     "added_roles": "El rol {roles} se ha añadido correctamente | Los roles {roles} se han añadido correctamente",
     "accept": "Aceptar invitación"

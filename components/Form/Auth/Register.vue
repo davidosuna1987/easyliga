@@ -60,24 +60,21 @@ const showShirtNumberInput = computed(
 )
 
 const getInvite = async () => {
+  if (!props.inviteId || !props.code) return
+
   loadingApi.value = true
-  if (props.inviteId && props.code) {
-    const { data, error } = await inviteService.get(
-      props.inviteId,
-      props.code,
-      {
-        with: 'invitedTo',
-        set_appends: 'unavailable_shirt_numbers',
-      },
-    )
-    if (error.value) {
-      toast.mapError(Object.values(error.value?.data?.errors))
-      errors.value = error.value.data?.errors
-    } else if (data.value) {
-      invite.value = mapApiInviteToInvite(data.value.data.invite)
-    }
-    loadingApi.value = false
+
+  const { data, error } = await inviteService.get(props.inviteId, props.code, {
+    with: 'invitedTo',
+    set_appends: 'unavailable_shirt_numbers,email_role_names',
+  })
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    navigateTo('/')
+  } else if (data.value) {
+    invite.value = mapApiInviteToInvite(data.value.data.invite)
   }
+  loadingApi.value = false
 }
 
 const handleRegister = async () => {
@@ -124,11 +121,16 @@ onMounted(() => {
           },
         }"
       >
-        <p>
-          {{ t('invites.invited_by', { name: invite.invitedTo.name }) }}
-        </p>
+        <p
+          v-html="
+            t('invites.invited_by', {
+              teamName: invite.invitedTo.name,
+              roles: invite.emailRoleNames,
+            })
+          "
+        ></p>
         <p class="mt-3">
-          {{ t('invites.invited_by_fill') }}
+          {{ t(`invites.invited_by_fill_${invite.roles[0]}`) }}
         </p>
       </Message>
     </template>
@@ -184,11 +186,10 @@ onMounted(() => {
     </FormLabel>
 
     <InviteShirtNumberInput
-      v-if="showShirtNumberInput"
+      v-if="showShirtNumberInput && invite"
       ref="shirtNumberInputRef"
-      :unavailableShirtNumbers="invite?.unavailableShirtNumbers"
+      :invite="invite"
       :error="errors?.shirt_number?.[0]"
-      showDisclaimer
       @shirtNumber:changed="form.shirt_number = $event"
     />
   </FormAuthBase>

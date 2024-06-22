@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/useAuthStore'
+import { Invite, invitedAsPlayer } from '@/domain/invite'
+
 const props = defineProps({
-  unavailableShirtNumbers: {
-    type: Array as PropType<number[]>,
-    required: false,
+  invite: {
+    type: Object as PropType<Invite>,
+    required: true,
   },
   error: {
     type: String,
@@ -23,13 +26,14 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
 const toast = useEasyToast()
 
 const selectedShirtNumber = ref<number>()
 const showUnavailableShirtNumbersDialog = ref<boolean>(false)
 
 const showUnavailableShirtNumbers = computed(
-  () => !!props.unavailableShirtNumbers?.length && props.showUnavailable,
+  () => !!props.invite.unavailableShirtNumbers?.length && props.showUnavailable,
 )
 
 const handleShirtNumberChanged = (value: number) => {
@@ -39,9 +43,9 @@ const handleShirtNumberChanged = (value: number) => {
 
 const isShirtNumberTaken = (): boolean => {
   if (
-    !!props.unavailableShirtNumbers?.length &&
+    !!props.invite.unavailableShirtNumbers?.length &&
     selectedShirtNumber.value &&
-    props.unavailableShirtNumbers.includes(selectedShirtNumber.value)
+    props.invite.unavailableShirtNumbers.includes(selectedShirtNumber.value)
   ) {
     toast.error(
       t('players.shirt_number_taken', {
@@ -61,9 +65,33 @@ defineExpose({
 
 <template>
   <aside class="easy-invite-shirt-number-input-component">
-    <p v-if="showDisclaimer" class="mb-10">
-      {{ t('invites.show_unavailable_shirt_numbers') }}
-    </p>
+    <Message
+      v-if="showDisclaimer || auth.isLoggedIn"
+      severity="primary"
+      class="mb-5 relative bottom-3"
+      :closable="false"
+      :pt="{
+        icon: {
+          style: {
+            display: 'none',
+          },
+        },
+      }"
+    >
+      <p v-if="auth.isLoggedIn" class="mb-3">
+        <span
+          v-html="
+            t('invites.invited_by', {
+              teamName: invite?.invitedTo?.name,
+              roles: invite?.emailRoleNames,
+            })
+          "
+        ></span>
+      </p>
+      <p v-if="showDisclaimer">
+        {{ t('invites.show_unavailable_shirt_numbers') }}
+      </p>
+    </Message>
 
     <FormLabel
       for="shirt_number"
@@ -103,7 +131,7 @@ defineExpose({
 
       <div class="flex gap-3 justify-center flex-wrap mt-5">
         <IconShirtNumber
-          v-for="shirtNumber in unavailableShirtNumbers"
+          v-for="shirtNumber in invite.unavailableShirtNumbers"
           :shirtNumber="shirtNumber"
           size="lg"
           isIcon

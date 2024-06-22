@@ -47,7 +47,7 @@ const getInvite = async () => {
 
   const { data, error } = await inviteService.get(props.inviteId, props.code, {
     with: 'invitedTo',
-    set_appends: 'role_names,unavailable_shirt_numbers',
+    set_appends: 'role_names,email_role_names,unavailable_shirt_numbers',
   })
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -66,7 +66,18 @@ const getInvite = async () => {
 }
 
 const handleAddRoles = async () => {
-  if (shirtNumberInputRef.value?.isShirtNumberTaken()) return
+  if (!form.value.shirt_number && isInvitedAsPlayer.value) {
+    toast.error(t('errors.correct_before_proceed'))
+    errors.value = { shirt_number: [t('shirts.required')] }
+    return
+  }
+
+  if (shirtNumberInputRef.value?.isShirtNumberTaken()) {
+    errors.value = { shirt_number: [t('shirts.required')] }
+    return
+  }
+
+  errors.value = null
 
   loadingApi.value = true
 
@@ -120,17 +131,10 @@ onMounted(() => {
       <Heading v-else tag="h5">{{ t('invites.add_roles') }}</Heading>
     </EasyGrid>
 
-    <div class="mt-6" v-if="showShirtNumberInput && invite?.invitedTo">
-      <p class="mb-3">
-        {{
-          t('invites.select_team_shirt_number', {
-            teamName: invite?.invitedTo.name,
-          })
-        }}
-      </p>
+    <div class="mt-6" v-if="showShirtNumberInput && invite">
       <InviteShirtNumberInput
         ref="shirtNumberInputRef"
-        :unavailableShirtNumbers="invite?.unavailableShirtNumbers"
+        :invite="invite"
         :error="errors?.shirt_number?.[0]"
         showDisclaimer
         @shirtNumber:changed="form.shirt_number = $event"
