@@ -47,6 +47,10 @@ export type Invite = {
 } & InviteRelations &
   InviteAppends
 
+export type InviteShirtNumberInputRef = {
+  isShirtNumberTaken: () => boolean
+}
+
 export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
   id: apiInvite.id,
   invitedBy: apiInvite.invited_by,

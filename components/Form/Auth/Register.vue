@@ -5,7 +5,12 @@ import {
   ApiRegisterByInviteRequest,
 } from '@/types/api/auth'
 import { ApiErrorObject } from '@/types/errors'
-import { Invite, invitedAsPlayer, mapApiInviteToInvite } from '@/domain/invite'
+import {
+  Invite,
+  InviteShirtNumberInputRef,
+  invitedAsPlayer,
+  mapApiInviteToInvite,
+} from '@/domain/invite'
 import InviteService from '@/services/invite'
 
 const props = defineProps({
@@ -33,6 +38,7 @@ const form = ref<ApiRegisterRequest>({
   shirt_number: undefined,
 })
 
+const shirtNumberInputRef = ref<InviteShirtNumberInputRef>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 const invite = ref<Invite | null>(null)
@@ -45,8 +51,12 @@ const formInvite = computed(
   }),
 )
 
-const showShirtNumberInput = computed((): boolean =>
-  !!invite.value ? invitedAsPlayer(invite.value) : false,
+const showShirtNumberInput = computed(
+  (): boolean =>
+    !!props.inviteId &&
+    !!props.code &&
+    !!invite.value &&
+    invitedAsPlayer(invite.value),
 )
 
 const getInvite = async () => {
@@ -71,14 +81,7 @@ const getInvite = async () => {
 }
 
 const handleRegister = async () => {
-  if (
-    !!invite.value?.unavailableShirtNumbers &&
-    form.value.shirt_number &&
-    invite.value.unavailableShirtNumbers.includes(form.value.shirt_number)
-  ) {
-    toast.error(t('players.shirt_number_taken'))
-    return
-  }
+  if (shirtNumberInputRef.value?.isShirtNumberTaken()) return
 
   loadingApi.value = true
   const { data, error } =
@@ -180,67 +183,14 @@ onMounted(() => {
       />
     </FormLabel>
 
-    <template v-if="props.inviteId && props.code">
-      <FormLabel
-        v-if="showShirtNumberInput"
-        for="shirt_number"
-        :label="t('shirts.number')"
-        :error="errors?.shirt_number?.[0]"
-        required
-      >
-        <InputNumber
-          id="shirt_number"
-          v-model="form.shirt_number"
-          showButtons
-          buttonLayout="horizontal"
-          :min="1"
-          :max="999"
-        />
-      </FormLabel>
-
-      <!-- <FormLabel
-        for="code"
-        :label="t('auth.invite_code')"
-        :error="errors?.code?.[0]"
-        required
-      >
-        <InputText
-          id="code"
-          v-model="formInvite.code"
-          type="text"
-          readonly
-          disabled
-        />
-      </FormLabel> -->
-    </template>
-
-    <template #link>
-      <div class="flex justify-end">
-        <a @click="showUnavailableShirtNumbersDialog = true">
-          {{ t('shirts.show_unavailable') }}
-        </a>
-      </div>
-    </template>
-
-    <DialogBottom
-      v-if="invite?.unavailableShirtNumbers"
-      class="easy-unavailable-shirt-numbers-dialog-component"
-      :visible="showUnavailableShirtNumbersDialog"
-      @hide="showUnavailableShirtNumbersDialog = false"
-    >
-      <template #header>
-        <Heading tag="h6">{{ t('shirts.unavailable') }}</Heading>
-      </template>
-
-      <div class="flex gap-3 justify-center flex-wrap mt-5">
-        <IconShirtNumber
-          v-for="shirtNumber in invite.unavailableShirtNumbers"
-          :shirtNumber="shirtNumber"
-          size="lg"
-          isIcon
-        />
-      </div>
-    </DialogBottom>
+    <InviteShirtNumberInput
+      v-if="showShirtNumberInput"
+      ref="shirtNumberInputRef"
+      :unavailableShirtNumbers="invite?.unavailableShirtNumbers"
+      :error="errors?.shirt_number?.[0]"
+      showDisclaimer
+      @shirtNumber:changed="form.shirt_number = $event"
+    />
   </FormAuthBase>
 </template>
 
