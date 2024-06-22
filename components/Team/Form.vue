@@ -408,6 +408,9 @@ watch(
     <ProfileDialogForm
       :profile="profileToEdit"
       :club-team-player="clubTeamPlayerData"
+      hideAvatar
+      hidePlayerId
+      hideRoles
       @updated="replaceUpdatedProfile"
       @hide="profileToEdit = undefined"
     />

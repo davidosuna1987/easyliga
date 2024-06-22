@@ -25,6 +25,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hidePlayerId: {
+    type: Boolean,
+    default: false,
+  },
+  hideRoles: {
+    type: Boolean,
+    default: false,
+  },
   clubTeamPlayer: {
     type: Object as PropType<UpdateClubTeamPlayer>,
     required: false,
@@ -151,18 +159,20 @@ watch(
       @image="avatarChange"
     />
 
-    <Heading tag="h5" position="center" class="player-id">
+    <Heading v-if="!hidePlayerId" tag="h5" position="center" class="player-id">
       {{ `${t('profiles.player_id')}: ${profile.playerId}` }}
     </Heading>
 
-    <p class="text-lg mb-3">{{ t('roles.role', 2) }}</p>
-    <div class="flex flex-wrap gap-1">
-      <Tag
-        v-for="role in auth.roles"
-        :key="role"
-        :value="t(`roles.type.${role}`)"
-      />
-    </div>
+    <template v-if="!hideRoles">
+      <p class="text-lg mb-3">{{ t('roles.role', 2) }}</p>
+      <div class="flex flex-wrap gap-1">
+        <Tag
+          v-for="role in auth.roles"
+          :key="role"
+          :value="t(`roles.type.${role}`)"
+        />
+      </div>
+    </template>
 
     <p class="text-lg mb-3 mt-6">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">

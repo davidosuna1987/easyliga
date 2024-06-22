@@ -12,6 +12,18 @@ const props = defineProps({
     type: Object as PropType<UpdateClubTeamPlayer>,
     required: false,
   },
+  hideAvatar: {
+    type: Boolean,
+    default: false,
+  },
+  hidePlayerId: {
+    type: Boolean,
+    default: false,
+  },
+  hideRoles: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { t } = useI18n()
@@ -44,7 +56,9 @@ watch(
     <ProfileForm
       :profile="profile"
       :clubTeamPlayer="clubTeamPlayer"
-      hideAvatar
+      :hideAvatar="hideAvatar"
+      :hidePlayerId="hidePlayerId"
+      :hideRoles="hideRoles"
       @updated="handleProfileFormUpdated"
     />
   </DialogBottom>
