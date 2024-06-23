@@ -143,10 +143,10 @@ onMounted(() => {
       <FormFooterActions
         class="mt-6"
         :submitLabel="t('invites.accept')"
-        hideCancel
         :disabled="loadingApi"
         :loading="loadingApi"
         @form:submit="handleAddRoles"
+        @form:cancel="navigateTo('/')"
       />
     </div>
   </form>
