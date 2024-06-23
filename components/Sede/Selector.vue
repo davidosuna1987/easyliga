@@ -16,14 +16,13 @@ const { t } = useI18n()
 
 const selectedSede = ref<Sede>()
 const sedes = ref<Sede[]>(props.sedes)
-const loadingApi = ref<boolean>(false)
 </script>
 
 <template>
   <Dropdown
     class="easy-sedes-selector-component"
     v-model="selectedSede"
-    :loading="props.loading || loadingApi"
+    :loading="props.loading"
     :options="sedes"
     optionLabel="name"
     scrollHeight="210px"
