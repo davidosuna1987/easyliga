@@ -127,7 +127,8 @@
     "file": "Archivo | Archivos",
     "change_file": "Cambiar archivo | Cambiar archivos",
     "replace_file": "Reemplazar archivo | Reemplazar archivos",
-    "website": "Sitio web"
+    "website": "Sitio web",
+    "short_name": "Nombre abreviado"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -593,9 +594,38 @@
     "select": "Selecciona un club",
     "no_managed_teams": "El club no gestiona ningún equipo",
     "name": "Nombre del club",
-    "short_name": "Nombre corto",
-    "responsible": "Responsable del club",
-    "search_responsible": "Buscar responsable del club"
+    "short_name": "Nombre corto"
+  },
+  "responsibles": {
+    "responsible": "Responsable | Responsables",
+    "create": "Crear responsable",
+    "created": "El responsable ha sido creada correctamente",
+    "edit": "Editar responsable",
+    "update": "Actualizar responsable",
+    "updated": "El responsable ha sido actualizada correctamente",
+    "delete": "Eliminar responsable",
+    "deleted": "El responsable ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el responsable?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona un responsable",
+    "search": "Buscar responsable | Buscar responsables",
+    "not_found": "No se han encontrado responsables con ese criterio de búsqueda",
+    "type": {
+      "federation": "Responsable de Federación",
+      "club": "Responsable de Club",
+      "sede": "Responsable de Sede"
+    },
+    "of": {
+      "federation": "Responsable de la federación",
+      "club": "Responsable del club",
+      "sede": "Responsable de la sede",
+      "search": {
+        "federation": "Buscar responsable para la federación | Buscar responsables para la federación",
+        "club": "Buscar responsable para el club | Buscar responsables para el club",
+        "sede": "Buscar responsable para la sede | Buscar responsables para la sede"
+      },
+      "not_found": "No hay asignado ningún responsable"
+    }
   },
   "sedes": {
     "sede": "Sede | Sedes",
@@ -608,7 +638,11 @@
     "deleted": "La sede ha sido eliminada correctamente",
     "delete_alert": "¿Seguro que quieres eliminar la sede?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "select": "Selecciona una sede"
+    "select": "Selecciona una sede",
+    "add": "Añadir sede",
+    "no_sedes": "No hay sedes disponibles",
+    "show": "Mostrar sede | Mostrar sedes",
+    "name": "Nombre de la sede"
   },
   "timeouts": {
     "timeout": "Tiempo muerto | Tiempos muertos",

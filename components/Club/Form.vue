@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ClubService from '@/services/club'
+import S from '@/services/club'
 import { Federation } from '@/domain/federation'
 import { User } from '@/domain/user'
 import { ApiClub, ApiClubFormRequest } from '@/types/api/club'
@@ -12,11 +12,24 @@ import {
   mapAddressToApiAddress,
   mapApiAddressToAddress,
 } from '@/domain/address'
+import { Sede } from '@/domain/sede'
 
 const props = defineProps({
   club: {
     type: Object as PropType<Club>,
     required: false,
+  },
+  showLicenses: {
+    type: Boolean,
+    default: true,
+  },
+  showResponsible: {
+    type: Boolean,
+    default: true,
+  },
+  showSedes: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -28,7 +41,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const toast = useEasyToast()
-const clubService = new ClubService()
+const s = new S()
 
 const form = ref<ApiClubFormRequest>({
   id: 0,
@@ -45,6 +58,7 @@ const form = ref<ApiClubFormRequest>({
 
 const selectedFederation = ref<Federation>()
 const selectedResponsible = ref<User>()
+const clubSedes = ref<Sede[]>([])
 const clubLicenses = ref<License[]>([])
 const editingResponsible = ref<boolean>(false)
 
@@ -64,6 +78,7 @@ const setFormData = (club: Club) => {
     address: mapAddressToApiAddress(club.address),
   }
 
+  clubSedes.value = club.sedes ?? []
   clubLicenses.value = club.licenses ?? []
   selectedFederation.value = club.federation
   selectedResponsible.value = club.responsible
@@ -88,7 +103,7 @@ const handleSubmit = () => {
 const handleStore = async () => {
   loadingApi.value = true
 
-  // const { data, error } = await clubService.store(form.value)
+  // const { data, error } = await s.store(form.value)
 
   // if (error.value) {
   //   toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -103,7 +118,7 @@ const handleStore = async () => {
 const handleUpdate = async () => {
   loadingApi.value = true
 
-  const { data, error } = await clubService.update(form.value.id, form.value)
+  const { data, error } = await s.update(form.value.id, form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -146,6 +161,11 @@ watch(
     immediate: true,
   },
 )
+
+defineExpose({
+  handleSubmit,
+  loadingApi,
+})
 </script>
 
 <template>
@@ -159,7 +179,7 @@ watch(
         <InputText v-model="form.name" />
       </FormLabel>
 
-      <FormLabel :label="t('clubs.short_name')">
+      <FormLabel :label="t('forms.short_name')">
         <InputText v-model="form.short_name" />
       </FormLabel>
 
@@ -192,7 +212,15 @@ watch(
       />
     </div>
 
-    <div class="mt-10" @mouseover="stopEditingResponsible">
+    <div v-if="showSedes" class="mt-10">
+      <SedeList
+        :sedes="clubSedes"
+        :clubId="club?.id"
+        @refresh="emit('refresh', true)"
+      />
+    </div>
+
+    <div v-if="showLicenses" class="mt-10" @mouseover="stopEditingResponsible">
       <LicenseList
         :type="LICENSABLE_TYPE_MAPPER.club"
         :licenses="clubLicenses"
@@ -201,12 +229,12 @@ watch(
       />
     </div>
 
-    <div class="mt-10">
+    <div v-if="showResponsible" class="mt-10">
       <FormLabel
         :label="
           editingResponsible
-            ? t('clubs.search_responsible')
-            : t('clubs.responsible')
+            ? t('responsibles.of.search.club')
+            : t('responsibles.of.club')
         "
       >
         <div class="flex sm:grid sm:grid-cols-3 gap-3 h-[42px]">
@@ -238,14 +266,13 @@ watch(
       </FormLabel>
     </div>
 
-    <div class="flex justify-end mt-10" @mouseover="stopEditingResponsible">
-      <Button
-        :label="club ? t('clubs.update') : t('clubs.create')"
-        :loading="loadingApi"
-        @click="handleSubmit"
-        type="button"
-      />
-    </div>
+    <FormFooterActions
+      class="mt-10"
+      :loading="loadingApi"
+      :submitLabel="props.club ? t('clubs.update') : t('clubs.create')"
+      hideCancel
+      @form:submit="handleSubmit"
+    />
   </form>
 </template>
 

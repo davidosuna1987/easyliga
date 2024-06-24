@@ -8,9 +8,11 @@ import {
   mapLicenseUpdateRequestToApiLicenseUpdateRequest,
 } from '@/domain/license'
 
+const PREFIX = 'licenses'
+
 export default class LicenseService {
   store(data: LicenseStoreRequest) {
-    return useApi<ApiLicenseResponse>(`licenses`, {
+    return useApi<ApiLicenseResponse>(`${PREFIX}`, {
       method: 'POST',
       body: mapApiLicenseStoreRequestToFormData(
         mapLicenseStoreRequestToApiLicenseStoreRequest(data),
@@ -19,7 +21,7 @@ export default class LicenseService {
   }
 
   update(licenseId: number, data: LicenseUpdateRequest) {
-    return useApi<ApiLicenseResponse>(`licenses/${licenseId}`, {
+    return useApi<ApiLicenseResponse>(`${PREFIX}/${licenseId}`, {
       method: 'POST',
       body: mapApiLicenseUpdateRequestToFormData(
         mapLicenseUpdateRequestToApiLicenseUpdateRequest(data),
@@ -28,7 +30,7 @@ export default class LicenseService {
   }
 
   destroy(licenseId: number) {
-    return useApi<ApiLicenseResponse>(`licenses/${licenseId}`, {
+    return useApi<ApiLicenseResponse>(`${PREFIX}/${licenseId}`, {
       method: 'DELETE',
     })
   }

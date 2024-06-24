@@ -17,7 +17,7 @@ export type ApiSedeRelations = {
 export type ApiSede = {
   id: number
   club_id: number | null
-  resposnsible_id: number | null
+  responsible_id: number | null
   address_id: number | null
   name: string
   short_name: string | null
@@ -30,7 +30,27 @@ export type ApiSede = {
   deleted_at: string | null
 } & ApiSedeRelations
 
+export type ApiSedeRequest = {
+  id: number
+  name: string
+  short_name: string | null
+  email: string | null
+  phone: string | null
+  website: string | null
+  address: ApiAddress | null
+  club_id: number | null
+  responsible_id: number | null
+}
+
 export type ApiSedeResponse = {
+  success: boolean
+  data: {
+    sede: ApiSede[]
+  }
+  errors: null
+}
+
+export type ApiSedesResponse = {
   success: boolean
   data: {
     sedes: ApiSede[]

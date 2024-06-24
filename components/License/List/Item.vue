@@ -3,7 +3,6 @@ import { License } from '@/domain/license'
 import { formatDate } from '@/domain/utils'
 import { IconNames } from '@/domain/icon'
 import LicenseService from '@/services/license'
-import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({
   license: {

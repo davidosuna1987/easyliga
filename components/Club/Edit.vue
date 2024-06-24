@@ -14,7 +14,7 @@ const getClub = async () => {
   loadingApi.value = true
 
   const { data, error } = await clubService.get(Number(route.params.clubId), {
-    with: 'federation,responsible.profile,sedes,address,licenses',
+    with: 'federation,responsible.profile,sedes.address,sedes.responsible.profile,address,licenses',
   })
 
   if (error.value) {

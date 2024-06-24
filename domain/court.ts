@@ -13,12 +13,15 @@ export type Court = {
   id: number
   name: string
   number: number
+  sedeId: number
 } & CourtRelations
 
 export const mapApiCourtToCourt = (apiCourt: ApiCourt): Court => ({
   id: apiCourt.id,
   name: apiCourt.name,
   number: apiCourt.number,
+  sedeId: apiCourt.sede_id,
+
   sede: apiCourt.sede ? mapApiSedeToSede(apiCourt.sede) : undefined,
   responsible: apiCourt.responsible
     ? mapApiUserToUser(apiCourt.responsible)

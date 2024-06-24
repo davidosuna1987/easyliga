@@ -2,11 +2,7 @@
 import UserService from '@/services/user'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
-import {
-  InvitedRole,
-  InvitedToType,
-  ROLE_TO_INVITED_TO_TYPE_MAPPER,
-} from '@/domain/invite'
+import { InvitedRole, ROLE_TO_INVITED_TO_TYPE_MAPPER } from '@/domain/invite'
 
 const props = defineProps({
   user: {
