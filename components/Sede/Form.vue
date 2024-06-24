@@ -93,6 +93,10 @@ const handleResponsibleSelected = (responsible: User) => {
 }
 
 const toggleEditingResponsible = () => {
+  if (!!editingResponsible.value && !!props.sede?.responsible) {
+    handleResponsibleSelected(props.sede.responsible)
+  }
+
   editingResponsible.value = !editingResponsible.value
 }
 
@@ -156,7 +160,6 @@ defineExpose({
       <AddressForm
         :address="form.address"
         @address:changed="handleAddressChanged"
-        @mouseover="editingResponsible = false"
         :reduced="reduced"
         :readonly="readonly"
       />
@@ -169,46 +172,44 @@ defineExpose({
             ? t('responsibles.of.search.sede')
             : t('responsibles.of.sede')
         "
+      />
+      <div
+        :class="[
+          'flex gap-3 h-[42px]',
+          reduced ? '' : 'sm:grid sm:grid-cols-3',
+        ]"
       >
-        <div
-          :class="[
-            'flex gap-3 h-[42px]',
-            reduced ? '' : 'sm:grid sm:grid-cols-3',
-          ]"
+        <template
+          v-if="
+            !!readonly || (selectedResponsible?.profile && !editingResponsible)
+          "
         >
-          <template
-            v-if="
-              !!readonly ||
-              (selectedResponsible?.profile && !editingResponsible)
-            "
-          >
-            <ProfileItem
-              v-if="selectedResponsible?.profile"
-              class="flex-1"
-              :profile="selectedResponsible.profile"
-            />
-            <p v-else>{{ t('responsibles.of.not_found') }}</p>
-          </template>
-          <template v-else>
-            <UserSearchForm
-              class="flex-1"
-              :whereRole="ROLE_MAPPER.club"
-              :showLabel="false"
-              :invitedToId="props.sede?.clubId ?? undefined"
-              full
-              @selected="handleResponsibleSelected"
-              @invited="editingResponsible = false"
-            />
-          </template>
-
-          <Button
-            v-if="!readonly && selectedResponsible?.profile"
-            :label="editingResponsible ? t('forms.cancel') : t('forms.edit')"
-            class="action w-min"
-            @click.prevent="toggleEditingResponsible()"
+          <ProfileItem
+            v-if="selectedResponsible?.profile"
+            class="flex-1"
+            :profile="selectedResponsible.profile"
           />
-        </div>
-      </FormLabel>
+          <p v-else>{{ t('responsibles.of.not_found') }}</p>
+        </template>
+        <template v-else>
+          <UserSearchForm
+            class="flex-1"
+            :whereRole="ROLE_MAPPER.club"
+            :showLabel="false"
+            :invitedToId="props.sede?.clubId ?? undefined"
+            full
+            @selected="handleResponsibleSelected"
+            @invited="editingResponsible = false"
+          />
+        </template>
+
+        <Button
+          v-if="!readonly && selectedResponsible?.profile"
+          :label="editingResponsible ? t('forms.cancel') : t('forms.edit')"
+          class="action w-min"
+          @click.prevent="toggleEditingResponsible()"
+        />
+      </div>
     </div>
 
     <FormFooterActions
