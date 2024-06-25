@@ -10,6 +10,12 @@ export type User = {
   email: string
 } & UserRelations
 
+export type UserSearchFormInputRef = {
+  editingUser: boolean
+  userChanged: boolean
+  stopEditing: () => void
+}
+
 export const mapApiUserToUser = (apiUser: ApiUser): User => ({
   id: apiUser.id,
   email: apiUser.email,

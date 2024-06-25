@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import S from '@/services/club'
+import ClubService from '@/services/club'
 import { Federation } from '@/domain/federation'
-import { User } from '@/domain/user'
+import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ApiClub, ApiClubFormRequest } from '@/types/api/club'
 import { Club } from '@/domain/club'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
@@ -41,7 +41,9 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const toast = useEasyToast()
-const s = new S()
+const clubService = new ClubService()
+
+const userSearchFormInputRef = ref<UserSearchFormInputRef>()
 
 const form = ref<ApiClubFormRequest>({
   id: 0,
@@ -61,8 +63,18 @@ const selectedResponsible = ref<User>()
 const clubSedes = ref<Sede[]>([])
 const clubLicenses = ref<License[]>([])
 const editingResponsible = ref<boolean>(false)
-
 const loadingApi = ref<boolean>(false)
+
+const userSearchFormInputLabel = computed(() => {
+  if (userSearchFormInputRef.value?.userChanged) {
+    return t('responsibles.of.new.sede')
+  }
+
+  return userSearchFormInputRef.value?.editingUser ||
+    (!readonly && !selectedResponsible.value?.profile)
+    ? t('responsibles.of.search.sede')
+    : t('responsibles.of.sede')
+})
 
 const setFormData = (club: Club) => {
   form.value = {
@@ -118,7 +130,7 @@ const handleStore = async () => {
 const handleUpdate = async () => {
   loadingApi.value = true
 
-  const { data, error } = await s.update(form.value.id, form.value)
+  const { data, error } = await clubService.update(form.value.id, form.value)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -144,9 +156,16 @@ const handleFederationSelected = (federation: Federation) => {
   form.value.federation_id = federation.id
 }
 
-const stopEditingResponsible = () => {
-  if (editingResponsible.value) {
-    editingResponsible.value = false
+const stopEditingResponsible = (cancel = false) => {
+  if (cancel && props.club?.responsible) {
+    handleResponsibleSelected(props.club.responsible)
+  }
+
+  if (
+    userSearchFormInputRef.value?.editingUser &&
+    !userSearchFormInputRef.value?.userChanged
+  ) {
+    userSearchFormInputRef.value?.stopEditing()
   }
 }
 
@@ -173,7 +192,7 @@ defineExpose({
     <EasyGrid
       :breakpoints="{ sm: 2, lg: 3 }"
       :gap="3"
-      @mouseover="stopEditingResponsible"
+      @mouseenter="stopEditingResponsible()"
     >
       <FormLabel :label="t('clubs.name')" required>
         <InputText v-model="form.name" />
@@ -203,12 +222,12 @@ defineExpose({
       </FormLabel>
     </EasyGrid>
 
-    <div class="mt-10" @mouseover="stopEditingResponsible">
+    <div class="mt-10" @mouseenter="stopEditingResponsible()">
       <Heading class="mb-3" tag="h6">{{ t('addresses.address') }}</Heading>
       <AddressForm
         :address="mapApiAddressToAddress(form.address)"
         @address:changed="handleAddressChanged"
-        @mouseover="editingResponsible = false"
+        @mouseenter="editingResponsible = false"
       />
     </div>
 
@@ -220,7 +239,11 @@ defineExpose({
       />
     </div>
 
-    <div v-if="showLicenses" class="mt-10" @mouseover="stopEditingResponsible">
+    <div
+      v-if="showLicenses"
+      class="mt-10"
+      @mouseenter="stopEditingResponsible()"
+    >
       <LicenseList
         :type="LICENSABLE_TYPE_MAPPER.club"
         :licenses="clubLicenses"
@@ -230,40 +253,18 @@ defineExpose({
     </div>
 
     <div v-if="showResponsible" class="mt-10">
-      <FormLabel
-        :label="
-          editingResponsible
-            ? t('responsibles.of.search.club')
-            : t('responsibles.of.club')
-        "
-      >
-        <div class="flex sm:grid sm:grid-cols-3 gap-3 h-[42px]">
-          <template v-if="selectedResponsible?.profile && !editingResponsible">
-            <ProfileItem
-              class="flex-1"
-              :profile="selectedResponsible.profile"
-            />
-          </template>
-
-          <template v-else>
-            <UserSearchForm
-              class="flex-1"
-              :whereRole="ROLE_MAPPER.club"
-              :showLabel="false"
-              :invitedToId="props.club?.id ?? undefined"
-              full
-              @selected="handleResponsibleSelected"
-              @invited="editingResponsible = false"
-            />
-          </template>
-
-          <Button
-            :label="editingResponsible ? t('forms.cancel') : t('forms.edit')"
-            class="action w-min"
-            @click.prevent="toggleEditingResponsible()"
-          />
-        </div>
-      </FormLabel>
+      <UserSearchFormInput
+        ref="userSearchFormInputRef"
+        :userOriginal="props.club?.responsible"
+        :userSelected="selectedResponsible"
+        :invitedToId="props.club?.id"
+        :whereRole="ROLE_MAPPER.club"
+        :label="userSearchFormInputLabel"
+        :breakpoints="{ sm: 2, lg: 3 }"
+        @selected="handleResponsibleSelected"
+        @invited="stopEditingResponsible(true)"
+        @cancel="stopEditingResponsible(true)"
+      />
     </div>
 
     <FormFooterActions

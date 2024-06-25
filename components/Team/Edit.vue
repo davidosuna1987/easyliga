@@ -53,7 +53,11 @@ onMounted(setInitialClubTeam)
       <Heading tag="h3" class="mb-5">
         {{ t('teams.edit') }}
       </Heading>
-      <TeamForm :team="team" @refresh="setInitialClubTeam" />
+      <TeamForm
+        :team="team"
+        @refresh="setInitialClubTeam"
+        @updated="setInitialClubTeam"
+      />
     </template>
   </div>
 </template>

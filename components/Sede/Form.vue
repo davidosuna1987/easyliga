@@ -7,7 +7,7 @@ import {
 } from '@/domain/sede'
 import { ApiErrorObject } from '@/types/errors'
 import SedeService from '@/services/sede'
-import { User } from '@/domain/user'
+import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ROLE_MAPPER } from '@/domain/role'
 import { Address } from '@/domain/address'
 
@@ -40,10 +40,11 @@ const { t } = useI18n()
 const toast = useEasyToast()
 const sedeService = new SedeService()
 
+const userSearchFormInputRef = ref<UserSearchFormInputRef>()
+
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 const form = ref<SedeRequest>(mapSedeToSedeRequest(props.sede))
-const editingResponsible = ref<boolean>(false)
 const selectedResponsible = ref<User | undefined>(
   props.sede?.responsible ?? undefined,
 )
@@ -51,6 +52,17 @@ const selectedResponsible = ref<User | undefined>(
 const successMessage = computed(() =>
   props.sede ? t('sedes.updated') : t('sedes.created'),
 )
+
+const userSearchFormInputLabel = computed(() => {
+  if (userSearchFormInputRef.value?.userChanged) {
+    return t('responsibles.of.new.sede')
+  }
+
+  return userSearchFormInputRef.value?.editingUser ||
+    (!readonly && !selectedResponsible.value?.profile)
+    ? t('responsibles.of.search.sede')
+    : t('responsibles.of.sede')
+})
 
 const handleSubmit = () => {
   if (props.sede) handleUpdate()
@@ -92,21 +104,20 @@ const handleResponsibleSelected = (responsible: User) => {
   form.value.responsibleId = responsible.id
 }
 
-const toggleEditingResponsible = () => {
-  if (!!editingResponsible.value && !!props.sede?.responsible) {
-    handleResponsibleSelected(props.sede.responsible)
-  }
-
-  editingResponsible.value = !editingResponsible.value
-}
-
 const handleAddressChanged = (address: Address) => {
   form.value.address = address
 }
 
-const stopEditingResponsible = () => {
-  if (editingResponsible.value) {
-    editingResponsible.value = false
+const stopEditingResponsible = (cancel = false) => {
+  if (cancel && props.sede?.responsible) {
+    handleResponsibleSelected(props.sede.responsible)
+  }
+
+  if (
+    userSearchFormInputRef.value?.editingUser &&
+    !userSearchFormInputRef.value?.userChanged
+  ) {
+    userSearchFormInputRef.value?.stopEditing()
   }
 }
 
@@ -129,11 +140,17 @@ defineExpose({
       :label="t('sedes.name')"
       :error="errors?.name?.[0]"
       :required="!readonly"
+      @mouseenter="stopEditingResponsible()"
     >
       <InputText v-model="form.name" :readonly="readonly" />
     </FormLabel>
 
-    <EasyGrid class="mt-3" :cols="2" :gap="3">
+    <EasyGrid
+      class="mt-3"
+      :cols="2"
+      :gap="3"
+      @mouseenter="stopEditingResponsible()"
+    >
       <FormLabel :label="t('forms.short_name')" :error="errors?.shortName?.[0]">
         <InputText v-model="form.shortName" :readonly="readonly" />
       </FormLabel>
@@ -155,7 +172,7 @@ defineExpose({
       </FormLabel>
     </EasyGrid>
 
-    <div class="mt-10" @mouseover="stopEditingResponsible">
+    <div class="mt-10" @mouseenter="stopEditingResponsible()">
       <Heading class="mb-3" tag="h6">{{ t('addresses.address') }}</Heading>
       <AddressForm
         :address="form.address"
@@ -166,50 +183,19 @@ defineExpose({
     </div>
 
     <div class="mt-10">
-      <FormLabel
-        :label="
-          editingResponsible || (!readonly && !selectedResponsible?.profile)
-            ? t('responsibles.of.search.sede')
-            : t('responsibles.of.sede')
-        "
+      <UserSearchFormInput
+        ref="userSearchFormInputRef"
+        :userOriginal="props.sede?.responsible"
+        :userSelected="selectedResponsible"
+        :invitedToId="props.sede?.clubId"
+        :whereRole="ROLE_MAPPER.club"
+        :label="userSearchFormInputLabel"
+        :readonly="readonly"
+        :reduced="reduced"
+        @selected="handleResponsibleSelected"
+        @invited="stopEditingResponsible(true)"
+        @cancel="stopEditingResponsible(true)"
       />
-      <div
-        :class="[
-          'flex gap-3 h-[42px]',
-          reduced ? '' : 'sm:grid sm:grid-cols-3',
-        ]"
-      >
-        <template
-          v-if="
-            !!readonly || (selectedResponsible?.profile && !editingResponsible)
-          "
-        >
-          <ProfileItem
-            v-if="selectedResponsible?.profile"
-            class="flex-1"
-            :profile="selectedResponsible.profile"
-          />
-          <p v-else>{{ t('responsibles.of.not_found') }}</p>
-        </template>
-        <template v-else>
-          <UserSearchForm
-            class="flex-1"
-            :whereRole="ROLE_MAPPER.club"
-            :showLabel="false"
-            :invitedToId="props.sede?.clubId ?? undefined"
-            full
-            @selected="handleResponsibleSelected"
-            @invited="editingResponsible = false"
-          />
-        </template>
-
-        <Button
-          v-if="!readonly && selectedResponsible?.profile"
-          :label="editingResponsible ? t('forms.cancel') : t('forms.edit')"
-          class="action w-min"
-          @click.prevent="toggleEditingResponsible()"
-        />
-      </div>
     </div>
 
     <FormFooterActions
@@ -220,6 +206,7 @@ defineExpose({
       hideCancel
       @form:submit="handleSubmit"
       @form:cancel="emit('cancel', true)"
+      @mouseenter="stopEditingResponsible()"
     />
   </form>
 </template>

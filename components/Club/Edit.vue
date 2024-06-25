@@ -40,7 +40,11 @@ onMounted(setInitialClubClub)
       <Heading tag="h3" class="mb-5">
         {{ t('clubs.edit') }}
       </Heading>
-      <ClubForm :club="club" @refresh="setInitialClubClub" />
+      <ClubForm
+        :club="club"
+        @refresh="setInitialClubClub"
+        @updated="setInitialClubClub"
+      />
     </template>
   </div>
 </template>

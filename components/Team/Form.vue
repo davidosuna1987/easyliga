@@ -11,7 +11,7 @@ import TeamService from '@/services/team'
 import { Sede } from '@/domain/sede'
 import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
-import { User } from '@/domain/user'
+import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ApiTeam } from '@/types/api/team'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
 import { License } from '@/domain/license'
@@ -33,6 +33,8 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const toast = useEasyToast()
 const teamService = new TeamService()
+
+const userSearchFormInputRef = ref<UserSearchFormInputRef>()
 
 const form = ref<TeamFormRequest>({
   id: 0,
@@ -57,8 +59,6 @@ const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const playerToRemove = ref<Player>()
 const profileToEdit = ref<Profile>()
 const showPlayerSearchFormDialog = ref<boolean>(false)
-const editingCoach = ref<boolean>(false)
-
 const loadingApi = ref<boolean>(false)
 
 const clubTeamPlayerData = computed((): UpdateClubTeamPlayer | undefined =>
@@ -73,6 +73,17 @@ const clubTeamPlayerData = computed((): UpdateClubTeamPlayer | undefined =>
 const unavailableShirtNumbers = computed(() =>
   form.value.players?.map(player => player.shirtNumber),
 )
+
+const userSearchFormInputLabel = computed(() => {
+  if (userSearchFormInputRef.value?.userChanged) {
+    return t('coaches.new')
+  }
+
+  return userSearchFormInputRef.value?.editingUser ||
+    (!readonly && !selectedCoach.value?.profile)
+    ? t('coaches.search')
+    : t('coaches.coach')
+})
 
 const setFormData = (team: Team) => {
   form.value = {
@@ -240,19 +251,17 @@ const handleAddPlayer = async (player: Player) => {
 const handleCoachSelected = (coach: User) => {
   selectedCoach.value = coach
   form.value.coachId = coach.id
-  editingCoach.value = false
 }
 
-const toggleEditingCoach = () => {
-  if (editingCoach.value === false) {
-    setTimeout(() => {
-      const input = document.querySelector(
-        '.easy-user-search-form-component input',
-      ) as HTMLInputElement
-      input?.focus()
-    }, 100)
+const stopEditingCoach = (cancel = false) => {
+  if (cancel && props.team?.coach) handleCoachSelected(props.team.coach)
+
+  if (
+    userSearchFormInputRef.value?.editingUser &&
+    !userSearchFormInputRef.value?.userChanged
+  ) {
+    userSearchFormInputRef.value?.stopEditing()
   }
-  editingCoach.value = !editingCoach.value
 }
 
 watch(
@@ -270,49 +279,37 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <EasyGrid :breakpoints="{ sm: 2, lg: 3 }" :gap="3">
+    <EasyGrid
+      :breakpoints="{ sm: 2, lg: 3 }"
+      :gap="3"
+      @mouseenter="stopEditingCoach()"
+    >
       <FormLabel :label="t('forms.name')">
-        <InputText v-model="form.name" @mouseover="editingCoach = false" />
+        <InputText v-model="form.name" />
       </FormLabel>
 
       <FormLabel :label="t('sedes.sede')">
-        <SedeSelector
-          :sedes="team?.sedes ?? []"
-          v-model="selectedSede"
-          @mouseover="editingCoach = false"
-        />
+        <SedeSelector :sedes="team?.sedes ?? []" v-model="selectedSede" />
       </FormLabel>
 
       <FormLabel :label="t('teams.shirt_color')">
-        <TeamShirtColorSelector
-          v-model="form.shirtColor"
-          @mouseover="editingCoach = false"
-        />
+        <TeamShirtColorSelector v-model="form.shirtColor" />
       </FormLabel>
 
       <FormLabel :label="t('divisions.division')">
-        <DivisionSelector
-          v-model="selectedDivision"
-          @mouseover="editingCoach = false"
-        />
+        <DivisionSelector v-model="selectedDivision" />
       </FormLabel>
 
       <FormLabel :label="t('categories.category')">
-        <CategorySelector
-          v-model="selectedCategory"
-          @mouseover="editingCoach = false"
-        />
+        <CategorySelector v-model="selectedCategory" />
       </FormLabel>
 
       <FormLabel :label="t('genders.gender')">
-        <GenderSelector
-          v-model="selectedGender"
-          @mouseover="editingCoach = false"
-        />
+        <GenderSelector v-model="selectedGender" />
       </FormLabel>
     </EasyGrid>
 
-    <div class="mt-10">
+    <div class="mt-10" @mouseenter="stopEditingCoach()">
       <LicenseList
         :type="LICENSABLE_TYPE_MAPPER.team"
         :licenses="teamLicenses"
@@ -322,36 +319,21 @@ watch(
     </div>
 
     <div class="mt-10">
-      <FormLabel
-        :label="editingCoach ? t('coaches.search') : t('coaches.coach')"
-      >
-        <div class="flex sm:grid sm:grid-cols-3 gap-3 h-[42px]">
-          <template v-if="selectedCoach?.profile && !editingCoach">
-            <ProfileItem class="flex-1" :profile="selectedCoach.profile" />
-          </template>
-
-          <template v-else>
-            <UserSearchForm
-              class="flex-1"
-              :whereRole="ROLE_MAPPER.coach"
-              :showLabel="false"
-              :invitedToId="props.team?.id ?? undefined"
-              full
-              @selected="handleCoachSelected"
-              @invited="editingCoach = false"
-            />
-          </template>
-
-          <Button
-            :label="editingCoach ? t('forms.cancel') : t('forms.edit')"
-            class="action w-min"
-            @click.prevent="toggleEditingCoach()"
-          />
-        </div>
-      </FormLabel>
+      <UserSearchFormInput
+        ref="userSearchFormInputRef"
+        :userOriginal="props.team?.coach"
+        :userSelected="selectedCoach"
+        :invitedToId="props.team?.id"
+        :whereRole="ROLE_MAPPER.coach"
+        :label="userSearchFormInputLabel"
+        :breakpoints="{ sm: 2, lg: 3 }"
+        @selected="handleCoachSelected"
+        @invited="stopEditingCoach(true)"
+        @cancel="stopEditingCoach(true)"
+      />
     </div>
 
-    <div class="players mt-10">
+    <div class="players mt-10" @mouseenter="stopEditingCoach()">
       <header class="header flex justify-between items-center mb-3">
         <FormLabel :label="t('players.player', 2)" />
         <Button
@@ -359,7 +341,6 @@ watch(
           size="small"
           class="action"
           @click.prevent="showPlayerSearchFormDialog = true"
-          @mouseover="editingCoach = false"
         />
       </header>
 
@@ -374,18 +355,16 @@ watch(
           :removePlayer="removePlayerAlert"
           editable
           @profile:edit="setProfileToEdit"
-          @mouseover="editingCoach = false"
         />
       </EasyGrid>
     </div>
 
-    <div class="flex justify-end mt-10">
-      <Button
-        :label="team ? t('teams.update') : t('teams.create')"
+    <div class="flex justify-end mt-10" @mouseenter="stopEditingCoach()">
+      <FormFooterActions
+        :submitLabel="team ? t('teams.update') : t('teams.create')"
         :loading="loadingApi"
-        @click="handleSubmit"
-        type="button"
-        @mouseover="editingCoach = false"
+        hideCancel
+        @form:submit="handleSubmit"
       />
     </div>
 

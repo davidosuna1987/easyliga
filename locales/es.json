@@ -279,7 +279,19 @@
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?",
     "no_current_games": "No tienes ningún partido en juego",
-    "coach_one_char": "E"
+    "coach_one_char": "E",
+    "new": "Nuevo entrenador",
+    "not_found": "No se han encontrado entrenadores con ese criterio de búsqueda",
+    "of": {
+      "team": "Entrenador del equipo",
+      "search": {
+        "team": "Buscar entrenador para el equipo | Buscar entrenadores para el equipo"
+      },
+      "new": {
+        "team": "Nuevo entrenador para el equipo | Nuevos entrenadores para el equipo"
+      },
+      "not_found": "No hay asignado ningún entrenador"
+    }
   },
   "games": {
     "game": "Partido | Partidos",
@@ -624,9 +636,15 @@
         "club": "Buscar responsable para el club | Buscar responsables para el club",
         "sede": "Buscar responsable para la sede | Buscar responsables para la sede"
       },
+      "new": {
+        "federation": "Nuevo responsable para la federación | Nuevos responsables para la federación",
+        "club": "Nuevo responsable para el club | Nuevos responsables para el club",
+        "sede": "Nuevo responsable para la sede | Nuevos responsables para la sede"
+      },
       "not_found": "No hay asignado ningún responsable"
     }
   },
+
   "sedes": {
     "sede": "Sede | Sedes",
     "create": "Crear sede",
