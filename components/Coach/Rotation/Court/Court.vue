@@ -22,7 +22,7 @@ import {
   isMembeSanction,
   mergeSanctionsRemovingDuplicates,
 } from '@/domain/sanction'
-import { GridBreakpoints } from 'domain/grid'
+import { GridBreakpoints } from '@/domain/grid'
 
 const props = defineProps({
   call: {

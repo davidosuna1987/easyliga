@@ -30,8 +30,6 @@ import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 import { ApiLeague } from '@/types/api/league'
 import { ApiTeam } from '@/types/api/team'
-import { ApiCourt } from '@/types/api/court'
-import { ApiSede } from '@/types/api/sede'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
@@ -182,8 +180,8 @@ export type GameStorePreviewData = {
   league: ApiLeague | null
   localTeam: ApiTeam | null
   visitorTeam: ApiTeam | null
-  sede: ApiSede | null
-  court: ApiCourt | null
+  sede: Sede | undefined
+  court: Court | undefined
 }
 
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({

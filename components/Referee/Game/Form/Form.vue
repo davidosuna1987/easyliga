@@ -8,12 +8,12 @@ import { ApiGameStoreRequest } from '@/types/api/game'
 import { ApiLeague } from '@/types/api/league'
 import { ApiTeam } from '@/types/api/team'
 import { ApiFederation } from '@/types/api/federation'
-import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
-import { ApiCourt } from '@/types/api/court'
 import { Category, GameStorePreviewData } from '@/domain/game'
 import { FederationScope } from '@/domain/federation'
 import { Gender } from '@/domain/game'
+import { Court } from '@/domain/court'
+import { Sede, mapApiSedeToSede } from '@/domain/sede'
 
 const emit = defineEmits<{
   (e: 'changed', value: GameStorePreviewData): void
@@ -33,8 +33,8 @@ const selectedGender = ref<Gender>()
 const selectedLeague = ref<ApiLeague | null>(null)
 const selectedLocalTeam = ref<ApiTeam | null>(null)
 const selectedVisitorTeam = ref<ApiTeam | null>(null)
-const selectedSede = ref<ApiSede | null>(null)
-const selectedCourt = ref<ApiCourt | null>(null)
+const selectedSede = ref<Sede>()
+const selectedCourt = ref<Court>()
 
 const loadingLeagues = ref<boolean>(false)
 const loadingTeams = ref<boolean>(false)
@@ -43,7 +43,7 @@ const loadingStore = ref<boolean>(false)
 
 const groupedLeagues = ref<ApiFederation[]>([])
 const leagueTeams = ref<ApiTeam[]>([])
-const groupedCourts = ref<ApiSede[]>([])
+const groupedCourts = ref<Sede[]>([])
 
 const localTeams = computed((): ApiTeam[] => leagueTeams.value)
 const visitorTeams = computed((): ApiTeam[] =>
@@ -82,9 +82,10 @@ const setVisitorTeam = (team: ApiTeam) => {
   selectedVisitorTeam.value = team
 }
 
-const setSedeAndCourt = (court: ApiCourt) => {
-  selectedSede.value =
-    groupedCourts.value.find(sede => sede.id === court.sede_id) ?? null
+const handleCourtSelected = (court: Court) => {
+  selectedSede.value = groupedCourts.value.find(
+    sede => sede.id === court.sedeId,
+  )
   selectedCourt.value = court
 }
 
@@ -154,7 +155,8 @@ watch(selectedLocalTeam, async team => {
       where: `club_id:${team.club_id}`,
       with: 'courts',
     })
-    groupedCourts.value = response.data.value?.data.sedes as ApiSede[]
+    groupedCourts.value =
+      response.data.value?.data.sedes.map(mapApiSedeToSede) ?? []
     loadingCourts.value = false
   }
 })
@@ -229,9 +231,9 @@ watch(onChangeData, data => {
       </FormLabel>
       <FormLabel :label="t('courts.court')" :error="errors?.court_id?.[0]">
         <SedeCourtSelector
-          :grouped-courts="groupedCourts"
+          :groupedCourts="groupedCourts"
           :disabled="!form.local_team_id"
-          @court:selected="setSedeAndCourt"
+          @court:selected="handleCourtSelected"
         />
       </FormLabel>
     </EasyGrid>

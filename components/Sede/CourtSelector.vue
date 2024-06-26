@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ApiCourt } from '@/types/api/court'
-import { ApiSede } from '@/types/api/sede'
+import { Court } from '@/domain/court'
+import { Sede } from '@/domain/sede'
 import SedeService from '@/services/sede'
+import { mapApiSedeToSede } from '@/domain/sede'
 
 const props = defineProps({
   groupedCourts: {
-    type: Array as PropType<ApiSede[]>,
+    type: Array as PropType<Sede[]>,
     default: null,
   },
   loading: {
@@ -14,32 +15,34 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['court:selected'])
+const emit = defineEmits<{
+  (e: 'court:selected', value: Court): void
+}>()
 
 const { t } = useI18n()
 const sedeService = new SedeService()
 
-const selectedCourt = ref<ApiCourt | null>(null)
+const selectedCourt = ref<Court>()
 const loadingApi = ref<boolean>(false)
 
-const groupedCourts = ref<ApiSede[]>(props.groupedCourts ?? [])
+const groupedCourts = ref<Sede[]>(props.groupedCourts ?? [])
 const options = computed(
-  (): ApiSede[] => props.groupedCourts ?? groupedCourts.value,
+  (): Sede[] => props.groupedCourts ?? groupedCourts.value,
 )
 
-const selectCourt = (court: ApiCourt) => {
-  emit('court:selected', court)
+const getGroupedCourts = async () => {
+  loadingApi.value = true
+  const { data } = await sedeService.fetch({
+    where_has: 'courts',
+    with: 'courts',
+  })
+  groupedCourts.value = data.value?.data.sedes.map(mapApiSedeToSede) ?? []
+  loadingApi.value = false
 }
 
-onMounted(async () => {
-  if (!props.groupedCourts) {
-    loadingApi.value = true
-    const response = await sedeService.fetch({
-      where_has: 'courts',
-      with: 'courts',
-    })
-    groupedCourts.value = response.data.value?.data.sedes as ApiSede[]
-    loadingApi.value = false
+onMounted(() => {
+  if (!groupedCourts.value.length) {
+    getGroupedCourts()
   }
 })
 </script>
@@ -55,7 +58,7 @@ onMounted(async () => {
     optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="t('courts.select')"
-    @update:modelValue="selectCourt"
+    @update:modelValue="emit('court:selected', $event)"
   />
 </template>
 
