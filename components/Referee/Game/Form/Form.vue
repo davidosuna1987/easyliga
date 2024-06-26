@@ -10,9 +10,8 @@ import { ApiTeam } from '@/types/api/team'
 import { ApiFederation } from '@/types/api/federation'
 import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
-import { ApiCategory } from '@/types/api/category'
 import { ApiCourt } from '@/types/api/court'
-import { GameStorePreviewData } from '@/domain/game'
+import { Category, GameStorePreviewData } from '@/domain/game'
 import { FederationScope } from '@/domain/federation'
 import { Gender } from '@/domain/game'
 
@@ -29,7 +28,7 @@ const federationService = new FederationService()
 const sedeService = new SedeService()
 const gameService = new GameService()
 
-const selectedCategory = ref<ApiCategory | null>(null)
+const selectedCategory = ref<Category>()
 const selectedGender = ref<Gender>()
 const selectedLeague = ref<ApiLeague | null>(null)
 const selectedLocalTeam = ref<ApiTeam | null>(null)
@@ -52,16 +51,18 @@ const visitorTeams = computed((): ApiTeam[] =>
 )
 
 const form = ref<ApiGameStoreRequest>({
-  league_id: null,
-  court_id: null,
-  referee_id: auth.user?.id ?? null,
-  local_team_id: null,
-  visitor_team_id: null,
+  league_id: 0,
+  court_id: 0,
+  referee_id: auth.user?.id ?? 0,
+  local_team_id: 0,
+  visitor_team_id: 0,
+  start: null,
+  status: null,
 })
 
 const errors = ref<ApiErrorObject | null>(null)
 
-const setCategory = (category: ApiCategory) => {
+const handleCategorySelected = (category: Category) => {
   selectedCategory.value = category
 }
 
@@ -172,10 +173,10 @@ const onChangeData = computed((): GameStorePreviewData => {
 
 watch(onChangeData, data => {
   errors.value = null
-  form.value.league_id = data.league?.id ?? null
-  form.value.court_id = data.court?.id ?? null
-  form.value.local_team_id = data.localTeam?.id ?? null
-  form.value.visitor_team_id = data.visitorTeam?.id ?? null
+  form.value.league_id = data.league?.id ?? 0
+  form.value.court_id = data.court?.id ?? 0
+  form.value.local_team_id = data.localTeam?.id ?? 0
+  form.value.visitor_team_id = data.visitorTeam?.id ?? 0
   emit('changed', data)
 })
 </script>
@@ -192,7 +193,7 @@ watch(onChangeData, data => {
       items="end"
     >
       <FormLabel :label="t('categories.category')">
-        <CategorySelector @selected="setCategory" />
+        <CategorySelector @category:selected="handleCategorySelected" />
       </FormLabel>
       <FormLabel :label="t('genders.gender')">
         <GenderSelector

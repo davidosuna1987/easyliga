@@ -246,6 +246,11 @@ const handleSedeSelected = (sede: Sede) => {
   form.value.sedeId = sede.id
 }
 
+const handleCategorySelected = (category: Category) => {
+  selectedCategory.value = category
+  form.value.categoryId = category.id
+}
+
 const handleGenderSelected = (gender: Gender) => {
   selectedGender.value = gender
   form.value.genderId = gender.id
@@ -306,7 +311,10 @@ watch(
       </FormLabel>
 
       <FormLabel :label="t('categories.category')">
-        <CategorySelector v-model="selectedCategory" />
+        <CategorySelector
+          v-model="selectedCategory"
+          @category:selected="handleCategorySelected"
+        />
       </FormLabel>
 
       <FormLabel :label="t('genders.gender')">

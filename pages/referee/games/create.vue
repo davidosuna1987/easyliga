@@ -9,7 +9,7 @@ definePageMeta({
 const { t } = useI18n()
 
 const game = ref(<GameStorePreviewData>{
-  category: null,
+  category: undefined,
   gender: undefined,
   league: null,
   localTeam: null,

@@ -35,11 +35,13 @@ import { ApiSede } from '@/types/api/sede'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
-export enum CategoryType {
-  MASCULINE = 'masculine',
-  FEMININE = 'feminine',
-  MIXED = 'mixed',
-}
+export const CATEGORY_MAPPER = {
+  masculine: 'masculine',
+  feminine: 'feminine',
+  mixed: 'mixed',
+} as const
+
+export type CategoryType = keyof typeof CATEGORY_MAPPER
 
 export type Category = {
   id: number
@@ -175,7 +177,7 @@ export const GameReportSideTeamTypes = {
 } as const
 
 export type GameStorePreviewData = {
-  category: ApiCategory | null
+  category: Category | undefined
   gender: Gender | undefined
   league: ApiLeague | null
   localTeam: ApiTeam | null

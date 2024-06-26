@@ -2,9 +2,6 @@
 import { useCategoryStore } from '@/stores/useCategoryStore'
 import { Category, mapApiCategoryToCategory } from '@/domain/game'
 
-const easyStorage = useEasyStorage()
-const catagoryStore = useCategoryStore()
-
 const props = defineProps({
   categories: {
     type: Array as PropType<Category[]>,
@@ -16,23 +13,36 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'category:selected', value: Category): void
+}>()
+
 const { t } = useI18n()
+const easyStorage = useEasyStorage()
+const catagoryStore = useCategoryStore()
 
 const selectedCategory = ref<Category | null>(null)
 const loadingApi = ref<boolean>(false)
 
 const categories = ref<Category[]>(
-  props.categories ?? easyStorage.getNested('categories.categories', []),
+  props.categories ??
+    easyStorage
+      .getNested('categories.categories', [])
+      .map(mapApiCategoryToCategory),
 )
 const options = computed((): Category[] => props.categories ?? categories.value)
 
-onMounted(async () => {
-  if (!props.categories) {
-    loadingApi.value = true
-    const response = await catagoryStore.fetch()
-    categories.value =
-      response.data.value?.data.categories.map(mapApiCategoryToCategory) ?? []
-    loadingApi.value = false
+const getCategories = async () => {
+  loadingApi.value = true
+  const { data } = await catagoryStore.fetch()
+  categories.value =
+    data.value?.data.categories.map(mapApiCategoryToCategory) ?? []
+  loadingApi.value = false
+}
+
+onMounted(() => {
+  if (!categories.value.length) {
+    getCategories()
   }
 })
 </script>
@@ -46,7 +56,7 @@ onMounted(async () => {
     :optionLabel="category => t(`categories.${category.name}`)"
     scrollHeight="210px"
     :placeholder="t('categories.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('category:selected', $event)"
   />
 </template>
 

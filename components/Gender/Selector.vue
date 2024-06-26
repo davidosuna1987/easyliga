@@ -2,10 +2,6 @@
 import { useGenderStore } from '@/stores/useGenderStore'
 import { Gender, mapApiGenderToGender } from '@/domain/game'
 
-const { t } = useI18n()
-const easyStorage = useEasyStorage()
-const genderStore = useGenderStore()
-
 const props = defineProps({
   genders: {
     type: Array as PropType<Gender[]>,
@@ -20,6 +16,10 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'gender:selected', value: Gender): void
 }>()
+
+const { t } = useI18n()
+const easyStorage = useEasyStorage()
+const genderStore = useGenderStore()
 
 const selectedGender = ref<Gender | null>(null)
 const loadingApi = ref<boolean>(false)
@@ -37,7 +37,7 @@ const getGenders = async () => {
   loadingApi.value = false
 }
 
-onMounted(async () => {
+onMounted(() => {
   if (!genders.value.length) {
     getGenders()
   }

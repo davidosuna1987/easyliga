@@ -98,11 +98,13 @@ export type ApiGamesResponse = {
 }
 
 export type ApiGameStoreRequest = {
-  league_id: number | null
-  court_id: number | null
-  referee_id: number | null
-  local_team_id: number | null
-  visitor_team_id: number | null
+  league_id: number
+  court_id: number
+  referee_id: number
+  local_team_id: number
+  visitor_team_id: number
+  start: Date | null
+  status: GameStatus | null
 }
 
 export type ApiGameObservationsRequest = {
