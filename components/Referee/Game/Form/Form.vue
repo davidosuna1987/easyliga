@@ -11,10 +11,10 @@ import { ApiFederation } from '@/types/api/federation'
 import { ApiSede } from '@/types/api/sede'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiCategory } from '@/types/api/category'
-import { ApiGender } from '@/types/api/gender'
 import { ApiCourt } from '@/types/api/court'
-import { GameStorePreviewData } from '@/types/game'
+import { GameStorePreviewData } from '@/domain/game'
 import { FederationScope } from '@/domain/federation'
+import { Gender } from '@/domain/game'
 
 const emit = defineEmits<{
   (e: 'changed', value: GameStorePreviewData): void
@@ -30,7 +30,7 @@ const sedeService = new SedeService()
 const gameService = new GameService()
 
 const selectedCategory = ref<ApiCategory | null>(null)
-const selectedGender = ref<ApiGender | null>(null)
+const selectedGender = ref<Gender>()
 const selectedLeague = ref<ApiLeague | null>(null)
 const selectedLocalTeam = ref<ApiTeam | null>(null)
 const selectedVisitorTeam = ref<ApiTeam | null>(null)
@@ -65,7 +65,7 @@ const setCategory = (category: ApiCategory) => {
   selectedCategory.value = category
 }
 
-const setGender = (gender: ApiGender) => {
+const handleGenderSelected = (gender: Gender) => {
   selectedGender.value = gender
 }
 
@@ -195,7 +195,10 @@ watch(onChangeData, data => {
         <CategorySelector @selected="setCategory" />
       </FormLabel>
       <FormLabel :label="t('genders.gender')">
-        <GenderSelector :disabled="!selectedCategory" @selected="setGender" />
+        <GenderSelector
+          :disabled="!selectedCategory"
+          @gender:selected="handleGenderSelected"
+        />
       </FormLabel>
       <FormLabel :label="t('leagues.league')" :error="errors?.league_id?.[0]">
         <FederationLeagueSelector

@@ -11,7 +11,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { Address } from '@/domain/address'
 import ClubService from '@/services/club'
 import ProfileService from '@/services/profile'
-import { GenderType } from '@/domain/game'
+import { GENDER_MAPPER } from '@/domain/game'
 import { getInitials } from '@/domain/utils'
 import { ApiProfile } from '@/types/api/profile'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -222,7 +222,11 @@ watch(
         <Dropdown
           v-model="form.gender"
           class="w-full"
-          :options="[GenderType.MALE, GenderType.FEMALE, GenderType.OTHER]"
+          :options="[
+            GENDER_MAPPER.male,
+            GENDER_MAPPER.female,
+            GENDER_MAPPER.other,
+          ]"
           :optionLabel="genderLabel"
           :disabled="!!loadingApi || !props.profile"
         />

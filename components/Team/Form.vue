@@ -246,6 +246,11 @@ const handleSedeSelected = (sede: Sede) => {
   form.value.sedeId = sede.id
 }
 
+const handleGenderSelected = (gender: Gender) => {
+  selectedGender.value = gender
+  form.value.genderId = gender.id
+}
+
 const handleCoachSelected = (coach: User) => {
   selectedCoach.value = coach
   form.value.coachId = coach.id
@@ -305,7 +310,10 @@ watch(
       </FormLabel>
 
       <FormLabel :label="t('genders.gender')">
-        <GenderSelector v-model="selectedGender" />
+        <GenderSelector
+          v-model="selectedGender"
+          @gender:selected="handleGenderSelected"
+        />
       </FormLabel>
     </EasyGrid>
 

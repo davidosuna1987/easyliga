@@ -17,21 +17,29 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'gender:selected', value: Gender): void
+}>()
+
 const selectedGender = ref<Gender | null>(null)
 const loadingApi = ref<boolean>(false)
 
 const genders = ref<Gender[]>(
-  props.genders ?? easyStorage.getNested('genders.genders', []),
+  props.genders ??
+    easyStorage.getNested('genders.genders', []).map(mapApiGenderToGender),
 )
 const options = computed((): Gender[] => props.genders ?? genders.value)
 
+const getGenders = async () => {
+  loadingApi.value = true
+  const { data } = await genderStore.fetch()
+  genders.value = data.value?.data.genders.map(mapApiGenderToGender) ?? []
+  loadingApi.value = false
+}
+
 onMounted(async () => {
-  if (!props.genders) {
-    loadingApi.value = true
-    const response = await genderStore.fetch()
-    genders.value =
-      response.data.value?.data.genders.map(mapApiGenderToGender) ?? []
-    loadingApi.value = false
+  if (!genders.value.length) {
+    getGenders()
   }
 })
 </script>
@@ -45,7 +53,7 @@ onMounted(async () => {
     :optionLabel="gender => t(`genders.${gender.name}`)"
     scrollHeight="210px"
     :placeholder="t('genders.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('gender:selected', $event)"
   />
 </template>
 

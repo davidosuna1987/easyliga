@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { GameStorePreviewData } from '@/types/game'
+import { GameStorePreviewData } from '@/domain/game'
 
 definePageMeta({
   middleware: ['role'],
@@ -10,7 +10,7 @@ const { t } = useI18n()
 
 const game = ref(<GameStorePreviewData>{
   category: null,
-  gender: null,
+  gender: undefined,
   league: null,
   localTeam: null,
   visitorTeam: null,
@@ -18,7 +18,7 @@ const game = ref(<GameStorePreviewData>{
   court: null,
 })
 
-const setGame = (data: GameStorePreviewData) => {
+const handleGameChanged = (data: GameStorePreviewData) => {
   game.value = data
 }
 </script>
@@ -30,7 +30,7 @@ const setGame = (data: GameStorePreviewData) => {
     </template>
     <div class="easy-referee-game-create-page">
       <Heading class="mb-5" position="center">{{ t('games.create') }}</Heading>
-      <RefereeGameForm @changed="setGame" />
+      <RefereeGameForm @changed="handleGameChanged" />
     </div>
   </NuxtLayout>
 </template>

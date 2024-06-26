@@ -28,6 +28,10 @@ import {
 } from '@/domain/game-signature'
 import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
+import { ApiLeague } from '@/types/api/league'
+import { ApiTeam } from '@/types/api/team'
+import { ApiCourt } from '@/types/api/court'
+import { ApiSede } from '@/types/api/sede'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
@@ -42,11 +46,13 @@ export type Category = {
   name: CategoryType
 }
 
-export enum GenderType {
-  MALE = 'male',
-  FEMALE = 'female',
-  OTHER = 'other',
-}
+export const GENDER_MAPPER = {
+  male: 'male',
+  female: 'female',
+  other: 'other',
+} as const
+
+export type GenderType = keyof typeof GENDER_MAPPER
 
 export type Gender = {
   id: number
@@ -168,6 +174,16 @@ export const GameReportSideTeamTypes = {
   RIGHT: 'B',
 } as const
 
+export type GameStorePreviewData = {
+  category: ApiCategory | null
+  gender: Gender | undefined
+  league: ApiLeague | null
+  localTeam: ApiTeam | null
+  visitorTeam: ApiTeam | null
+  sede: ApiSede | null
+  court: ApiCourt | null
+}
+
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
   name: apiGame.name,
@@ -254,7 +270,7 @@ export const mapApiCategoryToCategory = (
 
 export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
   id: apiGender.id,
-  name: apiGender.name as GenderType,
+  name: apiGender.name,
 })
 
 export const mapGameObservationsRequestToApiGameObservationsRequest = (

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GameStorePreviewData } from '@/types/game'
+import { GameStorePreviewData } from '@/domain/game'
 
 const props = defineProps({
   game: {
