@@ -111,7 +111,7 @@ const handleUserInvited = () => {
         v-model="search"
         :class="{ 'w-full': props.full }"
         :panelStyle="{ maxWidth: '401px' }"
-        :input-class="{ 'w-full': props.full }"
+        :input-class="{ 'w-full h-[42px]': props.full }"
         :suggestions="matchUsers"
         :auto-option-focus="false"
         :complete-on-focus="searchAvailable"
