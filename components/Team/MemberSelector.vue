@@ -27,18 +27,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['member:selected'])
+const emit = defineEmits<{
+  (e: 'member:selected', value: TeamMember): void
+}>()
 
 const { t } = useI18n()
 
 const selectedMember = ref<TeamMember | undefined>(props.member)
-
-watch(
-  () => selectedMember.value,
-  value => {
-    emit('member:selected', value)
-  },
-)
 </script>
 
 <template>
@@ -52,6 +47,7 @@ watch(
     }"
     :options="props.members"
     :placeholder="t('teams.members')"
+    @update:modelValue="emit('member:selected', $event)"
   >
     <template #value="slotProps">
       <template v-if="slotProps.value">

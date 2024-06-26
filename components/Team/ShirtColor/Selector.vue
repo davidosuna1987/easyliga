@@ -8,6 +8,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'color:selected', value: ShirtColor): void
+}>()
+
 const { t } = useI18n()
 
 const selectedColor = ref<ShirtColor>()
@@ -19,6 +23,7 @@ const selectedColor = ref<ShirtColor>()
     class="easy-team-shirt-color-selector-component"
     :options="[...SHIRT_COLORS]"
     :placeholder="t('teams.shirt_color')"
+    @update:modelValue="emit('color:selected', $event)"
   >
     <template #value="slotProps">
       <template v-if="slotProps.value">

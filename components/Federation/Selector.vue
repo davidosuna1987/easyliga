@@ -47,17 +47,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- <Dropdown
-    class="easy-federations-selector-component"
-    v-model="selectedFederation"
-    :loading="props.loading || loadingApi"
-    :options="options"
-    optionLabel="name"
-    optionValue="id"
-    scrollHeight="210px"
-    :placeholder="t('federations.select')"
-    @update:modelValue="emit('federation:selected', $event)"
-  /> -->
   <Dropdown
     class="easy-federations-selector-component"
     v-model="selectedFederation"
