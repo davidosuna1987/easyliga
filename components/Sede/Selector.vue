@@ -12,6 +12,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'sede:selected', value: Sede): void
+}>()
+
 const { t } = useI18n()
 
 const selectedSede = ref<Sede>()
@@ -27,7 +31,7 @@ const sedes = ref<Sede[]>(props.sedes)
     optionLabel="name"
     scrollHeight="210px"
     :placeholder="t('sedes.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('sede:selected', $event)"
   />
 </template>
 

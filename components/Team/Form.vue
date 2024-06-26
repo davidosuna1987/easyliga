@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { TeamFormRequest, Team, TeamMember } from '@/domain/team'
+import {
+  TeamFormRequest,
+  Team,
+  TeamMember,
+  mapTeamToTeamFormRequest,
+} from '@/domain/team'
 import {
   Player,
   UpdateClubTeamPlayer,
@@ -18,6 +23,10 @@ import { License } from '@/domain/license'
 import { ROLE_MAPPER } from '@/domain/role'
 
 const props = defineProps({
+  sedes: {
+    type: Array as PropType<Sede[]>,
+    required: true,
+  },
   team: {
     type: Object as PropType<Team>,
     required: false,
@@ -36,18 +45,7 @@ const teamService = new TeamService()
 
 const userSearchFormInputRef = ref<UserSearchFormInputRef>()
 
-const form = ref<TeamFormRequest>({
-  id: 0,
-  name: '',
-  clubId: undefined,
-  sedeId: undefined,
-  divisionId: undefined,
-  categoryId: undefined,
-  genderId: undefined,
-  coachId: undefined,
-  shirtColor: undefined,
-  players: [],
-})
+const form = ref<TeamFormRequest>(mapTeamToTeamFormRequest(props.team))
 
 const teamLicenses = ref<License[]>([])
 const selectedSede = ref<Sede>()
@@ -85,26 +83,21 @@ const userSearchFormInputLabel = computed(() => {
     : t('coaches.coach')
 })
 
-const setFormData = (team: Team) => {
-  form.value = {
-    id: team.id,
-    name: team.name,
-    clubId: team.clubId ?? undefined,
-    sedeId: team.sedeId ?? undefined,
-    divisionId: team.divisionId ?? undefined,
-    categoryId: team.categoryId ?? undefined,
-    genderId: team.genderId ?? undefined,
-    coachId: team.coachId ?? undefined,
-    shirtColor: team.shirtColor ?? undefined,
-    players: team.players ?? [],
-  }
+const setFormData = (team?: Team) => {
+  teamLicenses.value = team?.licenses ?? []
+  selectedDivision.value = team?.division
+  selectedCategory.value = team?.category
+  selectedGender.value = team?.gender
+  selectedCoach.value = team?.coach
 
-  teamLicenses.value = team.licenses ?? []
-  selectedSede.value = team.sedes?.find(sede => sede.id === team.sedeId)
-  selectedDivision.value = team.division
-  selectedCategory.value = team.category
-  selectedGender.value = team.gender
-  selectedCoach.value = team.coach
+  form.value = mapTeamToTeamFormRequest(team)
+
+  const teamSede =
+    props.sedes.length === 1
+      ? props.sedes[0]
+      : props.sedes?.find(sede => sede.id === team?.sedeId)
+
+  teamSede && handleSedeSelected(teamSede)
 }
 
 const setCaptain = (id: number) => {
@@ -248,6 +241,11 @@ const handleAddPlayer = async (player: Player) => {
   loadingApi.value = false
 }
 
+const handleSedeSelected = (sede: Sede) => {
+  selectedSede.value = sede
+  form.value.sedeId = sede.id
+}
+
 const handleCoachSelected = (coach: User) => {
   selectedCoach.value = coach
   form.value.coachId = coach.id
@@ -267,9 +265,7 @@ const stopEditingCoach = (cancel = false) => {
 watch(
   () => props.team,
   value => {
-    if (value) {
-      setFormData(value)
-    }
+    setFormData(value)
   },
   {
     immediate: true,
@@ -289,7 +285,11 @@ watch(
       </FormLabel>
 
       <FormLabel :label="t('sedes.sede')">
-        <SedeSelector :sedes="team?.sedes ?? []" v-model="selectedSede" />
+        <SedeSelector
+          :sedes="sedes"
+          v-model="selectedSede"
+          @sede:selected="handleSedeSelected"
+        />
       </FormLabel>
 
       <FormLabel :label="t('teams.shirt_color')">

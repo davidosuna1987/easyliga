@@ -54,6 +54,7 @@ onMounted(setInitialClubTeam)
         {{ t('teams.edit') }}
       </Heading>
       <TeamForm
+        :sedes="team.sedes ?? []"
         :team="team"
         @refresh="setInitialClubTeam"
         @updated="setInitialClubTeam"

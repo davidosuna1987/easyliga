@@ -38,7 +38,7 @@ onMounted(getClub)
       <Heading tag="h5" class="mb-5 font-bold">
         {{ club.name }}
       </Heading>
-      <TeamForm :club="club" />
+      <TeamForm :sedes="club.sedes ?? []" />
     </template>
   </div>
 </template>
