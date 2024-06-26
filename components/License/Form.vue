@@ -174,7 +174,7 @@ watch(
       >
         <CountrySelector
           v-model="selectedCountry"
-          @selected="handleCountrySelected"
+          @country:selected="handleCountrySelected"
         />
       </FormLabel>
     </EasyGrid>

@@ -15,6 +15,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'team:selected', value: Team): void
+}>()
+
 const { t } = useI18n()
 
 const teams = ref<Team[]>([])
@@ -48,7 +52,7 @@ onMounted(() => {
     :optionValue="team => team"
     scrollHeight="210px"
     :placeholder="t('teams.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('team:selected', $event)"
   />
 </template>
 

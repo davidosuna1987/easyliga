@@ -9,6 +9,10 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'country:selected', value: Country): void
+}>()
+
 const { t, locale } = useI18n()
 const countryStore = useCountryStore()
 
@@ -30,7 +34,7 @@ const selectedCountry = ref<Country>()
     :showClear="!readonly"
     scrollHeight="230px"
     :placeholder="t('countries.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('country:selected', $event)"
   >
     <template #value="slotProps">
       <CountryItem

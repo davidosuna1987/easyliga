@@ -137,7 +137,7 @@ onMounted(() => {
       >
         <CountrySelector
           v-model="selectedCountry"
-          @selected="handleCountrySelected"
+          @country:selected="handleCountrySelected"
         />
       </FormLabel>
       <FormLabel

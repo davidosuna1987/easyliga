@@ -222,7 +222,7 @@ watch(onChangeData, data => {
           :disabled="!selectedLeague || loadingTeams"
           :teams="localTeams"
           :loading="loadingTeams"
-          @selected="handleLocalTeamSelected"
+          @team:selected="handleLocalTeamSelected"
         />
       </FormLabel>
       <FormLabel :label="t('teams.visitor')">
@@ -230,7 +230,7 @@ watch(onChangeData, data => {
           :disabled="!form.local_team_id || loadingTeams"
           :teams="visitorTeams"
           :loading="loadingTeams"
-          @selected="handleVisitorTeamSelected"
+          @team:selected="handleVisitorTeamSelected"
         />
       </FormLabel>
       <FormLabel :label="t('courts.court')" :error="errors?.court_id?.[0]">

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ApiCourt } from '@/types/api/court'
+import { Court, mapApiCourtToCourt } from '@/domain/court'
 import CourtService from '@/services/court'
 
 const props = defineProps({
   courts: {
-    type: Array as PropType<ApiCourt[]>,
+    type: Array as PropType<Court[]>,
     default: null,
   },
   loading: {
@@ -13,21 +13,29 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'court:selected', value: Court): void
+}>()
+
 const { t } = useI18n()
 const courtService = new CourtService()
 
-const selectedCourt = ref<ApiCourt | null>(null)
+const selectedCourt = ref<Court | null>(null)
 const loadingApi = ref<boolean>(false)
-const courts = ref<ApiCourt[]>([])
+const courts = ref<Court[]>([])
 
-const options = computed((): ApiCourt[] => props.courts ?? courts.value)
+const options = computed((): Court[] => props.courts ?? courts.value)
 
-onMounted(async () => {
-  if (!props.courts) {
-    loadingApi.value = true
-    const response = await courtService.fetch()
-    courts.value = response.data.value?.data.courts ?? []
-    loadingApi.value = false
+const getCourts = async () => {
+  loadingApi.value = true
+  const { data } = await courtService.fetch()
+  courts.value = data.value?.data.courts.map(mapApiCourtToCourt) ?? []
+  loadingApi.value = false
+}
+
+onMounted(() => {
+  if (!courts.value.length) {
+    getCourts()
   }
 })
 </script>
@@ -42,7 +50,7 @@ onMounted(async () => {
     optionValue="id"
     scrollHeight="210px"
     :placeholder="t('courts.select')"
-    @update:modelValue="$emit('selected', $event)"
+    @update:modelValue="emit('court:selected', $event)"
   />
 </template>
 
