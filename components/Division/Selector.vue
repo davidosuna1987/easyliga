@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'selected', value: Division): void
+  (e: 'division:selected', value: Division): void
 }>()
 
 const { t } = useI18n()
@@ -27,13 +27,17 @@ const loadingApi = ref<boolean>(false)
 const divisions = ref<Division[]>(props.divisions ?? [])
 const options = computed((): Division[] => props.divisions ?? divisions.value)
 
-onMounted(async () => {
-  if (!props.divisions) {
-    loadingApi.value = true
-    const response = await divisionService.fetch()
-    divisions.value =
-      response.data.value?.data.divisions?.map(mapApiDivisionToDivision) ?? []
-    loadingApi.value = false
+const getDivisions = async () => {
+  loadingApi.value = true
+  const { data } = await divisionService.fetch()
+  divisions.value =
+    data.value?.data.divisions?.map(mapApiDivisionToDivision) ?? []
+  loadingApi.value = false
+}
+
+onMounted(() => {
+  if (!divisions.value.length) {
+    getDivisions()
   }
 })
 </script>
@@ -47,7 +51,7 @@ onMounted(async () => {
     optionLabel="name"
     scrollHeight="210px"
     :placeholder="t('divisions.select')"
-    @update:modelValue="emit('selected', $event)"
+    @update:modelValue="emit('division:selected', $event)"
   />
 </template>
 

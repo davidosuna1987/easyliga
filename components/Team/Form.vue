@@ -246,6 +246,11 @@ const handleSedeSelected = (sede: Sede) => {
   form.value.sedeId = sede.id
 }
 
+const handleDivisionSelected = (division: Division) => {
+  selectedDivision.value = division
+  form.value.divisionId = division.id
+}
+
 const handleCategorySelected = (category: Category) => {
   selectedCategory.value = category
   form.value.categoryId = category.id
@@ -307,7 +312,10 @@ watch(
       </FormLabel>
 
       <FormLabel :label="t('divisions.division')">
-        <DivisionSelector v-model="selectedDivision" />
+        <DivisionSelector
+          v-model="selectedDivision"
+          @division:selected="handleDivisionSelected"
+        />
       </FormLabel>
 
       <FormLabel :label="t('categories.category')">
