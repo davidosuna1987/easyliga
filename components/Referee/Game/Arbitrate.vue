@@ -6,7 +6,7 @@ import TimeoutService from '@/services/timeout'
 import {
   GameInitialData,
   GameObservationsRequest,
-  mapApiGameInitialDataToGame,
+  mapApiGameInitialDataToGameInitialData,
 } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
@@ -253,7 +253,7 @@ const getGameInitialData = async (firstCall: boolean = false) => {
     return
   }
 
-  gameInitialData.value = mapApiGameInitialDataToGame(data.value)
+  gameInitialData.value = mapApiGameInitialDataToGameInitialData(data.value)
   lastPoint.value = gameInitialData.value?.game.currentSet?.lastPoint
   localTeamCall.value = gameInitialData.value?.calls?.find(
     call => call.teamId === gameInitialData.value?.localTeam?.id,

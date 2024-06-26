@@ -18,7 +18,7 @@ import { Court, mapApiCourtToCourt } from '@/domain/court'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
-import { League } from '@/domain/league'
+import { League, mapApiLeagueToLeague } from '@/domain/league'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { Timeout } from '@/domain/timeout'
@@ -218,7 +218,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
     : undefined,
 })
 
-export const mapApiGameInitialDataToGame = (
+export const mapApiGameInitialDataToGameInitialData = (
   apiGameInitialData: ApiGameInitialDataResponse,
 ): GameInitialData => {
   const {
@@ -246,11 +246,7 @@ export const mapApiGameInitialDataToGame = (
     ),
     localTeamSetsWonCount: local_team_sets_won_count ?? 0,
     visitorTeamSetsWonCount: visitor_team_sets_won_count ?? 0,
-    league: {
-      id: league.id,
-      name: league.name,
-      season: league.season,
-    },
+    league: mapApiLeagueToLeague(league),
     referee: mapApiProfileToProfile(referee),
     localTeam: mapApiTeamToTeam(local_team),
     visitorTeam: mapApiTeamToTeam(visitor_team),
