@@ -96,18 +96,6 @@ const setFormData = (club: Club) => {
   selectedResponsible.value = club.responsible
 }
 
-const toggleEditingResponsible = () => {
-  if (editingResponsible.value === false) {
-    setTimeout(() => {
-      const input = document.querySelector(
-        '.easy-user-search-form-component input',
-      ) as HTMLInputElement
-      input?.focus()
-    }, 100)
-  }
-  editingResponsible.value = !editingResponsible.value
-}
-
 const handleSubmit = () => {
   !!props.club ? handleUpdate() : handleStore()
 }
