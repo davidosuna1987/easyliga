@@ -52,7 +52,7 @@ const mappedBreakpoints = computed(() =>
 <template>
   <div
     :class="[
-      'easy-grid-component',
+      'easy-grid-component grid',
       !!columns && `grid-cols-${columns}`,
       !!gap && `gap-${gap}`,
       !!gapX && `gap-x-${gapX}`,
