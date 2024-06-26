@@ -14,8 +14,8 @@ const game = ref(<GameStorePreviewData>{
   league: null,
   localTeam: null,
   visitorTeam: null,
-  sede: null,
-  court: null,
+  sede: undefined,
+  court: undefined,
 })
 
 const handleGameChanged = (data: GameStorePreviewData) => {
