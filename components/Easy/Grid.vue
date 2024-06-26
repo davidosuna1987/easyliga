@@ -52,7 +52,7 @@ const mappedBreakpoints = computed(() =>
 <template>
   <div
     :class="[
-      'easy-grid-component grid',
+      'easy-grid-component',
       !!columns && `grid-cols-${columns}`,
       !!gap && `gap-${gap}`,
       !!gapX && `gap-x-${gapX}`,
@@ -66,54 +66,6 @@ const mappedBreakpoints = computed(() =>
     <slot />
   </div>
 </template>
-
-<style scoped lang="scss">
-@for $i from 1 through 12 {
-  .grid-cols-#{$i} {
-    grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 640px) {
-  @for $i from 1 through 12 {
-    .sm\:grid-cols-#{$i} {
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  @for $i from 1 through 12 {
-    .md\:grid-cols-#{$i} {
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1024px) {
-  @for $i from 1 through 12 {
-    .lg\:grid-cols-#{$i} {
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1280px) {
-  @for $i from 1 through 12 {
-    .xl\:grid-cols-#{$i} {
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1536px) {
-  @for $i from 1 through 12 {
-    .\2xl\:grid-cols-#{$i} {
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-</style>
 
 <script lang="ts">
 export default {

@@ -132,60 +132,6 @@ defineExpose({
   </div>
 </template>
 
-<style scoped lang="scss">
-@for $i from 1 through 12 {
-  .grid-cols-#{$i} {
-    display: grid;
-    grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 640px) {
-  @for $i from 1 through 12 {
-    .sm\:grid-cols-#{$i} {
-      display: grid;
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  @for $i from 1 through 12 {
-    .md\:grid-cols-#{$i} {
-      display: grid;
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1024px) {
-  @for $i from 1 through 12 {
-    .lg\:grid-cols-#{$i} {
-      display: grid;
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1280px) {
-  @for $i from 1 through 12 {
-    .xl\:grid-cols-#{$i} {
-      display: grid;
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-
-@media (min-width: 1536px) {
-  @for $i from 1 through 12 {
-    .\2xl\:grid-cols-#{$i} {
-      display: grid;
-      grid-template-columns: repeat(#{$i}, minmax(0, 1fr));
-    }
-  }
-}
-</style>
-
 <script lang="ts">
 export default {
   name: 'UserSearchFormInput',
