@@ -14,17 +14,20 @@ export type LeagueRelations = {
 
 export type League = {
   id: number
+  categoryId: number
+  divisionId: number
+  genderId: number
   name: string
   season: number
-  division?: Division
-  category?: Category
-  gender?: Gender
   start?: string
   end?: string
-}
+} & LeagueRelations
 
 export const mapApiLeagueToLeague = (apiLeague: any): League => ({
   id: apiLeague.id,
+  categoryId: apiLeague.category_id,
+  divisionId: apiLeague.division_id,
+  genderId: apiLeague.gender_id,
   name: apiLeague.name,
   season: apiLeague.season,
   division: apiLeague.division

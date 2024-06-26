@@ -11,9 +11,9 @@ const { t } = useI18n()
 const game = ref(<GameStorePreviewData>{
   category: undefined,
   gender: undefined,
-  league: null,
-  localTeam: null,
-  visitorTeam: null,
+  league: undefined,
+  localTeam: undefined,
+  visitorTeam: undefined,
   sede: undefined,
   court: undefined,
 })

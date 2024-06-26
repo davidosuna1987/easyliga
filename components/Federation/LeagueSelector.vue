@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ApiLeague } from '@/types/api/league'
-import { ApiFederation } from '@/types/api/federation'
+import { League } from '@/domain/league'
+import {
+  Federation,
+  FederationScope,
+  mapApiFederationToFederation,
+} from '@/domain/federation'
 import FederationService from '@/services/federation'
-import { FederationScope } from '@/domain/federation'
 
 const props = defineProps({
   groupedLeagues: {
-    type: Array as PropType<ApiFederation[]>,
-    default: null,
+    type: Array as PropType<Federation[]>,
+    required: false,
   },
   categoryId: {
     type: Number,
@@ -24,41 +27,49 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'selected', value: ApiLeague): void
+  (e: 'league:selected', value: League): void
 }>()
 
 const { t } = useI18n()
 const federationService = new FederationService()
 
-const selectedLeague = ref<ApiLeague | null>(null)
+const selectedLeague = ref<League | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const groupedLeagues = ref<ApiFederation[]>([])
+const groupedLeagues = ref<Federation[]>([])
 const options = computed(
-  (): ApiFederation[] => props.groupedLeagues ?? groupedLeagues.value,
+  (): Federation[] => props.groupedLeagues ?? groupedLeagues.value,
 )
 
-onMounted(async () => {
-  if (!props.groupedLeagues) {
-    loadingApi.value = true
-    const response = await federationService.scopeWithLeagues(
-      FederationScope.REGIONAL,
-      {
-        category_id: props.categoryId.toString(),
-        gender_id: props.genderId.toString(),
-      },
-    )
-    groupedLeagues.value = response.data.value?.data
-      .federations as ApiFederation[]
-    loadingApi.value = false
+const getGroupedLeagues = async () => {
+  loadingApi.value = true
+  const { data } = await federationService.scopeWithLeagues(
+    FederationScope.REGIONAL,
+    {
+      category_id: String(props.categoryId),
+      gender_id: String(props.genderId),
+    },
+  )
+  groupedLeagues.value =
+    data.value?.data.federations.map(mapApiFederationToFederation) ?? []
+  loadingApi.value = false
+}
+
+onMounted(() => {
+  if (
+    !!props.categoryId &&
+    !!props.categoryId &&
+    !groupedLeagues.value.length
+  ) {
+    getGroupedLeagues()
   }
 
   // remove leagues with invalid category or gender
   groupedLeagues.value = groupedLeagues.value.filter(federation => {
     federation.leagues = federation.leagues?.filter(league => {
       return (
-        league.category_id === props.categoryId &&
-        league.gender_id === props.genderId
+        league.categoryId === props.categoryId &&
+        league.genderId === props.genderId
       )
     })
   })
@@ -77,7 +88,7 @@ onMounted(async () => {
     optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="t('leagues.select')"
-    @update:modelValue="emit('selected', $event)"
+    @update:modelValue="emit('league:selected', $event)"
   />
 </template>
 

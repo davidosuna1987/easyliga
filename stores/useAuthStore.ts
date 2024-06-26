@@ -25,7 +25,7 @@ import { mapApiProfileToProfile } from '@/domain/profile'
 import { Role } from '@/domain/role'
 import { ApiLicense } from '@/types/api/license'
 import { LicensableModelType } from '@/domain/licensable'
-import { ApiProfile } from 'types/api/profile'
+import { ApiProfile } from '@/types/api/profile'
 
 export const useAuthStore = defineStore('auth', () => {
   const easyStorage = useEasyStorage()

@@ -28,8 +28,6 @@ import {
 } from '@/domain/game-signature'
 import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
-import { ApiLeague } from '@/types/api/league'
-import { ApiTeam } from '@/types/api/team'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
@@ -177,9 +175,9 @@ export const GameReportSideTeamTypes = {
 export type GameStorePreviewData = {
   category: Category | undefined
   gender: Gender | undefined
-  league: ApiLeague | null
-  localTeam: ApiTeam | null
-  visitorTeam: ApiTeam | null
+  league: League | undefined
+  localTeam: Team | undefined
+  visitorTeam: Team | undefined
   sede: Sede | undefined
   court: Court | undefined
 }

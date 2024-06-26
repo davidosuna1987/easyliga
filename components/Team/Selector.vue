@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import TeamService from '@/services/team'
-import { ApiTeam } from '@/types/api/team'
+import { Team, mapApiTeamToTeam } from '@/domain/team'
 
 const teamService = new TeamService()
 
 const props = defineProps({
   teams: {
-    type: Array as PropType<ApiTeam[]>,
+    type: Array as PropType<Team[]>,
     default: null,
   },
   loading: {
@@ -17,18 +17,23 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const teams = ref<ApiTeam[]>([])
-const selectedTeam = ref<ApiTeam | null>(null)
+const teams = ref<Team[]>([])
+const selectedTeam = ref<Team | null>(null)
 const loadingApi = ref<boolean>(false)
 
-const options = computed((): ApiTeam[] => props.teams ?? teams.value)
+const options = computed((): Team[] => props.teams ?? teams.value)
 
-onMounted(async () => {
-  if (!props.teams) {
-    loadingApi.value = true
-    const response = await teamService.fetch()
-    teams.value = response.data.value?.data.teams ?? []
-    loadingApi.value = false
+const getTeams = async () => {
+  loadingApi.value = true
+  loadingApi.value = true
+  const { data } = await teamService.fetch()
+  teams.value = data.value?.data.teams.map(team => mapApiTeamToTeam(team)) ?? []
+  loadingApi.value = false
+}
+
+onMounted(() => {
+  if (!teams.value.length) {
+    getTeams()
   }
 })
 </script>

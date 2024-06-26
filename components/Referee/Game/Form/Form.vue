@@ -5,15 +5,18 @@ import SedeService from '@/services/sede'
 import GameService from '@/services/game'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiGameStoreRequest } from '@/types/api/game'
-import { ApiLeague } from '@/types/api/league'
-import { ApiTeam } from '@/types/api/team'
-import { ApiFederation } from '@/types/api/federation'
 import { ApiErrorObject } from '@/types/errors'
 import { Category, GameStorePreviewData } from '@/domain/game'
-import { FederationScope } from '@/domain/federation'
+import {
+  Federation,
+  FederationScope,
+  mapApiFederationToFederation,
+} from '@/domain/federation'
 import { Gender } from '@/domain/game'
 import { Court } from '@/domain/court'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
+import { Team, mapApiTeamToTeam } from '@/domain/team'
+import { League } from 'domain/league'
 
 const emit = defineEmits<{
   (e: 'changed', value: GameStorePreviewData): void
@@ -30,9 +33,9 @@ const gameService = new GameService()
 
 const selectedCategory = ref<Category>()
 const selectedGender = ref<Gender>()
-const selectedLeague = ref<ApiLeague | null>(null)
-const selectedLocalTeam = ref<ApiTeam | null>(null)
-const selectedVisitorTeam = ref<ApiTeam | null>(null)
+const selectedLeague = ref<League>()
+const selectedLocalTeam = ref<Team>()
+const selectedVisitorTeam = ref<Team>()
 const selectedSede = ref<Sede>()
 const selectedCourt = ref<Court>()
 
@@ -41,12 +44,12 @@ const loadingTeams = ref<boolean>(false)
 const loadingCourts = ref<boolean>(false)
 const loadingStore = ref<boolean>(false)
 
-const groupedLeagues = ref<ApiFederation[]>([])
-const leagueTeams = ref<ApiTeam[]>([])
+const groupedLeagues = ref<Federation[]>([])
+const leagueTeams = ref<Team[]>([])
 const groupedCourts = ref<Sede[]>([])
 
-const localTeams = computed((): ApiTeam[] => leagueTeams.value)
-const visitorTeams = computed((): ApiTeam[] =>
+const localTeams = computed((): Team[] => leagueTeams.value)
+const visitorTeams = computed((): Team[] =>
   leagueTeams.value.filter(team => team.id !== form.value.local_team_id),
 )
 
@@ -70,15 +73,15 @@ const handleGenderSelected = (gender: Gender) => {
   selectedGender.value = gender
 }
 
-const setLeague = (league: ApiLeague) => {
+const handleLeagueSelected = (league: League) => {
   selectedLeague.value = league
 }
 
-const setLocalTeam = (team: ApiTeam) => {
+const handleLocalTeamSelected = (team: Team) => {
   selectedLocalTeam.value = team
 }
 
-const setVisitorTeam = (team: ApiTeam) => {
+const handleVisitorTeamSelected = (team: Team) => {
   selectedVisitorTeam.value = team
 }
 
@@ -109,7 +112,7 @@ const getGroupedLeagues = async () => {
 
   loadingLeagues.value = true
 
-  const response = await federationService.scopeWithLeagues(
+  const { data } = await federationService.scopeWithLeagues(
     FederationScope.REGIONAL,
     {
       category_id: selectedCategory.value.id.toString(),
@@ -118,8 +121,8 @@ const getGroupedLeagues = async () => {
       // where_has: `leagues:category_id:${selectedCategory.value.id},leagues:gender_id:${selectedGender.value.id}`,
     },
   )
-  groupedLeagues.value = response.data.value?.data
-    .federations as ApiFederation[]
+  groupedLeagues.value =
+    data.value?.data.federations.map(mapApiFederationToFederation) ?? []
   loadingLeagues.value = false
 }
 
@@ -136,23 +139,24 @@ watch(selectedGender, async gender => {
 })
 
 watch(selectedLeague, async league => {
-  if (!league?.division_id || !selectedCategory.value || !selectedGender.value)
+  if (!league?.divisionId || !selectedCategory.value || !selectedGender.value)
     return
 
   loadingTeams.value = true
   const response = await teamService.fetch({
-    where: `division_id:${league?.division_id},category_id:${selectedCategory.value.id},gender_id:${selectedGender.value.id}`,
+    where: `division_id:${league?.divisionId},category_id:${selectedCategory.value.id},gender_id:${selectedGender.value.id}`,
   })
-  leagueTeams.value = response.data.value?.data.teams ?? []
+  leagueTeams.value =
+    response.data.value?.data.teams.map(team => mapApiTeamToTeam(team)) ?? []
   loadingTeams.value = false
 })
 
 watch(selectedLocalTeam, async team => {
-  if (team && team.club_id) {
+  if (team && team.clubId) {
     loadingCourts.value = true
     const response = await sedeService.fetch({
       where_has: 'courts',
-      where: `club_id:${team.club_id}`,
+      where: `club_id:${team.clubId}`,
       with: 'courts',
     })
     groupedCourts.value =
@@ -205,12 +209,12 @@ watch(onChangeData, data => {
       </FormLabel>
       <FormLabel :label="t('leagues.league')" :error="errors?.league_id?.[0]">
         <FederationLeagueSelector
-          :grouped-leagues="groupedLeagues"
+          :groupedLeagues="groupedLeagues"
           :categoryId="selectedCategory?.id"
           :genderId="selectedGender?.id"
           :disabled="!selectedGender || loadingLeagues"
           :loading="loadingLeagues"
-          @selected="setLeague"
+          @league:selected="handleLeagueSelected"
         />
       </FormLabel>
       <FormLabel :label="t('teams.local')">
@@ -218,7 +222,7 @@ watch(onChangeData, data => {
           :disabled="!selectedLeague || loadingTeams"
           :teams="localTeams"
           :loading="loadingTeams"
-          @selected="setLocalTeam"
+          @selected="handleLocalTeamSelected"
         />
       </FormLabel>
       <FormLabel :label="t('teams.visitor')">
@@ -226,7 +230,7 @@ watch(onChangeData, data => {
           :disabled="!form.local_team_id || loadingTeams"
           :teams="visitorTeams"
           :loading="loadingTeams"
-          @selected="setVisitorTeam"
+          @selected="handleVisitorTeamSelected"
         />
       </FormLabel>
       <FormLabel :label="t('courts.court')" :error="errors?.court_id?.[0]">
