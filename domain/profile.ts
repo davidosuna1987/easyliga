@@ -5,7 +5,7 @@ import {
   mapAddressToApiAddress,
   mapApiAddressToAddress,
 } from '@/domain/address'
-import { GENDER_MAPPER } from '@/domain/game'
+import { GENDER_MAPPER, GenderType } from '@/domain/game'
 import { Coach } from '@/domain/team'
 
 export const AVATAR_STYLES = {
@@ -33,7 +33,7 @@ export type Profile = {
   firstName: string
   lastName: string
   birthDate?: string
-  gender?: GENDER_MAPPER
+  gender?: GenderType
   avatar?: string
   email: string
   phone?: string
@@ -45,7 +45,7 @@ export type ProfileUpdateRequest = {
   firstName: string
   lastName: string
   birthDate?: Date
-  gender?: GENDER_MAPPER
+  gender?: GenderType
   avatar?: Image
   phone?: string
   address?: Address

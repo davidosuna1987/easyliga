@@ -1,7 +1,7 @@
 import { ApiUser } from '@/types/api/user'
 import { ApiFreshData } from '@/types/api/auth'
 import { ApiAddress, ApiAddressUpdateRequest } from '@/types/api/address'
-import { GENDER_MAPPER } from '@/domain/game'
+import { GenderType } from '@/domain/game'
 import { ApiLicense } from '@/types/api/license'
 
 export type ProfileRelations = {
@@ -18,7 +18,7 @@ export type ApiProfile = {
   first_name: string
   last_name: string
   birth_date: string | null
-  gender: GENDER_MAPPER | null
+  gender: GenderType | null
   avatar: string | null
   phone: string | null
   email: string
@@ -55,7 +55,7 @@ export type ApiProfileUpdateRequest = {
   first_name: string
   last_name: string
   birth_date: string | null
-  gender: GENDER_MAPPER | null
+  gender: GenderType | null
   avatar: File | null
   phone: string | null
 } & Omit<ApiAddressUpdateRequest, 'id'>
