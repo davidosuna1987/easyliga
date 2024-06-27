@@ -4,6 +4,7 @@ import {
   Team,
   TeamMember,
   mapTeamToTeamFormRequest,
+  mapApiTeamToTeam,
 } from '@/domain/team'
 import {
   Player,
@@ -17,7 +18,6 @@ import { Sede } from '@/domain/sede'
 import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
 import { User, UserSearchFormInputRef } from '@/domain/user'
-import { ApiTeam } from '@/types/api/team'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
 import { License } from '@/domain/license'
 import { ROLE_MAPPER } from '@/domain/role'
@@ -34,18 +34,23 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'created', value: ApiTeam): void
-  (e: 'updated', value: ApiTeam): void
+  (e: 'team:created', value: Team): void
+  (e: 'team:updated', value: Team): void
   (e: 'refresh', value: boolean): void
 }>()
 
 const { t } = useI18n()
+const route = useRoute()
 const toast = useEasyToast()
 const teamService = new TeamService()
 
 const userSearchFormInputRef = ref<UserSearchFormInputRef>()
 
-const form = ref<TeamFormRequest>(mapTeamToTeamFormRequest(props.team))
+const clubId = ref(props.team?.clubId ?? Number(route.params.clubId))
+
+const form = ref<TeamFormRequest>(
+  mapTeamToTeamFormRequest(props.team, clubId.value),
+)
 
 const teamLicenses = ref<License[]>([])
 const selectedSede = ref<Sede>()
@@ -90,7 +95,7 @@ const setFormData = (team?: Team) => {
   selectedGender.value = team?.gender
   selectedCoach.value = team?.coach
 
-  form.value = mapTeamToTeamFormRequest(team)
+  form.value = mapTeamToTeamFormRequest(team, clubId.value)
 
   const teamSede =
     props.sedes.length === 1
@@ -193,7 +198,7 @@ const handleStore = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
     toast.success(t('teams.created'))
-    emit('created', data.value.data.team)
+    emit('team:created', mapApiTeamToTeam(data.value.data.team))
   }
 
   loadingApi.value = false
@@ -207,7 +212,7 @@ const handleUpdate = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
     toast.success(t('teams.updated'))
-    emit('updated', data.value.data.team)
+    emit('team:updated', mapApiTeamToTeam(data.value.data.team))
   }
 
   loadingApi.value = false
@@ -333,7 +338,7 @@ watch(
       </FormLabel>
     </EasyGrid>
 
-    <div class="mt-10" @mouseenter="stopEditingCoach()">
+    <div v-if="team" class="mt-10" @mouseenter="stopEditingCoach()">
       <LicenseList
         :type="LICENSABLE_TYPE_MAPPER.team"
         :licenses="teamLicenses"
@@ -357,7 +362,7 @@ watch(
       />
     </div>
 
-    <div class="players mt-10" @mouseenter="stopEditingCoach()">
+    <div v-if="team" class="players mt-10" @mouseenter="stopEditingCoach()">
       <header class="header flex justify-between items-center mb-3">
         <FormLabel :label="t('players.player', 2)" />
         <Button

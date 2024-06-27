@@ -100,7 +100,9 @@ defineExpose({
       `flex gap-3 h-[42px]`,
       !!mappedBreakpoints
         ? mappedBreakpoints
-        : 'grid-cols-[minmax(0,1fr)_auto]',
+        : !readonly &&
+          selectedUser?.profile &&
+          'grid-cols-[minmax(0,1fr)_auto]',
     ]"
   >
     <template v-if="!!readonly || (selectedUser?.profile && !editingUser)">

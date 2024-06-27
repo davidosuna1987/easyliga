@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Club, mapApiClubToClub } from '@/domain/club'
 import ClubService from '@/services/club'
+import { Team } from 'domain/team'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -25,6 +26,10 @@ const getClub = async () => {
   loadingApi.value = false
 }
 
+const handleTeamCreated = (team: Team) => {
+  navigateTo(`/clubs/${club.value?.id}/teams/${team.id}/edit`)
+}
+
 onMounted(getClub)
 </script>
 
@@ -38,7 +43,7 @@ onMounted(getClub)
       <Heading tag="h5" class="mb-5 font-bold">
         {{ club.name }}
       </Heading>
-      <TeamForm :sedes="club.sedes ?? []" />
+      <TeamForm :sedes="club.sedes ?? []" @team:created="handleTeamCreated" />
     </template>
   </div>
 </template>

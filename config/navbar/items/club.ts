@@ -4,7 +4,7 @@ export default [
     items: [
       {
         label: 'navbar.club.list.label',
-        to: '/club/list',
+        to: '/clubs',
         // items: [
         //   {
         //     label: 'navbar.club.teams.list',

@@ -171,10 +171,13 @@ export const mapCallPlayerDataToTeamMember = (
   coach: false,
 })
 
-export const mapTeamToTeamFormRequest = (team?: Team): TeamFormRequest => ({
+export const mapTeamToTeamFormRequest = (
+  team?: Team,
+  clubId = 0,
+): TeamFormRequest => ({
   id: team?.id ?? 0,
   name: team?.name ?? '',
-  clubId: team?.clubId ?? undefined,
+  clubId: team?.clubId ?? clubId,
   sedeId: team?.sedeId ?? undefined,
   divisionId: team?.divisionId ?? undefined,
   categoryId: team?.categoryId ?? undefined,

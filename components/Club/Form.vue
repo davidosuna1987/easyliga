@@ -67,13 +67,13 @@ const loadingApi = ref<boolean>(false)
 
 const userSearchFormInputLabel = computed(() => {
   if (userSearchFormInputRef.value?.userChanged) {
-    return t('responsibles.of.new.sede')
+    return t('responsibles.of.new.club')
   }
 
   return userSearchFormInputRef.value?.editingUser ||
     (!readonly && !selectedResponsible.value?.profile)
-    ? t('responsibles.of.search.sede')
-    : t('responsibles.of.sede')
+    ? t('responsibles.of.search.club')
+    : t('responsibles.of.club')
 })
 
 const setFormData = (club: Club) => {
