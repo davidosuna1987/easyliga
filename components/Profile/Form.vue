@@ -176,25 +176,13 @@ watch(
 
     <p class="text-lg mb-3 mt-6">{{ t('forms.personal_data') }}</p>
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.email')"
-        :error="errors?.email?.[0]"
-      >
+      <FormLabel :label="t('forms.email')" :error="errors?.email?.[0]">
         <InputText v-model="form.email" class="w-full" type="email" />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.name')"
-        :error="errors?.firstName?.[0]"
-      >
+      <FormLabel :label="t('forms.name')" :error="errors?.firstName?.[0]">
         <InputText v-model="form.firstName" class="w-full" type="text" />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.surnames')"
-        :error="errors?.lastName?.[0]"
-      >
+      <FormLabel :label="t('forms.surnames')" :error="errors?.lastName?.[0]">
         <InputText
           v-model="form.lastName"
           class="w-full"
@@ -202,11 +190,7 @@ watch(
           :disabled="!!loadingApi || !props.profile"
         />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.birth_date')"
-        :error="errors?.birthDate?.[0]"
-      >
+      <FormLabel :label="t('forms.birth_date')" :error="errors?.birthDate?.[0]">
         <Calendar
           v-model="form.birthDate"
           class="w-full"
@@ -214,11 +198,7 @@ watch(
           :touchUI="true"
         />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.gender')"
-        :error="errors?.gender?.[0]"
-      >
+      <FormLabel :label="t('forms.gender')" :error="errors?.gender?.[0]">
         <Dropdown
           v-model="form.gender"
           class="w-full"
@@ -231,11 +211,7 @@ watch(
           :disabled="!!loadingApi || !props.profile"
         />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('forms.phone')"
-        :error="errors?.phone?.[0]"
-      >
+      <FormLabel :label="t('forms.phone')" :error="errors?.phone?.[0]">
         <InputText
           v-model="form.phone"
           class="w-full"

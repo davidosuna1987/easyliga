@@ -584,7 +584,7 @@
   "addresses": {
     "address": "Dirección | Direcciones",
     "company": "Nombre o razón social",
-    "line1": "Dirección",
+    "line1": "Calle",
     "line2": "Puerta, apartamento, local...",
     "city": "Ciudad",
     "state": "Provincia",

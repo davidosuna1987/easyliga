@@ -19,7 +19,7 @@ const props = defineProps({
   },
   invitedToId: {
     type: Number,
-    default: false,
+    required: false,
   },
   full: {
     type: Boolean,

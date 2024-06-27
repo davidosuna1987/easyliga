@@ -83,7 +83,6 @@ onMounted(() => {
       :gap="3"
     >
       <FormLabel
-        class="mb-3"
         :label="t('addresses.line1')"
         :error="mappedErrors?.line1?.[0]"
       >
@@ -95,7 +94,6 @@ onMounted(() => {
         />
       </FormLabel>
       <FormLabel
-        class="mb-3"
         :label="t('addresses.line2')"
         :error="mappedErrors?.line2?.[0]"
       >
@@ -106,11 +104,7 @@ onMounted(() => {
           :disabled="disabled"
         />
       </FormLabel>
-      <FormLabel
-        class="mb-3"
-        :label="t('addresses.city')"
-        :error="mappedErrors?.city?.[0]"
-      >
+      <FormLabel :label="t('addresses.city')" :error="mappedErrors?.city?.[0]">
         <InputText
           v-model="form.city"
           class="w-full"
@@ -119,7 +113,6 @@ onMounted(() => {
         />
       </FormLabel>
       <FormLabel
-        class="mb-3"
         :label="t('addresses.state')"
         :error="mappedErrors?.state?.[0]"
       >
@@ -131,7 +124,6 @@ onMounted(() => {
         />
       </FormLabel>
       <FormLabel
-        class="mb-3"
         :label="t('addresses.country')"
         :error="mappedErrors?.country?.[0]"
       >
@@ -141,7 +133,6 @@ onMounted(() => {
         />
       </FormLabel>
       <FormLabel
-        class="mb-3"
         :label="t('addresses.postal_code')"
         :error="mappedErrors?.postalCode?.[0]"
       >
