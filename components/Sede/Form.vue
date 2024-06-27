@@ -2,6 +2,7 @@
 import {
   Sede,
   SedeRequest,
+  mapApiSedeToSede,
   mapSedeRequestToApiSedeRequest,
   mapSedeToSedeRequest,
 } from '@/domain/sede'
@@ -10,6 +11,7 @@ import SedeService from '@/services/sede'
 import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ROLE_MAPPER } from '@/domain/role'
 import { Address } from '@/domain/address'
+import { ApiSedeResponse } from '@/types/api/sede'
 
 const props = defineProps({
   sede: {
@@ -32,7 +34,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'cancel', value: boolean): void
-  (e: 'success', value: string): void
+  (e: 'success', value: Sede): void
   (e: 'loading', value: boolean): void
 }>()
 
@@ -87,13 +89,17 @@ const handleUpdate = async () => {
   handleResponse(data, error, 'updated')
 }
 
-const handleResponse = (data: any, error: any, action: string) => {
+const handleResponse = (
+  data: Ref<ApiSedeResponse | null>,
+  error: any,
+  action: string,
+) => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors))
     errors.value = error.value.data?.errors
   } else if (data.value) {
     toast.success(successMessage.value)
-    emit('success', action)
+    emit('success', mapApiSedeToSede(data.value.data.sede))
   }
 
   loadingApi.value = false

@@ -22,7 +22,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'hide', value: boolean): void
-  (e: 'refresh', value: boolean): void
+  (e: 'refresh', value: Sede): void
 }>()
 
 const { t } = useI18n()
@@ -60,7 +60,7 @@ watch(
       :clubId="clubId"
       :readonly="readonly"
       reduced
-      @success="emit('refresh', true)"
+      @success="emit('refresh', $event)"
       @loading="formLoading = $event"
       @cancel="emit('hide', true)"
     />

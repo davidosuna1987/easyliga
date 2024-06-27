@@ -304,13 +304,13 @@ watch(
         <InputText v-model="form.name" />
       </FormLabel>
 
-      <FormLabel :label="t('sedes.sede')">
-        <SedeSelector
-          :sedes="sedes"
-          v-model="selectedSede"
-          @sede:selected="handleSedeSelected"
-        />
-      </FormLabel>
+      <SedeSelector
+        v-model="selectedSede"
+        :sedes="sedes"
+        :clubId="clubId"
+        :label="t('sedes.sede')"
+        @sede:selected="handleSedeSelected"
+      />
 
       <FormLabel :label="t('teams.shirt_color')">
         <TeamShirtColorSelector v-model="form.shirtColor" />

@@ -45,7 +45,7 @@ export type ApiSedeRequest = {
 export type ApiSedeResponse = {
   success: boolean
   data: {
-    sede: ApiSede[]
+    sede: ApiSede
   }
   errors: null
 }
