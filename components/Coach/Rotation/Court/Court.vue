@@ -149,6 +149,10 @@ const selectedCaptain = computed(() =>
   ),
 )
 
+const liberoPlayers = computed(() =>
+  props.call.playersData.filter(player => player.libero),
+)
+
 const playerToReplace = computed(() => {
   const rotationPlayer = rotationPlayers.value.find(
     rp => rp.currentPosition === selectedPosition.value,
@@ -656,19 +660,25 @@ watch(
 
     <div>
       <div
-        class="easy-captain-selector inline-flex items-center justify-center mt-10 lg:mt-0 mb-3 p-2 absolute left-0 bottom-[-78px]"
+        class="easy-captain-selector inline-flex items-center justify-center"
         :class="{ 'pointer-events-none': !canChangeCaptain }"
         @click="toggleCaptainSelector"
       >
-        <GameCallSelectedCaptain
-          class="cursor-pointer"
-          :class="{
-            'grayscale pointer-events-none':
-              rotation?.locked && props.isInitialRotationAssignment,
-          }"
-          :player="selectedCaptain"
-          :inCourtCaptain="!props.isInitialRotationAssignment"
-        />
+        <EasyGrid :gap="5">
+          <GameCallSelectedCaptain
+            class="cursor-pointer"
+            :class="{
+              'grayscale pointer-events-none':
+                rotation?.locked && props.isInitialRotationAssignment,
+            }"
+            :player="selectedCaptain"
+            :inCourtCaptain="!props.isInitialRotationAssignment"
+          />
+          <GameCallSelectedLibero
+            v-for="libero in liberoPlayers"
+            :player="libero"
+          />
+        </EasyGrid>
         <Button
           v-if="
             canChangeCaptain &&

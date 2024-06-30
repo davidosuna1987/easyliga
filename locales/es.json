@@ -396,7 +396,14 @@
     "member_select": "Selecciona un miembro del equipo",
     "shirt_color": "Color de la camiseta",
     "color": "Color de {teamName}",
-    "add": "Añadir equipo"
+    "add": "Añadir equipo",
+    "lower_category_teams_with_players": {
+      "label": "Jugadores de categorías inferiores",
+      "show": "Mostrar jugadores de categorías inferiores",
+      "hide": "Ocultar jugadores de categorías inferiores",
+      "select": "Selecciona jugadores de categorías inferiores",
+      "loading": "Cargando jugadores de categorías inferiores"
+    }
   },
   "players": {
     "player": "Jugador | Jugadores",
@@ -644,7 +651,6 @@
       "not_found": "No hay asignado ningún responsable"
     }
   },
-
   "sedes": {
     "sede": "Sede | Sedes",
     "create": "Crear sede",

@@ -255,7 +255,7 @@ onBeforeUnmount((): void => {
 
         <div
           v-if="!currentSetRotation?.players?.length"
-          class="flex items-center justify-end mt-24 md:mt-8"
+          class="flex items-center justify-end mt-5"
         >
           <Button
             type="submit"

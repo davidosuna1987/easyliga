@@ -41,6 +41,7 @@ const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
 
 const showSignatureDialog = ref<boolean>(false)
+const showLowerCategoryTeamsWithPlayers = ref<boolean>(false)
 const loadingSignature = ref<boolean>(false)
 
 const form = computed(() => {
@@ -91,10 +92,10 @@ const addSelectedPlayer = (player: Player) => {
   const shirtNumberExists = selectedPlayers.value.some(
     selectedPlayer => selectedPlayer.shirtNumber === player.shirtNumber,
   )
-  if (shirtNumberExists) {
-    toast.error(t('shirts.already_in_use'))
-    return
-  }
+  // if (shirtNumberExists) {
+  //   toast.error(t('shirts.already_in_use'))
+  //   return
+  // }
 
   // selectedPlayers.value?.push(player)
 
@@ -111,6 +112,7 @@ const addSelectedPlayer = (player: Player) => {
 }
 
 const togglePlayer = (player: Player) => {
+  console.log('foo')
   if (!call.value) return
 
   if (call.value.locked) {
@@ -349,9 +351,25 @@ onMounted(getTeamPlayers)
     :class="{ 'is-locked': call?.locked }"
     @submit.prevent="handleSignOrSubmit()"
   >
-    <FormLabel :label="t('calls.select')">
-      <GameCallList
-        :players="players"
+    <FormLabel :label="t('calls.select')" />
+    <GameCallList
+      :players="players"
+      :selectedPlayers="selectedPlayers"
+      :togglePlayer="togglePlayer"
+      :setCaptain="setCaptain"
+      :setLibero="setLibero"
+      :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
+      :setCaptainToggleDisabledProfileId="selectedCaptain?.profileId"
+      :tooltipsDisabled="!!call?.locked"
+    />
+
+    <div v-if="showLowerCategoryTeamsWithPlayers" class="mt-10">
+      <FormLabel
+        :label="t('teams.lower_category_teams_with_players.select')"
+        class="mb-3"
+      />
+      <TeamLowerCategoryTeamsWithPlayers
+        :teamId="call.teamId"
         :selectedPlayers="selectedPlayers"
         :togglePlayer="togglePlayer"
         :setCaptain="setCaptain"
@@ -360,7 +378,8 @@ onMounted(getTeamPlayers)
         :setCaptainToggleDisabledProfileId="selectedCaptain?.profileId"
         :tooltipsDisabled="!!call?.locked"
       />
-    </FormLabel>
+    </div>
+
     <EasyGrid class="mt-4" :gap="3" :breakpoints="{ md: 2 }" items="start">
       <div>
         <GameCallSelectedLibero
@@ -371,11 +390,25 @@ onMounted(getTeamPlayers)
       </div>
       <EasyGrid v-if="!call?.locked" justify="end">
         <Button
-          class="mt-3"
-          type="submit"
-          :label="call?.locked ? t('calls.locked') : t('calls.submit')"
+          type="button"
+          severity="link"
+          class="p-0 ml-auto mr-0 w-min whitespace-nowrap"
+          :label="
+            showLowerCategoryTeamsWithPlayers
+              ? t('teams.lower_category_teams_with_players.hide')
+              : t('teams.lower_category_teams_with_players.show')
+          "
+          @click.prevent="
+            showLowerCategoryTeamsWithPlayers =
+              !showLowerCategoryTeamsWithPlayers
+          "
+        />
+        <FormFooterActions
+          :submitLabel="call?.locked ? t('calls.locked') : t('calls.submit')"
           :disabled="call?.locked"
           :loading="loadingApi"
+          hideCancel
+          @form:submit="handleSignOrSubmit"
         />
       </EasyGrid>
     </EasyGrid>
