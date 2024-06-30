@@ -365,7 +365,7 @@ onMounted(getTeamPlayers)
 
     <div v-if="showLowerCategoryTeamsWithPlayers" class="mt-10">
       <FormLabel
-        :label="t('teams.lower_category_teams_with_players.select')"
+        :label="t('teams.lower_category_teams_with_players.callable')"
         class="mb-3"
       />
       <TeamLowerCategoryTeamsWithPlayers
@@ -390,7 +390,7 @@ onMounted(getTeamPlayers)
       </div>
       <EasyGrid v-if="!call?.locked" justify="end">
         <Button
-          type="button"
+          v-if="!showLowerCategoryTeamsWithPlayers"
           severity="link"
           class="p-0 ml-auto mr-0 w-min whitespace-nowrap"
           :label="

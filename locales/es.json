@@ -402,7 +402,8 @@
       "show": "Mostrar jugadores de categorías inferiores",
       "hide": "Ocultar jugadores de categorías inferiores",
       "select": "Selecciona jugadores de categorías inferiores",
-      "loading": "Cargando jugadores de categorías inferiores"
+      "loading": "Cargando jugadores de categorías inferiores",
+      "callable": "Jugadores convocables de categorías inferiores"
     }
   },
   "players": {
