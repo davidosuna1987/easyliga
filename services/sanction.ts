@@ -4,9 +4,11 @@ import {
   mapSanctionStoreRequestToApiSanctionStoreRequest,
 } from '@/domain/sanction'
 
+const PREFIX = 'sanctions'
+
 export default class SanctionService {
   store(data: SanctionStoreRequest) {
-    return useApi<ApiSanctionResponse>(`sanctions`, {
+    return useApi<ApiSanctionResponse>(`${PREFIX}`, {
       method: 'POST',
       body: mapSanctionStoreRequestToApiSanctionStoreRequest(data),
     })

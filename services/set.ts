@@ -5,15 +5,15 @@ import {
 } from '@/types/api/set'
 import { SanctionSeverityKey, SanctionTypeKey } from '@/domain/sanction'
 
-const SETS_API_PREFIX = 'sets'
+const PREFIX = 'sets'
 
 export default class SetService {
   fetch(params?: Record<string, string>) {
-    return useApi<ApiSetsResponse>(`sets/fetch`, { params })
+    return useApi<ApiSetsResponse>(`${PREFIX}/fetch`, { params })
   }
 
   start(setId: number, data: ApiSetStartRequest) {
-    return useApi(`sets/${setId}/start`, {
+    return useApi(`${PREFIX}/${setId}/start`, {
       method: 'PUT',
       body: data,
     })
@@ -29,7 +29,7 @@ export default class SetService {
     },
   ) {
     return useApi<ApiSetTeamIncompleteResponse>(
-      `${SETS_API_PREFIX}/${setId}/teams/${teamId}/incomplete`,
+      `${PREFIX}/${setId}/teams/${teamId}/incomplete`,
       { params },
     )
   }

@@ -14,19 +14,19 @@ import {
 } from '@/domain/game'
 import { SanctionSeverityKey, SanctionTypeKey } from '@/domain/sanction'
 
-const GAMES_API_PREFIX = 'games'
+const PREFIX = 'games'
 
 export default class GameService {
   fetch(params?: Record<string, string>) {
-    return useApi<ApiGamesResponse>(`${GAMES_API_PREFIX}/fetch`, { params })
+    return useApi<ApiGamesResponse>(`${PREFIX}/fetch`, { params })
   }
 
   get(gameId: number, params?: Record<string, string>) {
-    return useApi<ApiGameResponse>(`${GAMES_API_PREFIX}/${gameId}`, { params })
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}`, { params })
   }
 
   store(data: ApiGameStoreRequest) {
-    return useApi<ApiGameResponse>(`${GAMES_API_PREFIX}`, {
+    return useApi<ApiGameResponse>(`${PREFIX}`, {
       method: 'POST',
       body: data,
     })
@@ -34,7 +34,7 @@ export default class GameService {
 
   initialData(gameId: number, params?: Record<string, string>) {
     return useApi<ApiGameInitialDataResponse>(
-      `${GAMES_API_PREFIX}/${gameId}/initial-data`,
+      `${PREFIX}/${gameId}/initial-data`,
       {
         params,
       },
@@ -43,7 +43,7 @@ export default class GameService {
 
   teamPlayers(gameId: number, teamId: number, params?: Record<string, string>) {
     return useApi<ApiGameTeamPlayersResponse>(
-      `${GAMES_API_PREFIX}/${gameId}/teams/${teamId}/players`,
+      `${PREFIX}/${gameId}/teams/${teamId}/players`,
       {
         params,
       },
@@ -51,13 +51,10 @@ export default class GameService {
   }
 
   observations(gameId: number, data: GameObservationsRequest) {
-    return useApi<ApiGameResponse>(
-      `${GAMES_API_PREFIX}/${gameId}/observations`,
-      {
-        method: 'PUT',
-        body: mapGameObservationsRequestToApiGameObservationsRequest(data),
-      },
-    )
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/observations`, {
+      method: 'PUT',
+      body: mapGameObservationsRequestToApiGameObservationsRequest(data),
+    })
   }
 
   teamIncomplete(
@@ -70,14 +67,14 @@ export default class GameService {
     },
   ) {
     return useApi<ApiGameTeamIncompleteResponse>(
-      `${GAMES_API_PREFIX}/${gameId}/teams/${teamId}/incomplete`,
+      `${PREFIX}/${gameId}/teams/${teamId}/incomplete`,
       { params },
     )
   }
 
   reportSimple(gameId: number) {
     return useApi<ApiGameReportSimpleResponse>(
-      `${GAMES_API_PREFIX}/${gameId}/report/simple`,
+      `${PREFIX}/${gameId}/report/simple`,
     )
   }
 }
