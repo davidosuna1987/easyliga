@@ -58,6 +58,7 @@ const { t } = useI18n()
 const auth = useAuthStore()
 const route = useRoute()
 const toast = useEasyToast()
+const easyStorage = useEasyStorage()
 
 const gameService = new GameService()
 const pointService = new PointService()
@@ -269,6 +270,8 @@ const getGameInitialData = async (firstCall: boolean = false) => {
     window.Echo.leaveAllChannels()
     listenEvents()
   }
+
+  setShirtColorsFromStorage()
 }
 
 const sumPoint = async () => {
@@ -641,7 +644,24 @@ const listenEvents = () => {
   listenGameSignatureCreatedEvent()
 }
 
+const setShirtColorsFromStorage = () => {
+  const shirtColors = easyStorage.get(
+    `games.${gameInitialData.value?.game.id}.shirtColors`,
+  )
+
+  if (shirtColors) {
+    customTeamsShirtColor.value = shirtColors
+  }
+}
+
 watch(gameInitialData, () => setCustomTeamsShirtColor())
+
+watch(customTeamsShirtColor, () => {
+  easyStorage.set(
+    `games.${gameInitialData.value?.game.id}.shirtColors`,
+    customTeamsShirtColor.value,
+  )
+})
 
 onMounted(() => {
   getGameInitialData(true)
