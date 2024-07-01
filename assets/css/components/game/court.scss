@@ -36,8 +36,18 @@
       z-index: 1;
 
       .easy-icon-shirt-number-component {
-        background-color: var(--primary-color-medium);
+        // background-color: var(--primary-color-medium);
         border: solid 1px var(--primary-color-medium);
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--primary-color-medium);
+        }
       }
 
       &.is-replaced {
@@ -52,7 +62,9 @@
         }
 
         .easy-icon-shirt-number-component {
-          background-color: var(--danger-color-dark);
+          &::after {
+            background-color: var(--danger-color-dark);
+          }
         }
 
         .easy-icon-libero-component {
@@ -107,8 +119,12 @@
       &:hover {
         .shirt-number {
           .easy-icon-shirt-number-component {
-            background-color: var(--primary-color);
+            // background-color: var(--primary-color);
             border: solid 1px var(--primary-color);
+
+            &::after {
+              background-color: var(--primary-color);
+            }
           }
         }
       }
@@ -116,27 +132,39 @@
       &.serving {
         .shirt-number {
           .easy-icon-shirt-number-component {
-            -webkit-text-stroke: 1px var(--text-color);
-            color: var(--icon-easy-liga-color);
+            @include textShadow(black, 1);
+            // -webkit-text-stroke: 1px var(--text-color);
+            color: var(--icon-easy-liga-color) !important;
             font-weight: 900;
-            background-color: rgba(0, 136, 136, 0.4);
             border: none;
+
+            &::after {
+              opacity: 0.2;
+            }
           }
         }
       }
 
       &.is-sanctioned {
         .easy-icon-shirt-number-component {
-          background-color: var(--danger-color-light);
+          // background-color: var(--danger-color-light);
           border-color: var(--danger-color-light);
+
+          &::after {
+            background-color: var(--danger-color-light);
+          }
         }
 
         &:hover {
           background-color: var(--danger-color-lighten);
 
           .easy-icon-shirt-number-component {
-            background-color: var(--danger-color-medium);
+            // background-color: var(--danger-color-medium);
             border-color: var(--danger-color-medium);
+
+            &::after {
+              background-color: var(--danger-color-medium);
+            }
           }
         }
       }

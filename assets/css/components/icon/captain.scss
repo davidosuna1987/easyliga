@@ -15,7 +15,8 @@
   font-weight: 900;
   font-size: 1.5rem;
   color: var(--tertiary-color);
-  -webkit-text-stroke: 1px var(--text-color);
+  // -webkit-text-stroke: 1px var(--text-color);
+  text-shadow: var(--stroke-shadow);
   border: solid 1px var(--text-color);
   // text-shadow: 0 0 2px black;
 

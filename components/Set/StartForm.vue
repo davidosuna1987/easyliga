@@ -69,7 +69,7 @@ const setFirstServeTeam = () => {
 
     <FormLabel class="mt-6" :label="t('sets.select_first_serve_team')" />
     <Dropdown
-      class="easy-teams-selector-component"
+      class="easy-teams-selector-component w-full"
       v-model="firstServeTeam"
       :options="[leftSideTeam, rightSideTeam]"
       optionLabel="name"

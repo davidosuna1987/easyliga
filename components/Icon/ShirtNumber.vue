@@ -35,7 +35,7 @@ const colorClass = computed(() => {
     class="easy-icon-shirt-number-component"
     :class="[sizeClass, colorClass, { 'is-icon': !!isIcon }]"
   >
-    {{ shirtNumber }}
+    <span class="relative z-10">{{ shirtNumber }}</span>
   </div>
 </template>
 

@@ -5,6 +5,14 @@
 
 // usage: @include button(turquoise,black)
 
+@mixin textShadow($color: black, $width: 1) {
+  text-shadow: #{$width}px #{$width}px 0 $color,
+    -#{$width}px -#{$width}px 0 $color, #{$width}px -#{$width}px 0 $color,
+    -#{$width}px #{$width}px 0 $color, 0px #{$width}px 0 $color,
+    #{$width}px 0px 0 $color, 0px -#{$width}px 0 $color,
+    -#{$width}px 0px 0 $color !important;
+}
+
 @mixin blurBackground($background) {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);

@@ -1,4 +1,6 @@
 .easy-icon-shirt-number-component {
+  @include textShadow(black, 1);
+  position: relative;
   color: white;
   width: 2rem;
   height: 2rem;
@@ -8,9 +10,7 @@
   font-weight: 900;
   font-size: 1.5rem;
   // -webkit-text-stroke: 1px var(--text-color);
-  text-shadow: 1px 1px 0 black, -1px -1px 0 black, 1px -1px 0 black,
-    -1px 1px 0 black, 0px 1px 0 black, 1px 0px 0 black, 0px -1px 0 black,
-    -1px 0px 0 black;
+  overflow: hidden;
 
   &.size-sm {
     width: 1.5rem;
@@ -37,59 +37,104 @@
   }
 
   &.color-red {
-    background-color: var(--shirt-red) !important;
+    // background-color: var(--shirt-red) !important;
     border-color: var(--shirt-red-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-red) !important;
+    }
   }
 
   &.color-orange {
-    background-color: var(--shirt-orange) !important;
+    // background-color: var(--shirt-orange) !important;
     border-color: var(--shirt-orange-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-orange) !important;
+    }
   }
 
   &.color-yellow {
-    background-color: var(--shirt-yellow) !important;
+    // background-color: var(--shirt-yellow) !important;
     border-color: var(--shirt-yellow-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-yellow) !important;
+    }
   }
 
   &.color-green {
-    background-color: var(--shirt-green) !important;
+    // background-color: var(--shirt-green) !important;
     border-color: var(--shirt-green-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-green) !important;
+    }
   }
 
   &.color-blue {
-    background-color: var(--shirt-blue) !important;
+    // background-color: var(--shirt-blue) !important;
     border-color: var(--shirt-blue-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-blue) !important;
+    }
   }
 
   &.color-purple {
-    background-color: var(--shirt-purple) !important;
+    // background-color: var(--shirt-purple) !important;
     border-color: var(--shirt-purple-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-purple) !important;
+    }
   }
 
   &.color-pink {
-    background-color: var(--shirt-pink) !important;
+    // background-color: var(--shirt-pink) !important;
     border-color: var(--shirt-pink-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-pink) !important;
+    }
   }
 
   &.color-brown {
-    background-color: var(--shirt-brown) !important;
+    // background-color: var(--shirt-brown) !important;
     border-color: var(--shirt-brown-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-brown) !important;
+    }
   }
 
   &.color-gray {
-    background-color: var(--shirt-gray) !important;
+    // background-color: var(--shirt-gray) !important;
     border-color: var(--shirt-gray-dark) !important;
+
+    &:after {
+      background-color: var(--shirt-gray) !important;
+    }
   }
 
   &.color-black {
-    background-color: var(--shirt-black) !important;
+    // background-color: var(--shirt-black) !important;
     border-color: var(--shirt-black) !important;
+
+    &:after {
+      background-color: var(--shirt-black) !important;
+    }
   }
 
   &.color-white {
-    background-color: var(--shirt-white) !important;
+    @include textShadow(black, 0);
+    // background-color: var(--shirt-white) !important;
     border-color: var(--shirt-white) !important;
     color: black !important;
+
+    &:after {
+      background-color: var(--shirt-white) !important;
+    }
   }
 
   &.is-icon {
