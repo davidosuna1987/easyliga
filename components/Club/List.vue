@@ -108,16 +108,16 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                 </div>
               </div>
             </EasyGrid>
-
-            <div class="flex justify-end mt-3">
-              <Button
-                :label="t('teams.add')"
-                size="small"
-                class="action"
-                @click.prevent="goToCreateClubTeam(club)"
-              />
-            </div>
           </template>
+
+          <div class="flex justify-end mt-3">
+            <Button
+              :label="t('teams.add')"
+              size="small"
+              class="action"
+              @click.prevent="goToCreateClubTeam(club)"
+            />
+          </div>
         </div>
       </EasyGrid>
       <p v-else class="text-center">{{ t('clubs.no_managed_teams') }}</p>
