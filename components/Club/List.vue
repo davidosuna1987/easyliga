@@ -90,12 +90,12 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                 <div
                   class="team-actions flex items-center justify-between sm:justify-end"
                 >
-                  <small v-if="team.players" class="mr-3">
+                  <small class="mr-3">
                     {{
                       t(
                         'players.count',
-                        { num: team.players?.length },
-                        team.players?.length,
+                        { num: team.players?.length ?? 0 },
+                        team.players?.length ?? 0,
                       )
                     }}
                   </small>
