@@ -19,6 +19,14 @@ export type ApiFederationRelations = {
   licenses?: ApiLicense[]
 }
 
+export type ApiFederationCountRelations = {
+  federations_count?: number
+  divisions_count?: number
+  leagues_count?: number
+  clubs_count?: number
+  sedes_count?: number
+}
+
 export type ApiFederation = {
   id: number
   federation_id: number | null
@@ -34,7 +42,8 @@ export type ApiFederation = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-} & ApiFederationRelations
+} & ApiFederationRelations &
+  ApiFederationCountRelations
 
 export type ApiFederationResponse = {
   success: boolean

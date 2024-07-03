@@ -25,6 +25,14 @@ export type FederationRelations = {
   address?: Address
 }
 
+export type FederationCountRelations = {
+  federationsCount?: number
+  divisionsCount?: number
+  leaguesCount?: number
+  clubsCount?: number
+  sedesCount?: number
+}
+
 export type Federation = {
   id: number
   name: string
@@ -33,7 +41,8 @@ export type Federation = {
   email?: string
   phone?: string
   website?: string
-} & FederationRelations
+} & FederationRelations &
+  FederationCountRelations
 
 export const mapApiFederationToFederation = (
   apiFederation: ApiFederation,
@@ -70,4 +79,10 @@ export const mapApiFederationToFederation = (
   address: apiFederation.address
     ? mapApiAddressToAddress(apiFederation.address)
     : undefined,
+
+  federationsCount: apiFederation.federations_count ?? undefined,
+  divisionsCount: apiFederation.divisions_count ?? undefined,
+  leaguesCount: apiFederation.leagues_count ?? undefined,
+  clubsCount: apiFederation.clubs_count ?? undefined,
+  sedesCount: apiFederation.sedes_count ?? undefined,
 })
