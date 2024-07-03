@@ -22,7 +22,7 @@ const handleOnClick = () => {
 
 <template>
   <Button
-    class="easy-list-action-button-component ml-3"
+    class="easy-list-action-button-component"
     :label="label"
     size="small"
     @click.prevent="handleOnClick"
