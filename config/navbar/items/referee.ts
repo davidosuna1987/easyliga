@@ -1,6 +1,6 @@
 export default [
   {
-    label: 'navbar.panel',
+    label: 'navbar.referee.label',
     to: '/referee',
   },
   {

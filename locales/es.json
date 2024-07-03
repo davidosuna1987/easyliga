@@ -186,19 +186,30 @@
   "navbar": {
     "home": "Inicio",
     "panel": "Panel",
-    "referee": {
-      "games": {
-        "label": "Partidos",
-        "create": "Crear partido"
+    "federation": {
+      "label": "Federación",
+      "list": {
+        "label": "Listado de federaciones"
+      },
+      "leagues": {
+        "label": "Listado de ligas"
       }
     },
     "club": {
       "label": "Club",
       "list": {
-        "create": "Crear club",
-        "label": "Listado de clubs",
-        "teams": "Listado de equipos"
+        "label": "Listado de clubs"
       }
+    },
+    "referee": {
+      "label": "Árbitro",
+      "games": {
+        "label": "Partidos",
+        "create": "Crear partido"
+      }
+    },
+    "coach": {
+      "label": "Entrenador"
     }
   },
   "pages": {
