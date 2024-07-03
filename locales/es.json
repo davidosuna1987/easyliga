@@ -349,7 +349,8 @@
     "deleted": "La federación ha sido eliminada correctamente",
     "delete_alert": "¿Seguro que quieres eliminar la federación?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "select": "Selecciona una federación"
+    "select": "Selecciona una federación",
+    "no_managed": "No gestionas ninguna federación"
   },
   "divisions": {
     "division": "División | Divisiones",
@@ -375,7 +376,8 @@
     "deleted": "La liga ha sido eliminada correctamente",
     "delete_alert": "¿Seguro que quieres eliminar la liga?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "select": "Selecciona una liga"
+    "select": "Selecciona una liga",
+    "count": "{num} liga | {num} ligas"
   },
   "teams": {
     "team": "Equipo | Equipos",
@@ -625,7 +627,8 @@
     "select": "Selecciona un club",
     "no_managed_teams": "El club no gestiona ningún equipo",
     "name": "Nombre del club",
-    "short_name": "Nombre corto"
+    "short_name": "Nombre corto",
+    "count": "{num} club | {num} clubs"
   },
   "responsibles": {
     "responsible": "Responsable | Responsables",
