@@ -9,7 +9,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { Category, GameStorePreviewData } from '@/domain/game'
 import {
   Federation,
-  FederationScope,
+  FEDERATION_SCOPE_MAPPER,
   mapApiFederationToFederation,
 } from '@/domain/federation'
 import { Gender } from '@/domain/game'
@@ -113,7 +113,7 @@ const getGroupedLeagues = async () => {
   loadingLeagues.value = true
 
   const { data } = await federationService.scopeWithLeagues(
-    FederationScope.REGIONAL,
+    FEDERATION_SCOPE_MAPPER.regional,
     {
       category_id: selectedCategory.value.id.toString(),
       gender_id: selectedGender.value.id.toString(),

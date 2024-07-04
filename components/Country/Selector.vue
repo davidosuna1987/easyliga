@@ -22,9 +22,9 @@ const selectedCountry = ref<Country>()
 
 <template>
   <Dropdown
+    v-model="selectedCountry"
     :class="['easy-countries-selector-component']"
     :panelClass="!!readonly ? 'hidden pointer-events-none' : ''"
-    v-model="selectedCountry"
     :options="countries"
     :optionLabel="`translations.${locale}`"
     :filter="true"

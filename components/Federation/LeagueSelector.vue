@@ -2,7 +2,7 @@
 import { League } from '@/domain/league'
 import {
   Federation,
-  FederationScope,
+  FEDERATION_SCOPE_MAPPER,
   mapApiFederationToFederation,
 } from '@/domain/federation'
 import FederationService from '@/services/federation'
@@ -44,7 +44,7 @@ const options = computed(
 const getGroupedLeagues = async () => {
   loadingApi.value = true
   const { data } = await federationService.scopeWithLeagues(
-    FederationScope.REGIONAL,
+    FEDERATION_SCOPE_MAPPER.regional,
     {
       category_id: String(props.categoryId),
       gender_id: String(props.genderId),

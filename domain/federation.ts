@@ -5,14 +5,18 @@ import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
+import { License, mapApiLicenseToLicense } from '@/domain/license'
 
-export enum FederationScope {
-  NATIONAL = 'national',
-  REGIONAL = 'regional',
-  PROVINCIAL = 'provincial',
-  DISTRICT = 'district',
-  LOCAL = 'local',
-}
+export const FEDERATION_SCOPE_MAPPER = {
+  national: 'national',
+  regional: 'regional',
+  provincial: 'provincial',
+  district: 'district',
+  local: 'local',
+} as const
+
+export type FederationScope =
+  (typeof FEDERATION_SCOPE_MAPPER)[keyof typeof FEDERATION_SCOPE_MAPPER]
 
 export type FederationRelations = {
   responsible?: User
@@ -23,6 +27,7 @@ export type FederationRelations = {
   clubs?: Club[]
   sedes?: Sede[]
   address?: Address
+  licenses?: License[]
 }
 
 export type FederationCountRelations = {
@@ -41,6 +46,9 @@ export type Federation = {
   email?: string
   phone?: string
   website?: string
+  federationId?: number
+  responsibleId?: number
+  addressId?: number
 } & FederationRelations &
   FederationCountRelations
 
@@ -54,6 +62,10 @@ export const mapApiFederationToFederation = (
   email: apiFederation.email ?? undefined,
   phone: apiFederation.phone ?? undefined,
   website: apiFederation.website ?? undefined,
+  federationId: apiFederation.federation_id ?? undefined,
+  responsibleId: apiFederation.responsible_id ?? undefined,
+  addressId: apiFederation.address_id ?? undefined,
+
   responsible: apiFederation.responsible
     ? mapApiUserToUser(apiFederation.responsible)
     : undefined,
@@ -78,6 +90,9 @@ export const mapApiFederationToFederation = (
     : undefined,
   address: apiFederation.address
     ? mapApiAddressToAddress(apiFederation.address)
+    : undefined,
+  licenses: apiFederation.licenses
+    ? apiFederation.licenses.map(mapApiLicenseToLicense)
     : undefined,
 
   federationsCount: apiFederation.federations_count ?? undefined,

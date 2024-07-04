@@ -4,23 +4,28 @@ import { Role } from '@/domain/role'
 import { ApiInvite } from '@/types/api/invite'
 
 export const INVITED_TO_TYPE_MAPPER = {
-  team: 'team',
+  federation: 'federation',
   club: 'club',
+  team: 'team',
 } as const
 
 export const INVITED_TO_TYPES = Object.values(INVITED_TO_TYPE_MAPPER)
 
 export type InvitedToType = (typeof INVITED_TO_TYPES)[number]
 
-export type InvitedRole = Extract<Role, 'player' | 'coach' | 'club'>
+export type InvitedRole = Extract<
+  Role,
+  'federation' | 'club' | 'coach' | 'player'
+>
 
 export const ROLE_TO_INVITED_TO_TYPE_MAPPER: Record<
   InvitedRole,
   InvitedToType
 > = {
-  player: 'team',
-  coach: 'team',
+  federation: 'federation',
   club: 'club',
+  coach: 'team',
+  player: 'team',
 } as const
 
 export type InviteRelations = {

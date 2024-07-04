@@ -17,6 +17,13 @@ export type ClubRelations = {
   licenses?: License[]
 }
 
+export type ClubCountRelations = {
+  sedesCount?: number
+  teamsCount?: number
+  gamesCount?: number
+  licensesCount?: number
+}
+
 export type Club = {
   id: number
   federationId?: number
@@ -27,7 +34,8 @@ export type Club = {
   email?: string
   phone?: string
   website?: string
-} & ClubRelations
+} & ClubRelations &
+  ClubCountRelations
 
 export const mapApiClubToClub = (apiClub: ApiClub): Club => ({
   id: apiClub.id,
@@ -39,6 +47,7 @@ export const mapApiClubToClub = (apiClub: ApiClub): Club => ({
   email: apiClub.email || undefined,
   phone: apiClub.phone || undefined,
   website: apiClub.website || undefined,
+
   address: apiClub.address
     ? mapApiAddressToAddress(apiClub.address)
     : undefined,
@@ -57,4 +66,9 @@ export const mapApiClubToClub = (apiClub: ApiClub): Club => ({
   licenses: apiClub.licenses
     ? apiClub.licenses.map(mapApiLicenseToLicense)
     : undefined,
+
+  sedesCount: apiClub.sedes_count ?? undefined,
+  teamsCount: apiClub.teams_count ?? undefined,
+  gamesCount: apiClub.games_count ?? undefined,
+  licensesCount: apiClub.licenses_count ?? undefined,
 })

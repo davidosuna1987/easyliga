@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { SHIRT_COLORS, ShirtColor } from '@/domain/team'
 
-const props = defineProps({
-  color: {
-    type: String as PropType<ShirtColor>,
-    required: false,
-  },
-})
-
 const emit = defineEmits<{
   (e: 'color:selected', value: ShirtColor): void
 }>()

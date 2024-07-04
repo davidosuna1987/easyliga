@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ApiFederation } from '@/types/api/federation'
 import FederationService from '@/services/federation'
-import { FederationScope } from '@/domain/federation'
+import { FEDERATION_SCOPE_MAPPER } from '@/domain/federation'
 
 const federationService = new FederationService()
 
@@ -24,7 +24,7 @@ export const useFederationStore = defineStore('federations', () => {
     federations: ApiFederation[],
   ): ApiFederation[] =>
     federations.filter(
-      federation => federation.scope === FederationScope.NATIONAL,
+      federation => federation.scope === FEDERATION_SCOPE_MAPPER.national,
     )
 
   const groupFederationsById = (

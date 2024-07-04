@@ -340,6 +340,7 @@
   },
   "federations": {
     "federation": "Federación | Federaciones",
+    "name": "Nombre de la federación",
     "create": "Crear federación",
     "created": "La federación ha sido creada correctamente",
     "edit": "Editar federación",
@@ -350,7 +351,19 @@
     "delete_alert": "¿Seguro que quieres eliminar la federación?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona una federación",
-    "no_managed": "No gestionas ninguna federación"
+    "count": "{num} federación | {num} federaciones",
+    "no_managed": "No gestionas ninguna federación",
+    "scope": {
+      "label": "Ámbito de actuación",
+      "select": "Selecciona un ámbito de actuación",
+      "national": "Nacional",
+      "regional": "Regional",
+      "provincial": "Provincial",
+      "district": "Distrital",
+      "local": "Local"
+    },
+    "federation_clubs": "Clubs de {name}",
+    "no_vinculated_clubs": "No hay clubs vinculados a la federación"
   },
   "divisions": {
     "division": "División | Divisiones",
@@ -417,7 +430,8 @@
       "select": "Selecciona jugadores de categorías inferiores",
       "loading": "Cargando jugadores de categorías inferiores",
       "callable": "Jugadores convocables de categorías inferiores"
-    }
+    },
+    "count": "{num} equipo | {num} equipos"
   },
   "players": {
     "player": "Jugador | Jugadores",
@@ -628,7 +642,11 @@
     "no_managed_teams": "El club no gestiona ningún equipo",
     "name": "Nombre del club",
     "short_name": "Nombre corto",
-    "count": "{num} club | {num} clubs"
+    "count": "{num} club | {num} clubs",
+    "loading": "Cargando clubs...",
+    "no_managed": "No gestionas ningún club",
+    "list": "Listado de clubs",
+    "add": "Añadir club"
   },
   "responsibles": {
     "responsible": "Responsable | Responsables",

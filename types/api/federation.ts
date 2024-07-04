@@ -30,7 +30,7 @@ export type ApiFederationCountRelations = {
 export type ApiFederation = {
   id: number
   federation_id: number | null
-  resposnsible_id: number | null
+  responsible_id: number | null
   address_id: number | null
   name: string
   short_name: string | null
@@ -45,7 +45,29 @@ export type ApiFederation = {
 } & ApiFederationRelations &
   ApiFederationCountRelations
 
+export type ApiFederationFormRequest = {
+  id: number
+  federation_id: number | null
+  responsible_id: number | null
+  address_id: number | null
+  name: string
+  short_name: string | null
+  scope: FederationScope | null
+  email: string | null
+  phone: string | null
+  website: string | null
+  address: ApiAddress
+}
+
 export type ApiFederationResponse = {
+  success: boolean
+  data: {
+    federation: ApiFederation
+  }
+  errors: null
+}
+
+export type ApiFederationsResponse = {
   success: boolean
   data: {
     federations: ApiFederation[]

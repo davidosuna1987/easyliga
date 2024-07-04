@@ -1,10 +1,22 @@
 <script setup lang="ts">
+const props = defineProps({
+  hoverable: {
+    type: Boolean,
+    default: true,
+  },
+})
 const slots = useSlots()
 </script>
 
 <template>
   <div
-    class="easy-list-item-component flex flex-col sm:flex-row justify-between p-3 rounded-lg gap-1"
+    :class="[
+      'easy-list-item-component flex flex-col sm:flex-row justify-between py-3 rounded-lg gap-1',
+      {
+        'px-3 cursor-pointer hover:bg-[var(--primary-color-light)]':
+          props.hoverable,
+      },
+    ]"
   >
     <div class="flex items-center">
       <slot />
@@ -18,16 +30,6 @@ const slots = useSlots()
     </div>
   </div>
 </template>
-
-<style scoped>
-.easy-list-item-component {
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--primary-color-light);
-  }
-}
-</style>
 
 <script lang="ts">
 export default {

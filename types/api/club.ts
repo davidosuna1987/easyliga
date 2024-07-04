@@ -16,6 +16,13 @@ export type ApiClubRelations = {
   licenses?: ApiLicense[]
 }
 
+export type ApiClubCountRelations = {
+  sedes_count: number | null
+  teams_count: number | null
+  games_count: number | null
+  licenses_count: number | null
+}
+
 export type ApiClub = {
   id: number
   federation_id: number | null
@@ -30,7 +37,8 @@ export type ApiClub = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-} & ApiClubRelations
+} & ApiClubRelations &
+  ApiClubCountRelations
 
 export type ApiClubFormRequest = {
   id: number
