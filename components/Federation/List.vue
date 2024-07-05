@@ -10,31 +10,56 @@ const federationService = new FederationService()
 const federations = ref<Federation[]>()
 const loadingApi = ref<boolean>(false)
 
-const federationsCount = (federation: Federation) => {
-  return (
-    federation.federations?.reduce(
-      (acc: number, f: Federation) => acc + (f.federations?.length ?? 0),
-      federation.federations.length ?? 0,
-    ) ?? 0
-  )
-}
-
 const leaguesCount = (federation: Federation) => {
   return (
-    federation.federations?.reduce(
+    (federation.federations ?? []).reduce(
       (acc: number, f: Federation) => acc + (f.leagues?.length ?? 0),
-      federation.leaguesCount ?? 0,
+      federation.leaguesCount
+        ? federation.leaguesCount
+        : federation.leagues?.length ?? 0,
     ) ?? 0
   )
 }
 
 const clubsCount = (federation: Federation) => {
   return (
-    federation.federations?.reduce(
+    (federation.federations ?? []).reduce(
       (acc: number, f: Federation) => acc + (f.clubs?.length ?? 0),
-      federation.clubsCount ?? 0,
+      federation.clubsCount
+        ? federation.clubsCount
+        : federation.clubs?.length ?? 0,
     ) ?? 0
   )
+}
+
+const flattenFederations = (federations: Federation[]): Federation[] => {
+  const recurse = (feds: Federation[], hierarchy: number): Federation[] => {
+    return feds.flatMap(fed => {
+      const {
+        federations,
+        leagues,
+        clubs,
+        leaguesCount: lc,
+        clubsCount: cc,
+        ...rest
+      } = fed
+
+      const flattenedFederation: Federation = {
+        ...rest,
+        hierarchy,
+        leaguesCount: leaguesCount(fed),
+        clubsCount: clubsCount(fed),
+      }
+
+      const nestedFederations = federations
+        ? recurse(federations, hierarchy + 1)
+        : []
+
+      return [flattenedFederation, ...nestedFederations]
+    })
+  }
+
+  return recurse(federations, 1)
 }
 
 const getFederations = async () => {
@@ -47,9 +72,11 @@ const getFederations = async () => {
     with_count: 'leagues,clubs',
   })
 
-  federations.value = data.value?.data.federations.map(
-    mapApiFederationToFederation,
-  )
+  if (data.value) {
+    federations.value = flattenFederations(
+      data.value?.data.federations.map(mapApiFederationToFederation),
+    )
+  }
 
   loadingApi.value = false
 }
@@ -66,25 +93,19 @@ onMounted(getFederations)
     <Loading v-if="loadingApi" />
     <template v-else>
       <List v-if="federations?.length">
-        <ListItem v-for="federation in federations">
+        <ListItem
+          v-for="federation in federations"
+          :hierarchy="federation.hierarchy"
+        >
           <p>{{ federation.name }}</p>
 
           <template #actions>
-            <ListActionLabel v-if="federation.federations?.length">
-              {{
-                t(
-                  'federations.count',
-                  { num: federationsCount(federation) },
-                  federationsCount(federation),
-                )
-              }}
-            </ListActionLabel>
             <ListActionLabel>
               {{
                 t(
                   'clubs.count',
-                  { num: clubsCount(federation) },
-                  clubsCount(federation),
+                  { num: federation.clubsCount },
+                  federation.clubsCount ?? 0,
                 )
               }}
             </ListActionLabel>
@@ -92,8 +113,8 @@ onMounted(getFederations)
               {{
                 t(
                   'leagues.count',
-                  { num: leaguesCount(federation) },
-                  leaguesCount(federation),
+                  { num: federation.leaguesCount },
+                  federation.leaguesCount ?? 0,
                 )
               }}
             </ListActionLabel>

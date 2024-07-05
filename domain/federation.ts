@@ -28,6 +28,8 @@ export type FederationRelations = {
   sedes?: Sede[]
   address?: Address
   licenses?: License[]
+
+  hierarchy?: number // used to list federations in a tree structure
 }
 
 export type FederationCountRelations = {
