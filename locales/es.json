@@ -40,6 +40,8 @@
     "save": "Guardar",
     "edit": "Editar",
     "store": "Guardar",
+    "show": "Mostrar",
+    "see": "Ver",
     "data_stored": "Los datos se han guardado correctamente",
     "update": "Actualizar",
     "data_updated": "Los datos se han actualizado correctamente",
@@ -391,7 +393,8 @@
     "delete_alert": "¿Seguro que quieres eliminar la liga?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona una liga",
-    "count": "{num} liga | {num} ligas"
+    "count": "{num} liga | {num} ligas",
+    "list_empty": "No hay ligas generadas"
   },
   "teams": {
     "team": "Equipo | Equipos",

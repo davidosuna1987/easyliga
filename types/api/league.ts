@@ -1,3 +1,19 @@
+import { ApiCategory } from '@/types/api/category'
+import { ApiDivision } from '@/types/api/division'
+import { ApiGender } from '@/types/api/gender'
+import { ApiTeam } from '@/types/api/team'
+
+export type ApiLeagueRelatioins = {
+  division?: ApiDivision
+  category?: ApiCategory
+  gender?: ApiGender
+  teams?: ApiTeam[]
+}
+
+export type ApiLeagueCountRelations = {
+  teams_count?: number
+}
+
 export type ApiLeague = {
   id: number
   division_id: number | null
@@ -11,4 +27,5 @@ export type ApiLeague = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-}
+} & ApiLeagueRelatioins &
+  ApiLeagueCountRelations
