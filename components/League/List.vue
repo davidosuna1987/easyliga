@@ -2,7 +2,7 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import FederationService from '@/services/federation'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
-import { League, mapApiLeagueToLeague } from '@/domain/league'
+import { League } from '@/domain/league'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -38,7 +38,7 @@ const getLeagues = async () => {
   loadingApi.value = true
   const { data } = await federationService.fetch({
     where: `responsible_id:${auth.user.id}`,
-    with: 'leagues.teams,federations.leagues.teams',
+    with: 'leagues.teams,leagues.category,leagues.gender,federations.leagues.teams,federations.leagues.category,federations.leagues.gender',
   })
 
   if (data.value) {
@@ -67,7 +67,29 @@ onMounted(getLeagues)
 
           <List v-if="federation.leagues?.length">
             <ListItem v-for="league in federation.leagues">
-              <p>{{ league.name }}</p>
+              <div class="flex items-center gap-2">
+                <p>{{ league.name }}</p>
+                <Tag
+                  class="font-light border-solid border-primary text-primary bg-transparent border py-[2px] px-2 dark:border-teal-500 dark:text-teal-500"
+                  :value="`${t(`categories.${league.category?.name}`)}`"
+                  rounded
+                />
+                <Tag
+                  :class="[
+                    'font-light border-solid border-primary bg-transparent text-primary border py-[2px] px-2',
+                    {
+                      'dark:border-blue-500 dark:text-blue-500':
+                        league.gender?.name === 'masculine',
+                      'dark:border-fuchsia-400 dark:text-fuchsia-400':
+                        league.gender?.name === 'femenine',
+                      'dark:border-yellow-500 dark:text-yellow-500':
+                        league.gender?.name === 'mixed',
+                    },
+                  ]"
+                  :value="`${t(`genders.${league.gender?.name}`)}`"
+                  rounded
+                />
+              </div>
 
               <template #actions>
                 <ListActionLabel>

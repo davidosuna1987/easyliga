@@ -1,12 +1,14 @@
 import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
-import { ApiGender } from '@/types/api/gender'
 import { ApiTeam } from '@/types/api/team'
 
 export type ApiLeagueRelatioins = {
   division?: ApiDivision
   category?: ApiCategory
-  gender?: ApiGender
+  gender?: {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }
   teams?: ApiTeam[]
 }
 

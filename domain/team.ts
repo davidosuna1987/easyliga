@@ -6,7 +6,6 @@ import {
 import { ApiTeam, ApiTeamRequest } from '@/types/api/team'
 import {
   Category,
-  Gender,
   mapApiCategoryToCategory,
   mapApiGenderToGender,
 } from '@/domain/game'
@@ -24,7 +23,10 @@ export type TeamRelations = {
   sedes?: Sede[]
   division?: Division
   category?: Category
-  gender?: Gender
+  gender?: {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }
   coach?: User
   players?: Player[]
   licenses?: License[]
@@ -126,7 +128,7 @@ export const mapApiTeamToTeam = (
   category: apiTeam.category
     ? mapApiCategoryToCategory(apiTeam.category)
     : undefined,
-  gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
+  gender: apiTeam.gender ?? undefined,
   coach: apiTeam.coach ? mapApiUserToUser(apiTeam.coach) : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)

@@ -89,15 +89,28 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                 class="team p-3 rounded-lg"
                 @click.prevent="goToEditClubTeam(club, team)"
               >
-                <div class="team-info flex items-center">
+                <div class="team-info flex items-center gap-2">
                   <p>{{ team.name }}</p>
                   <Tag
-                    class="font-light ml-2 border-solid border-primary bg-transparent text-primary border py-[2px] px-2 dark:border-yellow-500 dark:text-yellow-500"
-                    :value="`${t(`categories.${team.category?.name}`)} ${t(
-                      `genders.${team.gender?.name}`,
-                    )}`"
+                    class="font-light border-solid border-primary text-primary bg-transparent border py-[2px] px-2 dark:border-teal-500 dark:text-teal-500"
+                    :value="`${t(`categories.${team.category?.name}`)}`"
                     rounded
-                  ></Tag>
+                  />
+                  <Tag
+                    :class="[
+                      'font-light border-solid border-primary bg-transparent text-primary border py-[2px] px-2',
+                      {
+                        'dark:border-blue-500 dark:text-blue-500':
+                          team.gender?.name === 'masculine',
+                        'dark:border-fuchsia-400 dark:text-fuchsia-400':
+                          team.gender?.name === 'femenine',
+                        'dark:border-yellow-500 dark:text-yellow-500':
+                          team.gender?.name === 'mixed',
+                      },
+                    ]"
+                    :value="`${t(`genders.${team.gender?.name}`)}`"
+                    rounded
+                  />
                 </div>
                 <div
                   class="team-actions flex items-center justify-between sm:justify-end"

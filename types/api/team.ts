@@ -4,7 +4,6 @@ import { ApiSede } from '@/types/api/sede'
 import { ApiPlayer } from '@/types/api/auth'
 import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
-import { ApiGender } from '@/types/api/gender'
 import { ApiPlayerRequest } from '@/types/api/player'
 import { ShirtColor } from '@/domain/team'
 import { ApiLicense } from '@/types/api/license'
@@ -15,7 +14,10 @@ export type ApiTeamRelations = {
   sedes?: ApiSede[]
   division?: ApiDivision
   category?: ApiCategory
-  gender?: ApiGender
+  gender?: {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }
   coach?: ApiUser
   players?: ApiPlayer[]
   licenses?: ApiLicense[]
