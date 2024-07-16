@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import FederationService from '@/services/federation'
-import { Club } from '@/domain/club'
 
 const { t } = useI18n()
 const route = useRoute()

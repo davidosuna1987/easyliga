@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/stores/useAuthStore'
+import { Role } from '@/domain/role'
 
 export default defineNuxtRouteMiddleware((to, from) => {
   const auth = useAuthStore()
@@ -14,7 +15,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
 
-  if (!auth.hasAnyRole(to.meta.roles as string[])) {
+  if (!auth.hasAnyRole(to.meta.roles as Role[])) {
     return navigateTo('/')
   }
 })

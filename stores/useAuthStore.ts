@@ -188,7 +188,7 @@ export const useAuthStore = defineStore('auth', () => {
     return hasRole(searchedRole)
   }
 
-  const isAdminOrHasAnyRole = (searchedRoles: string[]) => {
+  const isAdminOrHasAnyRole = (searchedRoles: Role[]) => {
     if (isAdmin()) return true
     return hasAnyRole(searchedRoles)
   }
@@ -198,14 +198,14 @@ export const useAuthStore = defineStore('auth', () => {
     return hasRole(searchedRole)
   }
 
-  const isStaffOrHasAnyRole = (searchedRoles: string[]) => {
+  const isStaffOrHasAnyRole = (searchedRoles: Role[]) => {
     if (isStaff()) return true
     return hasAnyRole(searchedRoles)
   }
 
   const hasRole = (searchedRole: Role) => roles.value.includes(searchedRole)
 
-  const hasAnyRole = (searchedRoles: string[]) =>
+  const hasAnyRole = (searchedRoles: Role[]) =>
     roles.value.some(role => searchedRoles.includes(role))
 
   const loginRedirect = () => {
