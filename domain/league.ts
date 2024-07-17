@@ -1,5 +1,10 @@
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
-import { Category, mapApiCategoryToCategory } from '@/domain/game'
+import {
+  Category,
+  Game,
+  mapApiCategoryToCategory,
+  mapApiGameToGame,
+} from '@/domain/game'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { ApiLeague } from '@/types/api/league'
 
@@ -11,10 +16,12 @@ export type LeagueRelations = {
     name: 'masculine' | 'femenine' | 'mixed'
   }
   teams?: Team[]
+  games?: Game[]
 }
 
 export type LeagueCountRelations = {
   teamsCount?: number
+  gamesCount?: number
 }
 
 export type League = {
@@ -49,6 +56,8 @@ export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
   teams: apiLeague.teams
     ? apiLeague.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
+  games: apiLeague.games ? apiLeague.games.map(mapApiGameToGame) : undefined,
 
   teamsCount: apiLeague.teams_count,
+  gamesCount: apiLeague.games_count,
 })

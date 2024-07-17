@@ -4,11 +4,7 @@ import {
   mapPlayerToApiPlayerRequest,
 } from '@/domain/player'
 import { ApiTeam, ApiTeamRequest } from '@/types/api/team'
-import {
-  Category,
-  mapApiCategoryToCategory,
-  mapApiGenderToGender,
-} from '@/domain/game'
+import { Category, mapApiCategoryToCategory } from '@/domain/game'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Profile } from '@/domain/profile'
@@ -16,12 +12,14 @@ import { CallPlayerData } from '@/domain/call'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { License, mapApiLicenseToLicense } from '@/domain/license'
+import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 
 export type TeamRelations = {
   club?: Club
   sede?: Sede
   sedes?: Sede[]
   division?: Division
+  federation?: Federation
   category?: Category
   gender?: {
     id: number
@@ -124,6 +122,9 @@ export const mapApiTeamToTeam = (
   sedes: apiTeam.sedes ? apiTeam.sedes.map(mapApiSedeToSede) : undefined,
   division: apiTeam.division
     ? mapApiDivisionToDivision(apiTeam.division)
+    : undefined,
+  federation: apiTeam.federation
+    ? mapApiFederationToFederation(apiTeam.federation)
     : undefined,
   category: apiTeam.category
     ? mapApiCategoryToCategory(apiTeam.category)

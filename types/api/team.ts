@@ -7,12 +7,14 @@ import { ApiDivision } from '@/types/api/division'
 import { ApiPlayerRequest } from '@/types/api/player'
 import { ShirtColor } from '@/domain/team'
 import { ApiLicense } from '@/types/api/license'
+import { ApiFederation } from '@/types/api/federation'
 
 export type ApiTeamRelations = {
   club?: ApiClub
   sede?: ApiSede
   sedes?: ApiSede[]
   division?: ApiDivision
+  federation?: ApiFederation
   category?: ApiCategory
   gender?: {
     id: number
