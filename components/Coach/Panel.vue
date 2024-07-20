@@ -331,7 +331,10 @@ const listenAllChannels = (gameId: number) => {
 //   window.Echo.leaveChannel(`game.${gameId}.timeout.status.updated`)
 // }
 
-onMounted(getCurrentGames)
+onMounted(() => {
+  window.Echo.leaveAllChannels()
+  // getCurrentGames()
+})
 
 onBeforeUnmount(() => {
   window.Echo.leaveAllChannels()
