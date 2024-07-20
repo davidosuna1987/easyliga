@@ -179,7 +179,7 @@
     }
   }
 
-  @media (min-width: $media-sidebars-min) {
+  @media (min-width: $media-sidebars) {
     .easy-game-sidebars-court-component {
       grid-template-columns: 330px 1fr 330px;
 

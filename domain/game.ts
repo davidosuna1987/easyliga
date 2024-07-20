@@ -118,6 +118,7 @@ export type Game = {
   winnerTeamId?: number
   loserTeamId?: number
   date?: string
+  matchday?: number
   start?: string
   end?: string
   duration?: Duration
@@ -196,6 +197,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   winnerTeamId: apiGame.winner_team_id ?? undefined,
   loserTeamId: apiGame.loser_team_id ?? undefined,
   date: apiGame.date ?? undefined,
+  matchday: apiGame.matchday ?? undefined,
   start: apiGame.start ?? undefined,
   end: apiGame.end ?? undefined,
   duration: mapApiDurationToDuration(apiGame.duration),

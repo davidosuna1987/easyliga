@@ -54,6 +54,7 @@ export type ApiGame = {
   local_team_id: number | null
   visitor_team_id: number | null
   date: string | null
+  matchday: number | null
   start: string | null
   end: string | null
   duration: ApiDuration | null

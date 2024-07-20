@@ -210,7 +210,6 @@ watch(
           v-model="selectedExpiryDate"
           class="w-full"
           :minDate="new Date()"
-          :dateFormat="`dd '${t('forms.of')}' MM '${t('forms.of')}' yy`"
           :touchUI="true"
           @update:modelValue="handleExpiryDateSelected($event as string)"
         />

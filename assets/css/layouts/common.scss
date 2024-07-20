@@ -18,7 +18,7 @@
     box-shadow: var(--box-shadow);
   }
 
-  @media (min-width: $min-width-tablet) {
+  @media (min-width: $media-md) {
     .easy-container {
       padding-inline: var(--easy-main-padding-tablet);
 
@@ -28,7 +28,7 @@
     }
   }
 
-  @media (min-width: $media-sidebars-min) {
+  @media (min-width: $media-sidebars) {
     .easy-container,
     .easy-container.referee-arbitrate {
       padding: var(--easy-main-padding-tablet);

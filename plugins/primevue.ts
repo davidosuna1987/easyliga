@@ -21,7 +21,23 @@ import Tag from 'primevue/tag'
 import Badge from 'primevue/badge'
 
 export default defineNuxtPlugin(nuxtApp => {
-  nuxtApp.vueApp.use(PrimeVue, config)
+  const {
+    $i18n: { t, locale },
+  } = useNuxtApp()
+
+  const dateFormat =
+    locale.value === 'es'
+      ? `dd '${t('forms.of')}' MM '${t('forms.of')}' yy`
+      : 'dd.mm.yy'
+
+  nuxtApp.vueApp.use(PrimeVue, {
+    ...config,
+    locale: {
+      ...config.locale,
+      firstDayOfWeek: 1,
+      dateFormat,
+    },
+  })
   nuxtApp.vueApp.component('Button', Button)
   nuxtApp.vueApp.component('Dropdown', Dropdown)
   nuxtApp.vueApp.component('Dialog', Dialog)

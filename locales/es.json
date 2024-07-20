@@ -130,7 +130,13 @@
     "change_file": "Cambiar archivo | Cambiar archivos",
     "replace_file": "Reemplazar archivo | Reemplazar archivos",
     "website": "Sitio web",
-    "short_name": "Nombre abreviado"
+    "short_name": "Nombre abreviado",
+    "start_date": "Fecha de inicio",
+    "end_date": "Fecha de fin",
+    "start_time": "Hora de inicio",
+    "end_time": "Hora de fin",
+    "start_datetime": "Fecha y hora de inicio",
+    "end_datetime": "Fecha y hora de fin"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -339,7 +345,16 @@
     "point_will_end_set": "Al sumar este punto, {teamName} será el ganador del set.",
     "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?",
     "finished": "Partido finalizado",
-    "score": "Marcador"
+    "score": "Marcador",
+    "generating": "Generando partidos",
+    "matchdays": {
+      "label": "Jornadas",
+      "num": "Jornada {num}",
+      "not_generated": "No hay jornadas generadas",
+      "generate": "Generar jornadas",
+      "generated": "Las jornadas han sido generadas correctamente",
+      "error_only_one_team": "No se pueden generar jornadas con menos de 2 equipos"
+    }
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -394,7 +409,8 @@
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona una liga",
     "count": "{num} liga | {num} ligas",
-    "list_empty": "No hay ligas generadas"
+    "list_empty": "No hay ligas generadas",
+    "start_date": "Fecha de inicio de la liga"
   },
   "teams": {
     "team": "Equipo | Equipos",

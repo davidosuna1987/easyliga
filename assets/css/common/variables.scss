@@ -88,8 +88,6 @@
   --box-shadow-focus: 0 0 0 0.2rem var(--primary-color-medium);
   --container-margin-top: 60px;
   --extra-mini-layout-margin: 65px;
-  --min-width-tablet: 769px;
-  --min-width-desktop: 1025px;
   --footer-height: 84px;
   --navbar-avatar-size: 38px;
   --easy-main-padding: 1rem;
@@ -131,12 +129,6 @@
   --signature-button-color: var(--primary-color);
 }
 
-$min-width-small: 640px;
-$min-width-tablet: 768px;
-$min-width-desktop: 992px;
-$min-width-desktop-big: 1024px;
-$media-sidebars-min: 1285px;
-
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
@@ -172,7 +164,7 @@ $media-sidebars-min: 1285px;
   }
 }
 
-@media (min-width: $min-width-tablet) {
+@media (min-width: $media-md) {
   :root {
     --app-margin: 16px;
     --navbar-width: calc(var(--main-max-width) - 2 * var(--app-margin));

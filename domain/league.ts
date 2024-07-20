@@ -6,7 +6,8 @@ import {
   mapApiGameToGame,
 } from '@/domain/game'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
-import { ApiLeague } from '@/types/api/league'
+import { ApiCreateMatchdaysGamesRequest, ApiLeague } from '@/types/api/league'
+import { ApiGame } from '@/types/api/game'
 
 export type LeagueRelations = {
   division?: Division
@@ -17,6 +18,15 @@ export type LeagueRelations = {
   }
   teams?: Team[]
   games?: Game[]
+}
+
+export type Matchday = {
+  matchday?: number
+  games: Game[]
+}
+
+export type LeagueCustomAppends = {
+  matchdays?: Matchday[]
 }
 
 export type LeagueCountRelations = {
@@ -34,7 +44,30 @@ export type League = {
   start?: string
   end?: string
 } & LeagueRelations &
-  LeagueCountRelations
+  LeagueCountRelations &
+  LeagueCustomAppends
+
+export type CreateMatchdaysGamesRequest = {
+  start?: Date
+}
+
+export const mapApiGamesToMatchdays = (apiGames: ApiGame[]): Matchday[] => {
+  const matchdays: Matchday[] = []
+  apiGames.forEach(apiGame => {
+    const matchdayIndex = matchdays.findIndex(
+      matchday => matchday.matchday === apiGame.matchday,
+    )
+    if (matchdayIndex === -1) {
+      matchdays.push({
+        matchday: apiGame.matchday ?? undefined,
+        games: [mapApiGameToGame(apiGame)],
+      })
+    } else {
+      matchdays[matchdayIndex].games.push(mapApiGameToGame(apiGame))
+    }
+  })
+  return matchdays
+}
 
 export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
   id: apiLeague.id,
@@ -60,4 +93,14 @@ export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
 
   teamsCount: apiLeague.teams_count,
   gamesCount: apiLeague.games_count,
+
+  matchdays: apiLeague.games
+    ? mapApiGamesToMatchdays(apiLeague.games)
+    : undefined,
+})
+
+export const mapCreateMatchdaysGamesRequestToApiCreateMatchdaysGamesRequest = (
+  createMatchdaysGamesRequest: CreateMatchdaysGamesRequest,
+): ApiCreateMatchdaysGamesRequest => ({
+  start: createMatchdaysGamesRequest.start ?? null,
 })

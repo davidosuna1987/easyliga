@@ -35,6 +35,10 @@ export type ApiLeague = {
 } & ApiLeagueRelatioins &
   ApiLeagueCountRelations
 
+export type ApiCreateMatchdaysGamesRequest = {
+  start: Date | null
+}
+
 export type ApiLeagueResponse = {
   success: boolean
   data: {
@@ -47,6 +51,15 @@ export type ApiLeaguesResponse = {
   success: boolean
   data: {
     leagues: ApiLeague[]
+  }
+  errors: null
+}
+
+export type ApiCreateMatchdaysGamesResponse = {
+  success: boolean
+  data: {
+    league: ApiLeague
+    games: ApiGame[]
   }
   errors: null
 }

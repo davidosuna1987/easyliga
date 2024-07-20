@@ -191,12 +191,7 @@ watch(
         />
       </FormLabel>
       <FormLabel :label="t('forms.birth_date')" :error="errors?.birthDate?.[0]">
-        <Calendar
-          v-model="form.birthDate"
-          class="w-full"
-          :dateFormat="`dd '${t('forms.of')}' MM '${t('forms.of')}' yy`"
-          :touchUI="true"
-        />
+        <Calendar v-model="form.birthDate" class="w-full" :touchUI="true" />
       </FormLabel>
       <FormLabel :label="t('forms.gender')" :error="errors?.gender?.[0]">
         <Dropdown

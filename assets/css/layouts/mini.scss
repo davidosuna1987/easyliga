@@ -27,7 +27,7 @@
     padding-bottom: calc(var(--easy-main-padding-tablet) + 3rem);
   }
 
-  @media (min-width: $min-width-tablet) {
+  @media (min-width: $media-md) {
     &:before {
       height: calc(
         100% + var(--extra-mini-layout-margin) * 2 - var(--app-margin)

@@ -76,13 +76,13 @@ onMounted(getLeagues)
                 />
                 <Tag
                   :class="[
-                    'font-light border-solid border-primary bg-transparent text-primary border py-[2px] px-2',
+                    'font-light border-solid border-primary bg-transparent border py-[2px] px-2',
                     {
-                      'dark:border-blue-500 dark:text-blue-500':
+                      'border-blue-500 text-blue-500':
                         league.gender?.name === 'masculine',
-                      'dark:border-fuchsia-400 dark:text-fuchsia-400':
+                      'border-fuchsia-400 text-fuchsia-400':
                         league.gender?.name === 'femenine',
-                      'dark:border-yellow-500 dark:text-yellow-500':
+                      'border-yellow-500 text-yellow-500':
                         league.gender?.name === 'mixed',
                     },
                   ]"

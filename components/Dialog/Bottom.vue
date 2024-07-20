@@ -30,6 +30,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  closable: {
+    type: Boolean,
+    default: true,
+  },
   position: {
     type: String as PropType<DialogProps['position']>,
     default: 'bottom',
@@ -65,6 +69,7 @@ watch(
     :dismissableMask="dismissableMask"
     :position="position"
     :breakpoints="breakpoints"
+    :closable="closable"
     modal
     @hide="emit('hide', true)"
   >
