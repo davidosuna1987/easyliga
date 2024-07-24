@@ -60,7 +60,7 @@ export type ApiGame = {
   duration: ApiDuration | null
   winner_team_id: number | null
   loser_team_id: number | null
-  status: GameStatus
+  status: GameStatus | null
   observations: string | null
   created_at: string | null
   updated_at: string | null

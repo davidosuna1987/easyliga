@@ -16,6 +16,8 @@ import {
 import TimeoutService from '@/services/timeout'
 import moment from 'moment'
 import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
+import { formatTime } from '@/domain/utils'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({
   games: {
@@ -35,6 +37,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
 const toast = useEasyToast()
 const timeoutService = new TimeoutService()
 
@@ -44,6 +47,7 @@ const ACTIONS_GRID_COLS: Record<string, number> = {
   resting: 1,
   playing: 1, // grid-cols-2 if timeouts are enabled
   finished: 2,
+  undefined: 1,
 }
 
 const gameSignatures = ref<GameSignature[]>(
@@ -179,87 +183,101 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="easy-coach-current-games-component">
+  <div class="easy-coach-games-component">
     <div v-for="(game, index) in games" class="game">
       <header class="name text-center">{{ game.name }}</header>
-      <GameStatus :status="game.status" />
+      <GameStatus
+        :status="game.status"
+        :start="game.date ? formatTime(game.date) : undefined"
+      />
       <EasyGrid
         class="actions mt-3"
         :gap="2"
-        :cols="ACTIONS_GRID_COLS[game.status] ?? ACTIONS_GRID_COLS.default"
+        :cols="ACTIONS_GRID_COLS[game.status ?? 'default']"
       >
-        <CoachButtonCall
-          v-if="game.status === 'warmup'"
-          class="action"
-          :gameId="game.id"
-          :teamId="calls[index]?.teamId"
-          :locked="!!calls[index]?.locked"
-        />
-        <CoachButtonRotation
-          v-if="['warmup', 'resting'].includes(game.status)"
-          class="action"
-          :gameId="game.id"
-          :callId="calls[index]?.id"
-          :callUnlocked="!!callUnlocked(index)"
-          :locked="!!currentSetRotation(game, calls[index]?.id)?.locked"
-        />
-        <template v-if="game.status === 'playing'">
-          <CoachButtonPlayerChange
+        <template v-if="game.status">
+          <CoachButtonCall
+            v-if="game.status === 'warmup'"
             class="action"
             :gameId="game.id"
             :teamId="calls[index]?.teamId"
-            :rotation="currentSetRotation(game, calls[index]?.id)"
-            :locked="
-              !!rotationLocked(index) ||
-              !!maxSetPlayerChangesReached(game, calls[index]?.id)
-            "
+            :locked="!!calls[index]?.locked"
           />
-          <CoachButtonTimeout
-            v-if="enableRequestTimeouts"
+          <CoachButtonRotation
+            v-if="['warmup', 'resting'].includes(game.status)"
             class="action"
-            :game="game"
-            :teamId="calls[index].teamId"
-            :loading="loadingTimeout"
-            @timeout:dialog="setToRequestTimeout = $event"
+            :gameId="game.id"
+            :callId="calls[index]?.id"
+            :callUnlocked="!!callUnlocked(index)"
+            :locked="!!currentSetRotation(game, calls[index]?.id)?.locked"
           />
-        </template>
-        <template v-if="game.status === 'finished'">
-          <div
-            v-if="reportAlreadySignedByCoachAndCaptain(game, calls[index])"
-            class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
-          >
-            {{ t('reports.closed') }}
-          </div>
-          <template v-else>
-            <CoachButtonSign
-              v-for="gameSignatureType in [
-                GameSignatureTypes.coach,
-                GameSignatureTypes.captain,
-              ]"
+          <template v-if="game.status === 'playing'">
+            <CoachButtonPlayerChange
+              class="action"
+              :gameId="game.id"
+              :teamId="calls[index]?.teamId"
+              :rotation="currentSetRotation(game, calls[index]?.id)"
+              :locked="
+                !!rotationLocked(index) ||
+                !!maxSetPlayerChangesReached(game, calls[index]?.id)
+              "
+            />
+            <CoachButtonTimeout
+              v-if="enableRequestTimeouts"
               class="action"
               :game="game"
-              :call="calls[index]"
-              :signature-type="gameSignatureType"
-              :disabled="
-                signButtonTypeDisabled(game, calls[index], gameSignatureType)
-              "
-              @signature:stored="handleSignatureStored"
+              :teamId="calls[index].teamId"
+              :loading="loadingTimeout"
+              @timeout:dialog="setToRequestTimeout = $event"
             />
-            <EasyCountdown
-              class="col-span-3"
-              v-slot="{ minutes, seconds }"
-              :target="getGameObservationsCountdownTarget(game)"
-              @countdown:ended="onCountdownEnded({ game, call: calls[index] })"
+          </template>
+          <template v-if="game.status === 'finished'">
+            <div
+              v-if="reportAlreadySignedByCoachAndCaptain(game, calls[index])"
+              class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
             >
-              <div
-                class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+              {{ t('reports.closed') }}
+            </div>
+            <template v-else>
+              <CoachButtonSign
+                v-for="gameSignatureType in [
+                  GameSignatureTypes.coach,
+                  GameSignatureTypes.captain,
+                ]"
+                class="action"
+                :game="game"
+                :call="calls[index]"
+                :signature-type="gameSignatureType"
+                :disabled="
+                  signButtonTypeDisabled(game, calls[index], gameSignatureType)
+                "
+                @signature:stored="handleSignatureStored"
+              />
+              <EasyCountdown
+                class="col-span-3"
+                v-slot="{ minutes, seconds }"
+                :target="getGameObservationsCountdownTarget(game)"
+                @countdown:ended="
+                  onCountdownEnded({ game, call: calls[index] })
+                "
               >
-                {{ t('reports.countdown') }}
-                <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
-              </div>
-            </EasyCountdown>
+                <div
+                  class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+                >
+                  {{ t('reports.countdown') }}
+                  <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
+                </div>
+              </EasyCountdown>
+            </template>
           </template>
         </template>
+        <Button
+          v-else-if="auth.user && game.localTeam?.coachId === auth.user.id"
+          class="action"
+          @click="navigateTo(`/coach/games/${game.id}/edit`)"
+        >
+          {{ t('games.edit_date') }}
+        </Button>
       </EasyGrid>
     </div>
 
@@ -287,6 +305,6 @@ onBeforeUnmount(() => {
 
 <script lang="ts">
 export default {
-  name: 'CoachCurrentGames',
+  name: 'CoachGames',
 }
 </script>

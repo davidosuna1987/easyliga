@@ -334,7 +334,9 @@
       "playing": "En juego",
       "timeout": "Tiempo muerto",
       "resting": "Descanso",
-      "finished": "Finalizado"
+      "finished": "Finalizado",
+      "no_status": "Partido creado",
+      "start": "Hora del partido: {start}"
     },
     "player_change": "Cambio | Cambios",
     "show_player_change": "Ver cambio | Ver cambios",
@@ -354,7 +356,8 @@
       "generate": "Generar jornadas",
       "generated": "Las jornadas han sido generadas correctamente",
       "error_only_one_team": "No se pueden generar jornadas con menos de 2 equipos"
-    }
+    },
+    "edit_date": "Editar fecha y hora"
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -966,5 +969,35 @@
     "show_unavailable_shirt_numbers": "Si tienes dudas sobre los dorsales disponibles puedes hacer click en el enlace de debajo del selector y verás los dorsales que ya están en posesión de algún otro jugador.",
     "added_roles": "El rol {roles} se ha añadido correctamente | Los roles {roles} se han añadido correctamente",
     "accept": "Aceptar invitación"
+  },
+  "dates": {
+    "weekdays": {
+      "0": "Domingo",
+      "1": "Lunes",
+      "2": "Martes",
+      "3": "Miércoles",
+      "4": "Jueves",
+      "5": "Viernes",
+      "6": "Sábado"
+    },
+    "months": {
+      "1": "Enero",
+      "2": "Febrero",
+      "3": "Marzo",
+      "4": "Abril",
+      "5": "Mayo",
+      "6": "Junio",
+      "7": "Julio",
+      "8": "Agosto",
+      "9": "Septiembre",
+      "10": "Octubre",
+      "11": "Noviembre",
+      "12": "Diciembre"
+    },
+    "select": {
+      "day": "Selecciona un día",
+      "month": "Selecciona un mes",
+      "year": "Selecciona un año"
+    }
   }
 }

@@ -24,7 +24,6 @@ import { getFullName } from '@/domain/player'
 import { Rotation } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES } from '@/domain/sanction'
 import moment from 'moment'
-import { formatDate } from '@/domain/utils'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -32,76 +31,68 @@ const gameService = new GameService()
 const callService = new CallService()
 const toast = useEasyToast()
 
-const selectedDateGames = ref<Game[]>([])
+const currentGames = ref<Game[]>()
 const calls = ref<Call[]>([])
+const teamType = ref<TeamType>(TeamType.LOCAL)
 const loadingApi = ref<boolean>(false)
 
-const getGamesByDate = async (
-  date: Date = new Date(),
-  type: TeamType = TeamType.LOCAL,
-) => {
+const getCurrentGames = async () => {
   if (!auth.user) return
 
-  loadingApi.value = true
-
-  if (type === TeamType.LOCAL) {
-    selectedDateGames.value = []
+  const commonParams = {
+    where: `date:>=:${moment()
+      .subtract(1, 'day')
+      .format('YYYY-MM-DD HH:mm:ss')}`,
+    with: `currentSet.rotations.players,currentSet.timeouts,currentSet.sanctions,signatures`,
   }
 
-  const formatedDate = formatDate(date.toString(), '-', true)
-  const formatedDateLeft = `${formatedDate} 00:00:00`
-  const formatedDateRight = `${formatedDate} 23:59:59`
-
-  const { data, error } = await gameService.fetch({
-    where: `date:>=:${formatedDateLeft},date:<=:${formatedDateRight}`,
-    where_has: `${type}Team:coach_id:${auth.user.id}`,
-    with: `localTeam,visitorTeam,currentSet.rotations.players,currentSet.timeouts,currentSet.sanctions,signatures`,
+  const { data } = await gameService.fetch({
+    where_has: `localTeam:coach_id:${auth.user.id}`,
+    ...commonParams,
   })
 
-  if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-  } else if (data.value) {
-    selectedDateGames.value = [
-      ...selectedDateGames.value,
-      ...data.value?.data.games
-        .map(mapApiGameToGame)
-        .filter(isValidCoachPanelGame),
-    ]
+  currentGames.value = data.value?.data.games
+    .map(mapApiGameToGame)
+    .filter(isValidCoachPanelGame)
 
-    if (type === TeamType.LOCAL) {
-      await getGamesByDate(date, TeamType.VISITOR)
-    }
+  if (!currentGames.value?.length) {
+    teamType.value = TeamType.VISITOR
+
+    const { data } = await gameService.fetch({
+      where_has: `visitorTeam:coach_id:${auth.user.id}`,
+      ...commonParams,
+    })
+
+    currentGames.value = data.value?.data.games
+      .map(mapApiGameToGame)
+      .filter(isValidCoachPanelGame)
   }
 
-  if (selectedDateGames.value?.length) {
-    await getSelectedDateGamesCalls()
+  if (currentGames.value?.length) {
+    await getCurrentGamesCalls()
   } else {
     loadingApi.value = false
   }
 }
 
-const getSelectedDateGamesCalls = async () => {
+const getCurrentGamesCalls = async () => {
   loadingApi.value = true
   calls.value = []
 
-  selectedDateGames.value?.forEach(async game => {
+  currentGames.value?.forEach(async game => {
     const { data } = await callService.fetch({
       where: `game_id:${game.id}`,
       with: 'currentRotation.players',
     })
 
-    const teamType =
-      game.localTeam?.coachId === auth.user?.id
-        ? TeamType.LOCAL
-        : TeamType.VISITOR
-
     const apiGameCall = data.value?.data.calls.find(
-      call => call.team_id === game?.[`${teamType}TeamId`],
+      call => call.team_id === game?.[`${teamType.value}TeamId`],
     )
 
-    if (apiGameCall) calls.value.push(mapApiCallToCall(apiGameCall))
+    if (apiGameCall) calls.value?.push(mapApiCallToCall(apiGameCall))
 
     window.Echo.leaveAllChannels()
+
     listenAllChannels(game.id)
 
     loadingApi.value = false
@@ -109,7 +100,7 @@ const getSelectedDateGamesCalls = async () => {
 }
 
 const setTimeoutStatus = (requestedTimeout: Timeout) => {
-  const game = selectedDateGames.value?.find(
+  const game = currentGames.value?.find(
     game => game.currentSet?.id === requestedTimeout.setId,
   )
   if (!game) return
@@ -125,7 +116,7 @@ const setTimeoutStatus = (requestedTimeout: Timeout) => {
 }
 
 const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
-  const endedGame = selectedDateGames.value?.find(g => g.id === game.id)
+  const endedGame = currentGames.value?.find(g => g.id === game.id)
   if (!endedGame) return
 
   const callToSign = calls.value.find(c => c.id === call.id && !c.signedAt)
@@ -135,8 +126,8 @@ const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
     await callService.sign(call.id, signData)
   }
 
-  selectedDateGames.value?.splice(
-    selectedDateGames.value?.map(g => g.id).indexOf(endedGame.id),
+  currentGames.value?.splice(
+    currentGames.value?.map(g => g.id).indexOf(endedGame.id),
     1,
   )
 
@@ -144,11 +135,11 @@ const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
 }
 
 const onReportSigned = (game: Game) => {
-  const signedGame = selectedDateGames.value?.find(g => g.id === game.id)
+  const signedGame = currentGames.value?.find(g => g.id === game.id)
   if (!signedGame) return
 
-  selectedDateGames.value?.splice(
-    selectedDateGames.value?.map(g => g.id).indexOf(signedGame.id),
+  currentGames.value?.splice(
+    currentGames.value?.map(g => g.id).indexOf(signedGame.id),
     1,
   )
 
@@ -159,7 +150,7 @@ const currentSetRotation = (
   gameId: number,
   callId: number,
 ): Rotation | undefined =>
-  selectedDateGames.value
+  currentGames.value
     ?.find(game => game.id === gameId)
     ?.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
@@ -172,7 +163,7 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
           ? t('events.call_locked')
           : t('events.call_unlocked'),
       )
-      getSelectedDateGamesCalls()
+      getCurrentGamesCalls()
     },
   )
 }
@@ -193,7 +184,7 @@ const listenRotationLockToggledEvent = (
           ? t('events.rotation_locked')
           : t('events.rotation_unlocked'),
       )
-      getGamesByDate()
+      getCurrentGames()
     },
   )
 }
@@ -202,7 +193,7 @@ const listenGameStatusUpdatedEvent = (gameId: number) => {
   window.Echo.channel(`game.${gameId}.status.updated`).listen(
     ApiEvents.GAME_STATUS_UPDATED,
     (response: ApiGameStatusUpdatedEventResponse) => {
-      const game = selectedDateGames.value?.find(game => game.id === gameId)
+      const game = currentGames.value?.find(game => game.id === gameId)
       if (game) {
         toast.info(
           t('events.game_status_updated', {
@@ -214,7 +205,7 @@ const listenGameStatusUpdatedEvent = (gameId: number) => {
           },
         )
 
-        getGamesByDate()
+        getCurrentGames()
       }
     },
   )
@@ -224,7 +215,7 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
   window.Echo.channel(`game.${gameId}.timeout.status.updated`).listen(
     ApiEvents.TIMEOUT_STATUS_UPDATED,
     (response: ApiTimeoutStatusUpdatedEventResponse) => {
-      const game = selectedDateGames.value?.find(game => game.id === gameId)
+      const game = currentGames.value?.find(game => game.id === gameId)
       if (game) {
         if (response.timeout.status === TimeoutStatusEnum.finished) {
           toast.info(
@@ -277,7 +268,7 @@ const listenSanctionStoredEvent = (gameId: number) => {
       )
 
       if (EXPULSION_SEVERITIES.includes(response.sanction.severity)) {
-        const game = selectedDateGames.value?.find(
+        const game = currentGames.value?.find(
           game => game.currentSet?.id === response.sanction.set_id,
         )
         const call = calls.value.find(call => call.gameId === game?.id)
@@ -306,7 +297,7 @@ const listenGameSignatureCreatedEvent = (gameId: number) => {
     ApiEvents.GAME_SIGNATURE_CREATED,
     (response: ApiGameSignatureCreatedEventResponse) => {
       toast.info(t('reports.signed'))
-      getGamesByDate()
+      getCurrentGames()
     },
   )
 }
@@ -323,11 +314,26 @@ const listenAllChannels = (gameId: number) => {
   })
 }
 
-const handleDateChanged = (date: Date) => getGamesByDate(date)
+// INFO: replaced with window.Echo.leaveAllChannels()
+// const leaveCallUnlockedEvent = (gameId: number, callId: number) => {
+//   window.Echo.leaveChannel(`game.${gameId}.call.${callId}.unlocked`)
+// }
+
+// const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
+//   window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
+// }
+
+// const leaveGameStatusUpdatedEvent = (gameId: number) => {
+//   window.Echo.leaveChannel(`game.${gameId}.status.updated`)
+// }
+
+// const leaveTimeoutStatusUpdatedEvent = (gameId: number) => {
+//   window.Echo.leaveChannel(`game.${gameId}.timeout.status.updated`)
+// }
 
 onMounted(() => {
   window.Echo.leaveAllChannels()
-  getGamesByDate()
+  // getCurrentGames()
 })
 
 onBeforeUnmount(() => {
@@ -344,18 +350,11 @@ onBeforeUnmount(() => {
           : t('coaches.welcome_no_name')
       }}
     </Heading>
-    <!-- <template v-else> -->
-    <EasyDatepickerDropdown class="mb-8" @date:changed="handleDateChanged" />
-
-    <LoadingLabel
-      v-if="loadingApi"
-      class="justify-center"
-      :label="t('games.loading')"
-    />
+    <Loading v-if="loadingApi" />
     <template v-else>
-      <CoachGames
-        v-if="selectedDateGames?.length"
-        :games="selectedDateGames"
+      <CoachCurrentGames
+        v-if="currentGames?.length"
+        :games="currentGames"
         :calls="calls"
         @timeout:requested="setTimeoutStatus"
         @countdown:ended="onCountdownEnded"

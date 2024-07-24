@@ -13,7 +13,7 @@ import {
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
-import { Club } from '@/domain/club'
+import { Club, mapApiClubToClub } from '@/domain/club'
 import { Court, mapApiCourtToCourt } from '@/domain/court'
 import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
@@ -49,6 +49,13 @@ export const GENDER_MAPPER = {
   female: 'female',
   other: 'other',
 } as const
+
+export type GameStatus =
+  | 'warmup'
+  | 'playing'
+  | 'timeout'
+  | 'resting'
+  | 'finished'
 
 export type GenderType = keyof typeof GENDER_MAPPER
 
@@ -97,13 +104,6 @@ export type GameRelationsCount = {
   visitorTeamSetsWonCount?: number
 }
 
-export type GameStatus =
-  | 'warmup'
-  | 'playing'
-  | 'timeout'
-  | 'resting'
-  | 'finished'
-
 export type Game = {
   id: number
   name: string
@@ -122,7 +122,7 @@ export type Game = {
   start?: string
   end?: string
   duration?: Duration
-  status: GameStatus
+  status?: GameStatus
   observations?: string
 } & GameRelations &
   GameRelationsCount
@@ -201,9 +201,38 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   start: apiGame.start ?? undefined,
   end: apiGame.end ?? undefined,
   duration: mapApiDurationToDuration(apiGame.duration),
-  status: apiGame.status,
+  status: apiGame.status ?? undefined,
   observations: apiGame.observations ?? undefined,
 
+  ...mapApiGameRelationsToGameRelations(apiGame),
+  ...mapApiGameRelationsCountToGameRelationsCount(apiGame),
+})
+
+export const mapApiGameRelationsToGameRelations = (
+  apiGame: ApiGame,
+): GameRelations => ({
+  league: apiGame.league ? mapApiLeagueToLeague(apiGame.league) : undefined,
+  division: apiGame.division
+    ? mapApiDivisionToDivision(apiGame.division)
+    : undefined,
+  club: apiGame.club ? mapApiClubToClub(apiGame.club) : undefined,
+  sede: apiGame.sede ? mapApiSedeToSede(apiGame.sede) : undefined,
+  court: apiGame.court ? mapApiCourtToCourt(apiGame.court) : undefined,
+  referee: apiGame.referee ? mapApiUserToUser(apiGame.referee) : undefined,
+  localTeam: apiGame.local_team
+    ? mapApiTeamToTeam(apiGame.local_team)
+    : undefined,
+  visitorTeam: apiGame.visitor_team
+    ? mapApiTeamToTeam(apiGame.visitor_team)
+    : undefined,
+  winnerTeam: apiGame.winner_team
+    ? mapApiTeamToTeam(apiGame.winner_team)
+    : undefined,
+  loserTeam: apiGame.loser_team
+    ? mapApiTeamToTeam(apiGame.loser_team)
+    : undefined,
+  teams: apiGame.teams?.map(team => mapApiTeamToTeam(team, false)),
+  calls: apiGame.calls?.map(mapApiCallToCall),
   sets: apiGame.sets?.map(mapApiSetToSet),
   currentSet: apiGame.current_set
     ? mapApiSetToSet(apiGame.current_set)
@@ -211,13 +240,16 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   sanctions: apiGame.sanctions
     ? apiGame.sanctions.map(mapApiSanctionToSanction)
     : undefined,
-
-  localTeamSetsWonCount: apiGame.local_team_sets_won_count,
-  visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count,
-  referee: apiGame.referee ? mapApiUserToUser(apiGame.referee) : undefined,
   signatures: apiGame.signatures
     ? apiGame.signatures.map(mapApiGameSignatureToGameSignature)
     : undefined,
+})
+
+export const mapApiGameRelationsCountToGameRelationsCount = (
+  apiGame: ApiGame,
+): GameRelationsCount => ({
+  localTeamSetsWonCount: apiGame.local_team_sets_won_count ?? undefined,
+  visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count ?? undefined,
 })
 
 export const mapApiGameInitialDataToGameInitialData = (

@@ -1,12 +1,22 @@
+<script setup lang="ts">
+const props = defineProps({
+  fullscreen: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const position = props.fullscreen ? 'fixed' : 'absolute'
+</script>
+
 <template>
-  <EasyGrid class="easy-loading-component" center>
+  <EasyGrid :style="{ position }" class="easy-loading-component" center>
     <LoadingSpinner />
   </EasyGrid>
 </template>
 
 <style lang="scss">
 .easy-loading-component {
-  position: fixed;
   top: 0;
   left: 0;
   z-index: 9999;

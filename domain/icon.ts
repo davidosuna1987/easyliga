@@ -5,6 +5,8 @@ export const IconNames = {
   delete: 'pepicons-pencil:trash',
   close: 'pepicons-pencil:times',
   check: 'pepicons-pencil:checkmark',
+  checkCircle: 'pepicons-pencil:checkmark-circle',
+  gameFinished: 'ic:baseline-check-circle-outline',
   download: 'pepicons-pencil:cloud-down',
   upload: 'pepicons-pencil:cloud-up',
   search: 'pepicons-pencil:loop',
