@@ -2,7 +2,8 @@ import es from '@/locales/es.json'
 import ct from '@/locales/ct.json'
 import pv from '@/locales/pv.json'
 import en from '@/locales/en.json'
-import { locales, FALLBACK_LOCALE } from '@/config/locale'
+import { locales } from '@/config/locale'
+import { FALLBACK_LOCALE } from '@/domain/locale'
 
 export default defineI18nConfig(() => {
   return {

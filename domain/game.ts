@@ -1,5 +1,6 @@
 import {
   ApiGame,
+  ApiGameRequestChangeDateRequest,
   ApiGameInitialDataResponse,
   ApiGameObservationsRequest,
   ApiGameReportSimple,
@@ -48,6 +49,16 @@ export const GENDER_MAPPER = {
   male: 'male',
   female: 'female',
   other: 'other',
+} as const
+
+export const GameReportSideTeamTypes = {
+  LEFT: 'A',
+  RIGHT: 'B',
+} as const
+
+export const GameReportTeamTypes = {
+  A: 'A',
+  B: 'B',
 } as const
 
 export type GameStatus =
@@ -104,9 +115,14 @@ export type GameRelationsCount = {
   visitorTeamSetsWonCount?: number
 }
 
+export type GameCustomAppends = {
+  name: string
+  duration?: Duration
+  confirmed: boolean
+}
+
 export type Game = {
   id: number
-  name: string
   leagueId?: number
   divisionId?: number
   clubId?: number
@@ -118,23 +134,21 @@ export type Game = {
   winnerTeamId?: number
   loserTeamId?: number
   date?: string
+  dateConfirmedBy: number[]
+  requestedDate?: string
+  dateRequestedBy?: number
   matchday?: number
   start?: string
   end?: string
-  duration?: Duration
   status?: GameStatus
   observations?: string
 } & GameRelations &
-  GameRelationsCount
+  GameRelationsCount &
+  GameCustomAppends
 
 export type GameObservationsRequest = {
   observations?: string
 }
-
-export const GameReportTeamTypes = {
-  A: 'A',
-  B: 'B',
-} as const
 
 export type GameReportTeamType =
   (typeof GameReportTeamTypes)[keyof typeof GameReportTeamTypes]
@@ -168,11 +182,6 @@ export type GameLocalVisitorTimeouts = {
   visitorTeamTimeouts: Timeout[]
 }
 
-export const GameReportSideTeamTypes = {
-  LEFT: 'A',
-  RIGHT: 'B',
-} as const
-
 export type GameStorePreviewData = {
   category: Category | undefined
   gender: Gender | undefined
@@ -183,9 +192,12 @@ export type GameStorePreviewData = {
   court: Court | undefined
 }
 
+export type GameRequestChangeDateRequest = {
+  requestedDate: Date
+}
+
 export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   id: apiGame.id,
-  name: apiGame.name,
   leagueId: apiGame.league_id ?? undefined,
   divisionId: apiGame.division_id ?? undefined,
   clubId: apiGame.club_id ?? undefined,
@@ -197,15 +209,18 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   winnerTeamId: apiGame.winner_team_id ?? undefined,
   loserTeamId: apiGame.loser_team_id ?? undefined,
   date: apiGame.date ?? undefined,
+  dateConfirmedBy: apiGame.date_confirmed_by,
+  requestedDate: apiGame.requested_date ?? undefined,
+  dateRequestedBy: apiGame.date_requested_by ?? undefined,
   matchday: apiGame.matchday ?? undefined,
   start: apiGame.start ?? undefined,
   end: apiGame.end ?? undefined,
-  duration: mapApiDurationToDuration(apiGame.duration),
   status: apiGame.status ?? undefined,
   observations: apiGame.observations ?? undefined,
 
   ...mapApiGameRelationsToGameRelations(apiGame),
   ...mapApiGameRelationsCountToGameRelationsCount(apiGame),
+  ...mapApiGameCustomAppendsToGameCustomAppends(apiGame),
 })
 
 export const mapApiGameRelationsToGameRelations = (
@@ -250,6 +265,14 @@ export const mapApiGameRelationsCountToGameRelationsCount = (
 ): GameRelationsCount => ({
   localTeamSetsWonCount: apiGame.local_team_sets_won_count ?? undefined,
   visitorTeamSetsWonCount: apiGame.visitor_team_sets_won_count ?? undefined,
+})
+
+export const mapApiGameCustomAppendsToGameCustomAppends = (
+  apiGame: ApiGame,
+): GameCustomAppends => ({
+  name: apiGame.name,
+  duration: mapApiDurationToDuration(apiGame.duration),
+  confirmed: apiGame.confirmed,
 })
 
 export const mapApiGameInitialDataToGameInitialData = (
@@ -325,6 +348,12 @@ export const mapApiGameReportSimpleToGameReportSimple = (
   calls: apiGameReportSimple.calls.map(mapApiCallToCall),
 })
 
+export const isMatchDay = (game: Game): boolean =>
+  moment(game.date).isSame(moment(), 'day')
+
+export const isMatchDayPassed = (game: Game): boolean =>
+  moment(game.date).isBefore(moment(), 'day')
+
 export const isValidCoachPanelGame = (game: Game): boolean =>
   !game.end ||
   moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf() >
@@ -370,3 +399,12 @@ export const getLocalVisitorTimeouts = (
 
   return { localTeamTimeouts, visitorTeamTimeouts }
 }
+
+export const mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest =
+  (request: GameRequestChangeDateRequest): ApiGameRequestChangeDateRequest => {
+    return {
+      requested_date: moment(request.requestedDate).format(
+        'YYYY-MM-DD HH:mm:ss',
+      ),
+    }
+  }

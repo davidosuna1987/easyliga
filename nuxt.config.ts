@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-icon',
     '@kevinmarrec/nuxt-pwa',
+    '@nuxtjs/color-mode',
   ],
   runtimeConfig: {
     // private keys

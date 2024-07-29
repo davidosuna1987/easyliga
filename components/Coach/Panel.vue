@@ -37,7 +37,7 @@ const calls = ref<Call[]>([])
 const loadingApi = ref<boolean>(false)
 
 const getGamesByDate = async (
-  date: Date = new Date(),
+  date: Date | string = new Date(),
   type: TeamType = TeamType.LOCAL,
 ) => {
   if (!auth.user) return
@@ -48,6 +48,7 @@ const getGamesByDate = async (
     selectedDateGames.value = []
   }
 
+  date = new Date(date)
   const formatedDate = formatDate(date.toString(), '-', true)
   const formatedDateLeft = `${formatedDate} 00:00:00`
   const formatedDateRight = `${formatedDate} 23:59:59`
@@ -325,6 +326,14 @@ const listenAllChannels = (gameId: number) => {
 
 const handleDateChanged = (date: Date) => getGamesByDate(date)
 
+const handleDateRequested = (game: Game) => {
+  getGamesByDate(game.date)
+}
+
+const handleDateApproved = (game: Game) => {
+  getGamesByDate(game.date)
+}
+
 onMounted(() => {
   window.Echo.leaveAllChannels()
   getGamesByDate()
@@ -357,6 +366,8 @@ onBeforeUnmount(() => {
         v-if="selectedDateGames?.length"
         :games="selectedDateGames"
         :calls="calls"
+        @date:requested="handleDateRequested"
+        @date:approved="handleDateApproved"
         @timeout:requested="setTimeoutStatus"
         @countdown:ended="onCountdownEnded"
         @report:signed="onReportSigned"

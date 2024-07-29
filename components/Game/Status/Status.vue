@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { IconNames } from '@/domain/icon'
 import { GameStatus } from '@/domain/game'
+import { formatTime } from '@/domain/utils'
 
 const props = defineProps({
   status: {
     type: String as PropType<GameStatus>,
+    required: false,
+  },
+  statusLabel: {
+    type: String,
     required: false,
   },
   start: {
@@ -31,37 +36,13 @@ const { t } = useI18n()
         :name="IconNames.gameFinished"
         size="1.15rem"
       />
-      <div v-else class="icon-wrapper">
-        <svg
-          :aria-label="`status ${status}`"
-          width="100%"
-          height="100%"
-          fill="none"
-          viewBox="0 0 16 16"
-          class="animate-spin"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            class="stroke"
-            stroke-width="2"
-            d="M3.05 3.05a7 7 0 1 1 9.9 9.9 7 7 0 0 1-9.9-9.9Z"
-            opacity=".5"
-          ></path>
-          <path
-            class="fill"
-            fill-rule="evenodd"
-            d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"
-            clip-rule="evenodd"
-          ></path>
-          <path class="fill" d="M14 8a6 6 0 0 0-6-6V0a8 8 0 0 1 8 8h-2Z"></path>
-        </svg>
-      </div>
+      <GameStatusSpinIcon v-else :status="status" />
       <span v-if="!reduced" class="label" :class="props.status">
-        {{ t(`games.status.${status}`) }}
+        {{ statusLabel ?? t(`games.status.${status}`) }}
       </span>
     </template>
     <span v-else-if="start" class="label">
-      {{ t(`games.status.start`, { start }) }}
+      {{ t(`games.status.start`, { start: formatTime(start) }) }}
     </span>
   </div>
 </template>

@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Game, GAME_OBSERVATIONS_DELAY } from '@/domain/game'
+import {
+  Game,
+  GAME_OBSERVATIONS_DELAY,
+  isMatchDay,
+  isMatchDayPassed,
+} from '@/domain/game'
 import {
   GameSignature,
   GameSignatureType,
@@ -16,8 +21,6 @@ import {
 import TimeoutService from '@/services/timeout'
 import moment from 'moment'
 import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
-import { formatTime } from '@/domain/utils'
-import { useAuthStore } from '@/stores/useAuthStore'
 
 const props = defineProps({
   games: {
@@ -31,14 +34,16 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
+  (e: 'date:requested', value: Game): void
+  (e: 'date:approved', value: Game): void
   (e: 'timeout:requested', value: Timeout): void
   (e: 'countdown:ended', value: { game: Game; call: Call }): void
   (e: 'signature:stored', value: GameSignature): void
 }>()
 
 const { t } = useI18n()
-const auth = useAuthStore()
 const toast = useEasyToast()
+
 const timeoutService = new TimeoutService()
 
 const ACTIONS_GRID_COLS: Record<string, number> = {
@@ -49,6 +54,8 @@ const ACTIONS_GRID_COLS: Record<string, number> = {
   finished: 2,
   undefined: 1,
 }
+
+const showGameRequestDateIds = ref<number[]>([])
 
 const gameSignatures = ref<GameSignature[]>(
   props.games.flatMap(game => game.signatures ?? []),
@@ -76,6 +83,14 @@ const gamesWithSanctionedMembersToChange = computed((): Game[] =>
     )
   }),
 )
+
+const showCoachButtonChangeDate = (game: Game) => {
+  // return (
+  //   auth.user &&
+  //   (game.localTeam?.coachId === auth.user.id || game.requestedDate)
+  // )
+  return game.date && !isMatchDayPassed(game)
+}
 
 const requestTimeout = async () => {
   const storeTimeoutForm: TimeoutStoreRequest = {
@@ -175,6 +190,37 @@ const handleSignatureStored = (gameSignature: GameSignature) => {
   emit('signature:stored', gameSignature)
 }
 
+const addGameToShowGameRequestDateIds = (gameId: number) => {
+  if (showGameRequestDateIds.value.includes(gameId)) return
+  showGameRequestDateIds.value = [...showGameRequestDateIds.value, gameId]
+}
+
+const removeGameFromShowGameRequestDateIds = (gameId: number) =>
+  (showGameRequestDateIds.value = showGameRequestDateIds.value.filter(
+    id => id !== gameId,
+  ))
+
+const isGameInShowGameRequestDateIds = (gameId: number): boolean =>
+  showGameRequestDateIds.value.includes(gameId)
+
+const handleCalendarShow = (game: Game) => {
+  // navigateTo(`/coach/games/${game.id}/edit`)
+
+  addGameToShowGameRequestDateIds(game.id)
+  setTimeout(() => {
+    const input = document.getElementById('calendar-game-date-input')
+    input?.click()
+  }, 100)
+}
+
+const handleDateRequested = (game: Game) => {
+  emit('date:requested', game)
+}
+
+const handleDateApproved = (game: Game) => {
+  emit('date:approved', game)
+}
+
 onMounted(redirectIfSanctionedMembersToChange)
 
 onBeforeUnmount(() => {
@@ -186,10 +232,14 @@ onBeforeUnmount(() => {
   <div class="easy-coach-games-component">
     <div v-for="(game, index) in games" class="game">
       <header class="name text-center">{{ game.name }}</header>
-      <GameStatus
-        :status="game.status"
-        :start="game.date ? formatTime(game.date) : undefined"
+      <GameStatus :status="game.status" :start="game.date" />
+
+      <GameChangeDateStatus
+        v-if="game.requestedDate && !game.status && !isMatchDayPassed(game)"
+        class="mt-2"
+        :game="game"
       />
+
       <EasyGrid
         class="actions mt-3"
         :gap="2"
@@ -271,13 +321,16 @@ onBeforeUnmount(() => {
             </template>
           </template>
         </template>
-        <Button
-          v-else-if="auth.user && game.localTeam?.coachId === auth.user.id"
-          class="action"
-          @click="navigateTo(`/coach/games/${game.id}/edit`)"
-        >
-          {{ t('games.edit_date') }}
-        </Button>
+
+        <CoachButtonChangeDate
+          v-else-if="showCoachButtonChangeDate(game)"
+          :game="game"
+          :showCalendar="isGameInShowGameRequestDateIds(game.id)"
+          @hide="removeGameFromShowGameRequestDateIds(game.id)"
+          @calendar:show="handleCalendarShow(game)"
+          @date:requested="handleDateRequested(game)"
+          @date:approved="handleDateApproved(game)"
+        />
       </EasyGrid>
     </div>
 

@@ -42,9 +42,14 @@ export type ApiGameRelationsCount = {
   visitor_team_sets_won_count?: number
 }
 
+export type ApiGameCustomAppends = {
+  name: string
+  duration: ApiDuration | null
+  confirmed: boolean
+}
+
 export type ApiGame = {
   id: number
-  name: string
   league_id: number | null
   division_id: number | null
   club_id: number | null
@@ -54,10 +59,12 @@ export type ApiGame = {
   local_team_id: number | null
   visitor_team_id: number | null
   date: string | null
+  date_confirmed_by: number[]
+  requested_date: string | null
+  date_requested_by: number | null
   matchday: number | null
   start: string | null
   end: string | null
-  duration: ApiDuration | null
   winner_team_id: number | null
   loser_team_id: number | null
   status: GameStatus | null
@@ -66,7 +73,8 @@ export type ApiGame = {
   updated_at: string | null
   deleted_at: string | null
 } & ApiGameRelations &
-  ApiGameRelationsCount
+  ApiGameRelationsCount &
+  ApiGameCustomAppends
 
 export type ApiGameReportSimple = {
   game: ApiGame
@@ -110,6 +118,10 @@ export type ApiGameStoreRequest = {
 
 export type ApiGameObservationsRequest = {
   observations: string | null
+}
+
+export type ApiGameRequestChangeDateRequest = {
+  requested_date: string
 }
 
 export type ApiGameInitialDataResponse = {

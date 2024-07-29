@@ -1,4 +1,5 @@
 import { ApiDuration } from '@/types/api/utils'
+import { getISOByLocale } from '@/domain/locale'
 
 const app = useNuxtApp()
 
@@ -22,7 +23,11 @@ export const mapApiDurationToDuration = (
   apiDuration: ApiDuration | null,
 ): Duration | undefined => (apiDuration ? { ...apiDuration } : undefined)
 
-export const formatDate = (date?: string, separator = '.', reverse = false) => {
+export const formatDate = (
+  date?: string | Date,
+  separator = '.',
+  reverse = false,
+) => {
   if (!date) return ''
   const d = new Date(date)
   const day = d.getDate().toString().padStart(2, '0')
@@ -33,7 +38,7 @@ export const formatDate = (date?: string, separator = '.', reverse = false) => {
     : `${day}${separator}${month}${separator}${year}`
 }
 
-export const formatDateTime = (date?: string, separator = '.') => {
+export const formatDateTime = (date?: string | Date, separator = '.') => {
   if (!date) return ''
   const d = new Date(date)
   const day = d.getDate().toString().padStart(2, '0')
@@ -56,6 +61,17 @@ export const formatTime = (
   if (scope === DurationScopes.minutes) return `${hours}:${minutes}`
   return `${hours}:${minutes}:${seconds}`
 }
+
+export const formatDateByLocale = (date: string | Date, locale: string) =>
+  new Intl.DateTimeFormat(getISOByLocale(locale), {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(date))
 
 export const sumDurations = (durations: Duration[]): Duration => {
   const totalSeconds = durations.reduce(

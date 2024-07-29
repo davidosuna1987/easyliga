@@ -6,6 +6,7 @@ import {
   ApiGameStoreRequest,
   ApiGameTeamIncompleteResponse,
   ApiGameReportSimpleResponse,
+  ApiGameRequestChangeDateRequest,
 } from '@/types/api/game'
 
 import {
@@ -75,6 +76,22 @@ export default class GameService {
   reportSimple(gameId: number) {
     return useApi<ApiGameReportSimpleResponse>(
       `${PREFIX}/${gameId}/report/simple`,
+    )
+  }
+
+  requestChangeDate(gameId: number, data: ApiGameRequestChangeDateRequest) {
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/request-change-date`, {
+      method: 'PUT',
+      body: data,
+    })
+  }
+
+  approveRequestedDate(gameId: number) {
+    return useApi<ApiGameResponse>(
+      `${PREFIX}/${gameId}/approve-requested-date`,
+      {
+        method: 'PUT',
+      },
     )
   }
 }

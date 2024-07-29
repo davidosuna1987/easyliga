@@ -8,8 +8,10 @@ import {
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { ApiCreateMatchdaysGamesRequest, ApiLeague } from '@/types/api/league'
 import { ApiGame } from '@/types/api/game'
+import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 
 export type LeagueRelations = {
+  federation?: Federation
   division?: Division
   category?: Category
   gender?: {
@@ -27,6 +29,8 @@ export type Matchday = {
 
 export type LeagueCustomAppends = {
   matchdays?: Matchday[]
+  fullName?: string
+  nameLong: string
 }
 
 export type LeagueCountRelations = {
@@ -79,6 +83,17 @@ export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
   start: apiLeague.start ?? undefined,
   end: apiLeague.end ?? undefined,
 
+  ...mapApiLeagueRelationsToLeagueRelations(apiLeague),
+  ...mapApiLeagueCountRelationsToLeagueCountRelations(apiLeague),
+  ...mapApiLeagueCustomAppendsToLeagueCustomAppends(apiLeague),
+})
+
+export const mapApiLeagueRelationsToLeagueRelations = (
+  apiLeague: ApiLeague,
+): LeagueRelations => ({
+  federation: apiLeague.federation
+    ? mapApiFederationToFederation(apiLeague.federation)
+    : undefined,
   division: apiLeague.division
     ? mapApiDivisionToDivision(apiLeague.division)
     : undefined,
@@ -90,13 +105,23 @@ export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
     ? apiLeague.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
   games: apiLeague.games ? apiLeague.games.map(mapApiGameToGame) : undefined,
+})
 
+export const mapApiLeagueCountRelationsToLeagueCountRelations = (
+  apiLeague: ApiLeague,
+): LeagueCountRelations => ({
   teamsCount: apiLeague.teams_count,
   gamesCount: apiLeague.games_count,
+})
 
+export const mapApiLeagueCustomAppendsToLeagueCustomAppends = (
+  apiLeague: ApiLeague,
+): LeagueCustomAppends => ({
   matchdays: apiLeague.games
     ? mapApiGamesToMatchdays(apiLeague.games)
     : undefined,
+  fullName: apiLeague.full_name,
+  nameLong: apiLeague.name_long,
 })
 
 export const mapCreateMatchdaysGamesRequestToApiCreateMatchdaysGamesRequest = (

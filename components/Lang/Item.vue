@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FALLBACK_LOCALE } from '@/config/locale'
+import { FALLBACK_LOCALE } from '@/domain/locale'
 import { MenuItem } from 'primevue/menuitem'
 import { getLangIcon } from '@/domain/locale'
 

@@ -83,6 +83,16 @@ a:-webkit-any-link {
     min-width: auto;
     max-width: 400px;
   }
+
+  table td {
+    &.p-datepicker-today > span {
+      background: var(--primary-color-darkest);
+      border-color: var(--primary-color-darkest);
+    }
+    > span.p-highlight {
+      color: var(--primary-color-text) !important;
+    }
+  }
 }
 
 .p-tag-value {
@@ -102,5 +112,9 @@ a:-webkit-any-link {
   background: var(--primary-color-light);
   border: solid var(--primary-color);
   border-width: 0 0 0 6px;
+  color: var(--text-color);
+}
+
+.p-dialog .p-dialog-header {
   color: var(--text-color);
 }

@@ -12,7 +12,7 @@ const props = defineProps({
   },
   message: {
     type: String,
-    required: true,
+    required: false,
   },
   acceptLabel: {
     type: String,
@@ -63,7 +63,9 @@ watch(
     <template #header>
       <Heading v-if="title" tag="h5">{{ title }}</Heading>
     </template>
-    <Heading tag="h6">{{ message }}</Heading>
+    <p v-if="message" class="mt-3 text-[1.15rem]">{{ message }}</p>
+
+    <slot />
 
     <template #footer>
       <FormFooterActions

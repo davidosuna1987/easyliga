@@ -25,7 +25,10 @@
   --danger-color-darkest: #901632;
   --info-color: #72add5;
   --info-color-dark: #69a8db;
+  --info-color-light: #badef7;
+  --info-color-lightest: #e8f5ff;
   --icon-easy-liga-color: #ffeb3b;
+  --highlight-color: var(--primary-color);
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
   --surface-c: #e9ecef;
@@ -144,12 +147,14 @@
     --danger-color-dark: #7b122b;
     --info-color: #4c78c4;
     --info-color-dark: #3960a4;
+    --info-color-lightest: #243655;
 
     --text-color: #b9a7a7;
     --text-color-invert: #2e3135;
     --text-color-secondary: #b9a7a7;
     --primary-color-text: #b9a7a7;
     --input-border-color: #343030;
+    --highlight-color: var(--tertiary-color);
     --background-overlay-opacity: 0.9;
 
     --signature-background: #aef7f0;

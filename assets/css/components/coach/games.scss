@@ -35,6 +35,12 @@
             background-color: var(--danger-color-lightest);
           }
         }
+
+        &.p-button-info {
+          &:hover {
+            background-color: var(--info-color-lightest);
+          }
+        }
       }
     }
   }

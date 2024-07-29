@@ -136,7 +136,8 @@
     "start_time": "Hora de inicio",
     "end_time": "Hora de fin",
     "start_datetime": "Fecha y hora de inicio",
-    "end_datetime": "Fecha y hora de fin"
+    "end_datetime": "Fecha y hora de fin",
+    "approve": "Aprobar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -169,7 +170,14 @@
     "timeout_game_not_playing": "No puedes solicitar un tiempo muerto en un partido que no está en juego",
     "invalid_file_type": "El formato del archivo es inválido. Los formatos permitodos son: {formats}",
     "shirt_number_no_zero": "El número de la camiseta no puede ser 0",
-    "not_allowed_to_edit_federation": "No tienes permisos para editar esta federación"
+    "not_allowed_to_edit_federation": "No tienes permisos para editar esta federación",
+    "not_allowed_to_edit_game_date": "No tienes permisos para editar la fecha de este partido",
+    "games": {
+      "date_request": {
+        "same_date": "La fecha solicitada debe ser distinta a la fecha del partido",
+        "same_requested_date": "La fecha solicitada debe ser distinta a la fecha solicitada"
+      }
+    }
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -357,7 +365,20 @@
       "generated": "Las jornadas han sido generadas correctamente",
       "error_only_one_team": "No se pueden generar jornadas con menos de 2 equipos"
     },
-    "edit_date": "Editar fecha y hora"
+    "edit_date": "Editar fecha y hora",
+    "datetime": "Fecha y hora del partido",
+    "date_updated": "La fecha y hora del partido se han guardado correctamente",
+    "date_request": {
+      "current_date": "Fecha actual",
+      "requested_date": "Fecha solicitada",
+      "request": "Solicitar cambio de fecha y hora",
+      "requested": "La solicitud de cambio de fecha y hora ha sido enviada correctamente",
+      "waiting": "Cambio de fecha solicitado: {date}",
+      "porposal": "Cambio de fecha propuesto: {date}",
+      "approve": "Aprobar fecha propuesta",
+      "approve_alert": "¿Seguro que quieres aprobar la fecha propuesta? En caso afirmativo, el partido se jugará en la siguiente fecha:",
+      "approved": "La fecha propuesta ha sido aprobada"
+    }
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -978,7 +999,16 @@
       "3": "Miércoles",
       "4": "Jueves",
       "5": "Viernes",
-      "6": "Sábado"
+      "6": "Sábado",
+      "short": {
+        "0": "Dom",
+        "1": "Lun",
+        "2": "Mar",
+        "3": "Mié",
+        "4": "Jue",
+        "5": "Vie",
+        "6": "Sáb"
+      }
     },
     "months": {
       "1": "Enero",
@@ -992,7 +1022,21 @@
       "9": "Septiembre",
       "10": "Octubre",
       "11": "Noviembre",
-      "12": "Diciembre"
+      "12": "Diciembre",
+      "short": {
+        "1": "Ene",
+        "2": "Feb",
+        "3": "Mar",
+        "4": "Abr",
+        "5": "May",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Ago",
+        "9": "Sep",
+        "10": "Oct",
+        "11": "Nov",
+        "12": "Dic"
+      }
     },
     "select": {
       "day": "Selecciona un día",

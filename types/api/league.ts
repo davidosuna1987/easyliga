@@ -2,8 +2,10 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
+import { ApiFederation } from '@/types/api/federation'
 
 export type ApiLeagueRelatioins = {
+  federation?: ApiFederation
   division?: ApiDivision
   category?: ApiCategory
   gender?: {
@@ -17,6 +19,11 @@ export type ApiLeagueRelatioins = {
 export type ApiLeagueCountRelations = {
   teams_count?: number
   games_count?: number
+}
+
+export type ApiLeagueCustomAppends = {
+  full_name?: string
+  name_long: string
 }
 
 export type ApiLeague = {
@@ -33,7 +40,8 @@ export type ApiLeague = {
   updated_at: string | null
   deleted_at: string | null
 } & ApiLeagueRelatioins &
-  ApiLeagueCountRelations
+  ApiLeagueCountRelations &
+  ApiLeagueCustomAppends
 
 export type ApiCreateMatchdaysGamesRequest = {
   start: Date | null
