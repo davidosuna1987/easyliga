@@ -4572,7 +4572,7 @@
 .p-dialog .p-dialog-header .p-dialog-header-icon {
   width: 2rem;
   height: 2rem;
-  color: #b9a7a7;
+  color: var(--primary-color-text);
   border: 0 none;
   background: transparent;
   border-radius: 50%;
@@ -4580,7 +4580,7 @@
   margin-right: 0.5rem;
 }
 .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
-  color: #343a40;
+  color: var(--primary-color-text);
   border-color: transparent;
   background: var(--primary-color-medium);
 }
