@@ -6,6 +6,7 @@
   --primary-color-lightest: #eef9f8;
   --primary-color-dark: #00695c;
   --primary-color-darkest: #004d40;
+  --primary-color-alpha: rgba(0, 150, 136, 0.1);
   --foreground-color: #f1f1f1;
   --background-color: #ffffff;
   --secondary-color: #cce1f7;
@@ -19,6 +20,7 @@
   --pink-color: #e879f9;
   --blue-color: #3b82f6;
   --yellow-color: #eab308;
+  --seagreen-color: #14b8a6;
   --danger-color: #fc3c2e;
   --danger-color-light: #ff9494;
   --danger-color-lighten: #fdcccc;
@@ -32,10 +34,11 @@
   // --info-color-lightest: #e8f5ff;
   --info-color: var(--blue-color);
   --info-color-dark: #2b6edc;
-  --info-color-light: #5593f7;
-  --info-color-lightest: #82b0f9;
+  --info-color-light: #80acf2;
+  --info-color-lightest: #e4f2ff;
   --icon-easy-liga-color: #ffeb3b;
   --highlight-color: var(--primary-color);
+  --highlight-color-alpha: var(--primary-color-alpha);
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
   --surface-c: #e9ecef;
@@ -158,14 +161,15 @@
     --info-color: #2369d8;
     --info-color-dark: #1653b6;
     --info-color-light: #0e4399;
-    --info-color-lightest: #09357d;
+    --info-color-lightest: #071d42;
 
     --text-color: #b9a7a7;
     --text-color-invert: #2e3135;
     --text-color-secondary: #b9a7a7;
     --primary-color-text: #b9a7a7;
     --input-border-color: #343030;
-    --highlight-color: #14b8a6;
+    --highlight-color: var(--seagreen-color);
+    --highlight-color-alpha: rgba(20, 184, 166, 0.1);
     --background-overlay-opacity: 0.9;
 
     --signature-background: #aef7f0;

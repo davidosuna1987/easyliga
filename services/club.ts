@@ -20,6 +20,13 @@ export default class ClubService {
     return useApi<ApiClubsResponse>(`${PREFIX}/fetch`, { params })
   }
 
+  store(data: ApiClubFormRequest) {
+    return useApi<ApiClubResponse>(`${PREFIX}/`, {
+      method: 'POST',
+      body: data,
+    })
+  }
+
   update(clubId: number, data: ApiClubFormRequest) {
     return useApi<ApiClubResponse>(`${PREFIX}/${clubId}`, {
       method: 'PUT',

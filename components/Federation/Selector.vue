@@ -11,10 +11,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
   (e: 'federation:selected', value: Federation): void
+  (e: 'federations:fetch', value: Federation[]): void
 }>()
 
 const { t } = useI18n()
@@ -30,18 +35,27 @@ const selectableFederations = ref<Federation[]>(
       .getNested('federations.groupedFederations', [])
       .map(mapApiFederationToFederation),
 )
+
 const options = computed(
   (): Federation[] => props.federations ?? selectableFederations.value,
 )
 
-onMounted(async () => {
+const getFederations = async () => {
+  loadingApi.value = true
+  const { data } = await federationStore.fetch()
+  selectableFederations.value = federationStore.groupedFederations.map(
+    mapApiFederationToFederation,
+  )
+  emit(
+    'federations:fetch',
+    data.value?.data.federations.map(mapApiFederationToFederation) ?? [],
+  )
+  loadingApi.value = false
+}
+
+onMounted(() => {
   if (!props.federations) {
-    loadingApi.value = true
-    await federationStore.fetch()
-    selectableFederations.value = federationStore.groupedFederations.map(
-      mapApiFederationToFederation,
-    )
-    loadingApi.value = false
+    getFederations()
   }
 })
 </script>
@@ -51,6 +65,7 @@ onMounted(async () => {
     class="easy-federations-selector-component"
     v-model="selectedFederation"
     :loading="props.loading || loadingApi"
+    :disabled="props.disabled"
     :options="options"
     optionLabel="name"
     :optionValue="federation => federation"

@@ -26,11 +26,7 @@ const getClub = async () => {
   loadingApi.value = false
 }
 
-const setInitialClubClub = async () => {
-  await getClub()
-}
-
-onMounted(setInitialClubClub)
+onMounted(getClub)
 </script>
 
 <template>
@@ -40,11 +36,7 @@ onMounted(setInitialClubClub)
       <Heading tag="h3" class="mb-5">
         {{ t('clubs.edit') }}
       </Heading>
-      <ClubForm
-        :club="club"
-        @refresh="setInitialClubClub"
-        @updated="setInitialClubClub"
-      />
+      <ClubForm :club="club" @refresh="getClub" @updated="getClub" />
     </template>
   </div>
 </template>

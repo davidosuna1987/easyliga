@@ -83,16 +83,6 @@ a:-webkit-any-link {
     min-width: auto;
     max-width: 400px;
   }
-
-  table td {
-    &.p-datepicker-today > span {
-      background: var(--primary-color-darkest);
-      border-color: var(--primary-color-darkest);
-    }
-    > span.p-highlight {
-      color: var(--primary-color-text) !important;
-    }
-  }
 }
 
 .p-tag-value {
@@ -117,4 +107,24 @@ a:-webkit-any-link {
 
 .p-dialog .p-dialog-header {
   color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .p-datepicker {
+    table td {
+      &.p-datepicker-today > span {
+        background: var(--primary-color-darkest);
+        border-color: var(--primary-color-darkest);
+      }
+      > span {
+        &.p-highlight {
+          color: var(--primary-color-text) !important;
+        }
+
+        &.p-disabled {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
 }

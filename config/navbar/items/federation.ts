@@ -10,6 +10,10 @@ export default [
         label: 'navbar.federation.leagues.label',
         to: '/leagues',
       },
+      {
+        label: 'navbar.federation.clubs.label',
+        to: '/federations/clubs',
+      },
     ],
   },
 ]

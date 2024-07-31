@@ -13,29 +13,34 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const goToCreateClub = (federation: Federation) =>
+  navigateTo(`/federations/${federation.id}/club/create`)
 </script>
 
 <template>
   <div class="easy-federation-clubs-component">
-    <ClubList
-      :clubs="federation?.clubs"
-      :title="t('federations.federation_clubs', { name: federation?.name })"
+    <!-- <ClubList
+      :clubs="federation.clubs"
+      :title="t('federations.federation_clubs', { name: federation.name })"
       :loadingLabel="t('clubs.loading')"
       :noManagedText="t('federations.no_vinculated_clubs')"
       :hoverable="false"
+      @club:create="goToCreateClub(federation)"
       @refresh="emit('refresh', true)"
-    />
+    /> -->
 
     <ClubList
-      v-for="managedFederation in federation?.federations"
+      v-for="managedFederation in federation.federations"
       class="mt-10"
-      :clubs="managedFederation?.clubs"
+      :clubs="managedFederation.clubs"
       :title="
-        t('federations.federation_clubs', { name: managedFederation?.name })
+        t('federations.federation_clubs', { name: managedFederation.name })
       "
       :loadingLabel="t('clubs.loading')"
       :noManagedText="t('federations.no_vinculated_clubs')"
       :hoverable="false"
+      @club:create="goToCreateClub(managedFederation)"
       @refresh="emit('refresh', true)"
     />
   </div>

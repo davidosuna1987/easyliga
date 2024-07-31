@@ -3,7 +3,7 @@ import ClubService from '@/services/club'
 import { Federation } from '@/domain/federation'
 import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ApiClub, ApiClubFormRequest } from '@/types/api/club'
-import { Club } from '@/domain/club'
+import { Club, mapApiClubToClub } from '@/domain/club'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
 import { License } from '@/domain/license'
 import { ROLE_MAPPER } from '@/domain/role'
@@ -34,20 +34,25 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'created', value: ApiClub): void
+  (e: 'created', value: Club): void
   (e: 'updated', value: ApiClub): void
   (e: 'refresh', value: boolean): void
 }>()
 
 const { t } = useI18n()
+const route = useRoute()
 const toast = useEasyToast()
 const clubService = new ClubService()
 
 const userSearchFormInputRef = ref<UserSearchFormInputRef>()
+const federationFromRoute = ref<number | null>(
+  Number(route.params.federationId) ?? null,
+)
+const isFederationFromRouteSelectable = ref<boolean>(false)
 
 const form = ref<ApiClubFormRequest>({
   id: 0,
-  federation_id: null,
+  federation_id: federationFromRoute.value,
   responsible_id: null,
   address_id: null,
   name: '',
@@ -103,14 +108,14 @@ const handleSubmit = () => {
 const handleStore = async () => {
   loadingApi.value = true
 
-  // const { data, error } = await s.store(form.value)
+  const { data, error } = await clubService.store(form.value)
 
-  // if (error.value) {
-  //   toast.mapError(Object.values(error.value?.data?.errors), false)
-  // } else if (data.value) {
-  //   toast.success(t('clubs.created'))
-  //   emit('created', data.value.data.club)
-  // }
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    toast.success(t('clubs.created'))
+    emit('created', mapApiClubToClub(data.value.data.club))
+  }
 
   loadingApi.value = false
 }
@@ -137,6 +142,21 @@ const handleResponsibleSelected = (responsible: User) => {
 
 const handleAddressChanged = (address: Address) => {
   form.value.address = mapAddressToApiAddress(address)
+}
+
+const handleFederationsFetch = (federations: Federation[]) => {
+  if (federationFromRoute.value) {
+    const federation = federations.find(
+      federation =>
+        !!federation.federationId &&
+        federation.id === federationFromRoute.value,
+    )
+    selectedFederation.value = federation
+
+    if (federation) {
+      isFederationFromRouteSelectable.value = true
+    }
+  }
 }
 
 const handleFederationSelected = (federation: Federation) => {
@@ -193,6 +213,8 @@ defineExpose({
       <FormLabel :label="t('federations.federation')">
         <FederationSelector
           v-model="selectedFederation"
+          :disabled="!!federationFromRoute && !isFederationFromRouteSelectable"
+          @federations:fetch="handleFederationsFetch"
           @federation:selected="handleFederationSelected"
         />
       </FormLabel>

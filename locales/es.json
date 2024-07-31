@@ -177,7 +177,8 @@
         "same_date": "La fecha solicitada debe ser distinta a la fecha del partido",
         "same_requested_date": "La fecha solicitada debe ser distinta a la fecha solicitada"
       }
-    }
+    },
+    "not_allowed_to_manage_federation": "No tienes permisos para gestionar esta federación"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -210,6 +211,9 @@
       },
       "leagues": {
         "label": "Listado de ligas"
+      },
+      "clubs": {
+        "label": "Listado de clubs"
       }
     },
     "club": {
@@ -395,6 +399,7 @@
     "select": "Selecciona una federación",
     "count": "{num} federación | {num} federaciones",
     "no_managed": "No gestionas ninguna federación",
+    "no_clubs": "No hay clubs vinculados a la federación",
     "scope": {
       "label": "Ámbito de actuación",
       "select": "Selecciona un ámbito de actuación",
@@ -675,12 +680,12 @@
   "clubs": {
     "club": "Club | Clubs",
     "create": "Crear club",
-    "created": "El club ha sido creada correctamente",
+    "created": "El club ha sido creado correctamente",
     "edit": "Editar club",
     "update": "Actualizar club",
-    "updated": "El club ha sido actualizada correctamente",
+    "updated": "El club ha sido actualizado correctamente",
     "delete": "Eliminar club",
-    "deleted": "El club ha sido eliminada correctamente",
+    "deleted": "El club ha sido eliminado correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el club?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un club",

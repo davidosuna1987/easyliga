@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import FederationService from '@/services/federation'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
+import { Club } from '@/domain/club'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -17,9 +18,6 @@ const getFederation = async () => {
 
   const { data, error } = await federationService.get(
     Number(route.params.federationId),
-    {
-      with: 'federation,federations.clubs.teams,leagues,clubs.teams,responsible.profile,address,licenses',
-    },
   )
 
   if (error.value) {
@@ -50,20 +48,22 @@ const authUserCanUpdateFederation = (federation: Federation) => {
   )
 }
 
+const handleClubCreated = (club: Club) => navigateTo(`/clubs/${club.id}`)
+
 onMounted(getFederation)
 </script>
 
 <template>
-  <div class="easy-federation-edit-component">
+  <div class="easy-federation-club-create-component">
     <Loading v-if="loadingApi" />
     <template v-else-if="federation">
-      <Heading tag="h3" class="mb-5">
-        {{ t('federations.edit') }}
-      </Heading>
-      <FederationForm
-        :federation="federation"
-        @refresh="getFederation"
-        @updated="getFederation"
+      <Heading tag="h3" class="mb-5">{{ t('clubs.create') }}</Heading>
+
+      <ClubForm
+        :showSedes="false"
+        :showLicenses="false"
+        :showResponsible="false"
+        @created="handleClubCreated"
       />
     </template>
   </div>
@@ -71,6 +71,6 @@ onMounted(getFederation)
 
 <script lang="ts">
 export default {
-  name: 'FederationEdit',
+  name: 'FederationClubCreate',
 }
 </script>
