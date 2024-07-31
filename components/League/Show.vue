@@ -2,6 +2,7 @@
 import LeagueService from '@/services/league'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
 import { formatDateTime } from '@/domain/utils'
+import { getListTagColor } from '@/domain/list'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -18,7 +19,7 @@ const getLeague = async () => {
   const { data, error } = await leagueService.get(
     Number(route.params.leagueId),
     {
-      with: 'games,teams.federation,category,gender',
+      with: 'federation,games,teams.federation,category,gender',
     },
   )
 
@@ -55,29 +56,20 @@ onMounted(() => {
 
     <template v-else-if="league">
       <header class="mb-8">
-        <Heading class="mb-5" position="center">
-          {{ league.name }}
+        <Heading position="center">{{ league.name }}</Heading>
+        <Heading tag="h6" class="mb-5" position="center">
+          {{ league.federation?.name }}
         </Heading>
         <div class="flex justify-center gap-5 relative bottom-2">
-          <Tag
-            class="font-light border-solid border-primary text-primary bg-transparent border py-[5px] px-5 dark:border-teal-500 dark:text-teal-500 text-lg"
-            :value="`${t(`categories.${league.category?.name}`)}`"
-            rounded
+          <ListTag
+            :label="`${t(`categories.${league.category?.name}`)}`"
+            color="primary"
+            size="large"
           />
-          <Tag
-            :class="[
-              'font-light border-solid border-primary bg-transparent border py-[5px] px-5 text-lg',
-              {
-                'border-blue-500 text-blue-500':
-                  league.gender?.name === 'masculine',
-                'border-fuchsia-400 text-fuchsia-400':
-                  league.gender?.name === 'femenine',
-                'border-yellow-500 text-yellow-500':
-                  league.gender?.name === 'mixed',
-              },
-            ]"
-            :value="`${t(`genders.${league.gender?.name}`)}`"
-            rounded
+          <ListTag
+            :label="`${t(`genders.${league.gender?.name}`)}`"
+            :color="getListTagColor(league.gender?.name)"
+            size="large"
           />
         </div>
       </header>

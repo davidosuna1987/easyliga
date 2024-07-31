@@ -3,12 +3,14 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import FederationService from '@/services/federation'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { League } from '@/domain/league'
+import { getListTagColor } from '@/domain/list'
 
 const { t } = useI18n()
 const auth = useAuthStore()
 const federationService = new FederationService()
 
 const groupedLeagues = ref<Federation[]>()
+const showAddLeagueDialog = ref<number | undefined>(undefined)
 const loadingApi = ref<boolean>(false)
 
 const teamsCount = (league: League) =>
@@ -62,32 +64,26 @@ onMounted(getLeagues)
     <Loading v-if="loadingApi" />
     <template v-else>
       <EasyGrid v-if="groupedLeagues?.length" :gap="5">
-        <div v-for="federation in groupedLeagues">
-          <Heading tag="h6">{{ federation.name }}</Heading>
+        <div class="mb-3" v-for="federation in groupedLeagues">
+          <header class="header flex justify-between mb-1">
+            <Heading tag="h6">{{ federation.name }}</Heading>
+            <ListActionButton
+              :label="t('leagues.add')"
+              :onClick="() => (showAddLeagueDialog = federation.id)"
+            />
+          </header>
 
           <List v-if="federation.leagues?.length">
             <ListItem v-for="league in federation.leagues">
               <div class="flex items-center gap-2">
                 <p>{{ league.name }}</p>
-                <Tag
-                  class="font-light border-solid border-primary text-primary bg-transparent border py-[2px] px-2 dark:border-teal-500 dark:text-teal-500"
-                  :value="`${t(`categories.${league.category?.name}`)}`"
-                  rounded
+                <ListTag
+                  :label="`${t(`categories.${league.category?.name}`)}`"
+                  color="primary"
                 />
-                <Tag
-                  :class="[
-                    'font-light border-solid border-primary bg-transparent border py-[2px] px-2',
-                    {
-                      'border-blue-500 text-blue-500':
-                        league.gender?.name === 'masculine',
-                      'border-fuchsia-400 text-fuchsia-400':
-                        league.gender?.name === 'femenine',
-                      'border-yellow-500 text-yellow-500':
-                        league.gender?.name === 'mixed',
-                    },
-                  ]"
-                  :value="`${t(`genders.${league.gender?.name}`)}`"
-                  rounded
+                <ListTag
+                  :label="`${t(`genders.${league.gender?.name}`)}`"
+                  :color="getListTagColor(league.gender?.name)"
                 />
               </div>
 
@@ -103,6 +99,8 @@ onMounted(getLeagues)
                 </ListActionLabel>
                 <ListActionButton
                   :label="t('forms.show')"
+                  severity="info"
+                  outlined
                   :onClick="() => goToLeague(league)"
                 />
               </template>

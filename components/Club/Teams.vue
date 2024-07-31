@@ -4,6 +4,7 @@ import ClubService from '@/services/club'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { Sede } from '@/domain/sede'
 import { Team } from '@/domain/team'
+import { getListTagColor } from '@/domain/list'
 
 const props = defineProps({
   loadingLabel: {
@@ -91,25 +92,13 @@ onMounted(getAuthuserClubWithSedesAndTeams)
               >
                 <div class="team-info flex items-center gap-2">
                   <p>{{ team.name }}</p>
-                  <Tag
-                    class="font-light border-solid border-primary text-primary bg-transparent border py-[2px] px-2 dark:border-teal-500 dark:text-teal-500"
-                    :value="`${t(`categories.${team.category?.name}`)}`"
-                    rounded
+                  <ListTag
+                    :label="`${t(`categories.${team.category?.name}`)}`"
+                    color="primary"
                   />
-                  <Tag
-                    :class="[
-                      'font-light border-solid border-primary bg-transparent border py-[2px] px-2',
-                      {
-                        'border-blue-500 text-blue-500':
-                          team.gender?.name === 'masculine',
-                        'border-fuchsia-400 text-fuchsia-400':
-                          team.gender?.name === 'femenine',
-                        'border-yellow-500 text-yellow-500':
-                          team.gender?.name === 'mixed',
-                      },
-                    ]"
-                    :value="`${t(`genders.${team.gender?.name}`)}`"
-                    rounded
+                  <ListTag
+                    :label="`${t(`genders.${team.gender?.name}`)}`"
+                    :color="getListTagColor(team.gender?.name)"
                   />
                 </div>
                 <div
@@ -124,10 +113,10 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                       )
                     }}
                   </small>
-                  <Button
+                  <ListActionButton
                     :label="t('forms.edit')"
-                    size="small"
-                    class="action"
+                    severity="info"
+                    outlined
                     @click.prevent="goToEditClubTeam(club, team)"
                   />
                 </div>

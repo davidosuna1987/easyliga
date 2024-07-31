@@ -1,11 +1,21 @@
 <script setup lang="ts">
+import { ButtonProps } from 'primevue/button'
+
 const props = defineProps({
   label: {
     type: String,
     required: true,
   },
   size: {
-    type: String,
+    type: String as PropType<ButtonProps['size']>,
+    default: 'small',
+  },
+  severity: {
+    type: String as PropType<ButtonProps['severity']>,
+    default: 'primary',
+  },
+  outlined: {
+    type: Boolean,
     required: false,
   },
   onClick: {
@@ -23,8 +33,10 @@ const handleOnClick = () => {
 <template>
   <Button
     class="easy-list-action-button-component"
+    :severity="severity"
     :label="label"
-    size="small"
+    :size="size"
+    :outlined="outlined"
     @click.prevent="handleOnClick"
   />
 </template>

@@ -101,6 +101,8 @@ onMounted(getClubs)
             </ListActionLabel>
             <ListActionButton
               :label="t('forms.edit')"
+              severity="info"
+              outlined
               :onClick="() => goToEditClub(club)"
             />
           </template>

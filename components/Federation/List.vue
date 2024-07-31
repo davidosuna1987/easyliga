@@ -120,6 +120,8 @@ onMounted(getFederations)
             </ListActionLabel>
             <ListActionButton
               :label="t('forms.edit')"
+              severity="info"
+              outlined
               :onClick="() => goToEditFederation(federation)"
             />
           </template>

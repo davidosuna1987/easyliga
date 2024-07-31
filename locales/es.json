@@ -434,7 +434,8 @@
     "select": "Selecciona una liga",
     "count": "{num} liga | {num} ligas",
     "list_empty": "No hay ligas generadas",
-    "start_date": "Fecha de inicio de la liga"
+    "start_date": "Fecha de inicio de la liga",
+    "add": "Añadir liga"
   },
   "teams": {
     "team": "Equipo | Equipos",
