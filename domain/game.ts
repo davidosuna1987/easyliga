@@ -157,7 +157,10 @@ export type GameReportSimple = {
   game: Game
   division: Division
   category: Category
-  gender: Gender
+  gender: {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }
   localTeam: Team
   visitorTeam: Team
   referee: Profile
@@ -319,7 +322,12 @@ export const mapApiCategoryToCategory = (
   name: apiCategory.name as CategoryType,
 })
 
-export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
+export const mapApiGenderToGender = (
+  apiGender: ApiGender,
+): {
+  id: number
+  name: 'masculine' | 'femenine' | 'mixed'
+} => ({
   id: apiGender.id,
   name: apiGender.name,
 })

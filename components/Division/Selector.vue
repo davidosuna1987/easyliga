@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import DivisionService from '@/services/division'
-import { Division, mapApiDivisionToDivision } from '@/domain/division'
+import FederationService from '@/services/federation'
+import {
+  Federation,
+  flattenFederations,
+  mapApiFederationToFederation,
+} from '@/domain/federation'
+import { Division } from '@/domain/division'
 
-const divisionService = new DivisionService()
+const federationService = new FederationService()
 
 const props = defineProps({
-  divisions: {
-    type: Array as PropType<Division[]>,
+  groupedDivisions: {
+    type: Array as PropType<Federation[]>,
     required: false,
   },
   loading: {
@@ -24,19 +29,46 @@ const { t } = useI18n()
 const selectedDivision = ref<Division>()
 const loadingApi = ref<boolean>(false)
 
-const divisions = ref<Division[]>(props.divisions ?? [])
-const options = computed((): Division[] => props.divisions ?? divisions.value)
+const groupedDivisions = ref<Federation[]>(props.groupedDivisions ?? [])
+const options = computed(
+  (): Federation[] => props.groupedDivisions ?? groupedDivisions.value,
+)
 
 const getDivisions = async () => {
   loadingApi.value = true
-  const { data } = await divisionService.fetch()
-  divisions.value =
-    data.value?.data.divisions?.map(mapApiDivisionToDivision) ?? []
+  const { data } = await federationService.fetch({
+    with: 'divisions,federation.divisions',
+  })
+  groupedDivisions.value = flattenFederations(
+    data.value?.data.federations?.map(mapApiFederationToFederation) ?? [],
+  )
+
+  selectDivisionIfOnlyOneOption(groupedDivisions.value)
+
   loadingApi.value = false
 }
 
+const selectDivisionIfOnlyOneOption = (federations: Federation[]) => {
+  if (federations.length === 1) {
+    const federation = federations[0]
+
+    if (federation.divisions?.length === 1) {
+      selectedDivision.value = federation.divisions[0]
+      emit('division:selected', federation.divisions[0])
+    }
+  }
+}
+
+watch(
+  () => props.groupedDivisions,
+  () => {
+    groupedDivisions.value = props.groupedDivisions ?? []
+    selectDivisionIfOnlyOneOption(groupedDivisions.value)
+  },
+)
+
 onMounted(() => {
-  if (!divisions.value.length) {
+  if (!props.groupedDivisions?.length) {
     getDivisions()
   }
 })
@@ -44,6 +76,20 @@ onMounted(() => {
 
 <template>
   <Dropdown
+    v-if="!!props.groupedDivisions"
+    class="easy-courts-selector-component"
+    v-model="selectedDivision"
+    :loading="props.loading || loadingApi"
+    :options="groupedDivisions"
+    optionLabel="name"
+    optionGroupChildren="divisions"
+    optionGroupLabel="name"
+    scrollHeight="210px"
+    :placeholder="t('divisions.select')"
+    @update:modelValue="emit('division:selected', $event)"
+  />
+  <Dropdown
+    v-else
     class="easy-divisions-selector-component"
     v-model="selectedDivision"
     :loading="props.loading || loadingApi"

@@ -4,7 +4,12 @@ import { Gender, mapApiGenderToGender } from '@/domain/game'
 
 const props = defineProps({
   genders: {
-    type: Array as PropType<Gender[]>,
+    type: Array as PropType<
+      {
+        id: number
+        name: 'masculine' | 'femenine' | 'mixed'
+      }[]
+    >,
     default: null,
   },
   loading: {
@@ -14,21 +19,40 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'gender:selected', value: Gender): void
+  (
+    e: 'gender:selected',
+    value: {
+      id: number
+      name: 'masculine' | 'femenine' | 'mixed'
+    },
+  ): void
 }>()
 
 const { t } = useI18n()
 const easyStorage = useEasyStorage()
 const genderStore = useGenderStore()
 
-const selectedGender = ref<Gender | null>(null)
+const selectedGender = ref<{
+  id: number
+  name: 'masculine' | 'femenine' | 'mixed'
+}>()
 const loadingApi = ref<boolean>(false)
 
-const genders = ref<Gender[]>(
+const genders = ref<
+  {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }[]
+>(
   props.genders ??
     easyStorage.getNested('genders.genders', []).map(mapApiGenderToGender),
 )
-const options = computed((): Gender[] => props.genders ?? genders.value)
+const options = computed(
+  (): {
+    id: number
+    name: 'masculine' | 'femenine' | 'mixed'
+  }[] => props.genders ?? genders.value,
+)
 
 const getGenders = async () => {
   loadingApi.value = true

@@ -103,3 +103,55 @@ export const mapApiFederationToFederation = (
   clubsCount: apiFederation.clubs_count ?? undefined,
   sedesCount: apiFederation.sedes_count ?? undefined,
 })
+
+export const flattenFederations = (federations: Federation[]): Federation[] => {
+  const recurse = (feds: Federation[], hierarchy: number): Federation[] => {
+    return feds.flatMap(fed => {
+      const {
+        federations,
+        leagues,
+        clubs,
+        leaguesCount: lc,
+        clubsCount: cc,
+        ...rest
+      } = fed
+
+      const flattenedFederation: Federation = {
+        ...rest,
+        hierarchy,
+        leaguesCount: leaguesCount(fed),
+        clubsCount: clubsCount(fed),
+      }
+
+      const nestedFederations = federations
+        ? recurse(federations, hierarchy + 1)
+        : []
+
+      return [flattenedFederation, ...nestedFederations]
+    })
+  }
+
+  return recurse(federations, 1)
+}
+
+export const leaguesCount = (federation: Federation) => {
+  return (
+    (federation.federations ?? []).reduce(
+      (acc: number, f: Federation) => acc + (f.leagues?.length ?? 0),
+      federation.leaguesCount
+        ? federation.leaguesCount
+        : federation.leagues?.length ?? 0,
+    ) ?? 0
+  )
+}
+
+export const clubsCount = (federation: Federation) => {
+  return (
+    (federation.federations ?? []).reduce(
+      (acc: number, f: Federation) => acc + (f.clubs?.length ?? 0),
+      federation.clubsCount
+        ? federation.clubsCount
+        : federation.clubs?.length ?? 0,
+    ) ?? 0
+  )
+}

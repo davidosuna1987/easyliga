@@ -4,9 +4,14 @@ import {
   Game,
   mapApiCategoryToCategory,
   mapApiGameToGame,
+  mapApiGenderToGender,
 } from '@/domain/game'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
-import { ApiCreateMatchdaysGamesRequest, ApiLeague } from '@/types/api/league'
+import {
+  ApiCreateMatchdaysGamesRequest,
+  ApiLeague,
+  ApiLeagueFormRequest,
+} from '@/types/api/league'
 import { ApiGame } from '@/types/api/game'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 
@@ -40,8 +45,9 @@ export type LeagueCountRelations = {
 
 export type League = {
   id: number
-  categoryId?: number
+  federationId?: number
   divisionId?: number
+  categoryId?: number
   genderId?: number
   name: string
   season: number
@@ -75,8 +81,9 @@ export const mapApiGamesToMatchdays = (apiGames: ApiGame[]): Matchday[] => {
 
 export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
   id: apiLeague.id,
-  categoryId: apiLeague.category_id ?? undefined,
+  federationId: apiLeague.federation_id ?? undefined,
   divisionId: apiLeague.division_id ?? undefined,
+  categoryId: apiLeague.category_id ?? undefined,
   genderId: apiLeague.gender_id ?? undefined,
   name: apiLeague.name,
   season: apiLeague.season,
@@ -100,7 +107,7 @@ export const mapApiLeagueRelationsToLeagueRelations = (
   category: apiLeague.category
     ? mapApiCategoryToCategory(apiLeague.category)
     : undefined,
-  gender: apiLeague.gender ?? undefined,
+  gender: apiLeague.gender ? mapApiGenderToGender(apiLeague.gender) : undefined,
   teams: apiLeague.teams
     ? apiLeague.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
@@ -128,4 +135,17 @@ export const mapCreateMatchdaysGamesRequestToApiCreateMatchdaysGamesRequest = (
   createMatchdaysGamesRequest: CreateMatchdaysGamesRequest,
 ): ApiCreateMatchdaysGamesRequest => ({
   start: createMatchdaysGamesRequest.start ?? null,
+})
+
+export const mapLeagueToApiLeagueFormRequest = (
+  league?: League,
+  federationId?: number,
+): ApiLeagueFormRequest => ({
+  id: league?.id ?? 0,
+  name: league?.name ?? '',
+  season: league?.season ?? new Date().getFullYear(),
+  federation_id: league?.federationId ?? federationId ?? null,
+  division_id: league?.divisionId ?? null,
+  category_id: league?.categoryId ?? null,
+  gender_id: league?.genderId ?? null,
 })

@@ -7,6 +7,10 @@ const props = defineProps({
     type: Array as PropType<Federation[]>,
     required: false,
   },
+  with: {
+    type: String,
+    default: '',
+  },
   loading: {
     type: Boolean,
     default: false,
@@ -42,7 +46,7 @@ const options = computed(
 
 const getFederations = async () => {
   loadingApi.value = true
-  const { data } = await federationStore.fetch()
+  const { data } = await federationStore.fetch({ with: props.with })
   selectableFederations.value = federationStore.groupedFederations.map(
     mapApiFederationToFederation,
   )

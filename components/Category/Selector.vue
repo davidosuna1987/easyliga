@@ -21,7 +21,7 @@ const { t } = useI18n()
 const easyStorage = useEasyStorage()
 const catagoryStore = useCategoryStore()
 
-const selectedCategory = ref<Category | null>(null)
+const selectedCategory = ref<Category>()
 const loadingApi = ref<boolean>(false)
 
 const categories = ref<Category[]>(

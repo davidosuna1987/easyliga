@@ -10,8 +10,8 @@ export const useFederationStore = defineStore('federations', () => {
   const nationalFederations = ref<ApiFederation[]>([])
   const groupedFederations = ref<ApiFederation[]>([])
 
-  const fetch = async () => {
-    const response = await federationService.fetch()
+  const fetch = async (params?: Record<string, string>) => {
+    const response = await federationService.fetch(params)
 
     federations.value = response.data.value?.data.federations ?? []
     nationalFederations.value = getNationalFederations(federations.value)

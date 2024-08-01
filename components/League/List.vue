@@ -4,6 +4,7 @@ import FederationService from '@/services/federation'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { League } from '@/domain/league'
 import { getListTagColor } from '@/domain/list'
+import { IconNames } from '@/domain/icon'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -52,8 +53,16 @@ const getLeagues = async () => {
   loadingApi.value = false
 }
 
+const handleAddLeague = (federation: Federation) => {
+  navigateTo(`/federations/${federation.id}/league/create`)
+}
+
 const goToLeague = (league: League) => {
   navigateTo(`/leagues/${league.id}`)
+}
+
+const goToEditLeague = (league: League) => {
+  navigateTo(`/federations/${league.federationId}/league/${league.id}/edit`)
 }
 
 onMounted(getLeagues)
@@ -69,7 +78,7 @@ onMounted(getLeagues)
             <Heading tag="h6">{{ federation.name }}</Heading>
             <ListActionButton
               :label="t('leagues.add')"
-              :onClick="() => (showAddLeagueDialog = federation.id)"
+              :onClick="() => handleAddLeague(federation)"
             />
           </header>
 
@@ -99,9 +108,18 @@ onMounted(getLeagues)
                 </ListActionLabel>
                 <ListActionButton
                   :label="t('forms.show')"
-                  severity="info"
+                  icon="show"
+                  iconSize="1.1rem"
                   outlined
                   :onClick="() => goToLeague(league)"
+                />
+                <ListActionButton
+                  :label="t('forms.edit')"
+                  icon="edit"
+                  iconSize="1.1rem"
+                  severity="info"
+                  outlined
+                  :onClick="() => goToEditLeague(league)"
                 />
               </template>
             </ListItem>
