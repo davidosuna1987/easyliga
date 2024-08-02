@@ -4,7 +4,7 @@ import {
   mapPlayerToApiPlayerRequest,
 } from '@/domain/player'
 import { ApiTeam, ApiTeamRequest } from '@/types/api/team'
-import { Category, mapApiCategoryToCategory } from '@/domain/game'
+import { Category, Gender, mapApiCategoryToCategory } from '@/domain/game'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Profile } from '@/domain/profile'
@@ -21,10 +21,7 @@ export type TeamRelations = {
   division?: Division
   federation?: Federation
   category?: Category
-  gender?: {
-    id: number
-    name: 'masculine' | 'femenine' | 'mixed'
-  }
+  gender?: Gender
   coach?: User
   players?: Player[]
   licenses?: License[]

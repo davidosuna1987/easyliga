@@ -1,7 +1,8 @@
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import {
-  Category,
   Game,
+  Category,
+  Gender,
   mapApiCategoryToCategory,
   mapApiGameToGame,
   mapApiGenderToGender,
@@ -19,10 +20,7 @@ export type LeagueRelations = {
   federation?: Federation
   division?: Division
   category?: Category
-  gender?: {
-    id: number
-    name: 'masculine' | 'femenine' | 'mixed'
-  }
+  gender?: Gender
   teams?: Team[]
   games?: Game[]
 }

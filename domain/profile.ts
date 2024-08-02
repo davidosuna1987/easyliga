@@ -5,8 +5,15 @@ import {
   mapAddressToApiAddress,
   mapApiAddressToAddress,
 } from '@/domain/address'
-import { GENDER_MAPPER, GenderType } from '@/domain/game'
 import { Coach } from '@/domain/team'
+
+export const PROFILE_GENDER_TYPES = {
+  male: 'male',
+  female: 'female',
+  other: 'other',
+} as const
+
+export type ProfileGender = keyof typeof PROFILE_GENDER_TYPES
 
 export const AVATAR_STYLES = {
   background: '#333333',
@@ -33,7 +40,7 @@ export type Profile = {
   firstName: string
   lastName: string
   birthDate?: string
-  gender?: GenderType
+  gender?: ProfileGender
   avatar?: string
   email: string
   phone?: string
@@ -45,7 +52,7 @@ export type ProfileUpdateRequest = {
   firstName: string
   lastName: string
   birthDate?: Date
-  gender?: GenderType
+  gender?: ProfileGender
   avatar?: Image
   phone?: string
   address?: Address

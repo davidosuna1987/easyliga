@@ -1,6 +1,8 @@
+import { GenderType } from '@/domain/game'
+
 export type ApiGender = {
   id: number
-  name: 'masculine' | 'femenine' | 'mixed'
+  name: GenderType
   slug: string
   created_at: string | null
   updated_at: string | null

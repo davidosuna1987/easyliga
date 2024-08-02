@@ -11,7 +11,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { Address } from '@/domain/address'
 import ClubService from '@/services/club'
 import ProfileService from '@/services/profile'
-import { GENDER_MAPPER } from '@/domain/game'
+import { PROFILE_GENDER_TYPES } from '@/domain/profile'
 import { getInitials } from '@/domain/utils'
 import { ApiProfile } from '@/types/api/profile'
 import { useAuthStore } from '@/stores/useAuthStore'
@@ -198,9 +198,9 @@ watch(
           v-model="form.gender"
           class="w-full"
           :options="[
-            GENDER_MAPPER.male,
-            GENDER_MAPPER.female,
-            GENDER_MAPPER.other,
+            PROFILE_GENDER_TYPES.male,
+            PROFILE_GENDER_TYPES.female,
+            PROFILE_GENDER_TYPES.other,
           ]"
           :optionLabel="genderLabel"
           :disabled="!!loadingApi || !props.profile"

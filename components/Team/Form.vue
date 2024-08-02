@@ -56,10 +56,7 @@ const teamLicenses = ref<License[]>([])
 const selectedSede = ref<Sede>()
 const selectedDivision = ref<Division>()
 const selectedCategory = ref<Category>()
-const selectedGender = ref<{
-  id: number
-  name: 'masculine' | 'femenine' | 'mixed'
-}>()
+const selectedGender = ref<Gender>()
 const selectedCoach = ref<User>()
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
 const playerToRemove = ref<Player>()

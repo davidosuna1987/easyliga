@@ -8,6 +8,7 @@ import { ApiPlayerRequest } from '@/types/api/player'
 import { ShirtColor } from '@/domain/team'
 import { ApiLicense } from '@/types/api/license'
 import { ApiFederation } from '@/types/api/federation'
+import { Gender } from '@/domain/game'
 
 export type ApiTeamRelations = {
   club?: ApiClub
@@ -16,10 +17,7 @@ export type ApiTeamRelations = {
   division?: ApiDivision
   federation?: ApiFederation
   category?: ApiCategory
-  gender?: {
-    id: number
-    name: 'masculine' | 'femenine' | 'mixed'
-  }
+  gender?: Gender
   coach?: ApiUser
   players?: ApiPlayer[]
   licenses?: ApiLicense[]

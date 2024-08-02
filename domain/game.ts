@@ -34,7 +34,7 @@ export const GAME_OBSERVATIONS_DELAY = 10
 
 export const CATEGORY_MAPPER = {
   masculine: 'masculine',
-  feminine: 'feminine',
+  femenine: 'femenine',
   mixed: 'mixed',
 } as const
 
@@ -44,12 +44,6 @@ export type Category = {
   id: number
   name: CategoryType
 }
-
-export const GENDER_MAPPER = {
-  male: 'male',
-  female: 'female',
-  other: 'other',
-} as const
 
 export const GameReportSideTeamTypes = {
   LEFT: 'A',
@@ -68,7 +62,13 @@ export type GameStatus =
   | 'resting'
   | 'finished'
 
-export type GenderType = keyof typeof GENDER_MAPPER
+export const GENDER_TYPES = {
+  masculine: 'masculine',
+  femenine: 'femenine',
+  mixed: 'mixed',
+} as const
+
+export type GenderType = keyof typeof GENDER_TYPES
 
 export type Gender = {
   id: number
@@ -157,10 +157,7 @@ export type GameReportSimple = {
   game: Game
   division: Division
   category: Category
-  gender: {
-    id: number
-    name: 'masculine' | 'femenine' | 'mixed'
-  }
+  gender: Gender
   localTeam: Team
   visitorTeam: Team
   referee: Profile
@@ -322,12 +319,7 @@ export const mapApiCategoryToCategory = (
   name: apiCategory.name as CategoryType,
 })
 
-export const mapApiGenderToGender = (
-  apiGender: ApiGender,
-): {
-  id: number
-  name: 'masculine' | 'femenine' | 'mixed'
-} => ({
+export const mapApiGenderToGender = (apiGender: ApiGender): Gender => ({
   id: apiGender.id,
   name: apiGender.name,
 })

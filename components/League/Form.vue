@@ -2,11 +2,7 @@
 import LeagueService from '@/services/league'
 import { Federation } from '@/domain/federation'
 import { ApiLeagueFormRequest } from '@/types/api/league'
-import {
-  League,
-  mapApiLeagueToLeague,
-  mapLeagueToApiLeagueFormRequest,
-} from '@/domain/league'
+import { League, mapLeagueToApiLeagueFormRequest } from '@/domain/league'
 import { Division } from '@/domain/division'
 import { Category } from '@/domain/game'
 import { Gender } from '@/domain/game'
@@ -44,10 +40,7 @@ const form = ref<ApiLeagueFormRequest>(
 
 const selectedDivision = ref<Division>()
 const selectedCategory = ref<Category>()
-const selectedGender = ref<{
-  id: number
-  name: 'masculine' | 'femenine' | 'mixed'
-}>()
+const selectedGender = ref<Gender>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject>()
 
@@ -136,10 +129,7 @@ const handleCategorySelected = (category: Category) => {
   form.value.category_id = category.id
 }
 
-const handleGenderSelected = (gender: {
-  id: number
-  name: 'masculine' | 'femenine' | 'mixed'
-}) => {
+const handleGenderSelected = (gender: Gender) => {
   selectedGender.value = gender
   form.value.gender_id = gender.id
 }
