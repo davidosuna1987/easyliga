@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LeagueService from '@/services/league'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
-import { formatDateTime } from '@/domain/utils'
+import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
 
 const { t } = useI18n()
@@ -11,6 +11,7 @@ const leagueService = new LeagueService()
 
 const league = ref<League>()
 const showGenerateGamesDialogForm = ref<boolean>(false)
+const showAddTeamDialogForm = ref<boolean>(false)
 const loadingApi = ref<boolean>(true)
 
 const getLeague = async () => {
@@ -19,7 +20,7 @@ const getLeague = async () => {
   const { data, error } = await leagueService.get(
     Number(route.params.leagueId),
     {
-      with: 'federation,games,teams.federation,category,gender',
+      with: 'federation,division,games,teams.federation,teams.gender,teams.category,category,gender',
     },
   )
 
@@ -33,7 +34,7 @@ const getLeague = async () => {
   showGenerateGamesDialogForm.value = false
 }
 
-const handleDialogShow = () => {
+const handleGenerateGamesDialogShow = () => {
   if (league.value?.teams && league.value?.teams?.length < 2) {
     toast.error(t('games.matchdays.error_only_one_team'))
     return
@@ -41,8 +42,17 @@ const handleDialogShow = () => {
   showGenerateGamesDialogForm.value = true
 }
 
-const handleDialogHide = () => {
+const handleGenerateGamesDialogHide = () => {
   showGenerateGamesDialogForm.value = false
+}
+
+const handleAddTeamDialogShow = () => {
+  showAddTeamDialogForm.value = true
+}
+
+const handleTeamAdded = (team: Team) => {
+  league.value?.teams?.push(team)
+  showAddTeamDialogForm.value = false
 }
 
 onMounted(() => {
@@ -76,28 +86,39 @@ onMounted(() => {
 
       <div class="flex flex-col sm:flex-row gap-8">
         <div class="teams">
-          <Heading tag="h6" class="mb-2">{{ t('teams.team', 2) }}</Heading>
+          <header class="flex justify-between items-center mb-2">
+            <Heading tag="h6">{{ t('teams.team', 2) }}</Heading>
+            <ListActionButton
+              v-if="!league.matchdays?.length"
+              :label="t('teams.add')"
+              :onClick="handleAddTeamDialogShow"
+            />
+          </header>
           <EasyGrid :gap="3">
-            <div v-for="team in league.teams" class="card">
-              <p>{{ team.name }}</p>
-              <small class="opacity-60">{{ team.federation?.name }}</small>
-            </div>
+            <LeagueTeamCard
+              v-for="team in league.teams"
+              :team="team"
+              :showCategory="team.category?.id !== league.category?.id"
+              reverseIcons
+            />
           </EasyGrid>
         </div>
 
         <EasyGrid v-if="league.matchdays?.length" class="matchdays" :gap="3">
-          <template v-for="matchday in league.matchdays">
+          <template
+            v-for="matchday in league.matchdays"
+            :key="matchday.matchday"
+          >
             <div v-if="matchday.matchday">
               <Heading tag="h6" class="mb-2">
                 {{ t('games.matchdays.num', { num: matchday.matchday }) }}
               </Heading>
               <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
-                <div v-for="game in matchday.games" class="card">
-                  <p>{{ game.name }}</p>
-                  <small class="opacity-60">{{
-                    formatDateTime(game.date)
-                  }}</small>
-                </div>
+                <LeagueGameCard
+                  v-for="game in matchday.games"
+                  :key="game.id"
+                  :game="game"
+                />
               </EasyGrid>
             </div>
           </template>
@@ -108,17 +129,25 @@ onMounted(() => {
           <Button
             :label="t('games.matchdays.generate')"
             size="small"
-            @click.prevent="handleDialogShow"
+            @click.prevent="handleGenerateGamesDialogShow"
           />
         </div>
       </div>
+
+      <LeagueTeamAddDialogForm
+        :visible="!!showAddTeamDialogForm"
+        :league="league"
+        :selectedTeams="league.teams"
+        @hide="showAddTeamDialogForm = false"
+        @team:added="handleTeamAdded"
+      />
     </template>
 
     <LeagueMatchdaysDialogForm
       v-if="league"
       :visible="showGenerateGamesDialogForm"
       :league="league"
-      @hide="handleDialogHide"
+      @hide="handleGenerateGamesDialogHide"
       @matchdays:generated="getLeague"
     />
   </div>
@@ -129,18 +158,6 @@ onMounted(() => {
 
 .teams {
   width: 100%;
-}
-
-.card {
-  border: solid 1px var(--input-border-color);
-  border-radius: var(--border-radius);
-  padding: 0.5rem 1rem;
-
-  &:hover {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    color: var(--primary-color-text);
-  }
 }
 
 .matchdays {

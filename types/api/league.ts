@@ -56,6 +56,11 @@ export type ApiLeagueFormRequest = {
   gender_id: number | null
 }
 
+export type ApiLeagueAddTeamFormRequest = {
+  validate_relations: boolean
+  team_id: number
+}
+
 export type ApiLeagueResponse = {
   success: boolean
   data: {
@@ -77,6 +82,15 @@ export type ApiCreateMatchdaysGamesResponse = {
   data: {
     league: ApiLeague
     games: ApiGame[]
+  }
+  errors: null
+}
+
+export type ApiLeagueAddTeamResponse = {
+  success: boolean
+  data: {
+    league: ApiLeague
+    team: ApiTeam
   }
   errors: null
 }

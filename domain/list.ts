@@ -1,6 +1,14 @@
 import { GenderType } from '@/domain/game'
 
-export type ListColor = 'primary' | 'blue' | 'pink' | 'yellow'
+export type ListColor =
+  | 'primary'
+  | 'blue'
+  | 'pink'
+  | 'yellow'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
 
 export const getListTagColor = (type?: GenderType | undefined): ListColor => {
   switch (type) {

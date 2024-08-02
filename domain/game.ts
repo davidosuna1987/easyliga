@@ -29,6 +29,7 @@ import {
 } from '@/domain/game-signature'
 import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
+import { IconName } from '@/domain/icon'
 
 export const GAME_OBSERVATIONS_DELAY = 10
 
@@ -69,6 +70,10 @@ export const GENDER_TYPES = {
 } as const
 
 export type GenderType = keyof typeof GENDER_TYPES
+
+export type GenderIconName =
+  | Extract<IconName, 'masculine' | 'femenine'>
+  | 'mixed'
 
 export type Gender = {
   id: number

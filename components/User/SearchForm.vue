@@ -49,7 +49,7 @@ const selectedUser = ref<User | undefined>(props.user)
 const matchUsers = ref<User[]>()
 const loadingApi = ref<boolean>(false)
 
-const withPelations = computed((): string =>
+const withRelations = computed((): string =>
   props.with.includes('profile')
     ? props.with.join(',')
     : [...props.with].concat('profile').join(','),
@@ -65,7 +65,7 @@ const searchUsers = async () => {
   loadingApi.value = true
   const { data, error } = await userService.search({
     search: search.value,
-    with: withPelations.value,
+    with: withRelations.value,
     ...(props.whereRole && { where_has: `roles:name:${props.whereRole}` }),
   })
   loadingApi.value = false

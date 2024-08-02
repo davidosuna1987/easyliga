@@ -12,6 +12,8 @@ export const IconNames = {
   search: 'pepicons-pencil:loop',
   link: 'pepicons-pencil:chain',
   refresh: 'ic:round-loop',
+  masculine: 'ph:gender-male-duotone',
+  femenine: 'ph:gender-female-duotone',
 } as const
 
 export type IconName = keyof typeof IconNames

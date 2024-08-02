@@ -3,6 +3,8 @@ import {
   ApiCreateMatchdaysGamesResponse,
   ApiLeagueFormRequest,
   ApiLeagueResponse,
+  ApiLeagueAddTeamResponse,
+  ApiLeagueAddTeamFormRequest,
 } from '@/types/api/league'
 
 const PREFIX = 'leagues'
@@ -34,5 +36,12 @@ export default class LeaguesService {
         body: data,
       },
     )
+  }
+
+  addTeam(leagueId: number, data: ApiLeagueAddTeamFormRequest) {
+    return useApi<ApiLeagueAddTeamResponse>(`${PREFIX}/${leagueId}/add-team`, {
+      method: 'POST',
+      body: data,
+    })
   }
 }

@@ -25,6 +25,14 @@ export type LeagueRelations = {
   games?: Game[]
 }
 
+export const MATCHDAY_TYPES = {
+  matchday: 'matchday',
+  empty: 'empty',
+  both: 'both',
+} as const
+
+export type MatchdayType = keyof typeof MATCHDAY_TYPES
+
 export type Matchday = {
   matchday?: number
   games: Game[]
@@ -59,12 +67,24 @@ export type CreateMatchdaysGamesRequest = {
   start?: Date
 }
 
-export const mapApiGamesToMatchdays = (apiGames: ApiGame[]): Matchday[] => {
+export type LeagueTeamAddFormRef = {
+  handleSubmit: () => void
+}
+
+export const mapApiGamesToMatchdays = (
+  apiGames: ApiGame[],
+  matchdayType: MatchdayType = MATCHDAY_TYPES.matchday,
+): Matchday[] => {
   const matchdays: Matchday[] = []
+
   apiGames.forEach(apiGame => {
+    if (matchdayType === MATCHDAY_TYPES.matchday && !apiGame.matchday) return
+    if (matchdayType === MATCHDAY_TYPES.empty && apiGame.matchday) return
+
     const matchdayIndex = matchdays.findIndex(
       matchday => matchday.matchday === apiGame.matchday,
     )
+
     if (matchdayIndex === -1) {
       matchdays.push({
         matchday: apiGame.matchday ?? undefined,
