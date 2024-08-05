@@ -74,6 +74,12 @@ const getGamesByDate = async (
     }
   }
 
+  // remove duplicated games
+  selectedDateGames.value = selectedDateGames.value.filter(
+    (game, index, self) =>
+      index === self.findIndex(g => g.id === game.id && g.date === game.date),
+  )
+
   if (selectedDateGames.value?.length) {
     await getSelectedDateGamesCalls()
   } else {
