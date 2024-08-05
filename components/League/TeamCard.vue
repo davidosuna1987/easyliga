@@ -85,7 +85,6 @@ const { t } = useI18n()
           'cursor-pointer w-7 h-7 rounded-full text-[var(--text-danger)] border-solid',
           'hover:bg-[var(--text-danger)] hover:border-[var(--text-danger)] hover:text-white grid place-items-center',
         ]"
-        v-tooltip.top="{ value: t('teams.delete') }"
         @click="onRemove"
       >
         <Icon :name="IconNames.delete" />
