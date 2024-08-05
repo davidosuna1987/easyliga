@@ -131,7 +131,11 @@ onMounted(() => {
               v-for="team in league.teams"
               :team="team"
               :showCategory="team.category?.id !== league.category?.id"
-              :onRemove="() => handleShowRemoveTeamAlertDialog(team)"
+              :onRemove="
+                league.matchdays?.length
+                  ? undefined
+                  : () => handleShowRemoveTeamAlertDialog(team)
+              "
               reverseIcons
             />
           </EasyGrid>
