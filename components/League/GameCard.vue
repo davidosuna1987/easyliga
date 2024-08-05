@@ -7,11 +7,17 @@ const props = defineProps({
     type: Object as PropType<Game>,
     required: true,
   },
+  hoverable: {
+    type: Boolean,
+    default: false,
+  },
 })
 </script>
 
 <template>
-  <div class="easy-league-game-card-component">
+  <div
+    :class="['easy-league-game-card-component', { 'is-hoverable': hoverable }]"
+  >
     <p>{{ game.name }}</p>
     <small class="opacity-60">
       {{ formatDateTime(game.date) }}
@@ -25,9 +31,13 @@ const props = defineProps({
   border-radius: var(--border-radius);
   padding: 0.5rem 1rem;
 
-  &:hover {
-    background-color: var(--primary-color-medium);
-    border-color: var(--primary-color);
+  &.is-hoverable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--primary-color-medium);
+      border-color: var(--primary-color);
+    }
   }
 }
 </style>

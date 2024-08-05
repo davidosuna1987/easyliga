@@ -451,7 +451,8 @@
       "invalid_team_relations": "Relaciones inválidas",
       "invalid_team_relations_message": "¿Seguro que quieres añadir el equipo a esta liga?",
       "invalid_team_relations_alert": "Las siguientes realaciones no coinciden entre la liga y el equipo:"
-    }
+    },
+    "remove_team_alert": "¿Seguro que quieres eliminar al equipo {teamName} de la liga?"
   },
   "teams": {
     "team": "Equipo | Equipos",

@@ -12,6 +12,8 @@ const leagueService = new LeagueService()
 const league = ref<League>()
 const showGenerateGamesDialogForm = ref<boolean>(false)
 const showAddTeamDialogForm = ref<boolean>(false)
+const showRemoveTeamAlertDialog = ref<boolean>(false)
+const teamToRemove = ref<Team>()
 const loadingApi = ref<boolean>(true)
 
 const getLeague = async () => {
@@ -34,6 +36,31 @@ const getLeague = async () => {
   showGenerateGamesDialogForm.value = false
 }
 
+const handleOnRemoveTeam = async (team: Team) => {
+  if (!league.value) return
+
+  loadingApi.value = true
+
+  const { data, error } = await leagueService.removeTeam(
+    league.value?.id,
+    team.id,
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    toast.success(t('teams.deleted'))
+    league.value?.teams?.splice(
+      league.value?.teams?.findIndex(t => t.id === team.id),
+      1,
+    )
+  }
+
+  teamToRemove.value = undefined
+  showRemoveTeamAlertDialog.value = false
+  loadingApi.value = false
+}
+
 const handleGenerateGamesDialogShow = () => {
   if (league.value?.teams && league.value?.teams?.length < 2) {
     toast.error(t('games.matchdays.error_only_one_team'))
@@ -46,8 +73,13 @@ const handleGenerateGamesDialogHide = () => {
   showGenerateGamesDialogForm.value = false
 }
 
-const handleAddTeamDialogShow = () => {
+const handleShowAddTeamDialog = () => {
   showAddTeamDialogForm.value = true
+}
+
+const handleShowRemoveTeamAlertDialog = (team: Team) => {
+  showRemoveTeamAlertDialog.value = true
+  teamToRemove.value = team
 }
 
 const handleTeamAdded = (team: Team) => {
@@ -91,7 +123,7 @@ onMounted(() => {
             <ListActionButton
               v-if="!league.matchdays?.length"
               :label="t('teams.add')"
-              :onClick="handleAddTeamDialogShow"
+              :onClick="handleShowAddTeamDialog"
             />
           </header>
           <EasyGrid :gap="3">
@@ -99,6 +131,7 @@ onMounted(() => {
               v-for="team in league.teams"
               :team="team"
               :showCategory="team.category?.id !== league.category?.id"
+              :onRemove="() => handleShowRemoveTeamAlertDialog(team)"
               reverseIcons
             />
           </EasyGrid>
@@ -140,6 +173,18 @@ onMounted(() => {
         :selectedTeams="league.teams"
         @hide="showAddTeamDialogForm = false"
         @team:added="handleTeamAdded"
+      />
+
+      <AlertDialog
+        v-if="!!teamToRemove"
+        :visible="!!showRemoveTeamAlertDialog"
+        :title="t('teams.delete')"
+        :message="t('leagues.remove_team_alert')"
+        severity="danger"
+        :acceptLabel="t('forms.delete')"
+        :disabled="loadingApi"
+        @accepted="handleOnRemoveTeam(teamToRemove)"
+        @hide="teamToRemove = undefined"
       />
     </template>
 

@@ -17,6 +17,15 @@ const props = defineProps({
     default: true,
   },
 })
+
+const typeToColor = computed(() => {
+  switch (props.type) {
+    case 'text-danger':
+      return '[var(--text-danger)]'
+    default:
+      return props.type
+  }
+})
 </script>
 
 <template>
@@ -24,8 +33,12 @@ const props = defineProps({
     :class="[
       `easy-form-action-icon-component cursor-pointer p-1 rounded-full`,
       outlined
-        ? `border-${type}-1 text-${type} hover:bg-${type}`
-        : `border-${type}-1 bg-${type} hover:bg-${type}-dark`,
+        ? `${
+            props.type === 'text-danger'
+              ? 'border-solid border-1'
+              : `border-${typeToColor}-1`
+          } text-${typeToColor} hover:bg-${typeToColor}`
+        : `border-${typeToColor}-1 bg-${typeToColor} hover:bg-${typeToColor}-dark`,
     ]"
   >
     <Icon :name="icon" :size="String(size)" />

@@ -86,7 +86,7 @@ export type ApiCreateMatchdaysGamesResponse = {
   errors: null
 }
 
-export type ApiLeagueAddTeamResponse = {
+export type ApiLeagueTeamFormResponse = {
   success: boolean
   data: {
     league: ApiLeague

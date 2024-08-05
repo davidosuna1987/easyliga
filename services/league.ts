@@ -3,7 +3,7 @@ import {
   ApiCreateMatchdaysGamesResponse,
   ApiLeagueFormRequest,
   ApiLeagueResponse,
-  ApiLeagueAddTeamResponse,
+  ApiLeagueTeamFormResponse,
   ApiLeagueAddTeamFormRequest,
 } from '@/types/api/league'
 
@@ -39,9 +39,19 @@ export default class LeaguesService {
   }
 
   addTeam(leagueId: number, data: ApiLeagueAddTeamFormRequest) {
-    return useApi<ApiLeagueAddTeamResponse>(`${PREFIX}/${leagueId}/add-team`, {
+    return useApi<ApiLeagueTeamFormResponse>(`${PREFIX}/${leagueId}/add-team`, {
       method: 'POST',
       body: data,
     })
+  }
+
+  removeTeam(leagueId: number, teamId: number) {
+    return useApi<ApiLeagueTeamFormResponse>(
+      `${PREFIX}/${leagueId}/remove-team`,
+      {
+        method: 'DELETE',
+        body: { team_id: teamId },
+      },
+    )
   }
 }

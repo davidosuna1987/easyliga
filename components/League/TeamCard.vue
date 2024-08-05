@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
+import { IconNames } from '@/domain/icon'
 
 const props = defineProps({
   team: {
@@ -27,6 +28,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hoverable: {
+    type: Boolean,
+    default: false,
+  },
+  onRemove: {
+    type: Function as PropType<() => void>,
+    required: false,
+  },
 })
 
 const { t } = useI18n()
@@ -37,34 +46,51 @@ const { t } = useI18n()
     :class="[
       'easy-league-team-card-component grid gap-1',
       { 'is-selected': selected },
+      { 'is-hoverable': hoverable },
     ]"
   >
-    <div class="flex justify-between gap-2">
-      <p>{{ team.name }}</p>
+    <div class="flex justify-between items-center gap-2">
+      <div class="flex-1">
+        <div class="flex justify-between gap-2">
+          <p>{{ team.name }}</p>
+          <div
+            v-if="team.category || team.gender"
+            :class="['flex gap-1', { 'flex-row-reverse': reverseIcons }]"
+          >
+            <GenderIcon
+              v-if="showIcons && showGender && team.gender"
+              :name="team.gender?.name"
+            />
+            <ListTag
+              v-else-if="showGender && team.gender"
+              :label="`${t(`genders.${team.gender?.name}`)}`"
+              :color="getListTagColor(team.gender?.name)"
+            />
+            <ListTag
+              v-if="showCategory && team.category"
+              :label="`${t(`categories.${team.category?.name}`)}`"
+              color="primary"
+            />
+          </div>
+        </div>
+        <small v-if="team.federation" class="opacity-60">
+          {{ team.federation?.name }}
+        </small>
+        <small v-if="team.club" class="opacity-60">{{ team.club?.name }}</small>
+      </div>
+
       <div
-        v-if="team.category || team.gender"
-        :class="['flex gap-1', { 'flex-row-reverse': reverseIcons }]"
+        v-if="onRemove"
+        :class="[
+          'cursor-pointer w-7 h-7 rounded-full text-[var(--text-danger)] border-solid',
+          'hover:bg-[var(--text-danger)] hover:border-[var(--text-danger)] hover:text-white grid place-items-center',
+        ]"
+        v-tooltip.top="{ value: t('teams.delete') }"
+        @click="onRemove"
       >
-        <GenderIcon
-          v-if="showIcons && showGender && team.gender"
-          :name="team.gender?.name"
-        />
-        <ListTag
-          v-else-if="showGender && team.gender"
-          :label="`${t(`genders.${team.gender?.name}`)}`"
-          :color="getListTagColor(team.gender?.name)"
-        />
-        <ListTag
-          v-if="showCategory && team.category"
-          :label="`${t(`categories.${team.category?.name}`)}`"
-          color="primary"
-        />
+        <Icon :name="IconNames.delete" />
       </div>
     </div>
-    <small v-if="team.federation" class="opacity-60">
-      {{ team.federation?.name }}
-    </small>
-    <small v-if="team.club" class="opacity-60">{{ team.club?.name }}</small>
   </div>
 </template>
 
@@ -79,9 +105,13 @@ const { t } = useI18n()
     pointer-events: none;
   }
 
-  &:hover {
-    background-color: var(--primary-color-medium);
-    border-color: var(--primary-color);
+  &.is-hoverable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--primary-color-medium);
+      border-color: var(--primary-color);
+    }
   }
 }
 </style>
