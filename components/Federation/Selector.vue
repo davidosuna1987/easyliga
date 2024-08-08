@@ -46,10 +46,18 @@ const options = computed(
 
 const getFederations = async () => {
   loadingApi.value = true
-  const { data } = await federationStore.fetch({ with: props.with })
+  const { data } = await federationStore.fetch(
+    props.with ? { with: props.with } : {},
+  )
   selectableFederations.value = federationStore.groupedFederations.map(
     mapApiFederationToFederation,
   )
+
+  easyStorage.set(
+    'federations.groupedFederations',
+    data.value?.data.federations,
+  )
+
   emit(
     'federations:fetch',
     data.value?.data.federations.map(mapApiFederationToFederation) ?? [],

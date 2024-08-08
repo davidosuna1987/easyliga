@@ -7,8 +7,6 @@ import {
 } from '@/domain/federation'
 import { Division } from '@/domain/division'
 
-const federationService = new FederationService()
-
 const props = defineProps({
   groupedDivisions: {
     type: Array as PropType<Federation[]>,
@@ -25,6 +23,8 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const federationService = new FederationService()
 
 const selectedDivision = ref<Division>()
 const loadingApi = ref<boolean>(false)

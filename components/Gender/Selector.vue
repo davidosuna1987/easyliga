@@ -24,15 +24,13 @@ const genderStore = useGenderStore()
 const selectedGender = ref<Gender>()
 const loadingApi = ref<boolean>(false)
 
-const genders = ref<Gender[]>(
-  props.genders ??
-    easyStorage.getNested('genders.genders', []).map(mapApiGenderToGender),
-)
+const genders = ref<Gender[]>(props.genders ?? [])
 const options = computed((): Gender[] => props.genders ?? genders.value)
 
 const getGenders = async () => {
   loadingApi.value = true
   const { data } = await genderStore.fetch()
+  easyStorage.set('genders.genders', data.value?.data.genders ?? [])
   genders.value = data.value?.data.genders.map(mapApiGenderToGender) ?? []
   loadingApi.value = false
 }

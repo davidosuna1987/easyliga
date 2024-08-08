@@ -42,6 +42,13 @@ export default class GameService {
     )
   }
 
+  addReferee(gameId: number, refereeId: number) {
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/add-referee`, {
+      method: 'PUT',
+      body: { referee_id: refereeId },
+    })
+  }
+
   teamPlayers(gameId: number, teamId: number, params?: Record<string, string>) {
     return useApi<ApiGameTeamPlayersResponse>(
       `${PREFIX}/${gameId}/teams/${teamId}/players`,

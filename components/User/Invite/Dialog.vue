@@ -47,7 +47,7 @@ const handleSubmit = async () => {
   const { error } = await userService.invite(form.value)
 
   if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors))
+    toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value.data?.errors
     loadingApi.value = false
   } else {

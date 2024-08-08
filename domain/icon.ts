@@ -14,6 +14,7 @@ export const IconNames = {
   refresh: 'ic:round-loop',
   masculine: 'ph:gender-male-duotone',
   femenine: 'ph:gender-female-duotone',
+  gear: 'pepicons-pencil:gear',
 } as const
 
 export type IconName = keyof typeof IconNames

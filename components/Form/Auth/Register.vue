@@ -65,7 +65,7 @@ const getInvite = async () => {
   loadingApi.value = true
 
   const { data, error } = await inviteService.get(props.inviteId, props.code, {
-    with: 'invitedTo',
+    with: 'invitor.profile,invitedTo',
     set_appends: 'unavailable_shirt_numbers,email_role_names',
   })
   if (error.value) {
@@ -123,14 +123,14 @@ onMounted(() => {
       >
         <p
           v-html="
-            t('invites.invited_by', {
-              teamName: invite.invitedTo.name,
+            t(`invites.invited_to.${invite.type}`, {
+              invitedToName: invite.invitedTo?.name,
               roles: invite.emailRoleNames,
             })
           "
         ></p>
         <p class="mt-3">
-          {{ t(`invites.invited_by_fill_${invite.roles[0]}`) }}
+          {{ t(`invites.invited_to.fill.${invite.roles[0]}`) }}
         </p>
       </Message>
     </template>

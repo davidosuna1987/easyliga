@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import LeagueService from '@/services/league'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
+import { Game } from '@/domain/game'
 import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
+import { User } from 'domain/user'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -13,6 +15,7 @@ const league = ref<League>()
 const showGenerateGamesDialogForm = ref<boolean>(false)
 const showAddTeamDialogForm = ref<boolean>(false)
 const showRemoveTeamAlertDialog = ref<boolean>(false)
+const showRefereeSelectorDialogForm = ref<Game>()
 const teamToRemove = ref<Team>()
 const loadingApi = ref<boolean>(true)
 
@@ -22,7 +25,7 @@ const getLeague = async () => {
   const { data, error } = await leagueService.get(
     Number(route.params.leagueId),
     {
-      with: 'federation,division,games,teams.federation,teams.gender,teams.category,category,gender',
+      with: 'federation,division,games.referee.profile,teams.federation,teams.gender,teams.category,category,gender',
     },
   )
 
@@ -85,6 +88,14 @@ const handleShowRemoveTeamAlertDialog = (team: Team) => {
 const handleTeamAdded = (team: Team) => {
   league.value?.teams?.push(team)
   showAddTeamDialogForm.value = false
+}
+
+const handleRefereeAssigned = (referee: User) => {
+  if (referee.id !== showRefereeSelectorDialogForm.value?.refereeId) {
+    getLeague()
+  }
+
+  showRefereeSelectorDialogForm.value = undefined
 }
 
 onMounted(() => {
@@ -155,6 +166,8 @@ onMounted(() => {
                   v-for="game in matchday.games"
                   :key="game.id"
                   :game="game"
+                  showActions
+                  @referee:assign="showRefereeSelectorDialogForm = game"
                 />
               </EasyGrid>
             </div>
@@ -177,6 +190,14 @@ onMounted(() => {
         :selectedTeams="league.teams"
         @hide="showAddTeamDialogForm = false"
         @team:added="handleTeamAdded"
+      />
+
+      <GameRefereeAssignFormDialog
+        v-if="!!showRefereeSelectorDialogForm"
+        :visible="!!showRefereeSelectorDialogForm"
+        :game="showRefereeSelectorDialogForm"
+        @referee:assigned="handleRefereeAssigned"
+        @hide="showRefereeSelectorDialogForm = undefined"
       />
 
       <AlertDialog

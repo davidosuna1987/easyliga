@@ -81,8 +81,8 @@ defineExpose({
       <p v-if="auth.isLoggedIn" class="mb-3">
         <span
           v-html="
-            t('invites.invited_by', {
-              teamName: invite?.invitedTo?.name,
+            t('invites.invited_to.team', {
+              invitedToName: invite?.invitedTo?.name,
               roles: invite?.emailRoleNames,
             })
           "

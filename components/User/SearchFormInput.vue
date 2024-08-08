@@ -46,11 +46,20 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
+const getUserOriginal = (): User | undefined =>
+  props.whereRole === 'referee' && props.userOriginal?.id === 1
+    ? undefined
+    : props.userOriginal
+
 const editingUser = ref<boolean>(false)
-const selectedUser = ref<User | undefined>(props.userOriginal)
+const selectedUser = ref<User | undefined>(getUserOriginal())
 
 const mappedBreakpoints = computed(() =>
   props.breakpoints ? mapBreakpointsToClasses(props.breakpoints) : undefined,
+)
+
+const showEditButton = computed(
+  () => !props.readonly && !!selectedUser.value?.profile,
 )
 
 const userChanged = computed(
@@ -67,7 +76,7 @@ const handleSelected = (user: User) => {
 const handleAction = () => {
   editingUser.value = !editingUser.value
   if (!editingUser.value) {
-    selectedUser.value = props.userOriginal
+    selectedUser.value = getUserOriginal()
     emit('cancel', true)
   }
 }
@@ -80,6 +89,14 @@ watch(
   () => props.userSelected,
   () => {
     selectedUser.value = props.userSelected
+  },
+  { immediate: true },
+)
+
+watch(
+  () => props.userOriginal,
+  () => {
+    selectedUser.value = props.userOriginal
   },
   { immediate: true },
 )
@@ -100,9 +117,7 @@ defineExpose({
       `flex gap-3 h-[42px]`,
       !!mappedBreakpoints
         ? mappedBreakpoints
-        : !readonly &&
-          selectedUser?.profile &&
-          'grid-cols-[minmax(0,1fr)_auto]',
+        : showEditButton && 'grid-cols-[minmax(0,1fr)_auto]',
     ]"
   >
     <template v-if="!!readonly || (selectedUser?.profile && !editingUser)">
@@ -126,7 +141,7 @@ defineExpose({
     </template>
 
     <Button
-      v-if="!readonly && selectedUser?.profile"
+      v-if="showEditButton"
       :label="editingUser ? t('forms.cancel') : t('forms.edit')"
       class="action w-min"
       @click.prevent="handleAction"

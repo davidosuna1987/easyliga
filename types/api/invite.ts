@@ -17,7 +17,7 @@ export type ApiInviteAppends = {
 export type ApiInvite = {
   id: number
   invited_by: number
-  invited_to_type: InvitedToType | null
+  invited_to_type: string | null
   invited_to_id: number | null
   email: string
   roles: Role[]

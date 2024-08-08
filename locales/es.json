@@ -138,7 +138,10 @@
     "start_datetime": "Fecha y hora de inicio",
     "end_datetime": "Fecha y hora de fin",
     "approve": "Aprobar",
-    "add": "Añadir"
+    "add": "Añadir",
+    "action": "Acción | Acciones",
+    "settings": "Ajuste | Ajustes",
+    "options": "Opciones"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -305,7 +308,10 @@
     "referee": "Árbitro | Árbitros",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?",
-    "license": "Licencia | Licencias"
+    "license": "Licencia | Licencias",
+    "assign": "Asignar árbitro",
+    "search": "Buscar árbitro | Buscar árbitros",
+    "change": "Cambiar árbitro | Cambiar árbitros"
   },
   "coaches": {
     "coach": "Entrenador | Entrenadores",
@@ -338,8 +344,13 @@
     "deleted": "El partido ha sido eliminado correctamente",
     "delete_alert": "¿Seguro que quieres eliminar el partido?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
-    "referees_assigned": "Árbitros asignados",
-    "referees_not_assigned": "Árbitros no asignados",
+    "referee": {
+      "game": "Árbitro del partido | Árbitros del partido",
+      "assign": "Asignar árbitro del partido | Asignar árbitros del partido",
+      "assign_message": "Asigna un árbitro para el partido {gameName} | Asigna los árbitros para el partido {gameName}",
+      "assigned": "El árbitro se ha asignado correctamente | Los árbitros se han asignado correctamente",
+      "not_assigned": "Árbitro no asignado | Árbitros no asignados"
+    },
     "select": "Selecciona un partido",
     "arbitrate": "Arbitrar partido",
     "loading": "Cargando partido | Cargando partidos",
@@ -1002,9 +1013,19 @@
   },
   "invites": {
     "invite": "Invitación | Invitaciones",
-    "invited_by": "El equipo {teamName} quiere invitarte a formar parte de Easy Liga para que seas <strong>{roles}</strong>",
-    "invited_by_fill_player": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo",
-    "invited_by_fill_coach": "Rellena todos los campos para formar parte del equipo",
+    "invited_to": {
+      "federation": "Has sido invitado a Easy Liga para ser responsable de la {invitedToName}.",
+      "club": "Has sido invitado a Easy Liga para ser responsable del club {invitedToName}.",
+      "team": "El equipo {invitedToName} quiere invitarte a formar parte de Easy Liga para que seas <strong>{roles}</strong>.",
+      "game": "Has sido invitado a Easy Liga para ser el árbitro del partido {invitedToName}.",
+      "fill": {
+        "federation": "Rellena todos los campos para formar parte de la federación.",
+        "club": "Rellena todos los campos para formar parte del club.",
+        "coach": "Rellena todos los campos para formar parte del equipo.",
+        "referee": "Rellena todos los campos para ser el árbitro del partido.",
+        "player": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo."
+      }
+    },
     "add_roles": "Añadir roles mediante invitación",
     "adding_roles": "Añadiendo roles mediante invitación",
     "login_to_accept": "Para poder añadir roles mediante invitación tienes que iniciar sesión",

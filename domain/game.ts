@@ -80,6 +80,12 @@ export type Gender = {
   name: GenderType
 }
 
+export type GameRefereeAssignFormRef = {
+  handleSubmit: () => void
+  loadingApi: boolean
+  selectedReferee: User | undefined
+}
+
 export type GameInitialData = {
   id: number
   game: Game
@@ -413,3 +419,6 @@ export const mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest =
       ),
     }
   }
+
+export const hasDefaultReferee = (game: Game): boolean =>
+  !game.refereeId || game.refereeId === 1

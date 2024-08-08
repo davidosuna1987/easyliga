@@ -79,15 +79,8 @@ const { t } = useI18n()
         <small v-if="team.club" class="opacity-60">{{ team.club?.name }}</small>
       </div>
 
-      <div
-        v-if="onRemove"
-        :class="[
-          'cursor-pointer w-7 h-7 rounded-full text-[var(--text-danger)] border-solid',
-          'hover:bg-[var(--text-danger)] hover:border-[var(--text-danger)] hover:text-white grid place-items-center',
-        ]"
-        @click="onRemove"
-      >
-        <Icon :name="IconNames.delete" />
+      <div v-if="onRemove" class="actions" @click="onRemove">
+        <Icon :name="IconNames.delete" size="1.5rem" />
       </div>
     </div>
   </div>
@@ -95,9 +88,25 @@ const { t } = useI18n()
 
 <style scoped lang="scss">
 .easy-league-team-card-component {
+  position: relative;
   border: solid 1px var(--input-border-color);
   border-radius: var(--border-radius);
   padding: 0.5rem 1rem;
+
+  .actions {
+    position: absolute;
+    left: 100%;
+    bottom: 100%;
+    color: white;
+    display: grid;
+    place-items: center;
+    translate: -55% 75%;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-danger);
+    }
+  }
 
   &.is-selected {
     background-color: var(--primary-color);

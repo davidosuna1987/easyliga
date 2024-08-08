@@ -24,12 +24,7 @@ const catagoryStore = useCategoryStore()
 const selectedCategory = ref<Category>()
 const loadingApi = ref<boolean>(false)
 
-const categories = ref<Category[]>(
-  props.categories ??
-    easyStorage
-      .getNested('categories.categories', [])
-      .map(mapApiCategoryToCategory),
-)
+const categories = ref<Category[]>(props.categories ?? [])
 const options = computed((): Category[] => props.categories ?? categories.value)
 
 const getCategories = async () => {
@@ -37,6 +32,8 @@ const getCategories = async () => {
   const { data } = await catagoryStore.fetch()
   categories.value =
     data.value?.data.categories.map(mapApiCategoryToCategory) ?? []
+
+  easyStorage.set('categories.categories', data.value?.data.categories)
   loadingApi.value = false
 }
 

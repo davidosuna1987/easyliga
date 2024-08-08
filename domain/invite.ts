@@ -7,6 +7,7 @@ export const INVITED_TO_TYPE_MAPPER = {
   federation: 'federation',
   club: 'club',
   team: 'team',
+  game: 'game',
 } as const
 
 export const INVITED_TO_TYPES = Object.values(INVITED_TO_TYPE_MAPPER)
@@ -15,7 +16,7 @@ export type InvitedToType = (typeof INVITED_TO_TYPES)[number]
 
 export type InvitedRole = Extract<
   Role,
-  'federation' | 'club' | 'coach' | 'player'
+  'federation' | 'club' | 'coach' | 'referee' | 'player'
 >
 
 export const ROLE_TO_INVITED_TO_TYPE_MAPPER: Record<
@@ -25,6 +26,7 @@ export const ROLE_TO_INVITED_TO_TYPE_MAPPER: Record<
   federation: 'federation',
   club: 'club',
   coach: 'team',
+  referee: 'game',
   player: 'team',
 } as const
 
@@ -42,7 +44,7 @@ export type InviteAppends = {
 export type Invite = {
   id: number
   invitedBy: number
-  invitedToType: InvitedToType | undefined
+  invitedToType: string | undefined
   invitedToId: number | undefined
   email: string
   roles: Role[]
@@ -56,6 +58,13 @@ export type InviteShirtNumberInputRef = {
   isShirtNumberTaken: () => boolean
 }
 
+export const mapInvitedToTypeToType = (
+  invitedToType: string | null,
+): InvitedToType | undefined => {
+  if (!invitedToType) return undefined
+  return invitedToType.split('\\').pop()?.toLowerCase() as InvitedToType
+}
+
 export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
   id: apiInvite.id,
   invitedBy: apiInvite.invited_by,
@@ -64,7 +73,7 @@ export const mapApiInviteToInvite = (apiInvite: ApiInvite): Invite => ({
   email: apiInvite.email,
   roles: apiInvite.roles,
   code: apiInvite.code,
-  type: apiInvite.type ?? undefined,
+  type: apiInvite.type ?? mapInvitedToTypeToType(apiInvite.invited_to_type),
   usedAt: apiInvite.used_at ?? undefined,
   emailRoleNames: apiInvite.email_role_names ?? undefined,
   roleNames: apiInvite.role_names ?? undefined,
