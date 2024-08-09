@@ -28,8 +28,7 @@ export type FederationRelations = {
   sedes?: Sede[]
   address?: Address
   licenses?: License[]
-
-  hierarchy?: number // used to list federations in a tree structure
+  referees?: User[]
 }
 
 export type FederationCountRelations = {
@@ -38,6 +37,10 @@ export type FederationCountRelations = {
   leaguesCount?: number
   clubsCount?: number
   sedesCount?: number
+}
+
+export type FederationCustomAttributes = {
+  hierarchy?: number // used to list federations in a tree structure
 }
 
 export type Federation = {
@@ -52,7 +55,8 @@ export type Federation = {
   responsibleId?: number
   addressId?: number
 } & FederationRelations &
-  FederationCountRelations
+  FederationCountRelations &
+  FederationCustomAttributes
 
 export const mapApiFederationToFederation = (
   apiFederation: ApiFederation,
@@ -95,6 +99,9 @@ export const mapApiFederationToFederation = (
     : undefined,
   licenses: apiFederation.licenses
     ? apiFederation.licenses.map(mapApiLicenseToLicense)
+    : undefined,
+  referees: apiFederation.referees
+    ? apiFederation.referees.map(mapApiUserToUser)
     : undefined,
 
   federationsCount: apiFederation.federations_count ?? undefined,

@@ -3,6 +3,8 @@ import { getISOByLocale } from '@/domain/locale'
 
 const app = useNuxtApp()
 
+export const SEARCH_MIN_LENGTH = 3
+
 export type NestedArray<T = any> = T | NestedArray<T>[]
 
 export type Duration = {

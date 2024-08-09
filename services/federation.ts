@@ -3,8 +3,9 @@ import {
   ApiFederationResponse,
   ApiFederationsResponse,
 } from '@/types/api/federation'
-import { ApiTeamResponse } from '@/types/api/team'
 import { FederationScope } from '@/domain/federation'
+import { ApiUsersResponse } from 'types/api/user'
+import { ApiClubsResponse } from 'types/api/club'
 
 const PREFIX = 'federations'
 
@@ -42,8 +43,17 @@ export default class FederationService {
   }
 
   clubs(federationId: number, params?: Record<string, string>) {
-    return useApi<ApiTeamResponse>(`${PREFIX}/${federationId}/clubs/fetch`, {
+    return useApi<ApiClubsResponse>(`${PREFIX}/${federationId}/clubs/fetch`, {
       params,
     })
+  }
+
+  referees(federationId: number, params?: Record<string, string>) {
+    return useApi<ApiUsersResponse>(
+      `${PREFIX}/${federationId}/referees/fetch`,
+      {
+        params,
+      },
+    )
   }
 }

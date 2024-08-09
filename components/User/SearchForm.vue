@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import UserService from '@/services/user'
+import LeagueService from '@/services/league'
+import { SEARCH_MIN_LENGTH } from '@/domain/utils'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
 import { InvitedRole, ROLE_TO_INVITED_TO_TYPE_MAPPER } from '@/domain/invite'
+import { League, mapApiLeagueToLeague } from '@/domain/league'
 
 const props = defineProps({
   user: {
@@ -41,12 +44,17 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const route = useRoute()
 const toast = useEasyToast()
+
 const userService = new UserService()
+const leagueService = new LeagueService()
 
 const search = ref<string>('')
 const selectedUser = ref<User | undefined>(props.user)
 const matchUsers = ref<User[]>()
+const routeLeague = ref<League>()
+const showUserInviteDialog = ref<boolean>()
 const loadingApi = ref<boolean>(false)
 
 const withRelations = computed((): string =>
@@ -56,25 +64,61 @@ const withRelations = computed((): string =>
 )
 
 const invite = computed((): boolean => !!props.invitedToId)
-const searchAvailable = computed((): boolean => search.value.length >= 3)
+const searchAvailable = computed(
+  (): boolean => search.value.length >= SEARCH_MIN_LENGTH,
+)
 
-const showUserInviteDialog = ref<boolean>()
+const whereHas = computed((): string | undefined => {
+  const whereHasArray = []
+  if (props.whereRole) {
+    whereHasArray.push(`roles:name:${props.whereRole}`)
+
+    if (props.whereRole === 'referee' && routeLeague.value) {
+      whereHasArray.push(
+        `refereeFederations:federations.id:${routeLeague.value?.federationId}`,
+      )
+    }
+  }
+  return whereHasArray.length ? whereHasArray.join(',') : undefined
+})
+
+const getRouteLeague = async () => {
+  loadingApi.value = true
+
+  const { data, error } = await leagueService.get(Number(route.params.leagueId))
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    routeLeague.value = mapApiLeagueToLeague(data.value.data.league)
+  }
+
+  loadingApi.value = false
+}
 
 const searchUsers = async () => {
-  if (!searchAvailable) return
+  if (!searchAvailable.value) {
+    toast.info(
+      t('errors.min_length', { num: SEARCH_MIN_LENGTH }, SEARCH_MIN_LENGTH),
+    )
+    return
+  }
+
   loadingApi.value = true
+
   const { data, error } = await userService.search({
     search: search.value,
     with: withRelations.value,
-    ...(props.whereRole && { where_has: `roles:name:${props.whereRole}` }),
+    ...(whereHas.value && { where_has: whereHas.value }),
   })
-  loadingApi.value = false
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
     matchUsers.value = data.value.data.users.map(mapApiUserToUser)
   }
+
+  loadingApi.value = false
 }
 
 const handleRemoveUser = () => {
@@ -92,6 +136,12 @@ const handleUserInvited = () => {
   showUserInviteDialog.value = false
   emit('invited', true)
 }
+
+onBeforeMount(() => {
+  if (route.params.leagueId) {
+    getRouteLeague()
+  }
+})
 </script>
 
 <template>

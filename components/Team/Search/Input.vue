@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import TeamService from '@/services/team'
+import { SEARCH_MIN_LENGTH } from '@/domain/utils'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
 
@@ -51,19 +52,27 @@ const selectedTeam = ref<Team | undefined>(props.team)
 const matchTeams = ref<Team[]>()
 const loadingApi = ref<boolean>(false)
 
-const searchAvailable = computed((): boolean => search.value.length >= 3)
+const searchAvailable = computed(
+  (): boolean => search.value.length >= SEARCH_MIN_LENGTH,
+)
 const selectedTeamsIds = computed(() =>
   props.selectedTeams.map(team => team.id),
 )
 
 const searchTeams = async () => {
-  if (!searchAvailable) return
+  if (!searchAvailable.value) {
+    toast.info(
+      t('errors.min_length', { num: SEARCH_MIN_LENGTH }, SEARCH_MIN_LENGTH),
+    )
+    return
+  }
+
   loadingApi.value = true
+
   const { data, error } = await teamService.fetch({
     scope: `name:${search.value}`,
     ...(props.with ? { with: props.with.join(',') } : {}),
   })
-  loadingApi.value = false
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -72,6 +81,8 @@ const searchTeams = async () => {
       .map(team => mapApiTeamToTeam(team, false))
       .filter(team => !selectedTeamsIds.value.includes(team.id))
   }
+
+  loadingApi.value = false
 }
 
 const handleRemoveTeam = () => {
