@@ -95,7 +95,7 @@ const props = defineProps({
   },
   gameStatus: {
     type: String as PropType<GameStatus>,
-    required: true,
+    required: false,
   },
   timeoutRunning: {
     type: Boolean,
@@ -437,7 +437,7 @@ onMounted(setInitialShowCountdown)
             !currentSet.localTeamSide ||
             !currentSet.visitorTeamSide ||
             !currentSet.firstServeTeamId ||
-            ['warmup', 'resting'].includes(gameStatus)
+            (gameStatus && ['warmup', 'resting'].includes(gameStatus))
           "
           class="mb-3"
           :currentSet="currentSet"

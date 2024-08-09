@@ -176,7 +176,7 @@ const currentSetRotation = (
     ?.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
 const listenCallUnlockedEvent = (gameId: number, callId: number) => {
-  listenedEvents.value.push(`call-unlocked-${gameId}-${callId}`)
+  listenedEvents.value.push(`game.${gameId}.call.${callId}.unlocked`)
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
     ApiEvents.CALL_UNLOCKED,
     (response: ApiCallUnlockedEventResponse) => {
@@ -194,7 +194,9 @@ const listenRotationLockToggledEvent = (
   gameId: number,
   rotationId?: number,
 ) => {
-  listenedEvents.value.push(`rotation-lock-toggled-${gameId}-${rotationId}`)
+  listenedEvents.value.push(
+    `game.${gameId}.rotation.${rotationId}.lock-toggled`,
+  )
   if (!rotationId) return
 
   window.Echo.channel(
@@ -213,7 +215,7 @@ const listenRotationLockToggledEvent = (
 }
 
 const listenGameStatusUpdatedEvent = (gameId: number) => {
-  listenedEvents.value.push(`game-status-updated-${gameId}`)
+  listenedEvents.value.push(`game.${gameId}.status.updated`)
   window.Echo.channel(`game.${gameId}.status.updated`).listen(
     ApiEvents.GAME_STATUS_UPDATED,
     (response: ApiGameStatusUpdatedEventResponse) => {
@@ -236,7 +238,7 @@ const listenGameStatusUpdatedEvent = (gameId: number) => {
 }
 
 const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
-  listenedEvents.value.push(`timeout-status-updated-${gameId}`)
+  listenedEvents.value.push(`game.${gameId}.timeout.status.updated`)
   window.Echo.channel(`game.${gameId}.timeout.status.updated`).listen(
     ApiEvents.TIMEOUT_STATUS_UPDATED,
     (response: ApiTimeoutStatusUpdatedEventResponse) => {
@@ -279,7 +281,7 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
 }
 
 const listenSanctionStoredEvent = (gameId: number) => {
-  listenedEvents.value.push(`sanction-stored-${gameId}`)
+  listenedEvents.value.push(`game.${gameId}.sanction.stored`)
   window.Echo.channel(`game.${gameId}.sanction.stored`).listen(
     ApiEvents.SANCTION_STORED,
     (response: ApiSanctionStoredEventResponse) => {
@@ -319,7 +321,7 @@ const listenSanctionStoredEvent = (gameId: number) => {
 }
 
 const listenGameSignatureCreatedEvent = (gameId: number) => {
-  listenedEvents.value.push(`game-signature-created-${gameId}`)
+  listenedEvents.value.push(`game.${gameId}.game_signature.created`)
   window.Echo.channel(`game.${gameId}.game_signature.created`).listen(
     ApiEvents.GAME_SIGNATURE_CREATED,
     (response: ApiGameSignatureCreatedEventResponse) => {
@@ -330,7 +332,7 @@ const listenGameSignatureCreatedEvent = (gameId: number) => {
 }
 
 const listenRequestChangeDateEvent = (gameId: number) => {
-  listenedEvents.value.push(`request-change-date-${gameId}`)
+  listenedEvents.value.push(`game.${gameId}.request-change-date`)
   window.Echo.channel(`game.${gameId}.request-change-date`).listen(
     ApiEvents.REQUEST_CHANGE_DATE,
     (response: ApiRequestChangeDateEventResponse) => {
@@ -361,29 +363,31 @@ const listenRequestChangeDateEvent = (gameId: number) => {
 }
 
 const listenAllChannels = (gameId: number) => {
-  if (!listenedEvents.value.includes(`game-status-updated-${gameId}`)) {
+  if (!listenedEvents.value.includes(`game.${gameId}.status.updated`)) {
     listenGameStatusUpdatedEvent(gameId)
   }
-  if (!listenedEvents.value.includes(`timeout-status-updated-${gameId}`)) {
+  if (!listenedEvents.value.includes(`game.${gameId}.timeout.status.updated`)) {
     listenTimeoutStatusUpdatedEvent(gameId)
   }
-  if (!listenedEvents.value.includes(`sanction-stored-${gameId}`)) {
+  if (!listenedEvents.value.includes(`game.${gameId}.sanction.stored`)) {
     listenSanctionStoredEvent(gameId)
   }
-  if (!listenedEvents.value.includes(`game-signature-created-${gameId}`)) {
+  if (!listenedEvents.value.includes(`game.${gameId}.game_signature.created`)) {
     listenGameSignatureCreatedEvent(gameId)
   }
-  if (!listenedEvents.value.includes(`request-change-date-${gameId}`)) {
+  if (!listenedEvents.value.includes(`game.${gameId}.request-change-date`)) {
     listenRequestChangeDateEvent(gameId)
   }
 
   calls.value?.forEach(call => {
-    if (!listenedEvents.value.includes(`call-unlocked-${gameId}-${call.id}`)) {
+    if (
+      !listenedEvents.value.includes(`game.${gameId}.call.${call.id}.unlocked`)
+    ) {
       listenCallUnlockedEvent(gameId, call.id)
     }
     if (
       !listenedEvents.value.includes(
-        `rotation-lock-toggled-${gameId}-${call.currentRotation?.id}`,
+        `game.${gameId}.rotation.${call.currentRotation?.id}.lock-toggled`,
       )
     ) {
       listenRotationLockToggledEvent(gameId, call.currentRotation?.id)

@@ -46,6 +46,7 @@ const callService = new CallService()
 const setService = new SetService()
 const rotationService = new RotationService()
 
+const listenedEvents = ref<string[]>([])
 const gameSets = ref<Set[]>([])
 const gameSanctions = ref<Sanction[]>()
 const call = ref<Call>()
@@ -189,6 +190,7 @@ const handleSubmit = async (): Promise<void> => {
 }
 
 const listenSanctionStoredEvent = (): void => {
+  listenedEvents.value.push(`game.${route.params.game_id}.sanction.stored`)
   window.Echo.channel(`game.${route.params.game_id}.sanction.stored`).listen(
     ApiEvents.SANCTION_STORED,
     (response: ApiSanctionStoredEventResponse) => {
@@ -206,6 +208,21 @@ const listenSanctionStoredEvent = (): void => {
   )
 }
 
+const listenAllChannels = () => {
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.sanction.stored`,
+    )
+  ) {
+    listenSanctionStoredEvent()
+  }
+}
+
+const leaveAllChannels = () => {
+  window.Echo.leaveAllChannels()
+  listenedEvents.value = []
+}
+
 watch(currentSet, (): void => emit('update:set', currentSet.value))
 
 watch(currentSetRotation, (): void => {
@@ -215,12 +232,12 @@ watch(currentSetRotation, (): void => {
 })
 
 onMounted((): void => {
-  listenSanctionStoredEvent()
+  listenAllChannels()
   getInitialData()
 })
 
 onBeforeUnmount((): void => {
-  window.Echo.leaveAllChannels()
+  leaveAllChannels()
 })
 </script>
 

@@ -30,6 +30,7 @@ const gameService = new GameService()
 const callService = new CallService()
 const gameSignatureService = new GameSignatureService()
 
+const listenedEvents = ref<string[]>([])
 const game = ref<Game>()
 const call = ref<Call>()
 const teamType = ref<TeamType>()
@@ -230,6 +231,8 @@ const changePlayerShirtNumber = (player?: Player) => {
 }
 
 const getTeamPlayers = async () => {
+  leaveAllChannels()
+
   loadingApi.value = true
 
   const { data, error } = await gameService.teamPlayers(
@@ -251,8 +254,7 @@ const getTeamPlayers = async () => {
   players.value = mapApiPlayersToPlayers(data.value.data.players)
   teamType.value = data.value.data.team_type
 
-  window.Echo.leaveAllChannels()
-  listenCallUnlockedEvent()
+  listenAllChannels()
 }
 
 const handleSignOrSubmit = () => {
@@ -312,6 +314,9 @@ const handleSubmit = async () => {
 }
 
 const listenCallUnlockedEvent = () => {
+  listenedEvents.value.push(
+    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+  )
   window.Echo.channel(
     `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
   ).listen(
@@ -325,6 +330,21 @@ const listenCallUnlockedEvent = () => {
       getTeamPlayers()
     },
   )
+}
+
+const listenAllChannels = () => {
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+    )
+  ) {
+    listenCallUnlockedEvent()
+  }
+}
+
+const leaveAllChannels = () => {
+  window.Echo.leaveAllChannels()
+  listenedEvents.value = []
 }
 
 // INFO: replaced with window.Echo.leaveAllChannels()

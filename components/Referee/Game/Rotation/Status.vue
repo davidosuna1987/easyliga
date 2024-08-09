@@ -22,7 +22,7 @@ const props = defineProps({
   },
   gameStatus: {
     type: String as PropType<GameStatus>,
-    required: true,
+    required: false,
   },
 })
 

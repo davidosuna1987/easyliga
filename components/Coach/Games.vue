@@ -222,10 +222,6 @@ const handleDateApproved = (game: Game) => {
 }
 
 onMounted(redirectIfSanctionedMembersToChange)
-
-onBeforeUnmount(() => {
-  window.Echo.leaveAllChannels()
-})
 </script>
 
 <template>

@@ -32,6 +32,7 @@ const toast = useEasyToast()
 
 const rotationService = new RotationService()
 
+const listenedEvents = ref<string[]>([])
 const game = ref<Game>()
 const rotation = ref<Rotation>()
 const initialRotation = ref<Rotation>()
@@ -112,9 +113,8 @@ const getRotation = async () => {
     gameSanctions,
   )
 
-  window.Echo.leaveAllChannels()
-  listenRotationLockToggledEvent(game.value?.id, rotation.value.id)
-  listenSanctionStoredEvent(game.value?.id)
+  leaveAllChannels()
+  listenAllChannels(game.value?.id, rotation.value.id)
 
   loadingApi.value = false
 }
@@ -222,7 +222,9 @@ const listenRotationLockToggledEvent = (
   rotationId?: number,
 ) => {
   if (!gameId || !rotationId) return
-
+  listenedEvents.value.push(
+    `game.${gameId}.rotation.${rotationId}.lock-toggled`,
+  )
   window.Echo.channel(
     `game.${gameId}.rotation.${rotationId}.lock-toggled`,
   ).listen(
@@ -240,7 +242,7 @@ const listenRotationLockToggledEvent = (
 
 const listenSanctionStoredEvent = (gameId?: number) => {
   if (!gameId) return
-
+  listenedEvents.value.push(`game.${gameId}.sanction.stored`)
   window.Echo.channel(`game.${gameId}.sanction.stored`).listen(
     ApiEvents.SANCTION_STORED,
     (response: ApiSanctionStoredEventResponse) => {
@@ -258,15 +260,28 @@ const listenSanctionStoredEvent = (gameId?: number) => {
   )
 }
 
-// INFO: replaced with window.Echo.leaveAllChannels()
-// const leaveRotationLockToggledEvent = (gameId: number, rotationId: number) => {
-//   window.Echo.leaveChannel(`game.${gameId}.rotation.${rotationId}.lock-toggled`)
-// }
+const listenAllChannels = (gameId?: number, rotationId?: number) => {
+  if (!listenedEvents.value.includes(`game.${gameId}.sanction.stored`)) {
+    listenSanctionStoredEvent()
+  }
+  if (
+    !listenedEvents.value.includes(
+      `game.${gameId}.rotation.${rotationId}.lock-toggled`,
+    )
+  ) {
+    listenRotationLockToggledEvent(gameId, rotationId)
+  }
+}
+
+const leaveAllChannels = () => {
+  window.Echo.leaveAllChannels()
+  listenedEvents.value = []
+}
 
 onMounted(getRotation)
 
 onBeforeUnmount(() => {
-  window.Echo.leaveAllChannels()
+  leaveAllChannels()
 })
 </script>
 

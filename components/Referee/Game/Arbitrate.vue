@@ -65,6 +65,7 @@ const pointService = new PointService()
 const setService = new SetService()
 const timeoutService = new TimeoutService()
 
+const listenedEvents = ref<string[]>([])
 const gameInitialData = ref<GameInitialData>()
 const localTeamCall = ref<Call>()
 const visitorTeamCall = ref<Call>()
@@ -267,8 +268,8 @@ const getGameInitialData = async (firstCall: boolean = false) => {
   loadingApi.value = false
 
   if (firstCall) {
-    window.Echo.leaveAllChannels()
-    listenEvents()
+    leaveAllChannels()
+    listenAllChannels()
   }
 
   setShirtColorsFromStorage()
@@ -492,6 +493,7 @@ const setCustomTeamsShirtColor = (teamId?: number, shirtColor?: ShirtColor) => {
 }
 
 const listenCallUpdatedEvent = () => {
+  listenedEvents.value.push(`game.${route.params.game_id}.call.updated`)
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
     ApiEvents.CALL_UPDATED,
     (response: ApiCallUpdatedEventResponse) => {
@@ -513,6 +515,7 @@ const listenCallUpdatedEvent = () => {
 }
 
 const listenRotationCreatedEvent = () => {
+  listenedEvents.value.push(`game.${route.params.game_id}.rotation.created`)
   window.Echo.channel(`game.${route.params.game_id}.rotation.created`).listen(
     ApiEvents.ROTATION_CREATED,
     (response: ApiRotationCreatedEventResponse) => {
@@ -546,6 +549,7 @@ const listenRotationCreatedEvent = () => {
 }
 
 const listenRotationUpdatedEvent = () => {
+  listenedEvents.value.push(`game.${route.params.game_id}.rotation.updated`)
   window.Echo.channel(`game.${route.params.game_id}.rotation.updated`).listen(
     ApiEvents.ROTATION_UPDATED,
     (response: ApiRotationUpdatedEventResponse) => {
@@ -579,6 +583,9 @@ const listenRotationUpdatedEvent = () => {
 }
 
 const listenTimeoutStatusUpdatedEvent = () => {
+  listenedEvents.value.push(
+    `game.${route.params.game_id}.timeout.status.updated`,
+  )
   window.Echo.channel(
     `game.${route.params.game_id}.timeout.status.updated`,
   ).listen(
@@ -615,6 +622,9 @@ const listenTimeoutStatusUpdatedEvent = () => {
 }
 
 const listenGameSignatureCreatedEvent = () => {
+  listenedEvents.value.push(
+    `game.${route.params.game_id}.game_signature.created`,
+  )
   window.Echo.channel(
     `game.${route.params.game_id}.game_signature.created`,
   ).listen(
@@ -636,12 +646,45 @@ const listenGameSignatureCreatedEvent = () => {
   )
 }
 
-const listenEvents = () => {
-  listenCallUpdatedEvent()
-  listenRotationCreatedEvent()
-  listenRotationUpdatedEvent()
-  listenTimeoutStatusUpdatedEvent()
-  listenGameSignatureCreatedEvent()
+const listenAllChannels = () => {
+  if (
+    !listenedEvents.value.includes(`game.${route.params.game_id}.call.updated`)
+  ) {
+    listenCallUpdatedEvent()
+  }
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.rotation.created`,
+    )
+  ) {
+    listenRotationCreatedEvent()
+  }
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.rotation.updated`,
+    )
+  ) {
+    listenRotationUpdatedEvent()
+  }
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.timeout.status.updated`,
+    )
+  ) {
+    listenTimeoutStatusUpdatedEvent()
+  }
+  if (
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.game_signature.created`,
+    )
+  ) {
+    listenGameSignatureCreatedEvent()
+  }
+}
+
+const leaveAllChannels = () => {
+  window.Echo.leaveAllChannels()
+  listenedEvents.value = []
 }
 
 const setShirtColorsFromStorage = () => {
