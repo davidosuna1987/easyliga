@@ -1005,7 +1005,9 @@
       "referee": "El árbitro ha firmado el acta",
       "coach": "El entrenador de {teamName} ha firmado el acta",
       "captain": "El capitán de {teamName} ha firmado el acta"
-    }
+    },
+    "date_change_requested": "Se ha solicitado un cambio de fecha para jugar el partido {gameName} en la siguiente fecha: {date}",
+    "date_change_approved": "Se ha aprovado el cambio de fecha del partido {gameName} para la siguiente fecha: {date}"
   },
   "countries": {
     "country": "País | Países",

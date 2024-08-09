@@ -12,6 +12,7 @@ import {
   ApiEvents,
   ApiGameStatusUpdatedEventResponse,
   ApiGameSignatureCreatedEventResponse,
+  ApiRequestChangeDateEventResponse,
 } from '@/types/api/event'
 import { TeamType } from '@/domain/team'
 import {
@@ -24,23 +25,27 @@ import { getFullName } from '@/domain/player'
 import { Rotation } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES } from '@/domain/sanction'
 import moment from 'moment'
-import { formatDate } from '@/domain/utils'
+import { formatDate, formatDateByLocale } from '@/domain/utils'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const auth = useAuthStore()
 const gameService = new GameService()
 const callService = new CallService()
 const toast = useEasyToast()
 
+const listenedEvents = ref<string[]>([])
+const selectedDate = ref<Date>(new Date())
 const selectedDateGames = ref<Game[]>([])
 const calls = ref<Call[]>([])
 const loadingApi = ref<boolean>(false)
 
 const getGamesByDate = async (
-  date: Date | string = new Date(),
+  date: Date | string = selectedDate.value,
   type: TeamType = TeamType.LOCAL,
 ) => {
   if (!auth.user) return
+
+  leaveAllChannels()
 
   loadingApi.value = true
 
@@ -49,6 +54,7 @@ const getGamesByDate = async (
   }
 
   date = new Date(date)
+  selectedDate.value = date
   const formatedDate = formatDate(date.toString(), '-', true)
   const formatedDateLeft = `${formatedDate} 00:00:00`
   const formatedDateRight = `${formatedDate} 23:59:59`
@@ -108,7 +114,6 @@ const getSelectedDateGamesCalls = async () => {
 
     if (apiGameCall) calls.value.push(mapApiCallToCall(apiGameCall))
 
-    window.Echo.leaveAllChannels()
     listenAllChannels(game.id)
 
     loadingApi.value = false
@@ -171,6 +176,7 @@ const currentSetRotation = (
     ?.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
 const listenCallUnlockedEvent = (gameId: number, callId: number) => {
+  listenedEvents.value.push(`call-unlocked-${gameId}-${callId}`)
   window.Echo.channel(`game.${gameId}.call.${callId}.unlocked`).listen(
     ApiEvents.CALL_UNLOCKED,
     (response: ApiCallUnlockedEventResponse) => {
@@ -188,6 +194,7 @@ const listenRotationLockToggledEvent = (
   gameId: number,
   rotationId?: number,
 ) => {
+  listenedEvents.value.push(`rotation-lock-toggled-${gameId}-${rotationId}`)
   if (!rotationId) return
 
   window.Echo.channel(
@@ -206,6 +213,7 @@ const listenRotationLockToggledEvent = (
 }
 
 const listenGameStatusUpdatedEvent = (gameId: number) => {
+  listenedEvents.value.push(`game-status-updated-${gameId}`)
   window.Echo.channel(`game.${gameId}.status.updated`).listen(
     ApiEvents.GAME_STATUS_UPDATED,
     (response: ApiGameStatusUpdatedEventResponse) => {
@@ -228,6 +236,7 @@ const listenGameStatusUpdatedEvent = (gameId: number) => {
 }
 
 const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
+  listenedEvents.value.push(`timeout-status-updated-${gameId}`)
   window.Echo.channel(`game.${gameId}.timeout.status.updated`).listen(
     ApiEvents.TIMEOUT_STATUS_UPDATED,
     (response: ApiTimeoutStatusUpdatedEventResponse) => {
@@ -270,6 +279,7 @@ const listenTimeoutStatusUpdatedEvent = (gameId: number) => {
 }
 
 const listenSanctionStoredEvent = (gameId: number) => {
+  listenedEvents.value.push(`sanction-stored-${gameId}`)
   window.Echo.channel(`game.${gameId}.sanction.stored`).listen(
     ApiEvents.SANCTION_STORED,
     (response: ApiSanctionStoredEventResponse) => {
@@ -309,6 +319,7 @@ const listenSanctionStoredEvent = (gameId: number) => {
 }
 
 const listenGameSignatureCreatedEvent = (gameId: number) => {
+  listenedEvents.value.push(`game-signature-created-${gameId}`)
   window.Echo.channel(`game.${gameId}.game_signature.created`).listen(
     ApiEvents.GAME_SIGNATURE_CREATED,
     (response: ApiGameSignatureCreatedEventResponse) => {
@@ -318,16 +329,71 @@ const listenGameSignatureCreatedEvent = (gameId: number) => {
   )
 }
 
+const listenRequestChangeDateEvent = (gameId: number) => {
+  listenedEvents.value.push(`request-change-date-${gameId}`)
+  window.Echo.channel(`game.${gameId}.request-change-date`).listen(
+    ApiEvents.REQUEST_CHANGE_DATE,
+    (response: ApiRequestChangeDateEventResponse) => {
+      if (response.emitter.id === auth.user?.id) return
+
+      if (response.action === 'requested' && response.game.requested_date) {
+        toast.info(
+          t('events.date_change_requested', {
+            gameName: response.game.name,
+            date: formatDateByLocale(
+              response.game.requested_date,
+              locale.value,
+            ),
+          }),
+        )
+      } else if (response.action === 'approved' && response.game.date) {
+        toast.info(
+          t('events.date_change_approved', {
+            gameName: response.game.name,
+            date: formatDateByLocale(response.game.date, locale.value),
+          }),
+        )
+      }
+
+      getGamesByDate()
+    },
+  )
+}
+
 const listenAllChannels = (gameId: number) => {
-  listenGameStatusUpdatedEvent(gameId)
-  listenTimeoutStatusUpdatedEvent(gameId)
-  listenSanctionStoredEvent(gameId)
-  listenGameSignatureCreatedEvent(gameId)
+  if (!listenedEvents.value.includes(`game-status-updated-${gameId}`)) {
+    listenGameStatusUpdatedEvent(gameId)
+  }
+  if (!listenedEvents.value.includes(`timeout-status-updated-${gameId}`)) {
+    listenTimeoutStatusUpdatedEvent(gameId)
+  }
+  if (!listenedEvents.value.includes(`sanction-stored-${gameId}`)) {
+    listenSanctionStoredEvent(gameId)
+  }
+  if (!listenedEvents.value.includes(`game-signature-created-${gameId}`)) {
+    listenGameSignatureCreatedEvent(gameId)
+  }
+  if (!listenedEvents.value.includes(`request-change-date-${gameId}`)) {
+    listenRequestChangeDateEvent(gameId)
+  }
 
   calls.value?.forEach(call => {
-    listenCallUnlockedEvent(gameId, call.id)
-    listenRotationLockToggledEvent(gameId, call.currentRotation?.id)
+    if (!listenedEvents.value.includes(`call-unlocked-${gameId}-${call.id}`)) {
+      listenCallUnlockedEvent(gameId, call.id)
+    }
+    if (
+      !listenedEvents.value.includes(
+        `rotation-lock-toggled-${gameId}-${call.currentRotation?.id}`,
+      )
+    ) {
+      listenRotationLockToggledEvent(gameId, call.currentRotation?.id)
+    }
   })
+}
+
+const leaveAllChannels = () => {
+  window.Echo.leaveAllChannels()
+  listenedEvents.value = []
 }
 
 const handleDateChanged = (date: Date) => getGamesByDate(date)
@@ -341,12 +407,12 @@ const handleDateApproved = (game: Game) => {
 }
 
 onMounted(() => {
-  window.Echo.leaveAllChannels()
+  leaveAllChannels()
   getGamesByDate()
 })
 
 onBeforeUnmount(() => {
-  window.Echo.leaveAllChannels()
+  leaveAllChannels()
 })
 </script>
 
