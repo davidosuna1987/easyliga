@@ -359,8 +359,10 @@ onBeforeUnmount(() => {
           : t('coaches.welcome_no_name')
       }}
     </Heading>
-    <!-- <template v-else> -->
-    <EasyDatepickerDropdown class="mb-8" @date:changed="handleDateChanged" />
+
+    <EasyGrid class="mb-8" justify="center">
+      <EasyCalendar @date:changed="handleDateChanged" />
+    </EasyGrid>
 
     <LoadingLabel
       v-if="loadingApi"
@@ -378,7 +380,7 @@ onBeforeUnmount(() => {
         @countdown:ended="onCountdownEnded"
         @report:signed="onReportSigned"
       />
-      <p v-else class="text-center">{{ t('coaches.no_current_games') }}</p>
+      <p v-else class="text-center">{{ t('games.no_games_for_date') }}</p>
     </template>
   </div>
 </template>

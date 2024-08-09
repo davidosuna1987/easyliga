@@ -75,6 +75,9 @@ export const formatDateByLocale = (date: string | Date, locale: string) =>
     hour12: false,
   }).format(new Date(date))
 
+export const mapIndexToLocaleDateIndex = (index: number) =>
+  index === 6 ? 0 : index + 1
+
 export const sumDurations = (durations: Duration[]): Duration => {
   const totalSeconds = durations.reduce(
     (acc, duration) =>

@@ -2,6 +2,7 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import { Game, mapApiGameToGame } from '@/domain/game'
+import { formatDate } from '@/domain/utils'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -10,12 +11,18 @@ const gameService = new GameService()
 const currentGames = ref<Game[]>()
 const loadingApi = ref<boolean>(false)
 
-const getCurrentGames = async () => {
+const getGamesByDate = async (date: Date | string = new Date()) => {
   if (!auth.user) return
 
   loadingApi.value = true
+
+  date = new Date(date)
+  const formatedDate = formatDate(date.toString(), '-', true)
+  const formatedDateLeft = `${formatedDate} 00:00:00`
+  const formatedDateRight = `${formatedDate} 23:59:59`
+
   const { data } = await gameService.fetch({
-    where: `referee_id:${auth.user.id},status:!=:finished`,
+    where: `referee_id:${auth.user.id},status:!=:finished,date:>=:${formatedDateLeft},date:<=:${formatedDateRight}`,
   })
 
   currentGames.value = data.value?.data.games.map(game =>
@@ -25,14 +32,11 @@ const getCurrentGames = async () => {
   loadingApi.value = false
 }
 
-onMounted(getCurrentGames)
+onMounted(getGamesByDate)
 </script>
 
 <template>
-  <div
-    class="easy-referee-panel-component flex flex-col h-full"
-    :class="{ 'justify-between': !loadingApi && !currentGames?.length }"
-  >
+  <EasyGrid class="easy-referee-panel-component">
     <Heading class="mb-5" position="center">
       {{
         auth.profile?.firstName
@@ -40,6 +44,11 @@ onMounted(getCurrentGames)
           : t('referees.welcome_no_name')
       }}
     </Heading>
+
+    <EasyGrid class="mb-8" justify="center">
+      <EasyCalendar @date:changed="getGamesByDate" />
+    </EasyGrid>
+
     <LoadingLabel
       v-if="loadingApi"
       size="1.25rem"
@@ -47,12 +56,13 @@ onMounted(getCurrentGames)
       class="flex justify-center"
     />
     <template v-else>
-      <RefereeCurrentGames v-if="currentGames?.length" :games="currentGames" />
-      <div v-else class="content">
+      <RefereeGames v-if="currentGames?.length" :games="currentGames" />
+      <p v-else class="text-center">{{ t('games.no_games_for_date') }}</p>
+      <!-- <div v-else class="content">
         <RefereeGameCreateButton />
-      </div>
+      </div> -->
     </template>
-  </div>
+  </EasyGrid>
 </template>
 
 <script lang="ts">

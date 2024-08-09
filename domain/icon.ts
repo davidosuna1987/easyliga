@@ -15,6 +15,8 @@ export const IconNames = {
   masculine: 'ph:gender-male-duotone',
   femenine: 'ph:gender-female-duotone',
   gear: 'pepicons-pencil:gear',
+  chevronLeft: 'pepicons-pencil:angle-left',
+  chevronRight: 'pepicons-pencil:angle-right',
 } as const
 
 export type IconName = keyof typeof IconNames
