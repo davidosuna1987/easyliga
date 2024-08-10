@@ -8,6 +8,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  clickable: {
+    type: Boolean,
+    default: false,
+  },
 })
 const slots = useSlots()
 
@@ -26,8 +30,8 @@ const hasParent = computed(() => props.hierarchy > 1)
       'easy-list-item-component flex flex-col sm:flex-row justify-between py-3 rounded-lg gap-1',
       {
         'has-parent': hasParent,
-        'px-3 cursor-pointer hover:bg-[var(--highlight-color-alpha)]':
-          props.hoverable,
+        'px-3 hover:bg-[var(--highlight-color-alpha)]': props.hoverable,
+        'cursor-pointer': props.clickable,
       },
     ]"
     :style="styles"

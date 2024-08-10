@@ -90,7 +90,7 @@ const dayClass = (day: Date | null) => {
   const commonClass =
     'flex flex-col place-self-center gap-2 p-2 w-full rounded-lg cursor-pointer'
   return selectedDate.value.toDateString() === day?.toDateString()
-    ? `${commonClass} bg-[var(--highlight-color)] text-white`
+    ? `${commonClass} bg-[var(--highlight-color)] text-[var(--highlight-color-text)]`
     : `${commonClass} hover:bg-[var(--highlight-color-alpha)]`
 }
 

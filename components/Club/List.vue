@@ -71,7 +71,12 @@ onMounted(getClubs)
 
 <template>
   <div class="easy-club-list-component">
-    <header class="header flex justify-between items-center">
+    <header
+      :class="[
+        'header flex justify-between items-center',
+        { 'mb-1': hoverable },
+      ]"
+    >
       <Heading tag="h6" position="center">{{ heading }}</Heading>
       <Button
         class="action"

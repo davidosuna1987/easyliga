@@ -85,11 +85,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           <template v-for="sede in club.sedes">
             <EasyGrid v-if="sedeContainsTeams(sede)" class="sede mt-3">
               <Heading tag="h6">{{ sede.name }}</Heading>
-              <div
-                v-for="team in sede.teams"
-                class="team p-3 rounded-lg"
-                @click.prevent="goToEditClubTeam(club, team)"
-              >
+              <div v-for="team in sede.teams" class="team p-3 rounded-lg">
                 <div class="team-info flex items-center gap-2">
                   <p>{{ team.name }}</p>
                   <ListTag
@@ -117,7 +113,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
                     :label="t('forms.edit')"
                     severity="info"
                     outlined
-                    @click.prevent="goToEditClubTeam(club, team)"
+                    @click="goToEditClubTeam(club, team)"
                   />
                 </div>
               </div>

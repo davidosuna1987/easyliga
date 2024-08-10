@@ -48,17 +48,48 @@ a:-webkit-any-link {
 .p-menubar
   .p-menubar-root-list
   > .p-menuitem:not(.p-highlight):not(.p-disabled)
+  > .p-menuitem-content {
+  overflow: hidden;
+  color: var(--menuitem-highlight-text);
+  &:hover {
+    background-color: var(--primary-color-lightest);
+    color: var(--primary-color-text);
+  }
+}
+
+.p-menubar
+  .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+  > .p-menuitem-content {
+  background-color: var(--primary-color-lightest);
+  color: var(--menuitem-highlight-text);
+}
+
+.p-menubar
+  .p-menuitem:not(.p-highlight):not(.p-disabled)
   > .p-menuitem-content:hover {
-  background-color: var(--primary-color-light);
-  color: var(--text-color);
+  background-color: var(--primary-color-lightest);
+  color: var(--menuitem-highlight-text);
+}
+
+.p-menubar .p-menuitem.p-highlight > .p-menuitem-content {
+  background-color: var(--primary-color-lightest) !important;
+  color: var(--menuitem-highlight-text) !important;
 }
 
 .p-menuitem-link {
-  &__active {
+  &__active,
+  &.router-link-active {
     background-color: var(--primary-color-light);
-    color: var(--highlight-text-color) !important;
+    color: var(--menuitem-highlight-text) !important;
     cursor: default !important;
   }
+}
+
+.p-tieredmenu
+  .p-menuitem:not(.p-highlight):not(.p-disabled)
+  > .p-menuitem-content:hover {
+  background-color: var(--primary-color-lightest);
+  color: var(--menuitem-highlight-text);
 }
 
 .p-input-icon-left > i,
@@ -124,6 +155,83 @@ a:-webkit-any-link {
         &.p-disabled {
           opacity: 0.6;
         }
+      }
+    }
+  }
+
+  .p-togglebutton.p-button.p-highlight:hover {
+    background: var(--primary-color-medium);
+  }
+  .p-button:enabled:hover {
+    background: var(--primary-color-medium);
+    border-color: var(--primary-color-medium);
+  }
+  .p-button:enabled:active {
+    background: var(--primary-color-medium);
+    border-color: var(--primary-color-medium);
+  }
+
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem:not(.p-highlight):not(.p-disabled)
+    > .p-menuitem-content:hover {
+    background-color: unset !important;
+    a {
+      color: var(--primary-color-medium);
+    }
+  }
+
+  .p-menubar
+    .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+    > .p-menuitem-content {
+    background-color: unset !important;
+    a {
+      color: var(--text-color);
+    }
+  }
+
+  .p-menubar
+    .p-menuitem:not(.p-highlight):not(.p-disabled)
+    > .p-menuitem-content:hover {
+    background-color: unset !important;
+    a {
+      color: var(--primary-color-medium);
+    }
+  }
+
+  .p-menubar .p-menuitem.p-highlight > .p-menuitem-content {
+    background-color: unset !important;
+    a {
+      color: var(--primary-color-medium);
+    }
+  }
+
+  .p-menuitem-link {
+    &__active,
+    &.router-link-active {
+      background-color: unset !important;
+      color: var(--primary-color) !important;
+    }
+  }
+
+  .p-tieredmenu
+    .p-menuitem:not(.p-highlight):not(.p-disabled)
+    > .p-menuitem-content:hover {
+    background-color: unset !important;
+    a {
+      color: var(--primary-color-medium);
+    }
+  }
+
+  .p-tieredmenu
+    .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+    > .p-menuitem-content {
+    background-color: unset !important;
+    a {
+      color: var(--text-color);
+
+      &:hover {
+        color: var(--primary-color-medium);
       }
     }
   }

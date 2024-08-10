@@ -167,7 +167,7 @@ const reportAlreadySignedByCoachAndCaptain = (
 ): boolean => {
   const gameTeamSignatures = gameSignatures.value?.filter(
     signature =>
-      signature.gameId === game.id && signature.teamId === call.teamId,
+      signature.gameId === game.id && signature.teamId === call?.teamId,
   )
 
   return (
@@ -281,6 +281,7 @@ onMounted(redirectIfSanctionedMembersToChange)
             </div>
             <template v-else>
               <CoachButtonSign
+                v-if="!!calls[index]"
                 v-for="gameSignatureType in [
                   GameSignatureTypes.coach,
                   GameSignatureTypes.captain,

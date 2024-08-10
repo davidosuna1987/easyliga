@@ -39,7 +39,6 @@ const goToCreateClub = (federation: Federation) =>
       "
       :loadingLabel="t('clubs.loading')"
       :noManagedText="t('federations.no_vinculated_clubs')"
-      :hoverable="false"
       @club:create="goToCreateClub(managedFederation)"
       @refresh="emit('refresh', true)"
     />

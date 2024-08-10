@@ -143,7 +143,7 @@ const removeProfileTooltipText = computed(() => {
     </div>
     <div
       v-if="showIcons || showCaptain || showLibero"
-      class="team-player-captain flex gap-2"
+      class="team-player-captain flex items-center gap-2"
       :class="[`grid-cols-${iconsGap}`]"
     >
       <IconLibero

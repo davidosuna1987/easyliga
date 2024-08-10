@@ -20,13 +20,7 @@
   .player-id {
     position: relative;
     bottom: 1.25rem;
-    color: var('--primary-color');
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .player-id {
-      color: var(--tertiary-color);
-    }
+    color: var(--primary-color);
   }
 }
 

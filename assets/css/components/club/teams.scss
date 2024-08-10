@@ -25,11 +25,6 @@
     .action {
       padding-block: 0.25rem;
     }
-
-    &:hover {
-      background-color: var(--primary-color-light);
-      cursor: pointer;
-    }
   }
 
   @media (min-width: $media-sm) {

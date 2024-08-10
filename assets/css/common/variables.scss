@@ -22,6 +22,12 @@
   --blue-color: #3b82f6;
   --yellow-color: #eab308;
   --seagreen-color: #14b8a6;
+  --seagreen-color-medium: #4ed7c5;
+  --seagreen-color-dark: #0e8c7b;
+  --seagreen-color-darkest: #004d40;
+  --seagreen-color-light: #aef7f0;
+  --seagreen-color-lightest: #e8fffd;
+  --seagreen-color-alpha: rgba(20, 184, 166, 0.2);
   --danger-color: #fc3c2e;
   --text-danger: #fc3c2e;
   --text-danger-rgb: 252, 60, 46;
@@ -43,6 +49,7 @@
   --icon-easy-liga-color: #ffeb3b;
   --highlight-color: var(--primary-color);
   --highlight-color-alpha: var(--primary-color-alpha);
+  --highlight-color-text: var(--primary-color-text);
   --surface-a: #ffffff;
   --surface-b: #f8f9fa;
   --surface-c: #e9ecef;
@@ -144,6 +151,7 @@
   --signature-background: #ffffff;
   --signature-button-background: var(--primary-color-lightest);
   --signature-button-color: var(--primary-color);
+  --menuitem-highlight-text: var(--text-color);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -151,14 +159,21 @@
     color-scheme: dark;
     --foreground-color: #000000;
     --background-color: #121212;
-    --primary-color: #003932;
-    --primary-color-medium: #004840;
-    --primary-color-light: #004d40;
-    --primary-color-lightest: #003932;
-    --primary-color-dark: #002e29;
-    --primary-color-darkest: #00231f;
-    --danger-color: #901632;
-    --danger-color-dark: #7b122b;
+    // --primary-color: #003932;
+    // --primary-color-medium: #004840;
+    // --primary-color-light: #004d40;
+    // --primary-color-lightest: #003932;
+    // --primary-color-dark: #002e29;
+    // --primary-color-darkest: #00231f;
+    --primary-color: var(--seagreen-color);
+    --primary-color-medium: var(--seagreen-color-dark);
+    --primary-color-light: var(--seagreen-color-darkest);
+    --primary-color-lightest: #00342b;
+    --primary-color-dark: var(--seagreen-color-light);
+    --primary-color-darkest: var(--seagreen-color-lightest);
+    --primary-color-alpha: rgba(20, 184, 166, 0.2);
+    // --danger-color: #901632;
+    // --danger-color-dark: #7b122b;
     // --info-color: #4c78c4;
     // --info-color-dark: #3960a4;
     // --info-color-lightest: #243655;
@@ -170,15 +185,19 @@
     --text-color: #b9a7a7;
     --text-color-invert: #2e3135;
     --text-color-secondary: #b9a7a7;
-    --primary-color-text: #b9a7a7;
+    // --primary-color-text: #b9a7a7;
+    // --primary-color-text: #ffffff;
+    --primary-color-text: var(--background-color);
     --input-border-color: #343030;
     --highlight-color: var(--seagreen-color);
-    --highlight-color-alpha: rgba(20, 184, 166, 0.1);
+    --highlight-color-alpha: var(--seagreen-color-alpha);
+    --highlight-color-text: var(--background-color);
     --background-overlay-opacity: 0.9;
 
-    --signature-background: #aef7f0;
-    --signature-button-background: var(--primary-color-light);
+    --signature-background: var(--primary-color-alpha);
+    --signature-button-background: var(--primary-color-alpha);
     --signature-button-color: var(--text-color);
+    --menuitem-highlight-text: white;
   }
 }
 

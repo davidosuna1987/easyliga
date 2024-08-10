@@ -144,6 +144,7 @@ defineExpose({
     flex: 1;
     border-radius: 0;
     border: none !important;
+    border-top: solid 2px var(--background-color) !important;
     background-color: var(--signature-button-background);
     color: var(--signature-button-color);
 
