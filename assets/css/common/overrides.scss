@@ -144,8 +144,8 @@ a:-webkit-any-link {
   .p-datepicker {
     table td {
       &.p-datepicker-today > span {
-        background: var(--primary-color-darkest);
-        border-color: var(--primary-color-darkest);
+        background: var(--primary-color-lightest);
+        border-color: var(--primary-color-lightest);
       }
       > span {
         &.p-highlight {
@@ -157,6 +157,13 @@ a:-webkit-any-link {
         }
       }
     }
+  }
+
+  .p-datepicker:not(.p-disabled)
+    table
+    td
+    span:not(.p-highlight):not(.p-disabled):hover {
+    background: var(--primary-color-light);
   }
 
   .p-togglebutton.p-button.p-highlight:hover {
