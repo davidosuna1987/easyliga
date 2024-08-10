@@ -298,30 +298,36 @@
   }
 
   @media (prefers-color-scheme: dark) {
+    .wrapper {
+      &:before {
+        border-color: var(--primary-color-lightest);
+      }
+    }
+
     .court {
-      border: solid 1px var(--primary-color-dark);
+      border: solid 1px var(--primary-color-light);
     }
 
     .side {
       .position-1,
       .position-5,
       .position-6 {
-        background-color: var(--primary-color-dark);
+        background-color: var(--primary-color-light);
 
         &:hover {
-          background-color: var(--primary-color-darkest);
+          background-color: var(--primary-color-lightest);
         }
       }
 
       &.left {
         .position-1 {
-          border-right: solid 1px var(--primary-color-darkest);
+          border-right: solid 1px var(--primary-color-lightest);
         }
         .position-5 {
-          border-right: solid 1px var(--primary-color-darkest);
+          border-right: solid 1px var(--primary-color-lightest);
         }
         .position-6 {
-          border-right: solid 1px var(--primary-color-darkest);
+          border-right: solid 1px var(--primary-color-lightest);
         }
 
         .position-2,
@@ -329,26 +335,26 @@
         .position-4 {
           background-image: linear-gradient(
             135deg,
-            var(--primary-color-darkest) 8.33%,
-            var(--primary-color-dark) 8.33%,
-            var(--primary-color-dark) 50%,
-            var(--primary-color-darkest) 50%,
-            var(--primary-color-darkest) 58.33%,
-            var(--primary-color-dark) 58.33%,
-            var(--primary-color-dark) 100%
+            var(--primary-color-lightest) 8.33%,
+            var(--primary-color-light) 8.33%,
+            var(--primary-color-light) 50%,
+            var(--primary-color-lightest) 50%,
+            var(--primary-color-lightest) 58.33%,
+            var(--primary-color-light) 58.33%,
+            var(--primary-color-light) 100%
           );
           background-size: 6.4px 6.4px;
 
           &:hover {
             background-image: linear-gradient(
               135deg,
-              var(--primary-color-dark) 8.33%,
-              var(--primary-color-darkest) 8.33%,
-              var(--primary-color-darkest) 50%,
-              var(--primary-color-dark) 50%,
-              var(--primary-color-dark) 58.33%,
-              var(--primary-color-darkest) 58.33%,
-              var(--primary-color-darkest) 100%
+              var(--primary-color-light) 8.33%,
+              var(--primary-color-lightest) 8.33%,
+              var(--primary-color-lightest) 50%,
+              var(--primary-color-light) 50%,
+              var(--primary-color-light) 58.33%,
+              var(--primary-color-lightest) 58.33%,
+              var(--primary-color-lightest) 100%
             );
           }
         }
@@ -358,29 +364,29 @@
         .position-2,
         .position-3,
         .position-4 {
-          border-right: solid 1px var(--primary-color-darkest);
+          border-right: solid 1px var(--primary-color-lightest);
           background-image: linear-gradient(
             45deg,
-            var(--primary-color-darkest) 8.33%,
-            var(--primary-color-dark) 8.33%,
-            var(--primary-color-dark) 50%,
-            var(--primary-color-darkest) 50%,
-            var(--primary-color-darkest) 58.33%,
-            var(--primary-color-dark) 58.33%,
-            var(--primary-color-dark) 100%
+            var(--primary-color-lightest) 8.33%,
+            var(--primary-color-light) 8.33%,
+            var(--primary-color-light) 50%,
+            var(--primary-color-lightest) 50%,
+            var(--primary-color-lightest) 58.33%,
+            var(--primary-color-light) 58.33%,
+            var(--primary-color-light) 100%
           );
           background-size: 6.4px 6.4px;
 
           &:hover {
             background-image: linear-gradient(
               45deg,
-              var(--primary-color-dark) 8.33%,
-              var(--primary-color-darkest) 8.33%,
-              var(--primary-color-darkest) 50%,
-              var(--primary-color-dark) 50%,
-              var(--primary-color-dark) 58.33%,
-              var(--primary-color-darkest) 58.33%,
-              var(--primary-color-darkest) 100%
+              var(--primary-color-light) 8.33%,
+              var(--primary-color-lightest) 8.33%,
+              var(--primary-color-lightest) 50%,
+              var(--primary-color-light) 50%,
+              var(--primary-color-light) 58.33%,
+              var(--primary-color-lightest) 58.33%,
+              var(--primary-color-lightest) 100%
             );
           }
         }

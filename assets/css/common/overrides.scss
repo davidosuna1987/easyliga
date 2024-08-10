@@ -86,6 +86,12 @@ a:-webkit-any-link {
 }
 
 .p-tieredmenu
+  .p-menuitem:not(.p-highlight):not(.p-disabled).p-focus
+  > .p-menuitem-content {
+  background-color: unset;
+}
+
+.p-tieredmenu
   .p-menuitem:not(.p-highlight):not(.p-disabled)
   > .p-menuitem-content:hover {
   background-color: var(--primary-color-lightest);
