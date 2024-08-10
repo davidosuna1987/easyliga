@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Game } from '@/domain/game'
-import moment from 'moment'
+import { Game, isMatchDay } from '@/domain/game'
 
 const props = defineProps({
   games: {
@@ -11,12 +10,8 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isDayGame = (game: Game) => {
-  return game.date && moment(game.date).isSame(moment(), 'day')
-}
-
 const handleGameClick = (game: Game) => {
-  if (isDayGame(game)) {
+  if (isMatchDay(game)) {
     navigateTo(`/referee/games/${game.id}/arbitrate`)
   }
 
@@ -31,9 +26,9 @@ const handleGameClick = (game: Game) => {
       :key="game.id"
       v-tooltip.top="{
         value: t('games.arbitrate'),
-        disabled: !isDayGame(game),
+        disabled: !isMatchDay(game),
       }"
-      :class="['game', { 'is-disabled': !isDayGame(game) }]"
+      :class="['game', { 'is-disabled': !isMatchDay(game) }]"
       @click="handleGameClick(game)"
     >
       <span class="name">{{ game.name }}</span>

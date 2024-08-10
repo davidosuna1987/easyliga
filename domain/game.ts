@@ -360,7 +360,7 @@ export const mapApiGameReportSimpleToGameReportSimple = (
 })
 
 export const isMatchDay = (game: Game): boolean =>
-  moment(game.date).isSame(moment(), 'day')
+  !!game.date && moment(game.date).isSame(moment(), 'day')
 
 export const isMatchDayPassed = (game: Game): boolean =>
   moment(game.date).isBefore(moment(), 'day')

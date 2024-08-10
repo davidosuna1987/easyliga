@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  Game,
-  GAME_OBSERVATIONS_DELAY,
-  isMatchDay,
-  isMatchDayPassed,
-} from '@/domain/game'
+import { Game, GAME_OBSERVATIONS_DELAY, isMatchDayPassed } from '@/domain/game'
 import {
   GameSignature,
   GameSignatureType,
@@ -19,8 +14,8 @@ import {
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
 import TimeoutService from '@/services/timeout'
-import moment from 'moment'
 import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
+import moment from 'moment'
 
 const props = defineProps({
   games: {

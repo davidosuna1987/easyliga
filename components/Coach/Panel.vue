@@ -24,8 +24,8 @@ import { mapApiProfileToProfile } from '@/domain/profile'
 import { getFullName } from '@/domain/player'
 import { Rotation } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES } from '@/domain/sanction'
-import moment from 'moment'
 import { formatDate, formatDateByLocale } from '@/domain/utils'
+import moment from 'moment'
 
 const { t, locale } = useI18n()
 const auth = useAuthStore()
