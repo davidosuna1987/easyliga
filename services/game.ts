@@ -33,6 +33,12 @@ export default class GameService {
     })
   }
 
+  start(gameId: number) {
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/start`, {
+      method: 'PUT',
+    })
+  }
+
   initialData(gameId: number, params?: Record<string, string>) {
     return useApi<ApiGameInitialDataResponse>(
       `${PREFIX}/${gameId}/initial-data`,

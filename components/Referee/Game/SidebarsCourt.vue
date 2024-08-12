@@ -124,6 +124,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+  'game:start',
   'call:unlocked',
   'rotation:lock-toggled',
   'point:sum',
@@ -268,6 +269,10 @@ const setMemberToSanction = (
     : teamMembersToSanction.value.find(member => member.coach)
 }
 
+const startGame = () => {
+  emit('game:start')
+}
+
 const sumPoint = (type: TeamType) => {
   emit('point:sum', type)
 }
@@ -345,6 +350,7 @@ onUnmounted(() => {
         :timeoutRunning="timeoutRunning"
         :gameSignatures="gameSignatures"
         :customTeamsShirtColor="customTeamsShirtColor"
+        @game:start="startGame"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
         @set:start="emit('set:start', $event)"

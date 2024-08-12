@@ -396,7 +396,8 @@
       "approve_alert": "¿Seguro que quieres aprobar la fecha propuesta? En caso afirmativo, el partido se jugará en la siguiente fecha:",
       "approved": "La fecha propuesta ha sido aprobada"
     },
-    "no_games_for_date": "No hay ningún partido en la fecha seleccionada"
+    "no_games_for_date": "No hay ningún partido en la fecha seleccionada",
+    "unlock": "Desbloquear partido"
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -1090,5 +1091,8 @@
       "month": "Selecciona un mes",
       "year": "Selecciona un año"
     }
+  },
+  "game": {
+    "unlocked": "El partido se ha desbloqueado correctamente"
   }
 }

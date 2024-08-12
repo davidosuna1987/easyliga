@@ -380,6 +380,22 @@ const createFormPoint = (type: TeamType) => {
   }
 }
 
+const startGame = async () => {
+  if (!gameInitialData.value?.game?.id) return
+
+  loadingApi.value = true
+
+  const { error } = await gameService.start(gameInitialData.value.game.id)
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+  } else {
+    toast.success(t('game.unlocked'))
+    getGameInitialData()
+  }
+}
+
 const startSet = async (setStartRequest: SetStartRequest) => {
   if (!gameInitialData.value?.game?.currentSet?.id) return
 
@@ -772,6 +788,7 @@ onMounted(() => {
       :timeoutRunning="timeoutRunning"
       :gameSignatures="gameInitialData.game.signatures"
       :customTeamsShirtColor="customTeamsShirtColor"
+      @game:start="startGame"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
       @point:sum="createFormPoint"

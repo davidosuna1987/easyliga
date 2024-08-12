@@ -116,6 +116,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
+  'game:start',
   'point:sum',
   'point:undo',
   'set:start',
@@ -391,112 +392,122 @@ onMounted(setInitialShowCountdown)
     </div>
 
     <template v-if="auth.isAdminOrHasRole('referee')">
-      <template
-        v-if="
-          playersToBeReplacedForSanction.length ||
-          waitingForPlayerChanges ||
-          timeoutRunning
-        "
-      >
-        <EasyGrid
-          v-if="playersToBeReplacedForSanction.length"
-          class="actions"
-          center
-        >
-          <Button
-            class="px-12 mb-3"
-            :label="t('sanctions.players_to_replace')"
-            severity="danger"
-            outlined
-            :disabled="true"
-          />
-        </EasyGrid>
-        <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
-          <Button
-            class="px-12 mb-3"
-            :label="t('rotations.waiting_player_changes')"
-            outlined
-            :loading="true"
-            :disabled="true"
-          />
-        </EasyGrid>
-        <EasyGrid v-if="timeoutRunning" class="actions" center>
-          <Button
-            class="px-12 mb-3"
-            :label="t('timeouts.running')"
-            severity="danger"
-            outlined
-            :loading="true"
-            :disabled="true"
-          />
-        </EasyGrid>
-      </template>
-      <template v-else>
-        <GameSetActions
-          v-if="
-            !currentSet.localTeamSide ||
-            !currentSet.visitorTeamSide ||
-            !currentSet.firstServeTeamId ||
-            (gameStatus && ['warmup', 'resting'].includes(gameStatus))
-          "
-          class="mb-3"
-          :currentSet="currentSet"
-          :leftSideTeam="leftSideTeam"
-          :rightSideTeam="rightSideTeam"
-          :disabled="setActionsDisabled"
-          @set:start="emit('set:start', $event)"
+      <EasyGrid v-if="!gameStatus" class="actions" center>
+        <Button
+          class="px-12"
+          :label="t('games.unlock')"
+          @click.prevent="emit('game:start')"
         />
-        <div class="flex flex-col gap-8">
-          <GameChangesActions
-            v-if="gameStatus === 'playing'"
-            class="w-full mb-3"
-            :leftSideTeamCall="leftSideTeamCall"
-            :rightSideTeamCall="rightSideTeamCall"
-            :leftSideTeamRotation="leftSideTeamRotation"
-            :rightSideTeamRotation="rightSideTeamRotation"
-          />
-          <GamePointActions
-            v-if="gameStatus === 'playing'"
-            class="w-full mb-3"
+      </EasyGrid>
+      <template v-else>
+        <template
+          v-if="
+            playersToBeReplacedForSanction.length ||
+            waitingForPlayerChanges ||
+            timeoutRunning
+          "
+        >
+          <EasyGrid
+            v-if="playersToBeReplacedForSanction.length"
+            class="actions"
+            center
+          >
+            <Button
+              class="px-12 mb-3"
+              :label="t('sanctions.players_to_replace')"
+              severity="danger"
+              outlined
+              :disabled="true"
+            />
+          </EasyGrid>
+          <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
+            <Button
+              class="px-12 mb-3"
+              :label="t('rotations.waiting_player_changes')"
+              outlined
+              :loading="true"
+              :disabled="true"
+            />
+          </EasyGrid>
+          <EasyGrid v-if="timeoutRunning" class="actions" center>
+            <Button
+              class="px-12 mb-3"
+              :label="t('timeouts.running')"
+              severity="danger"
+              outlined
+              :loading="true"
+              :disabled="true"
+            />
+          </EasyGrid>
+        </template>
+        <template v-else>
+          <GameSetActions
+            v-if="
+              !currentSet.localTeamSide ||
+              !currentSet.visitorTeamSide ||
+              !currentSet.firstServeTeamId ||
+              (gameStatus && ['warmup', 'resting'].includes(gameStatus))
+            "
+            class="mb-3"
             :currentSet="currentSet"
-            :undoPointButtonDisabled="undoPointButtonDisabled"
-            :undoLastPointCountdown="undoLastPointCountdown"
-            @point:sum="sumPoint"
-            @point:undo="undoLastPoint"
-          />
-          <GameTimeoutSanctionActions
-            v-if="gameStatus !== 'finished'"
-            class="mt-6 mb-3"
             :leftSideTeam="leftSideTeam"
             :rightSideTeam="rightSideTeam"
-            :leftSideTeamMembers="leftSideTeamMembers"
-            :rightSideTeamMembers="rightSideTeamMembers"
-            :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
-            :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
-            :currentSet="currentSet"
-            :gameSanctions="props.gameSanctions"
-            :gameStatus="gameStatus"
-            @timeout:init="emit('timeout:init', $event)"
-            @sanction:stored="emit('sanction:stored', $event)"
-            @sidebar:toggle="emit('sidebar:toggle', $event)"
+            :disabled="setActionsDisabled"
+            @set:start="emit('set:start', $event)"
           />
-        </div>
-        <EasyGrid v-if="gameStatus === 'finished'" class="actions" center>
-          <GameSignatureActions
-            v-if="pendingGameSignatures"
-            :gameId="currentSet.gameId"
-            :gameSignatures="gameSignatures"
-            :teams="teams"
-          />
-          <Button
-            v-else
-            class="px-12 mb-3"
-            :label="t('games.finished')"
-            outlined
-            disabled
-          />
-        </EasyGrid>
+          <div class="flex flex-col gap-8">
+            <GameChangesActions
+              v-if="gameStatus === 'playing'"
+              class="w-full mb-3"
+              :leftSideTeamCall="leftSideTeamCall"
+              :rightSideTeamCall="rightSideTeamCall"
+              :leftSideTeamRotation="leftSideTeamRotation"
+              :rightSideTeamRotation="rightSideTeamRotation"
+            />
+            <GamePointActions
+              v-if="gameStatus === 'playing'"
+              class="w-full mb-3"
+              :currentSet="currentSet"
+              :undoPointButtonDisabled="undoPointButtonDisabled"
+              :undoLastPointCountdown="undoLastPointCountdown"
+              @point:sum="sumPoint"
+              @point:undo="undoLastPoint"
+            />
+            <GameTimeoutSanctionActions
+              v-if="gameStatus !== 'finished'"
+              class="mt-6 mb-3"
+              :leftSideTeam="leftSideTeam"
+              :rightSideTeam="rightSideTeam"
+              :leftSideTeamMembers="leftSideTeamMembers"
+              :rightSideTeamMembers="rightSideTeamMembers"
+              :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
+              :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
+              :currentSet="currentSet"
+              :gameSanctions="props.gameSanctions"
+              :gameStatus="gameStatus"
+              @timeout:init="emit('timeout:init', $event)"
+              @sanction:stored="emit('sanction:stored', $event)"
+              @sidebar:toggle="emit('sidebar:toggle', $event)"
+            />
+          </div>
+          <EasyGrid v-if="gameStatus === 'finished'" class="actions" center>
+            <GameSignatureActions
+              v-if="pendingGameSignatures"
+              :gameId="currentSet.gameId"
+              :gameSignatures="gameSignatures"
+              :teams="teams"
+            />
+            <Button
+              v-else
+              class="px-12 mb-3"
+              :label="t('games.finished')"
+              outlined
+              disabled
+            />
+          </EasyGrid>
+        </template>
       </template>
+
       <a
         v-if="gameStatus !== 'finished' || showCountdown"
         href=""
@@ -505,6 +516,7 @@ onMounted(setInitialShowCountdown)
       >
         {{ t('observations.record') }}
       </a>
+
       <EasyCountdown
         v-if="gameStatus === 'finished' && showCountdown"
         class="col-span-3"
@@ -519,6 +531,7 @@ onMounted(setInitialShowCountdown)
           <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
         </div>
       </EasyCountdown>
+
       <SanctionDialog
         v-if="teamToSanction && memberToSanction"
         :visible="!!teamToSanction"

@@ -42,24 +42,29 @@ const unlock = async () => {
 <template>
   <div
     class="easy-game-call-status-component flex items-center"
-    :class="{ 'justify-between': props.call.locked }"
+    :class="{ 'justify-between': props.call.locked && !!gameStatus }"
   >
-    <template v-if="props.call.locked">
+    <template v-if="props.call.locked && !!gameStatus">
       <div class="flex items-center">
         <FormSpinner size="0.75rem" />
         <small>{{ t('rotations.waiting') }}</small>
       </div>
-      <Button
-        v-if="props.currentSet.number === 1 && props.gameStatus !== 'finished'"
-        class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
-        :label="t('forms.unlock')"
-        @click="unlock()"
-      />
     </template>
     <template v-else>
       <FormSpinner size="0.75rem" />
       <small>{{ t('calls.waiting') }}</small>
     </template>
+
+    <Button
+      v-if="
+        props.currentSet.number === 1 &&
+        props.gameStatus !== 'finished' &&
+        props.gameStatus !== 'warmup'
+      "
+      class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"
+      :label="t('forms.unlock')"
+      @click="unlock()"
+    />
   </div>
 </template>
 
