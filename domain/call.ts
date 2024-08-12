@@ -56,7 +56,7 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => ({
   gameId: apiCall.game_id,
   teamId: apiCall.team_id,
   playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
-  locked: apiCall.locked,
+  locked: apiCall.locked ? true : false,
   observations: apiCall.observations ?? undefined,
   signedAt: apiCall.signed_at ?? undefined,
 
@@ -81,8 +81,8 @@ export const mapCallPlayersDataToPlayers = (
     lastName: callPlayerData.lastName,
     shirtNumber: callPlayerData.shirtNumber,
     avatar: callPlayerData.avatar,
-    captain: callPlayerData.captain,
-    libero: callPlayerData.libero,
+    captain: callPlayerData.captain ? true : false,
+    libero: callPlayerData.libero ? true : false,
   }))
 
 export const mapApiCallPlayersDataToCallPlayersData = (
@@ -94,8 +94,8 @@ export const mapApiCallPlayersDataToCallPlayersData = (
     lastName: apiCallPlayerData.last_name,
     avatar: apiCallPlayerData.avatar ?? undefined,
     shirtNumber: apiCallPlayerData.shirt_number,
-    captain: apiCallPlayerData.captain,
-    libero: apiCallPlayerData.libero,
+    captain: apiCallPlayerData.captain ? true : false,
+    libero: apiCallPlayerData.libero ? true : false,
   }))
 
 export const mapCallObservationsRequestToApiCallObservationsRequest = (

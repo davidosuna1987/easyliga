@@ -113,7 +113,6 @@ const addSelectedPlayer = (player: Player) => {
 }
 
 const togglePlayer = (player: Player) => {
-  console.log('foo')
   if (!call.value) return
 
   if (call.value.locked) {
