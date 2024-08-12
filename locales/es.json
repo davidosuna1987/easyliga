@@ -503,7 +503,8 @@
       "hide": "Ocultar jugadores de categorías inferiores",
       "select": "Selecciona jugadores de categorías inferiores",
       "loading": "Cargando jugadores de categorías inferiores",
-      "callable": "Jugadores convocables de categorías inferiores"
+      "callable": "Jugadores convocables de categorías inferiores",
+      "not_found": "No se han encontrado jugadores de categorías inferiores"
     },
     "count": "{num} equipo | {num} equipos",
     "search": "Buscar equipo",

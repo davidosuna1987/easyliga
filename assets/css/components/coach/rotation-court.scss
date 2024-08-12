@@ -22,49 +22,6 @@
         cursor: not-allowed;
       }
 
-      &:hover {
-        background-color: var(--primary-color-medium);
-
-        .placeholder {
-          color: var(--primary-color-light);
-        }
-
-        .shirt-number {
-          .easy-icon-shirt-number-component {
-            background-color: var(--primary-color);
-            border: solid 1px var(--primary-color-medium);
-          }
-        }
-
-        &.is-sanctioned {
-          background-color: var(--danger-color-lighten);
-
-          .easy-icon-shirt-number-component {
-            background-color: var(--danger-color-medium);
-            border-color: var(--danger-color-medium);
-          }
-        }
-
-        &.is-replacement-sanctioned {
-          background-color: var(--danger-color-lightest);
-          cursor: not-allowed;
-
-          // .easy-icon-shirt-number-component {
-          //   background-color: var(--danger-color-medium);
-          //   border-color: var(--danger-color-medium);
-          // }
-        }
-
-        &.max-player-changes-reached {
-          background-color: var(--primary-color-light);
-
-          .easy-icon-shirt-number-component {
-            background-color: var(--primary-color-medium);
-            border: solid 1px var(--primary-color-medium);
-          }
-        }
-      }
-
       &.is-being-replaced {
         .shirt-number {
           .easy-icon-shirt-number-component {
@@ -98,6 +55,60 @@
           .easy-icon-shirt-number-component {
             background-color: var(--danger-color-light);
             border-color: var(--danger-color-light);
+          }
+        }
+      }
+
+      &:hover {
+        background-color: var(--primary-color-medium);
+
+        .placeholder {
+          color: var(--primary-color-light);
+        }
+
+        .shirt-number {
+          .easy-icon-shirt-number-component {
+            background-color: var(--primary-color);
+            border: solid 1px var(--primary-color-medium);
+          }
+
+          &.is-replaced {
+            .easy-icon-shirt-number-component {
+              background-color: var(--danger-color-dark);
+              border-color: var(--danger-color-dark);
+
+              &::after {
+                background-color: var(--danger-color-dark);
+              }
+            }
+          }
+        }
+
+        &.is-sanctioned {
+          background-color: var(--danger-color-lighten);
+
+          .easy-icon-shirt-number-component {
+            background-color: var(--danger-color-medium);
+            border-color: var(--danger-color-medium);
+          }
+        }
+
+        &.is-replacement-sanctioned {
+          background-color: var(--danger-color-lightest);
+          cursor: not-allowed;
+
+          // .easy-icon-shirt-number-component {
+          //   background-color: var(--danger-color-medium);
+          //   border-color: var(--danger-color-medium);
+          // }
+        }
+
+        &.max-player-changes-reached {
+          background-color: var(--primary-color-light);
+
+          .easy-icon-shirt-number-component {
+            background-color: var(--primary-color-medium);
+            border: solid 1px var(--primary-color-medium);
           }
         }
       }
@@ -141,5 +152,28 @@
   .change-captain-button {
     font-size: 0.7rem;
     padding: 0.3rem 0.5rem 0.325rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .side.left {
+      [class^='position-'] {
+        .icon-max-changes-reached {
+          background: var(--danger-color-darkest);
+          color: var(--danger-color-light);
+        }
+
+        &.is-sanctioned {
+          background-color: var(--danger-color-darkest);
+        }
+
+        &:hover {
+          background-color: var(--primary-color-lightest);
+
+          &.is-sanctioned {
+            background-color: var(--danger-color-darkest);
+          }
+        }
+      }
+    }
   }
 }

@@ -694,6 +694,7 @@ watch(
 
       <CoachRotationPlayerChanges
         v-if="!props.isInitialRotationAssignment"
+        class="mt-5"
         :playersData="props.call.playersData"
         :playerChanges="playerChanges"
         :initialPlayerChanges="initialPlayerChanges"

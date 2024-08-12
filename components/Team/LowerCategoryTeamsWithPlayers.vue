@@ -74,10 +74,14 @@ getLowerCategoryTeamsWithPlayers()
     v-if="loadingApi"
   />
   <EasyGrid
+    v-else
     class="easy-team-lower-category-teams-with-players-component"
     :gap="5"
   >
-    <div v-for="team in lowerCategoryTeamsWithPlayers">
+    <div
+      v-if="lowerCategoryTeamsWithPlayers.length"
+      v-for="team in lowerCategoryTeamsWithPlayers"
+    >
       <Heading tag="h5">{{ team.name }}</Heading>
       <GameCallList
         v-if="team.players"
@@ -91,6 +95,7 @@ getLowerCategoryTeamsWithPlayers()
         :tooltipsDisabled="tooltipsDisabled"
       />
     </div>
+    <p v-else>{{ t('teams.lower_category_teams_with_players.not_found') }}</p>
   </EasyGrid>
 </template>
 

@@ -118,4 +118,14 @@
       }
     }
   }
+
+  @media (prefers-color-scheme: dark) {
+    .player-container {
+      color: gainsboro;
+
+      &:nth-child(3) {
+        background-color: var(--danger-color-darkest);
+      }
+    }
+  }
 }

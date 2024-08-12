@@ -7,6 +7,7 @@ export const IconNames = {
   check: 'pepicons-pencil:checkmark',
   checkCircle: 'pepicons-pencil:checkmark-circle',
   gameFinished: 'ic:baseline-check-circle-outline',
+  trash: 'ic:baseline-delete',
   download: 'pepicons-pencil:cloud-down',
   upload: 'pepicons-pencil:cloud-up',
   search: 'pepicons-pencil:loop',

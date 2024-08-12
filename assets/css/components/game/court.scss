@@ -37,7 +37,7 @@
 
       .easy-icon-shirt-number-component {
         // background-color: var(--primary-color-medium);
-        border: solid 1px var(--primary-color-medium);
+        border: solid 1px var(--primary-color);
 
         &::after {
           content: '';
@@ -46,7 +46,7 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background-color: var(--primary-color-medium);
+          background-color: var(--primary-color);
         }
       }
 
@@ -148,22 +148,22 @@
       &.is-sanctioned {
         .easy-icon-shirt-number-component {
           // background-color: var(--danger-color-light);
-          border-color: var(--danger-color-light);
+          border-color: var(--danger-color-light) !important;
 
           &::after {
-            background-color: var(--danger-color-light);
+            background-color: var(--danger-color-light) !important;
           }
         }
 
         &:hover {
-          background-color: var(--danger-color-lighten);
+          background-color: var(--danger-color-lighten) !important;
 
           .easy-icon-shirt-number-component {
             // background-color: var(--danger-color-medium);
-            border-color: var(--danger-color-medium);
+            border-color: var(--danger-color-medium) !important;
 
             &::after {
-              background-color: var(--danger-color-medium);
+              background-color: var(--danger-color-medium) !important;
             }
           }
         }
@@ -309,6 +309,14 @@
     }
 
     .side {
+      [class^='position'] {
+        &.is-sanctioned {
+          &:hover {
+            background-color: var(--danger-color-darkest) !important;
+          }
+        }
+      }
+
       .position-1,
       .position-5,
       .position-6 {
