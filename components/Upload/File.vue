@@ -88,7 +88,7 @@ const reset = () => {
         @click.prevent="handleButtonClick"
       >
         <span v-if="selectedFile">
-          <Icon :name="IconNames.delete" />
+          <Icon :name="IconNames.trash" />
         </span>
         <span v-else>{{
           fileName ? t('forms.replace_file') : t('forms.select_file')

@@ -59,7 +59,7 @@ const handleRemoveSede = async () => {
           @click.stop="emit('sede:edit', sede)"
         />
         <FormActionIcon
-          :icon="IconNames.delete"
+          :icon="IconNames.trash"
           type="danger"
           :outlined="false"
           v-tooltip.top="{

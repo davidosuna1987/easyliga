@@ -80,7 +80,7 @@ const { t } = useI18n()
       </div>
 
       <div v-if="onRemove" class="actions" @click="onRemove">
-        <Icon :name="IconNames.delete" size="1.5rem" />
+        <Icon :name="IconNames.trash" size="1.5rem" />
       </div>
     </div>
   </div>

@@ -70,7 +70,7 @@ const handleRemoveLicense = async () => {
           @click.stop="emit('license:edit', license)"
         />
         <FormActionIcon
-          :icon="IconNames.delete"
+          :icon="IconNames.trash"
           type="danger"
           :outlined="false"
           v-tooltip.top="{
