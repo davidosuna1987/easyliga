@@ -31,6 +31,7 @@ import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 import { IconName } from '@/domain/icon'
 
+export const SETS_TO_WIN = 3
 export const GAME_OBSERVATIONS_DELAY = 10
 
 export const CATEGORY_MAPPER = {

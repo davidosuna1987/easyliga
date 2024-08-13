@@ -234,6 +234,33 @@ const setRotationPlayersFromRtotation = () => {
   }
 }
 
+const handleAutoRotation = () => {
+  if (!props.call.playersData.length) return
+
+  const players = props.call.playersData.filter(player => !player.libero)
+
+  for (let i = 0; i < 6; i++) {
+    const player = players[i]
+
+    if (!player) return
+
+    rotationPlayers.value.push({
+      changeWindows: [],
+      currentPosition: POSITIONS[i],
+      inCourtProfileId: player.profileId,
+      libero: false,
+      position: POSITIONS[i],
+      profileId: player.profileId,
+      replacementProfileId: undefined,
+      rotationId: 0,
+    })
+
+    if (i === 0) setRotationCaptain(player.profileId)
+  }
+
+  emit('update:players', rotationPlayers.value)
+}
+
 const hideUndoPlayerChangeDialog = () => {
   showUndoPlayerChange.value = false
   playerChangeToUndo.value = undefined
@@ -705,6 +732,8 @@ watch(
         @undo:playerChange="setPlayerChangeToUndo"
       />
     </div>
+
+    <Button label="AUTO ROTACIÓN" @click="handleAutoRotation" />
   </EasyGrid>
 
   <DialogBottom

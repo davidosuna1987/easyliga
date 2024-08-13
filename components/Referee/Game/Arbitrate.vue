@@ -7,6 +7,7 @@ import {
   GameInitialData,
   GameObservationsRequest,
   mapApiGameInitialDataToGameInitialData,
+  SETS_TO_WIN,
 } from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
@@ -225,8 +226,18 @@ const winnerTeamIfSumPoint = computed((): Team | undefined => {
       ? formPoint.value.visitor_team_score
       : formPoint.value.local_team_score
 
+  const winnerTeamSetsWon =
+    winnerTeamId === leftSideTeam.value?.id
+      ? leftSideTeamSetsWonCount.value
+      : rightSideTeamSetsWonCount.value
+
+  const loserTeamSetsWon =
+    winnerTeamId === leftSideTeam.value?.id
+      ? rightSideTeamSetsWonCount.value
+      : leftSideTeamSetsWonCount.value
+
   const pointsToWin =
-    game.currentSet?.number === MAX_SETS_PER_MATCH
+    winnerTeamSetsWon + loserTeamSetsWon + 1 === MAX_SETS_PER_MATCH
       ? LAST_SET_POINTS_TO_WIN
       : SET_POINTS_TO_WIN
 
@@ -238,6 +249,18 @@ const winnerTeamIfSumPoint = computed((): Team | undefined => {
   }
 
   return undefined
+})
+
+const gameFinishesIfSumPoint = computed((): boolean => {
+  if (!winnerTeamIfSumPoint.value) return false
+
+  const winnerTeam = winnerTeamIfSumPoint.value
+  const winnerTeamSetsWon =
+    winnerTeam.id === leftSideTeam.value?.id
+      ? leftSideTeamSetsWonCount.value
+      : rightSideTeamSetsWonCount.value
+
+  return winnerTeamSetsWon + 1 === SETS_TO_WIN
 })
 
 const getGameInitialData = async (firstCall: boolean = false) => {
@@ -825,18 +848,28 @@ onMounted(() => {
       @hide="showSetPointWillEndSetDialog = false"
     >
       <template #header>
-        <Heading tag="h6">{{ t('sets.close') }}</Heading>
+        <Heading tag="h6">{{
+          t(`${gameFinishesIfSumPoint ? 'games' : 'sets'}.close`)
+        }}</Heading>
       </template>
 
       <p>
         {{
-          t('games.point_will_end_set', {
+          t(`games.point_will_end_${gameFinishesIfSumPoint ? 'game' : 'set'}`, {
             teamName: winnerTeamIfSumPoint?.name,
           })
         }}
       </p>
 
-      <p class="mt-3">{{ t('games.point_will_end_set_alert') }}</p>
+      <p class="mt-3">
+        {{
+          t(
+            `games.point_will_end_${
+              gameFinishesIfSumPoint ? 'game' : 'set'
+            }_alert`,
+          )
+        }}
+      </p>
 
       <template #footer>
         <FormFooterActions
