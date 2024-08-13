@@ -92,6 +92,13 @@ export default class GameService {
     )
   }
 
+  changeDate(gameId: number, data: ApiGameRequestChangeDateRequest) {
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/change-date`, {
+      method: 'PUT',
+      body: data,
+    })
+  }
+
   requestChangeDate(gameId: number, data: ApiGameRequestChangeDateRequest) {
     return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/request-change-date`, {
       method: 'PUT',

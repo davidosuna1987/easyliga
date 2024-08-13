@@ -3,6 +3,7 @@ import GameService from '@/services/game'
 import {
   Game,
   GameRequestChangeDateRequest,
+  isSameCoachForBothTeams,
   mapApiGameToGame,
   mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest,
 } from '@/domain/game'
@@ -64,7 +65,7 @@ const showApproveButton = computed(
     props.game.dateRequestedBy !== auth.user.id,
 )
 
-const handleSubmit = async () => {
+const handleSubmit = () => {
   if (!props.game) return
 
   if (!form.value.requestedDate) {
@@ -94,8 +95,34 @@ const handleSubmit = async () => {
 
   errors.value = null
 
+  isSameCoachForBothTeams(props.game) ? changeDate() : requestChangeDate()
+}
+
+const requestChangeDate = async () => {
   loadingApi.value = true
   const { data, error } = await gameService.requestChangeDate(
+    props.game.id,
+    mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest(
+      form.value,
+    ),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+  } else if (data.value) {
+    toast.success(t('games.date_request.requested'))
+    emit('date:requested', mapApiGameToGame(data.value.data.game))
+
+    props.hidden || props.inlineButton ? handleHide() : navigateTo('/coach')
+  }
+
+  loadingApi.value = false
+}
+
+const changeDate = async () => {
+  loadingApi.value = true
+  const { data, error } = await gameService.changeDate(
     props.game.id,
     mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest(
       form.value,
@@ -182,7 +209,11 @@ const handleHide = () =>
               <Button
                 size="small"
                 :loading="loadingApi"
-                :label="t('games.date_request.request')"
+                :label="
+                  isSameCoachForBothTeams(game)
+                    ? t('games.date_request.change')
+                    : t('games.date_request.request')
+                "
                 :disabled="loadingApi"
                 @click="handleSubmit"
               />
@@ -208,7 +239,11 @@ const handleHide = () =>
         @click="showApproveRequestedDateDialog = true"
       />
       <Button
-        :label="t('games.date_request.request')"
+        :label="
+          isSameCoachForBothTeams(game)
+            ? t('games.date_request.change')
+            : t('games.date_request.request')
+        "
         severity="info"
         outlined
         :disabled="loadingApi"

@@ -396,7 +396,8 @@
       "porposal": "Cambio de fecha propuesto: {date}",
       "approve": "Aprobar fecha propuesta",
       "approve_alert": "¿Seguro que quieres aprobar la fecha propuesta? En caso afirmativo, el partido se jugará en la siguiente fecha:",
-      "approved": "La fecha propuesta ha sido aprobada"
+      "approved": "La fecha propuesta ha sido aprobada",
+      "change": "Cambiar fecha y hora"
     },
     "no_games_for_date": "No hay ningún partido en la fecha seleccionada",
     "unlock": "Desbloquear partido",

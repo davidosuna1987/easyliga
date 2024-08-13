@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import GameService from '@/services/game'
-import { Game, mapApiGameToGame } from '@/domain/game'
+import { Game, isSameCoachForBothTeams, mapApiGameToGame } from '@/domain/game'
 import { useAuthStore } from '@/stores/useAuthStore'
 import { formatDateByLocale } from '@/domain/utils'
 
@@ -70,7 +70,11 @@ const approveRequestedDate = async () => {
       class="action"
       severity="info"
       outlined
-      :label="t('games.date_request.request')"
+      :label="
+        isSameCoachForBothTeams(game)
+          ? t('games.date_request.change')
+          : t('games.date_request.request')
+      "
       :disabled="loadingApi"
       @click="emit('calendar:show', game)"
     />
