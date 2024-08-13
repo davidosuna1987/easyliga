@@ -423,3 +423,8 @@ export const mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest =
 
 export const hasDefaultReferee = (game: Game): boolean =>
   !game.refereeId || game.refereeId === 1
+
+export const isSameCoachForBothTeams = (game: Game): boolean => {
+  if (!game.localTeam || !game.visitorTeam) return false
+  return game.localTeam.coachId === game.visitorTeam.coachId
+}

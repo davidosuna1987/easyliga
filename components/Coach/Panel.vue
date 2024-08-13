@@ -2,7 +2,12 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import CallService from '@/services/call'
-import { Game, isValidCoachPanelGame, mapApiGameToGame } from '@/domain/game'
+import {
+  Game,
+  isValidCoachPanelGame,
+  isSameCoachForBothTeams,
+  mapApiGameToGame,
+} from '@/domain/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import {
   ApiCallUnlockedEventResponse,
@@ -37,6 +42,7 @@ const listenedEvents = ref<string[]>([])
 const selectedDate = ref<Date>(new Date())
 const selectedDateGames = ref<Game[]>([])
 const calls = ref<Call[]>([])
+const opponentCalls = ref<Call[]>([])
 const loadingApi = ref<boolean>(false)
 
 const getGamesByDate = async (
@@ -108,11 +114,22 @@ const getSelectedDateGamesCalls = async () => {
         ? TeamType.LOCAL
         : TeamType.VISITOR
 
+    const opponentTeamType =
+      teamType === TeamType.LOCAL ? TeamType.VISITOR : TeamType.LOCAL
+
     const apiGameCall = data.value?.data.calls.find(
       call => call.team_id === game?.[`${teamType}TeamId`],
     )
 
+    const apiOpponentGameCall = isSameCoachForBothTeams(game)
+      ? data.value?.data.calls.find(
+          call => call.team_id === game?.[`${opponentTeamType}TeamId`],
+        )
+      : undefined
+
     if (apiGameCall) calls.value.push(mapApiCallToCall(apiGameCall))
+    if (apiOpponentGameCall)
+      opponentCalls.value.push(mapApiCallToCall(apiOpponentGameCall))
 
     listenAllChannels(game.id)
 
@@ -393,6 +410,22 @@ const listenAllChannels = (gameId: number) => {
       listenRotationLockToggledEvent(gameId, call.currentRotation?.id)
     }
   })
+
+  opponentCalls.value?.forEach(call => {
+    if (
+      !listenedEvents.value.includes(`game.${gameId}.call.${call.id}.unlocked`)
+    ) {
+      listenCallUnlockedEvent(gameId, call.id)
+    }
+    if (
+      call.currentRotation?.id &&
+      !listenedEvents.value.includes(
+        `game.${gameId}.rotation.${call.currentRotation.id}.lock-toggled`,
+      )
+    ) {
+      listenRotationLockToggledEvent(gameId, call.currentRotation.id)
+    }
+  })
 }
 
 const leaveAllChannels = () => {
@@ -444,6 +477,7 @@ onBeforeUnmount(() => {
         v-if="selectedDateGames?.length"
         :games="selectedDateGames"
         :calls="calls"
+        :opponentCalls="opponentCalls"
         @date:requested="handleDateRequested"
         @date:approved="handleDateApproved"
         @timeout:requested="setTimeoutStatus"

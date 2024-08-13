@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { Game, GAME_OBSERVATIONS_DELAY, isMatchDayPassed } from '@/domain/game'
+import TimeoutService from '@/services/timeout'
+import {
+  Game,
+  GAME_OBSERVATIONS_DELAY,
+  isMatchDayPassed,
+  isSameCoachForBothTeams,
+} from '@/domain/game'
 import {
   GameSignature,
   GameSignatureType,
@@ -13,8 +19,7 @@ import {
   TimeoutStoreRequest,
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
-import TimeoutService from '@/services/timeout'
-import { EXPULSION_SEVERITIES, SanctionType } from '@/domain/sanction'
+import { SanctionType, EXPULSION_SEVERITIES } from '@/domain/sanction'
 import moment from 'moment'
 
 const props = defineProps({
@@ -23,6 +28,10 @@ const props = defineProps({
     required: true,
   },
   calls: {
+    type: Array as PropType<Call[]>,
+    required: true,
+  },
+  opponentCalls: {
     type: Array as PropType<Call[]>,
     required: true,
   },
@@ -41,23 +50,33 @@ const toast = useEasyToast()
 
 const timeoutService = new TimeoutService()
 
+const enableRequestTimeouts = ref<boolean>(true)
+
+const getPlayingStatusGridCols = (game: Game) => {
+  if (isSameCoachForBothTeams(game)) {
+    return 2
+  }
+
+  return enableRequestTimeouts.value ? 2 : 1
+}
+
 const ACTIONS_GRID_COLS: Record<string, number> = {
   default: 1,
   warmup: 2,
   resting: 1,
-  playing: 1, // grid-cols-2 if timeouts are enabled
+  playing: enableRequestTimeouts.value ? 2 : 1, // grid-cols-2 if timeouts are enabled
   finished: 2,
   undefined: 1,
 }
 
 const showGameRequestDateIds = ref<number[]>([])
+const timeoutRequestedByOpponent = ref<boolean>(false)
 
 const gameSignatures = ref<GameSignature[]>(
   props.games.flatMap(game => game.signatures ?? []),
 )
 const setToRequestTimeout = ref<number>()
 const loadingTimeout = ref<boolean>(false)
-const enableRequestTimeouts = ref<boolean>(false)
 
 const gamesWithSanctionedMembersToChange = computed((): Game[] =>
   props.games.filter((game, index) => {
@@ -88,9 +107,13 @@ const showCoachButtonChangeDate = (game: Game) => {
 }
 
 const requestTimeout = async () => {
+  const call = !!timeoutRequestedByOpponent.value
+    ? props.opponentCalls[0]
+    : props.calls[0]
+
   const storeTimeoutForm: TimeoutStoreRequest = {
     setId: setToRequestTimeout.value ?? 0,
-    teamId: props.calls[0].teamId ?? 0,
+    teamId: call.teamId ?? 0,
     status: TimeoutStatusEnum.requested,
   }
 
@@ -111,12 +134,27 @@ const requestTimeout = async () => {
 const currentSetRotation = (game: Game, callId: number): Rotation | undefined =>
   game.currentSet?.rotations?.find(rotation => rotation.callId === callId)
 
-const callUnlocked = (callIndex: number): boolean | undefined =>
-  !props.calls[callIndex]?.locked ||
-  props.calls[callIndex]?.playersData.length < MIN_CALL_PLAYERS
+const callUnlocked = (
+  callIndex: number,
+  opponent: boolean = false,
+): boolean | undefined => {
+  const call = opponent
+    ? props.opponentCalls[callIndex]
+    : props.calls[callIndex]
 
-const rotationLocked = (callIndex: number): boolean | undefined =>
-  props.calls[callIndex]?.currentRotation?.locked
+  return !call?.locked || call?.playersData.length < MIN_CALL_PLAYERS
+}
+
+const rotationLocked = (
+  callIndex: number,
+  opponent: boolean = false,
+): boolean => {
+  const call = opponent
+    ? props.opponentCalls[callIndex]
+    : props.calls[callIndex]
+
+  return !!call.currentRotation?.locked
+}
 
 const maxSetPlayerChangesReached = (
   game: Game,
@@ -180,6 +218,23 @@ const reportAlreadySignedByCoachAndCaptain = (
   )
 }
 
+const showReportSignedMessage = (game: Game, index: number): boolean => {
+  const callSigned = reportAlreadySignedByCoachAndCaptain(
+    game,
+    props.calls[index],
+  )
+
+  if (isSameCoachForBothTeams(game)) {
+    const opponentCallSigned = reportAlreadySignedByCoachAndCaptain(
+      game,
+      props.opponentCalls[index],
+    )
+    return callSigned && opponentCallSigned
+  }
+
+  return callSigned
+}
+
 const handleSignatureStored = (gameSignature: GameSignature) => {
   gameSignatures.value.push(gameSignature)
   emit('signature:stored', gameSignature)
@@ -216,6 +271,11 @@ const handleDateApproved = (game: Game) => {
   emit('date:approved', game)
 }
 
+const handleTimeoutRequested = (setId?: number, opponent: boolean = false) => {
+  timeoutRequestedByOpponent.value = opponent
+  setToRequestTimeout.value = setId
+}
+
 onMounted(redirectIfSanctionedMembersToChange)
 </script>
 
@@ -234,24 +294,45 @@ onMounted(redirectIfSanctionedMembersToChange)
       <EasyGrid
         class="actions mt-3"
         :gap="2"
-        :cols="ACTIONS_GRID_COLS[game.status ?? 'default']"
+        :cols="
+          game.status === 'playing'
+            ? getPlayingStatusGridCols(game)
+            : ACTIONS_GRID_COLS[game.status ?? 'default']
+        "
       >
         <template v-if="game.status">
-          <CoachButtonCall
-            v-if="game.status === 'warmup'"
-            class="action"
-            :gameId="game.id"
-            :teamId="calls[index]?.teamId"
-            :locked="!!calls[index]?.locked"
-          />
-          <CoachButtonRotation
-            v-if="['warmup', 'resting'].includes(game.status)"
-            class="action"
-            :gameId="game.id"
-            :callId="calls[index]?.id"
-            :callUnlocked="!!callUnlocked(index)"
-            :locked="!!currentSetRotation(game, calls[index]?.id)?.locked"
-          />
+          <template v-if="game.status === 'warmup'">
+            <CoachButtonCall
+              class="action"
+              :gameId="game.id"
+              :teamId="calls[index]?.teamId"
+              :locked="!!calls[index]?.locked"
+            />
+            <CoachButtonCall
+              v-if="isSameCoachForBothTeams(game)"
+              class="action"
+              :gameId="game.id"
+              :teamId="opponentCalls[index]?.teamId"
+              :locked="!!opponentCalls[index]?.locked"
+            />
+          </template>
+          <template v-if="['warmup', 'resting'].includes(game.status)">
+            <CoachButtonRotation
+              class="action"
+              :gameId="game.id"
+              :callId="calls[index]?.id"
+              :callUnlocked="!!callUnlocked(index)"
+              :locked="!!currentSetRotation(game, calls[index]?.id)?.locked" />
+            <CoachButtonRotation
+              v-if="isSameCoachForBothTeams(game)"
+              class="action"
+              :gameId="game.id"
+              :callId="opponentCalls[index]?.id"
+              :callUnlocked="!!callUnlocked(index, true)"
+              :locked="
+                !!currentSetRotation(game, opponentCalls[index]?.id)?.locked
+              "
+          /></template>
           <template v-if="game.status === 'playing'">
             <CoachButtonPlayerChange
               class="action"
@@ -263,53 +344,84 @@ onMounted(redirectIfSanctionedMembersToChange)
                 !!maxSetPlayerChangesReached(game, calls[index]?.id)
               "
             />
-            <CoachButtonTimeout
-              v-if="enableRequestTimeouts"
+            <CoachButtonPlayerChange
+              v-if="isSameCoachForBothTeams(game)"
               class="action"
-              :game="game"
-              :teamId="calls[index].teamId"
-              :loading="loadingTimeout"
-              @timeout:dialog="setToRequestTimeout = $event"
+              :gameId="game.id"
+              :teamId="opponentCalls[index]?.teamId"
+              :rotation="currentSetRotation(game, opponentCalls[index]?.id)"
+              :locked="
+                !!rotationLocked(index, true) ||
+                !!maxSetPlayerChangesReached(game, opponentCalls[index]?.id)
+              "
             />
+            <template v-if="enableRequestTimeouts">
+              <CoachButtonTimeout
+                class="action"
+                :game="game"
+                :teamId="calls[index].teamId"
+                :loading="loadingTimeout"
+                @timeout:dialog="handleTimeoutRequested($event)"
+              />
+              <CoachButtonTimeout
+                v-if="isSameCoachForBothTeams(game)"
+                class="action"
+                :game="game"
+                :teamId="opponentCalls[index].teamId"
+                :loading="loadingTimeout"
+                @timeout:dialog="handleTimeoutRequested($event, true)"
+              />
+            </template>
           </template>
           <template v-if="game.status === 'finished'">
             <div
-              v-if="reportAlreadySignedByCoachAndCaptain(game, calls[index])"
-              class="col-span-3 text-xs text-[var(--danger-color)] flex items-center justify-center"
+              v-if="showReportSignedMessage(game, index)"
+              :class="[
+                `col-span-${
+                  ACTIONS_GRID_COLS[game.status ?? 'default']
+                } text-xs text-[var(--danger-color)] flex items-center justify-center`,
+              ]"
             >
               {{ t('reports.closed') }}
             </div>
             <template v-else>
-              <CoachButtonSign
-                v-if="!!calls[index]"
+              <template
                 v-for="gameSignatureType in [
                   GameSignatureTypes.coach,
                   GameSignatureTypes.captain,
                 ]"
-                class="action"
-                :game="game"
-                :call="calls[index]"
-                :signature-type="gameSignatureType"
-                :disabled="
-                  signButtonTypeDisabled(game, calls[index], gameSignatureType)
-                "
-                @signature:stored="handleSignatureStored"
-              />
-              <EasyCountdown
-                class="col-span-3"
-                v-slot="{ minutes, seconds }"
-                :target="getGameObservationsCountdownTarget(game)"
-                @countdown:ended="
-                  onCountdownEnded({ game, call: calls[index] })
-                "
               >
-                <div
-                  class="text-xs text-[var(--danger-color)] flex items-center justify-center"
-                >
-                  {{ t('reports.countdown') }}
-                  <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
-                </div>
-              </EasyCountdown>
+                <CoachButtonSign
+                  v-if="!!calls[index]"
+                  class="action"
+                  :game="game"
+                  :call="calls[index]"
+                  :signature-type="gameSignatureType"
+                  :disabled="
+                    signButtonTypeDisabled(
+                      game,
+                      calls[index],
+                      gameSignatureType,
+                    )
+                  "
+                  @signature:stored="handleSignatureStored"
+                />
+                <CoachButtonSign
+                  v-if="isSameCoachForBothTeams(game) && !!opponentCalls[index]"
+                  class="action"
+                  :game="game"
+                  :call="opponentCalls[index]"
+                  :signature-type="gameSignatureType"
+                  :disabled="
+                    signButtonTypeDisabled(
+                      game,
+                      opponentCalls[index],
+                      gameSignatureType,
+                    )
+                  "
+                  @signature:stored="handleSignatureStored"
+                />
+              </template>
             </template>
           </template>
         </template>
@@ -324,6 +436,21 @@ onMounted(redirectIfSanctionedMembersToChange)
           @date:approved="handleDateApproved(game)"
         />
       </EasyGrid>
+      <EasyCountdown
+        :class="[
+          `col-span-${ACTIONS_GRID_COLS[game.status ?? 'default']} mt-3`,
+        ]"
+        v-slot="{ minutes, seconds }"
+        :target="getGameObservationsCountdownTarget(game)"
+        @countdown:ended="onCountdownEnded({ game, call: calls[index] })"
+      >
+        <div
+          class="text-xs text-[var(--danger-color)] flex items-center justify-center"
+        >
+          {{ t('reports.countdown') }}
+          <pre class="text-xs ml-2">{{ minutes }}:{{ seconds }}</pre>
+        </div>
+      </EasyCountdown>
     </div>
 
     <DialogBottom
