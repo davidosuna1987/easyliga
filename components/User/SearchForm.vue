@@ -133,9 +133,20 @@ const handleUserSelected = (event: AutoCompleteItemSelectEvent) => {
 }
 
 const handleUserInvited = () => {
-  showUserInviteDialog.value = false
+  clear()
   emit('invited', true)
 }
+
+const clear = () => {
+  showUserInviteDialog.value = false
+  selectedUser.value = undefined
+  loadingApi.value = false
+  search.value = ''
+}
+
+defineExpose({
+  clear,
+})
 
 onBeforeMount(() => {
   if (route.params.leagueId) {

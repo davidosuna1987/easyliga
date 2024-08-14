@@ -44,7 +44,8 @@ const route = useRoute()
 const toast = useEasyToast()
 const teamService = new TeamService()
 
-const userSearchFormInputRef = ref<UserSearchFormInputRef>()
+const coachSearchFormInputRef = ref<UserSearchFormInputRef>()
+const substituteCoachSearchFormInputRef = ref<UserSearchFormInputRef>()
 
 const clubId = ref(props.team?.clubId ?? Number(route.params.clubId))
 
@@ -58,7 +59,9 @@ const selectedDivision = ref<Division>()
 const selectedCategory = ref<Category>()
 const selectedGender = ref<Gender>()
 const selectedCoach = ref<User>()
+const teamSubstituteCoaches = ref<User[]>(props.team?.substituteCoaches ?? [])
 const shirtNumberUpdatePlayer = ref<Player | TeamMember>()
+const substituteCoachToRemove = ref<User>()
 const playerToRemove = ref<Player>()
 const profileToEdit = ref<Profile>()
 const showPlayerSearchFormDialog = ref<boolean>(false)
@@ -77,16 +80,26 @@ const unavailableShirtNumbers = computed(() =>
   form.value.players?.map(player => player.shirtNumber),
 )
 
-const userSearchFormInputLabel = computed(() => {
-  if (userSearchFormInputRef.value?.userChanged) {
+const coachSearchFormInputLabel = computed(() => {
+  if (coachSearchFormInputRef.value?.userChanged) {
     return t('coaches.new')
   }
 
-  return userSearchFormInputRef.value?.editingUser ||
+  return coachSearchFormInputRef.value?.editingUser ||
     (!readonly && !selectedCoach.value?.profile)
     ? t('coaches.search')
     : t('coaches.coach')
 })
+
+const substituteCoachesLabel = computed(() =>
+  teamSubstituteCoaches.value?.length
+    ? t('coaches.substitute', teamSubstituteCoaches.value.length)
+    : t('coaches.add_substitute'),
+)
+
+const substituteCoachesSearchFormInputLabel = computed(() =>
+  teamSubstituteCoaches.value?.length ? t('coaches.add_substitute') : undefined,
+)
 
 const setFormData = (team?: Team) => {
   teamLicenses.value = team?.licenses ?? []
@@ -271,14 +284,63 @@ const handleCoachSelected = (coach: User) => {
   form.value.coachId = coach.id
 }
 
+const handleSubstituteCoachSelected = (coach: User) => {
+  if (coachAlreadyInTeam(coach)) {
+    substituteCoachSearchFormInputRef.value?.clear()
+    toast.error(t('errors.coach_already_in_team'))
+    return
+  }
+  teamSubstituteCoaches.value.push(coach)
+  form.value.substituteCoachesIds = [
+    ...(form.value.substituteCoachesIds ?? []),
+    coach.id,
+  ]
+  substituteCoachSearchFormInputRef.value?.clear()
+}
+
+const setSubstituteCoachToRemove = (profileId: number) => {
+  substituteCoachToRemove.value = teamSubstituteCoaches.value.find(
+    coach => coach.profile?.id === profileId,
+  )
+}
+
+const handleRemoveSubstituteCoach = (coachId?: number) => {
+  if (!coachId) return
+
+  teamSubstituteCoaches.value = teamSubstituteCoaches.value.filter(
+    c => c.id !== coachId,
+  )
+  form.value.substituteCoachesIds = form.value.substituteCoachesIds?.filter(
+    id => id !== coachId,
+  )
+
+  substituteCoachToRemove.value = undefined
+}
+
+const coachAlreadyInTeam = (coach: User) => {
+  return (
+    selectedCoach.value?.id === coach.id ||
+    teamSubstituteCoaches.value.find(c => c.id === coach.id)
+  )
+}
+
 const stopEditingCoach = (cancel = false) => {
   if (cancel && props.team?.coach) handleCoachSelected(props.team.coach)
 
   if (
-    userSearchFormInputRef.value?.editingUser &&
-    !userSearchFormInputRef.value?.userChanged
+    coachSearchFormInputRef.value?.editingUser &&
+    !coachSearchFormInputRef.value?.userChanged
   ) {
-    userSearchFormInputRef.value?.stopEditing()
+    coachSearchFormInputRef.value?.stopEditing()
+  }
+}
+
+const stopEditingSubstituteCoach = () => {
+  if (
+    substituteCoachSearchFormInputRef.value?.editingUser &&
+    !substituteCoachSearchFormInputRef.value?.userChanged
+  ) {
+    substituteCoachSearchFormInputRef.value?.stopEditing()
   }
 }
 
@@ -349,16 +411,48 @@ watch(
 
     <div class="mt-10">
       <UserSearchFormInput
-        ref="userSearchFormInputRef"
+        ref="coachSearchFormInputRef"
         :userOriginal="props.team?.coach"
         :userSelected="selectedCoach"
         :invitedToId="props.team?.id"
         :whereRole="ROLE_MAPPER.coach"
-        :label="userSearchFormInputLabel"
+        :label="coachSearchFormInputLabel"
         :breakpoints="{ sm: 2, lg: 3 }"
         @selected="handleCoachSelected"
         @invited="stopEditingCoach(true)"
         @cancel="stopEditingCoach(true)"
+      />
+    </div>
+
+    <div v-if="!!form.coachId" class="mt-10">
+      <FormLabel :label="substituteCoachesLabel" />
+      <EasyGrid
+        v-if="teamSubstituteCoaches.length"
+        class="substitute-coaches-list"
+        :breakpoints="{ sm: 2, lg: 3, xl: 4 }"
+        :gap="3"
+      >
+        <template v-for="coach in teamSubstituteCoaches">
+          <ProfileItem
+            v-if="coach.profile"
+            :profile="coach.profile"
+            :onRemove="setSubstituteCoachToRemove"
+            :removeTooltip="t('coaches.delete')"
+          />
+        </template>
+      </EasyGrid>
+
+      <UserSearchFormInput
+        ref="substituteCoachSearchFormInputRef"
+        class="mt-3"
+        :invitedToId="props.team?.id"
+        :whereRole="ROLE_MAPPER.coach"
+        :label="substituteCoachesSearchFormInputLabel"
+        :breakpoints="{ sm: 2, lg: 3 }"
+        :editable="false"
+        @selected="handleSubstituteCoachSelected"
+        @invited="stopEditingSubstituteCoach"
+        @cancel="stopEditingSubstituteCoach"
       />
     </div>
 
@@ -403,16 +497,6 @@ watch(
       @hide="shirtNumberUpdatePlayer = undefined"
     />
 
-    <AlertDialog
-      :visible="!!playerToRemove"
-      :title="`${playerToRemove?.firstName} ${playerToRemove?.lastName}`"
-      :message="t('players.delete_alert')"
-      :acceptLabel="t('forms.delete')"
-      severity="danger"
-      @accepted="removePlayer(playerToRemove?.profileId)"
-      @hide="playerToRemove = undefined"
-    />
-
     <ProfileDialogForm
       :profile="profileToEdit"
       :club-team-player="clubTeamPlayerData"
@@ -431,6 +515,29 @@ watch(
       :loading="loadingApi"
       @hide="showPlayerSearchFormDialog = false"
       @player:add="handleAddPlayer"
+    />
+
+    <AlertDialog
+      :visible="!!playerToRemove"
+      :title="`${playerToRemove?.firstName} ${playerToRemove?.lastName}`"
+      :message="t('players.delete_alert')"
+      :acceptLabel="t('forms.delete')"
+      severity="danger"
+      @accepted="removePlayer(playerToRemove?.profileId)"
+      @hide="playerToRemove = undefined"
+    />
+
+    <AlertDialog
+      v-if="substituteCoachToRemove"
+      :visible="!!substituteCoachToRemove"
+      :title="`${substituteCoachToRemove.profile?.firstName} ${substituteCoachToRemove.profile?.lastName}`"
+      :message="t('coaches.delete_substitute_alert')"
+      :acceptLabel="t('forms.delete')"
+      severity="danger"
+      @accepted="
+        handleRemoveSubstituteCoach(substituteCoachToRemove.profile?.id)
+      "
+      @hide="playerToRemove = undefined"
     />
   </form>
 </template>

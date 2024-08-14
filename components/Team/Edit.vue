@@ -14,7 +14,7 @@ const loadingApi = ref<boolean>(false)
 const getTeam = async () => {
   loadingApi.value = true
   const { data, error } = await teamService.get(Number(route.params.teamId), {
-    with: 'division,category,gender,sedes,coach.profile,players.address,licenses',
+    with: 'division,category,gender,sedes,coach.profile,substituteCoaches.profile,players.address,licenses',
   })
 
   if (error.value) {

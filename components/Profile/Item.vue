@@ -15,13 +15,17 @@ const props = defineProps({
     type: Object as PropType<Profile>,
     required: true,
   },
-  removeProfile: {
+  onRemove: {
     type: Function as PropType<(id: number) => void>,
     default: null,
   },
   removeIcon: {
     type: String as PropType<RemoveIcon>,
     default: 'trash',
+  },
+  removeTooltip: {
+    type: String,
+    required: false,
   },
   selected: {
     type: Boolean,
@@ -53,14 +57,18 @@ const { t } = useI18n()
 
 const iconsGap = computed(() => {
   let gap = 0
-  if (!!props.removeProfile) gap++
+  if (!!props.onRemove) gap++
   if (!!props.editable) gap++
   return gap
 })
 
-const removeProfileTooltipText = computed(() => {
-  return props.removeIcon === 'trash' ? t('profiles.delete') : t('forms.cancel')
-})
+const onRemoveTooltipText = computed(() =>
+  props.removeTooltip
+    ? props.removeTooltip
+    : props.removeIcon === 'trash'
+    ? t('profiles.delete')
+    : t('forms.cancel'),
+)
 </script>
 
 <template>
@@ -101,14 +109,14 @@ const removeProfileTooltipText = computed(() => {
         @click.stop="emit('profile:edit', profile)"
       />
       <PlayerItemIcon
-        v-if="!!removeProfile"
+        v-if="!!onRemove"
         class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
         :name="RemoveIconTypes[removeIcon]"
         v-tooltip.top="{
-          value: removeProfileTooltipText,
+          value: onRemoveTooltipText,
           disabled: tooltipDisabled,
         }"
-        @click.stop="removeProfile(profile.id)"
+        @click.stop="onRemove(profile.id)"
       />
     </div>
   </div>

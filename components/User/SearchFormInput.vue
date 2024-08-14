@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User } from '@/domain/user'
+import { User, UserSearchFormRef } from '@/domain/user'
 import { InvitedRole } from '@/domain/invite'
 import { GridBreakpoints, mapBreakpointsToClasses } from '@/domain/grid'
 
@@ -28,6 +28,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  editable: {
+    type: Boolean,
+    default: true,
+  },
   reduced: {
     type: Boolean,
     default: false,
@@ -51,6 +55,7 @@ const getUserOriginal = (): User | undefined =>
     ? undefined
     : props.userOriginal
 
+const userSearchFormRef = ref<UserSearchFormRef>()
 const editingUser = ref<boolean>(false)
 const selectedUser = ref<User | undefined>(getUserOriginal())
 
@@ -58,8 +63,14 @@ const mappedBreakpoints = computed(() =>
   props.breakpoints ? mapBreakpointsToClasses(props.breakpoints) : undefined,
 )
 
+const showSelectedUserProfile = computed(
+  () =>
+    !!props.editable &&
+    (!!props.readonly || (selectedUser.value?.profile && !editingUser.value)),
+)
+
 const showEditButton = computed(
-  () => !props.readonly && !!selectedUser.value?.profile,
+  () => !!props.editable && !props.readonly && !!selectedUser.value?.profile,
 )
 
 const userChanged = computed(
@@ -85,6 +96,14 @@ const stopEditing = () => {
   editingUser.value = false
 }
 
+const clear = () => {
+  setTimeout(() => {
+    selectedUser.value = undefined
+    editingUser.value = false
+    userSearchFormRef.value?.clear()
+  }, 0)
+}
+
 watch(
   () => props.userSelected,
   () => {
@@ -105,47 +124,51 @@ defineExpose({
   editingUser,
   userChanged,
   stopEditing,
+  clear,
 })
 </script>
 
 <template>
-  <FormLabel v-if="label" :label="label" />
+  <div>
+    <FormLabel v-if="label" :label="label" />
 
-  <div
-    :class="[
-      'easy-user-search-form-input-component',
-      `flex gap-3 h-[42px]`,
-      !!mappedBreakpoints
-        ? mappedBreakpoints
-        : showEditButton && 'grid-cols-[minmax(0,1fr)_auto]',
-    ]"
-  >
-    <template v-if="!!readonly || (selectedUser?.profile && !editingUser)">
-      <ProfileItem
-        v-if="selectedUser?.profile"
-        class="flex-1"
-        :profile="selectedUser.profile"
-      />
-      <p v-else>{{ t('responsibles.of.not_found') }}</p>
-    </template>
-    <template v-else>
-      <UserSearchForm
-        class="flex-1"
-        :whereRole="whereRole"
-        :showLabel="false"
-        :invitedToId="invitedToId ?? undefined"
-        full
-        @selected="handleSelected"
-        @invited="editingUser = false"
-      />
-    </template>
+    <div
+      :class="[
+        'easy-user-search-form-input-component',
+        `flex gap-3 h-[42px]`,
+        !!mappedBreakpoints
+          ? mappedBreakpoints
+          : showEditButton && 'grid-cols-[minmax(0,1fr)_auto]',
+      ]"
+    >
+      <template v-if="showSelectedUserProfile">
+        <ProfileItem
+          v-if="selectedUser?.profile"
+          class="flex-1"
+          :profile="selectedUser.profile"
+        />
+        <p v-else>{{ t('responsibles.of.not_found') }}</p>
+      </template>
+      <template v-else>
+        <UserSearchForm
+          ref="userSearchFormRef"
+          class="flex-1"
+          :whereRole="whereRole"
+          :showLabel="false"
+          :invitedToId="invitedToId ?? undefined"
+          full
+          @selected="handleSelected"
+          @invited="editingUser = false"
+        />
+      </template>
 
-    <Button
-      v-if="showEditButton"
-      :label="editingUser ? t('forms.cancel') : t('forms.edit')"
-      class="action w-min"
-      @click.prevent="handleAction"
-    />
+      <Button
+        v-if="showEditButton"
+        :label="editingUser ? t('forms.cancel') : t('forms.edit')"
+        class="action w-min"
+        @click.prevent="handleAction"
+      />
+    </div>
   </div>
 </template>
 

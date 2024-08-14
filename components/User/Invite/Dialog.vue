@@ -49,11 +49,12 @@ const handleSubmit = async () => {
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value.data?.errors
-    loadingApi.value = false
   } else {
+    form.value.email = ''
     toast.success(t('users.invited'))
     emit('invited', true)
   }
+  loadingApi.value = false
 }
 
 watch(

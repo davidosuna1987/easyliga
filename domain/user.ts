@@ -14,6 +14,11 @@ export type UserSearchFormInputRef = {
   editingUser: boolean
   userChanged: boolean
   stopEditing: () => void
+  clear: () => void
+}
+
+export type UserSearchFormRef = {
+  clear: () => void
 }
 
 export const mapApiUserToUser = (apiUser: ApiUser): User => ({

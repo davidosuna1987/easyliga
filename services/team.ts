@@ -1,5 +1,8 @@
 import { ApiTeamResponse, ApiTeamsResponse } from '@/types/api/team'
-import { Team, mapTeamToApiTeamRequest } from '@/domain/team'
+import {
+  TeamFormRequest,
+  mapTeamFormRequestToApiTeamRequest,
+} from '@/domain/team'
 import { ApiPlayerRequest } from '@/types/api/player'
 
 const PREFIX = 'teams'
@@ -13,17 +16,17 @@ export default class TeamService {
     return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}`, { params })
   }
 
-  store(data: Team) {
+  store(data: TeamFormRequest) {
     return useApi<ApiTeamResponse>(`${PREFIX}`, {
       method: 'POST',
-      body: mapTeamToApiTeamRequest(data),
+      body: mapTeamFormRequestToApiTeamRequest(data),
     })
   }
 
-  update(teamId: number, data: Team) {
+  update(teamId: number, data: TeamFormRequest) {
     return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}`, {
       method: 'PUT',
-      body: mapTeamToApiTeamRequest(data),
+      body: mapTeamFormRequestToApiTeamRequest(data),
     })
   }
 

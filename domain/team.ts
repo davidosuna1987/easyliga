@@ -23,6 +23,7 @@ export type TeamRelations = {
   category?: Category
   gender?: Gender
   coach?: User
+  substituteCoaches?: User[]
   players?: Player[]
   licenses?: License[]
 }
@@ -73,6 +74,7 @@ export type TeamFormRequest = {
   categoryId: number | undefined
   genderId: number | undefined
   coachId: number | undefined
+  substituteCoachesIds?: number[]
   players: Player[]
   shirtColor?: ShirtColor
 }
@@ -114,6 +116,15 @@ export const mapApiTeamToTeam = (
   categoryId: apiTeam.category_id ?? undefined,
   genderId: apiTeam.gender_id ?? undefined,
   coachId: apiTeam.coach_id ?? undefined,
+  shirtColor: apiTeam.shirt_color ?? undefined,
+
+  ...mapApiTeamRelationsToTeamRelations(apiTeam, withProfiles),
+})
+
+export const mapApiTeamRelationsToTeamRelations = (
+  apiTeam: ApiTeam,
+  withProfiles: boolean = false,
+): TeamRelations => ({
   club: apiTeam.club ? mapApiClubToClub(apiTeam.club) : undefined,
   sede: apiTeam.sede ? mapApiSedeToSede(apiTeam.sede) : undefined,
   sedes: apiTeam.sedes ? apiTeam.sedes.map(mapApiSedeToSede) : undefined,
@@ -128,25 +139,32 @@ export const mapApiTeamToTeam = (
     : undefined,
   gender: apiTeam.gender ?? undefined,
   coach: apiTeam.coach ? mapApiUserToUser(apiTeam.coach) : undefined,
+  substituteCoaches: apiTeam.substitute_coaches
+    ? apiTeam.substitute_coaches.map(mapApiUserToUser)
+    : undefined,
   players: apiTeam.players?.length
     ? mapApiPlayersToPlayers(apiTeam.players, withProfiles)
     : undefined,
   licenses: apiTeam.licenses
     ? apiTeam.licenses.map(mapApiLicenseToLicense)
     : undefined,
-  shirtColor: apiTeam.shirt_color ?? undefined,
 })
 
-export const mapTeamToApiTeamRequest = (team: Team): ApiTeamRequest => ({
-  name: team.name,
-  club_id: team.clubId ?? null,
-  sede_id: team.sedeId ?? null,
-  division_id: team.divisionId ?? null,
-  category_id: team.categoryId ?? null,
-  gender_id: team.genderId ?? null,
-  coach_id: team.coachId ?? null,
-  players: team.players ? team.players.map(mapPlayerToApiPlayerRequest) : null,
-  shirt_color: team.shirtColor ?? null,
+export const mapTeamFormRequestToApiTeamRequest = (
+  teamFormRequest: TeamFormRequest,
+): ApiTeamRequest => ({
+  name: teamFormRequest.name,
+  club_id: teamFormRequest.clubId ?? null,
+  sede_id: teamFormRequest.sedeId ?? null,
+  division_id: teamFormRequest.divisionId ?? null,
+  category_id: teamFormRequest.categoryId ?? null,
+  gender_id: teamFormRequest.genderId ?? null,
+  coach_id: teamFormRequest.coachId ?? null,
+  substitute_coaches_ids: teamFormRequest.substituteCoachesIds ?? null,
+  players: teamFormRequest.players
+    ? teamFormRequest.players.map(mapPlayerToApiPlayerRequest)
+    : null,
+  shirt_color: teamFormRequest.shirtColor ?? null,
 })
 
 export const mapProfileToTeamMember = (
@@ -183,6 +201,7 @@ export const mapTeamToTeamFormRequest = (
   categoryId: team?.categoryId ?? undefined,
   genderId: team?.genderId ?? undefined,
   coachId: team?.coachId ?? undefined,
+  substituteCoachesIds: team?.substituteCoaches?.map(coach => coach.id) ?? [],
   players: team?.players ?? [],
   shirtColor: team?.shirtColor ?? undefined,
 })

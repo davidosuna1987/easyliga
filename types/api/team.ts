@@ -19,6 +19,7 @@ export type ApiTeamRelations = {
   category?: ApiCategory
   gender?: Gender
   coach?: ApiUser
+  substitute_coaches?: ApiUser[]
   players?: ApiPlayer[]
   licenses?: ApiLicense[]
 }
@@ -63,6 +64,7 @@ export type ApiTeamRequest = {
   category_id: number | null
   gender_id: number | null
   coach_id: number | null
+  substitute_coaches_ids: number[] | null
   players: ApiPlayerRequest[] | null
   shirt_color: ShirtColor | null
 }

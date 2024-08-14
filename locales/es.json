@@ -183,7 +183,8 @@
       }
     },
     "not_allowed_to_manage_federation": "No tienes permisos para gestionar esta federación",
-    "not_allowed_to_manage_league": "No tienes permisos para gestionar esta liga"
+    "not_allowed_to_manage_league": "No tienes permisos para gestionar esta liga",
+    "coach_already_in_team": "El entrenador seleccionado ya forma parte del equipo"
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -315,7 +316,9 @@
   },
   "coaches": {
     "coach": "Entrenador | Entrenadores",
+    "substitute": "Entrenador suplente | Entrenadores suplentes",
     "search": "Buscar entrenador | Buscar entrenadores",
+    "search_substitute": "Buscar entrenador suplente | Buscar entrenadores suplentes",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?",
     "no_current_games": "No tienes ningún partido en juego",
@@ -331,7 +334,12 @@
         "team": "Nuevo entrenador para el equipo | Nuevos entrenadores para el equipo"
       },
       "not_found": "No hay asignado ningún entrenador"
-    }
+    },
+    "delete": "Eliminar entrenador",
+    "delete_alert": "¿Seguro que quieres eliminar al entrenador?",
+    "delete_substitute": "Eliminar entrenador suplente",
+    "delete_substitute_alert": "¿Seguro que quieres eliminar al entrenador suplente?",
+    "add_substitute": "Añadir entrenador suplente | Añadir entrenadores suplentes"
   },
   "games": {
     "game": "Partido | Partidos",
