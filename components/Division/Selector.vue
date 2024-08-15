@@ -76,25 +76,13 @@ onMounted(() => {
 
 <template>
   <Dropdown
-    v-if="!!props.groupedDivisions"
     class="easy-courts-selector-component"
-    v-model="selectedDivision"
-    :loading="props.loading || loadingApi"
-    :options="groupedDivisions"
-    optionLabel="name"
-    optionGroupChildren="divisions"
-    optionGroupLabel="name"
-    scrollHeight="210px"
-    :placeholder="t('divisions.select')"
-    @update:modelValue="emit('division:selected', $event)"
-  />
-  <Dropdown
-    v-else
-    class="easy-divisions-selector-component"
     v-model="selectedDivision"
     :loading="props.loading || loadingApi"
     :options="options"
     optionLabel="name"
+    optionGroupChildren="divisions"
+    optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="t('divisions.select')"
     @update:modelValue="emit('division:selected', $event)"
