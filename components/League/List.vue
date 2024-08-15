@@ -11,16 +11,21 @@ const auth = useAuthStore()
 const federationService = new FederationService()
 
 const groupedLeagues = ref<Federation[]>()
-const showAddLeagueDialog = ref<number | undefined>(undefined)
 const loadingApi = ref<boolean>(false)
 
 const teamsCount = (league: League) =>
   league.teamsCount ? league.teamsCount : league.teams?.length ?? 0
 
 const flattenFederations = (federations: Federation[]): Federation[] => {
+  const watcher = new Set<number>()
+
   const recurse = (feds: Federation[]): Federation[] => {
     return feds.flatMap(fed => {
       const { federations, ...rest } = fed
+
+      const federationId = rest.id
+      if (watcher.has(federationId)) return []
+      watcher.add(federationId)
 
       const flattenedFederation: Federation = {
         ...rest,
