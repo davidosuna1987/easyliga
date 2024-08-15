@@ -4,6 +4,7 @@ export const IconNames = {
   show: 'mdi:eye-outline',
   delete: 'pepicons-pencil:trash',
   close: 'pepicons-pencil:times',
+  times: 'material-symbols:close-rounded',
   check: 'pepicons-pencil:checkmark',
   checkCircle: 'pepicons-pencil:checkmark-circle',
   gameFinished: 'ic:baseline-check-circle-outline',
