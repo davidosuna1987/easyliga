@@ -437,6 +437,7 @@ onMounted(redirectIfSanctionedMembersToChange)
         />
       </EasyGrid>
       <EasyCountdown
+        v-if="game.status === 'finished'"
         :class="[
           `col-span-${ACTIONS_GRID_COLS[game.status ?? 'default']} mt-3`,
         ]"
