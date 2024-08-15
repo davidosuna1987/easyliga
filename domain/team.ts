@@ -4,7 +4,12 @@ import {
   mapPlayerToApiPlayerRequest,
 } from '@/domain/player'
 import { ApiTeam, ApiTeamRequest } from '@/types/api/team'
-import { Category, Gender, mapApiCategoryToCategory } from '@/domain/game'
+import {
+  Category,
+  Gender,
+  mapApiCategoryToCategory,
+  mapApiGenderToGender,
+} from '@/domain/game'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Profile } from '@/domain/profile'
@@ -137,7 +142,7 @@ export const mapApiTeamRelationsToTeamRelations = (
   category: apiTeam.category
     ? mapApiCategoryToCategory(apiTeam.category)
     : undefined,
-  gender: apiTeam.gender ?? undefined,
+  gender: apiTeam.gender ? mapApiGenderToGender(apiTeam.gender) : undefined,
   coach: apiTeam.coach ? mapApiUserToUser(apiTeam.coach) : undefined,
   substituteCoaches: apiTeam.substitute_coaches
     ? apiTeam.substitute_coaches.map(mapApiUserToUser)

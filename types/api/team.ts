@@ -9,6 +9,7 @@ import { ShirtColor } from '@/domain/team'
 import { ApiLicense } from '@/types/api/license'
 import { ApiFederation } from '@/types/api/federation'
 import { Gender } from '@/domain/game'
+import { ApiGender } from './gender'
 
 export type ApiTeamRelations = {
   club?: ApiClub
@@ -17,7 +18,7 @@ export type ApiTeamRelations = {
   division?: ApiDivision
   federation?: ApiFederation
   category?: ApiCategory
-  gender?: Gender
+  gender?: ApiGender
   coach?: ApiUser
   substitute_coaches?: ApiUser[]
   players?: ApiPlayer[]
