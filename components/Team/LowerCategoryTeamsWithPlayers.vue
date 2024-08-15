@@ -2,6 +2,7 @@
 import { Team, TeamMember, mapApiTeamToTeam } from '@/domain/team'
 import TeamService from '@/services/team'
 import { Player } from '@/domain/player'
+import { getListTagColor } from '@/domain/list'
 
 const props = defineProps({
   teamId: {
@@ -39,6 +40,8 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const toast = useEasyToast()
+
 const teamService = new TeamService()
 
 const lowerCategoryTeamsWithPlayers = ref<Team[]>([])
@@ -48,9 +51,14 @@ const getLowerCategoryTeamsWithPlayers = async () => {
   loadingApi.value = true
   const { data, error } = await teamService.lowerCategoryTeamsWithPlayers(
     props.teamId,
+    {
+      with: 'category,gender',
+    },
   )
 
-  if (data.value) {
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
     lowerCategoryTeamsWithPlayers.value = data.value.data.teams.map(team =>
       mapApiTeamToTeam(team),
     )
@@ -82,7 +90,17 @@ getLowerCategoryTeamsWithPlayers()
       v-if="lowerCategoryTeamsWithPlayers.length"
       v-for="team in lowerCategoryTeamsWithPlayers"
     >
-      <Heading tag="h5">{{ team.name }}</Heading>
+      <header class="flex items-center gap-3">
+        <Heading tag="h5">{{ team.name }}</Heading>
+        <ListTag
+          :label="`${t(`categories.${team.category?.name}`)}`"
+          color="primary"
+        />
+        <ListTag
+          :label="`${t(`genders.${team.gender?.name}`)}`"
+          :color="getListTagColor(team.gender?.name)"
+        />
+      </header>
       <GameCallList
         v-if="team.players"
         :players="team.players"

@@ -13,7 +13,7 @@ import { ApiErrorObject } from '@/types/errors'
 import { mapPlayersToApiCallRequestPlayers } from '@/types/api/call'
 import { ApiCallUnlockedEventResponse } from '@/types/api/event'
 import { ApiEvents } from '@/types/api/event'
-import { TeamMember, TeamType } from '@/domain/team'
+import { mapApiTeamToTeam, Team, TeamMember, TeamType } from '@/domain/team'
 import {
   GameSignatureTypes,
   GameSignatureStoreRequest,
@@ -31,6 +31,7 @@ const callService = new CallService()
 const gameSignatureService = new GameSignatureService()
 
 const listenedEvents = ref<string[]>([])
+const team = ref<Team>()
 const game = ref<Game>()
 const call = ref<Call>()
 const teamType = ref<TeamType>()
@@ -247,6 +248,7 @@ const getTeamPlayers = async () => {
     return
   }
 
+  team.value = mapApiTeamToTeam(data.value.data.team)
   game.value = mapApiGameToGame(data.value.data.game)
   call.value = mapApiCallToCall(data.value.data.call)
   selectedPlayers.value = mapCallPlayersDataToPlayers(call.value.playersData)
@@ -357,11 +359,13 @@ onMounted(getTeamPlayers)
 </script>
 
 <template>
-  <Heading tag="h5" position="center" class="mb-5">{{ game?.name }}</Heading>
+  <Heading tag="h5" position="center" class="mb-5" v-highlight="team?.name">
+    {{ game?.name }}
+  </Heading>
 
-  <Message v-if="call?.locked" :closable="false">{{
-    t('calls.locked_warning')
-  }}</Message>
+  <Message v-if="call?.locked" :closable="false">
+    {{ t('calls.locked_warning') }}
+  </Message>
 
   <Loading v-if="loadingApi" />
   <form

@@ -42,4 +42,15 @@ export default defineNuxtPlugin(nuxtApp => {
 
     if (!hasRoles) commentNode(el, binding, vnode)
   })
+
+  nuxtApp.vueApp.directive('highlight', (el, binding) => {
+    const textToHighlight = binding.value
+    if (!textToHighlight) return
+
+    const regex = new RegExp(`(${textToHighlight})`, 'gi')
+    el.innerHTML = el.innerHTML.replace(
+      regex,
+      '<span class="text-highlight">$1</span>',
+    )
+  })
 })

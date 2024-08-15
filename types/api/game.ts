@@ -146,6 +146,7 @@ export type ApiGameInitialDataResponse = {
 export type ApiGameTeamPlayersResponse = {
   success: boolean
   data: {
+    team: ApiTeam
     game: ApiGame
     call: ApiCall
     players: ApiPlayer[]
