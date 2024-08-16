@@ -56,7 +56,7 @@ const config = useRuntimeConfig()
 </script>
 
 <template>
-  <header class="report-header md:flex border-solid">
+  <header class="report-header border-solid">
     <div class="report-header-info p-4 flex-1 flex flex-col justify-between">
       <p class="report-competition text-2xl font-semibold">
         {{ division.name }}
@@ -78,7 +78,7 @@ const config = useRuntimeConfig()
     <div
       class="report-header-data border-solid border-y-0 p-4 flex-1 flex flex-col justify-between"
     >
-      <EasyGrid class="mb-2" :cols="2">
+      <EasyGrid class="report-team-local mb-2" :cols="2" :gap="3">
         <p class="report-date">
           <strong class="mr-1">{{ t('forms.date') }}:</strong>
           <span v-if="game.date">{{ formatDate(game.date) }}</span>
@@ -88,7 +88,7 @@ const config = useRuntimeConfig()
           <span v-if="game.date">{{ formatTime(game.date) }}</span>
         </p>
       </EasyGrid>
-      <EasyGrid class="mb-2" :cols="2">
+      <EasyGrid class="report-team-visitor mb-2" :cols="2" :gap="3">
         <p class="report-local-team">
           <strong class="mr-1">{{ t('teams.local') }}:</strong>
           <span>{{ localTeam.name }}</span>
@@ -99,20 +99,22 @@ const config = useRuntimeConfig()
         </p>
       </EasyGrid>
       <div>
-        <EasyGrid class="report-teams" :cols="2">
-          <div class="report-team flex justify-start items-end">
-            <p
-              class="report-team-side text-5xl font-semibold mr-3 text-primary"
-            >
+        <EasyGrid class="report-teams" :cols="2" :gap="3">
+          <div
+            class="report-team report-team-left flex justify-start items-end gap-3"
+          >
+            <p class="report-team-side text-5xl font-semibold text-primary">
               {{ GameReportSideTeamTypes.LEFT }}
             </p>
             <p class="report-team-name text-xl leading-5 mb-1.5">
               {{ leftSideTeam.name }}
             </p>
           </div>
-          <div class="report-team flex flex-row-reverse items-end">
+          <div
+            class="report-team report-team-right flex flex-row-reverse items-end gap-3"
+          >
             <p
-              class="report-team-side text-5xl font-semibold ml-3 text-tertiary-dark"
+              class="report-team-side text-5xl font-semibold text-tertiary-dark"
             >
               {{ GameReportSideTeamTypes.RIGHT }}
             </p>

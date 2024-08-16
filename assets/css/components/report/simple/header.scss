@@ -1,0 +1,82 @@
+.report-header {
+  display: grid;
+  grid-template-areas:
+    'info'
+    'data'
+    'logo';
+
+  .report-header-info {
+    grid-area: info;
+    border-bottom: solid 1px;
+  }
+
+  .report-header-data {
+    grid-area: data;
+    border: none;
+
+    .report-team-local,
+    .report-team-visitor {
+      display: block;
+    }
+
+    .report-teams {
+      display: block;
+
+      .report-team-left,
+      .report-team-right {
+        flex-direction: row;
+      }
+    }
+  }
+
+  .report-header-easy {
+    grid-area: logo;
+    border-top: solid 1px;
+  }
+
+  @media (min-width: $media-sm) {
+    grid-template-areas:
+      'info logo'
+      'data data';
+
+    .report-header-info {
+      border: none;
+    }
+
+    .report-header-data {
+      border-top: solid 1px;
+
+      .report-team-local,
+      .report-team-visitor {
+        display: grid;
+      }
+
+      .report-teams {
+        display: grid;
+
+        .report-team-right {
+          flex-direction: row-reverse;
+        }
+      }
+    }
+
+    .report-header-easy {
+      border: none;
+      justify-self: end;
+    }
+  }
+
+  @media (min-width: $media-xl) {
+    display: flex;
+
+    .report-header-data {
+      border-top: none;
+      border-left: solid 1px;
+      border-right: solid 1px;
+    }
+
+    .report-header-easy {
+      justify-self: auto;
+    }
+  }
+}

@@ -7,8 +7,8 @@ const props = defineProps({
 
 const bgColor = computed(() =>
   props.type === GameReportTeamTypes.A
-    ? 'bg-[var(--primary-color-medium)]'
-    : 'bg-tertiary',
+    ? 'bg-[var(--primary-color-medium)] dark:bg-[var(--primary-color)] dark:text-[var(--background-color)]'
+    : 'bg-tertiary dark:text-[var(--background-color)]',
 )
 </script>
 
@@ -26,6 +26,10 @@ const bgColor = computed(() =>
 <style scoped lang="scss">
 .easy-game-report-sanction-team-item-component {
   border: solid 1px var(--text-color);
+
+  @media (prefers-color-scheme: dark) {
+    border: none;
+  }
 }
 </style>
 

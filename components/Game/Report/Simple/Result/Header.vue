@@ -27,14 +27,14 @@ const { t } = useI18n()
   <GameReportSimpleSidedTeam
     :team="localTeam"
     :leftSideTeam="leftSideTeam"
-    class="col-span-5 border-solid border-r-0 border-t-0 p-2"
+    class="col-span-5 border-solid border-r-0 p-2"
   />
 
   <GameReportSimpleSidedTeam
     :team="visitorTeam"
     :leftSideTeam="leftSideTeam"
     direction="right"
-    class="col-span-5 border-solid border-t-0 p-2"
+    class="col-span-5 border-solid p-2"
   />
 
   <div class="grid place-content-center p-2 border-solid border-r-0 border-t-0">

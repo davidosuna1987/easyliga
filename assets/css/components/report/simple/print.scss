@@ -1,0 +1,92 @@
+.print {
+  display: none;
+}
+
+.easy-container {
+  height: min-content !important;
+}
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print {
+    display: block !important;
+  }
+
+  html {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+    font-size: 10px;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .easy-navbar,
+  .easy-footer {
+    display: none;
+  }
+
+  .easy-main {
+    min-height: 0;
+    margin-block: 0;
+    border-radius: 0;
+
+    .easy-container {
+      border-radius: 0;
+      box-shadow: none;
+      padding: 2.5rem;
+
+      .easy-game-report-component {
+        .report-header {
+          display: flex;
+
+          .report-header-info {
+            border: none;
+          }
+
+          .report-header-data {
+            @apply border-solid border-y-0;
+
+            .report-team-local,
+            .report-team-visitor {
+              display: grid;
+            }
+
+            .report-teams {
+              display: grid;
+
+              .report-team-right {
+                flex-direction: row-reverse;
+              }
+            }
+          }
+
+          .report-header-easy {
+            border: none;
+          }
+        }
+
+        .report-main {
+          grid-template-columns: 1fr 1fr 300px;
+        }
+
+        .easy-icon-easy-liga-component {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
+}

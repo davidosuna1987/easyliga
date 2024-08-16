@@ -25,12 +25,12 @@ const { t } = useI18n()
     <strong class="uppercase">{{ t('calls.call') }}</strong>
   </div>
   <GameReportSimpleSidedTeam
-    class="col-span-6 p-2 border-solid border-t-0 border-r-0"
+    class="col-span-6 p-2 border-solid border-r-0"
     :team="localTeam"
     :leftSideTeam="leftSideTeam"
   />
   <GameReportSimpleSidedTeam
-    class="col-span-6 p-2 border-solid border-t-0 text-right"
+    class="col-span-6 p-2 border-solid text-right"
     :team="visitorTeam"
     :leftSideTeam="leftSideTeam"
     direction="right"

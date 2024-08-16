@@ -73,11 +73,32 @@ const gameLocalVisitorTimeouts = computed(
 
 const print = () => {
   if (!report.value) return
+
   const originalTitle = document.title
   const titleSlug = report.value.game.name.toLowerCase().replace(/ /g, '-')
   document.title = `acta-${titleSlug}`
+
+  // Simula una pantalla de ordenador cambiando el viewport
+  const originalViewport = document.querySelector('meta[name="viewport"]')
+  const newViewport = document.createElement('meta')
+  newViewport.name = 'viewport'
+  newViewport.content = 'width=1400px'
+
+  if (originalViewport) {
+    document.head.removeChild(originalViewport)
+  }
+  document.head.appendChild(newViewport)
+
+  // Imprime la página
   window.print()
+
+  // Restaura el título y el viewport original después de imprimir
   document.title = originalTitle
+  document.head.removeChild(newViewport)
+
+  if (originalViewport) {
+    document.head.appendChild(originalViewport)
+  }
 }
 
 onMounted(() => {
@@ -169,68 +190,6 @@ onMounted(() => {
     </template>
   </div>
 </template>
-
-<style lang="scss">
-.print {
-  display: none;
-}
-
-.easy-container {
-  height: min-content !important;
-}
-
-@media print {
-  @page {
-    size: A4 landscape;
-    margin: 0;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .print {
-    display: block !important;
-  }
-
-  html {
-    margin: 0;
-    padding: 0;
-    min-height: 0;
-    font-size: 11px;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    min-height: 0;
-  }
-
-  .easy-navbar,
-  .easy-footer {
-    display: none;
-  }
-
-  .easy-main {
-    min-height: 0;
-    margin-block: 0;
-    border-radius: 0;
-
-    .easy-container {
-      border-radius: 0;
-      box-shadow: none;
-      padding: 2.5rem;
-
-      .easy-game-report-component {
-        .easy-icon-easy-liga-component {
-          width: 50px;
-          height: 50px;
-        }
-      }
-    }
-  }
-}
-</style>
 
 <script lang="ts">
 export default {
