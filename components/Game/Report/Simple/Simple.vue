@@ -92,7 +92,7 @@ onMounted(() => {
       class="flex justify-center items-center h-[calc(100dvh-250px)]"
     >
       <LoadingSpinner />
-      <span class="text-2xl ml-3">Cargando datos del partido</span>
+      <span class="text-2xl ml-3">{{ t('games.loading_data') }}</span>
     </div>
     <template v-else>
       <div v-if="report" class="report-wrapper max-w-[1220px] mx-auto">
@@ -111,10 +111,11 @@ onMounted(() => {
         />
 
         <main
-          class="report-main mt-3 grid grid-cols-1 md:[grid-template-columns:1fr_1fr_300px] gap-3 items-start"
+          class="report-main mt-3 grid grid-cols-1 xl:grid-cols-[1fr_1fr_300px_!important] gap-3 items-start"
         >
           <GameReportSimpleCall
             v-if="gameSidedTeams?.leftSideTeam"
+            :referee="report.referee"
             :calls="report.calls"
             :localTeam="report.localTeam"
             :visitorTeam="report.visitorTeam"

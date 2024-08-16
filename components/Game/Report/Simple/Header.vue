@@ -56,7 +56,7 @@ const config = useRuntimeConfig()
 </script>
 
 <template>
-  <header class="report-header flex border-solid">
+  <header class="report-header md:flex border-solid">
     <div class="report-header-info p-4 flex-1 flex flex-col justify-between">
       <p class="report-competition text-2xl font-semibold">
         {{ division.name }}
@@ -124,7 +124,7 @@ const config = useRuntimeConfig()
       </div>
     </div>
     <div
-      class="report-header-easy py-4 px-12 flex justify-center items-center text-center flex-col"
+      class="report-header-easy py-4 px-12 flex flex-col justify-center items-center text-center"
     >
       <IconEasyLiga size="60" />
       <span class="text-xl font-semibold">{{ config.public.appName }}</span>

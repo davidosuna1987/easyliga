@@ -409,7 +409,8 @@
     },
     "no_games_for_date": "No hay ningún partido en la fecha seleccionada",
     "unlock": "Desbloquear partido",
-    "close": "Cerrar partido"
+    "close": "Cerrar partido",
+    "loading_data": "Cargando datos del partido"
   },
   "federations": {
     "federation": "Federación | Federaciones",
