@@ -1,0 +1,49 @@
+.easy-signature-component {
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  border-radius: 1rem;
+  box-shadow: var(--box-shadow-hard);
+
+  .signature-wrapper {
+    position: relative;
+    aspect-ratio: 16/9;
+    background-color: var(--signature-background);
+
+    .signature-placeholder {
+      position: absolute;
+      inset: 0;
+      font-size: 3rem;
+      font-weight: 100;
+      color: gainsboro;
+      pointer-events: none;
+    }
+  }
+
+  .signature-button {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    border-radius: 0;
+    border: none !important;
+    border-top: solid 2px var(--background-color) !important;
+    background-color: var(--signature-button-background);
+    color: var(--signature-button-color);
+
+    &:focus {
+      box-shadow: none;
+    }
+
+    &:hover {
+      color: var(--signature-button-color);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .signature-wrapper {
+      canvas {
+        filter: invert(1) !important;
+      }
+    }
+  }
+}
