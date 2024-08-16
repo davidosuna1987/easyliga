@@ -155,13 +155,14 @@ const handleEditVisitorTeamCoachName = (): void => {
       <div class="col-span-12 border-solid">
         <div class="grid grid-cols-11 place-content-center">
           <div class="col-span-5 px-2 flex justify-between items-center">
-            <input
+            <div
               v-if="authUserCanEditLocalCoachName && editLocalTeamCoachName"
               ref="localTeamCoachNameInput"
-              v-model="localTeamCoachName"
               class="flex-1"
-              type="text"
-            />
+              contenteditable
+            >
+              {{ localTeamCoachName }}
+            </div>
             <span v-else>
               {{ getFullName(localTeamCoach) }}
             </span>
@@ -180,13 +181,14 @@ const handleEditVisitorTeamCoachName = (): void => {
             <strong class="print">{{ TeamMemberTypes.COACH }}</strong>
           </div>
           <div class="col-span-5 px-2 flex justify-between items-center">
-            <input
+            <div
               v-if="authUserCanEditVisitorCoachName && editVisitorTeamCoachName"
               ref="visitorTeamCoachNameInput"
-              v-model="visitorTeamCoachName"
               class="flex-1"
-              type="text"
-            />
+              contenteditable
+            >
+              {{ visitorTeamCoachName }}
+            </div>
             <span v-else>
               {{ getFullName(visitorTeamCoach) }}
             </span>
