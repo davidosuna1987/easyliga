@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/useAuthStore'
 import TimeoutService from '@/services/timeout'
 import {
   Game,
   GAME_OBSERVATIONS_DELAY,
+  isMatchDay,
   isMatchDayPassed,
   isSameCoachForBothTeams,
 } from '@/domain/game'
@@ -20,19 +22,12 @@ import {
   mapApiTimeoutToTimeout,
 } from '@/domain/timeout'
 import { SanctionType, EXPULSION_SEVERITIES } from '@/domain/sanction'
+import { TeamType } from '@/domain/team'
 import moment from 'moment'
 
 const props = defineProps({
   games: {
     type: Array as PropType<Game[]>,
-    required: true,
-  },
-  calls: {
-    type: Array as PropType<Call[]>,
-    required: true,
-  },
-  opponentCalls: {
-    type: Array as PropType<Call[]>,
     required: true,
   },
 })
@@ -46,11 +41,12 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
 const toast = useEasyToast()
 
 const timeoutService = new TimeoutService()
 
-const enableRequestTimeouts = ref<boolean>(true)
+const enableRequestTimeouts = ref<boolean>(false)
 
 const getPlayingStatusGridCols = (game: Game) => {
   if (isSameCoachForBothTeams(game)) {
@@ -70,50 +66,61 @@ const ACTIONS_GRID_COLS: Record<string, number> = {
 }
 
 const showGameRequestDateIds = ref<number[]>([])
-const timeoutRequestedByOpponent = ref<boolean>(false)
 
 const gameSignatures = ref<GameSignature[]>(
   props.games.flatMap(game => game.signatures ?? []),
 )
-const setToRequestTimeout = ref<number>()
+const setToRequestTimeout = ref<{ setId: number; teamId: number }>()
 const loadingTimeout = ref<boolean>(false)
 
+const getGameCall = (
+  game: Game,
+  opponent: boolean = false,
+): Call | undefined => {
+  const teamType =
+    game.localTeam?.coachId === auth.user?.id
+      ? opponent
+        ? TeamType.VISITOR
+        : TeamType.LOCAL
+      : opponent
+      ? TeamType.LOCAL
+      : TeamType.VISITOR
+
+  return game.calls?.find(call => call.teamId === game?.[`${teamType}TeamId`])
+}
+
 const gamesWithSanctionedMembersToChange = computed((): Game[] =>
-  props.games.filter((game, index) => {
-    const teamRotation = game.currentSet?.rotations?.find(
-      rotation => rotation.callId === props.calls[index].id,
-    )
-    const inCourtProfileIds = teamRotation?.players?.map(
-      player => player.inCourtProfileId,
-    )
+  props.games.filter(game => {
+    const teamRotations = game.currentSet?.rotations?.filter(rotation => {
+      return isSameCoachForBothTeams(game)
+        ? game.calls?.map(call => call.id).includes(rotation.callId)
+        : rotation.callId === getGameCall(game)?.id
+    })
+
+    const inCourtProfileIds = teamRotations
+      ?.flatMap(rotation => rotation.players)
+      ?.map(player => player.inCourtProfileId)
 
     return game.currentSet?.sanctions?.some(
       sanction =>
         sanction.type === SanctionType.member &&
         EXPULSION_SEVERITIES.includes(sanction.severity) &&
-        sanction.teamId === props.calls[index].teamId &&
+        (isSameCoachForBothTeams(game)
+          ? game.calls?.map(call => call.teamId).includes(sanction.teamId)
+          : sanction.teamId === getGameCall(game)?.teamId) &&
         sanction.playerProfileId &&
         inCourtProfileIds?.includes(sanction.playerProfileId),
     )
   }),
 )
 
-const showCoachButtonChangeDate = (game: Game) => {
-  // return (
-  //   auth.user &&
-  //   (game.localTeam?.coachId === auth.user.id || game.requestedDate)
-  // )
-  return game.date && !isMatchDayPassed(game)
-}
+const showCoachButtonChangeDate = (game: Game) =>
+  game.date && !isMatchDayPassed(game)
 
 const requestTimeout = async () => {
-  const call = !!timeoutRequestedByOpponent.value
-    ? props.opponentCalls[0]
-    : props.calls[0]
-
   const storeTimeoutForm: TimeoutStoreRequest = {
-    setId: setToRequestTimeout.value ?? 0,
-    teamId: call.teamId ?? 0,
+    setId: setToRequestTimeout.value?.setId ?? 0,
+    teamId: setToRequestTimeout.value?.teamId ?? 0,
     status: TimeoutStatusEnum.requested,
   }
 
@@ -131,40 +138,46 @@ const requestTimeout = async () => {
   }
 }
 
-const currentSetRotation = (game: Game, callId: number): Rotation | undefined =>
-  game.currentSet?.rotations?.find(rotation => rotation.callId === callId)
-
-const callUnlocked = (
-  callIndex: number,
+const currentSetRotation = (
+  game: Game,
   opponent: boolean = false,
-): boolean | undefined => {
-  const call = opponent
-    ? props.opponentCalls[callIndex]
-    : props.calls[callIndex]
-
-  return !call?.locked || call?.playersData.length < MIN_CALL_PLAYERS
+): Rotation | undefined => {
+  const call = getGameCall(game, opponent)
+  return call
+    ? game.currentSet?.rotations?.find(rotation => rotation.callId === call.id)
+    : undefined
 }
 
-const rotationLocked = (
-  callIndex: number,
-  opponent: boolean = false,
-): boolean => {
-  const call = opponent
-    ? props.opponentCalls[callIndex]
-    : props.calls[callIndex]
+const callUnlocked = (game: Game, opponent: boolean = false): boolean => {
+  const call = getGameCall(game, opponent)
+  return call
+    ? !call.locked || call.playersData.length < MIN_CALL_PLAYERS
+    : true
+}
 
-  return !!call.currentRotation?.locked
+const rotationLocked = (game: Game, opponent: boolean = false): boolean => {
+  const call = getGameCall(game, opponent)
+  return call ? !!call.currentRotation?.locked : true
 }
 
 const maxSetPlayerChangesReached = (
   game: Game,
-  callId: number,
+  opponent: boolean = true,
 ): boolean | undefined => {
-  const rotation = currentSetRotation(game, callId)
-
+  const rotation = currentSetRotation(game, opponent)
   if (!rotation) return
-
   return rotation.playerChangesCount >= MAX_ROTATION_PLAYER_CHANGES
+}
+
+const currentSetRotationLocked = (
+  game: Game,
+  opponent: boolean = false,
+): boolean => {
+  const call = getGameCall(game, opponent)
+  if (!call || !call.locked) return true
+  return call
+    ? !!call.locked && !!currentSetRotation(game, opponent)?.locked
+    : true
 }
 
 const getGameObservationsCountdownTarget = (game: Game): number =>
@@ -175,14 +188,23 @@ const onCountdownEnded = ({ game, call }: { game: Game; call: Call }) =>
 
 const redirectIfSanctionedMembersToChange = () => {
   if (gamesWithSanctionedMembersToChange.value.length) {
-    const game = gamesWithSanctionedMembersToChange.value[0]
-    const call = props.calls.find(call => call.gameId === game.id)
-    const rotation = currentSetRotation(game, call?.id ?? 0)
-    if (game && call && rotation) {
-      navigateTo(
-        `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
-      )
-    }
+    gamesWithSanctionedMembersToChange.value.forEach(game => {
+      const calls = game.calls?.filter(call => call.gameId === game.id)
+
+      calls?.forEach(call => {
+        const rotation = game.currentSet?.rotations?.find(
+          rotation => rotation.callId === call?.id,
+        )
+
+        if (rotation && rotation.locked) return
+
+        if (call && rotation) {
+          navigateTo(
+            `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+          )
+        }
+      })
+    })
   }
 }
 
@@ -218,22 +240,30 @@ const reportAlreadySignedByCoachAndCaptain = (
   )
 }
 
-const showReportSignedMessage = (game: Game, index: number): boolean => {
-  const callSigned = reportAlreadySignedByCoachAndCaptain(
-    game,
-    props.calls[index],
-  )
+const gameCallSigned = (game: Game): boolean => {
+  const callSigned = !!getGameCall(game)
+    ? reportAlreadySignedByCoachAndCaptain(game, getGameCall(game) as Call)
+    : false
 
   if (isSameCoachForBothTeams(game)) {
-    const opponentCallSigned = reportAlreadySignedByCoachAndCaptain(
-      game,
-      props.opponentCalls[index],
-    )
+    const opponentCallSigned = !!getGameCall(game, true)
+      ? reportAlreadySignedByCoachAndCaptain(
+          game,
+          getGameCall(game, true) as Call,
+        )
+      : false
+
     return callSigned && opponentCallSigned
   }
 
   return callSigned
 }
+
+const showReportSignedMessage = (game: Game, index: number): boolean =>
+  isMatchDay(game) ? gameCallSigned(game) : false
+
+const showSignatureCountdown = (game: Game, index: number): boolean =>
+  game.status === 'finished' && !gameCallSigned(game)
 
 const handleSignatureStored = (gameSignature: GameSignature) => {
   gameSignatures.value.push(gameSignature)
@@ -254,8 +284,6 @@ const isGameInShowGameRequestDateIds = (gameId: number): boolean =>
   showGameRequestDateIds.value.includes(gameId)
 
 const handleCalendarShow = (game: Game) => {
-  // navigateTo(`/coach/games/${game.id}/edit`)
-
   addGameToShowGameRequestDateIds(game.id)
   setTimeout(() => {
     const input = document.getElementById('calendar-game-date-input')
@@ -271,12 +299,21 @@ const handleDateApproved = (game: Game) => {
   emit('date:approved', game)
 }
 
-const handleTimeoutRequested = (setId?: number, opponent: boolean = false) => {
-  timeoutRequestedByOpponent.value = opponent
-  setToRequestTimeout.value = setId
+const handleTimeoutRequested = (setId?: number, teamId?: number) =>
+  (setToRequestTimeout.value = setId && teamId ? { setId, teamId } : undefined)
+
+const getActionsGridCols = (game: Game): number => {
+  switch (game.status) {
+    case 'playing':
+      return getPlayingStatusGridCols(game)
+    case 'resting':
+      return isSameCoachForBothTeams(game) ? 2 : 1
+    default:
+      return ACTIONS_GRID_COLS[game.status ?? 'default']
+  }
 }
 
-onMounted(redirectIfSanctionedMembersToChange)
+onMounted(() => redirectIfSanctionedMembersToChange())
 </script>
 
 <template>
@@ -291,85 +328,97 @@ onMounted(redirectIfSanctionedMembersToChange)
         :game="game"
       />
 
-      <EasyGrid
-        class="actions mt-3"
-        :gap="2"
-        :cols="
-          game.status === 'playing'
-            ? getPlayingStatusGridCols(game)
-            : ACTIONS_GRID_COLS[game.status ?? 'default']
-        "
-      >
+      <EasyGrid class="actions mt-3" :gap="2" :cols="getActionsGridCols(game)">
         <template v-if="game.status">
           <template v-if="game.status === 'warmup'">
             <CoachButtonCall
               class="action"
               :gameId="game.id"
-              :teamId="calls[index]?.teamId"
-              :locked="!!calls[index]?.locked"
+              :teamId="getGameCall(game)?.teamId ?? 0"
+              :locked="!!getGameCall(game)?.locked"
             />
             <CoachButtonCall
-              v-if="isSameCoachForBothTeams(game)"
+              v-if="isSameCoachForBothTeams(game) && getGameCall(game, true)"
               class="action"
               :gameId="game.id"
-              :teamId="opponentCalls[index]?.teamId"
-              :locked="!!opponentCalls[index]?.locked"
+              :teamId="getGameCall(game, true)?.teamId ?? 0"
+              :locked="!!getGameCall(game, true)?.locked"
             />
           </template>
           <template v-if="['warmup', 'resting'].includes(game.status)">
             <CoachButtonRotation
               class="action"
               :gameId="game.id"
-              :callId="calls[index]?.id"
-              :callUnlocked="!!callUnlocked(index)"
-              :locked="!!currentSetRotation(game, calls[index]?.id)?.locked" />
+              :callId="getGameCall(game)?.id ?? 0"
+              :rotationId="currentSetRotation(game)?.id ?? 0"
+              :teamId="getGameCall(game)?.teamId ?? 0"
+              :sanctionedPlayersToBeReplaced="
+                gamesWithSanctionedMembersToChange.includes(game)
+              "
+              :callUnlocked="callUnlocked(game)"
+              :locked="currentSetRotationLocked(game)"
+            />
             <CoachButtonRotation
               v-if="isSameCoachForBothTeams(game)"
               class="action"
               :gameId="game.id"
-              :callId="opponentCalls[index]?.id"
-              :callUnlocked="!!callUnlocked(index, true)"
-              :locked="
-                !!currentSetRotation(game, opponentCalls[index]?.id)?.locked
+              :callId="getGameCall(game, true)?.id ?? 0"
+              :rotationId="currentSetRotation(game, true)?.id ?? 0"
+              :teamId="getGameCall(game, true)?.teamId ?? 0"
+              :sanctionedPlayersToBeReplaced="
+                gamesWithSanctionedMembersToChange.includes(game)
               "
-          /></template>
+              :callUnlocked="callUnlocked(game, true)"
+              :locked="currentSetRotationLocked(game, true)"
+            />
+          </template>
           <template v-if="game.status === 'playing'">
             <CoachButtonPlayerChange
+              v-if="!!getGameCall(game)"
               class="action"
               :gameId="game.id"
-              :teamId="calls[index]?.teamId"
-              :rotation="currentSetRotation(game, calls[index]?.id)"
+              :teamId="getGameCall(game)?.teamId ?? 0"
+              :rotation="currentSetRotation(game)"
               :locked="
-                !!rotationLocked(index) ||
-                !!maxSetPlayerChangesReached(game, calls[index]?.id)
+                !!rotationLocked(game) || !!maxSetPlayerChangesReached(game)
               "
             />
             <CoachButtonPlayerChange
-              v-if="isSameCoachForBothTeams(game)"
+              v-if="isSameCoachForBothTeams(game) && !!getGameCall(game, true)"
               class="action"
               :gameId="game.id"
-              :teamId="opponentCalls[index]?.teamId"
-              :rotation="currentSetRotation(game, opponentCalls[index]?.id)"
+              :teamId="getGameCall(game, true)?.teamId ?? 0"
+              :rotation="currentSetRotation(game, true)"
               :locked="
-                !!rotationLocked(index, true) ||
-                !!maxSetPlayerChangesReached(game, opponentCalls[index]?.id)
+                !!rotationLocked(game, true) ||
+                !!maxSetPlayerChangesReached(game, true)
               "
             />
             <template v-if="enableRequestTimeouts">
               <CoachButtonTimeout
+                v-if="!!getGameCall(game)"
                 class="action"
                 :game="game"
-                :teamId="calls[index].teamId"
+                :teamId="getGameCall(game)?.teamId ?? 0"
                 :loading="loadingTimeout"
-                @timeout:dialog="handleTimeoutRequested($event)"
+                @timeout:dialog="
+                  handleTimeoutRequested($event, getGameCall(game)?.teamId)
+                "
               />
               <CoachButtonTimeout
-                v-if="isSameCoachForBothTeams(game)"
+                v-if="
+                  isSameCoachForBothTeams(game) && !!getGameCall(game, true)
+                "
                 class="action"
                 :game="game"
-                :teamId="opponentCalls[index].teamId"
+                :teamId="getGameCall(game, true)?.teamId ?? 0"
                 :loading="loadingTimeout"
-                @timeout:dialog="handleTimeoutRequested($event, true)"
+                @timeout:dialog="
+                  handleTimeoutRequested(
+                    $event,
+                    getGameCall(game, true)?.teamId,
+                  )
+                "
               />
             </template>
           </template>
@@ -392,30 +441,30 @@ onMounted(redirectIfSanctionedMembersToChange)
                 ]"
               >
                 <CoachButtonSign
-                  v-if="!!calls[index]"
-                  class="action"
+                  v-if="!!getGameCall(game)"
                   :game="game"
-                  :call="calls[index]"
+                  :call="getGameCall(game) as Call"
                   :signature-type="gameSignatureType"
                   :disabled="
                     signButtonTypeDisabled(
                       game,
-                      calls[index],
+                      getGameCall(game) as Call,
                       gameSignatureType,
                     )
                   "
                   @signature:stored="handleSignatureStored"
                 />
                 <CoachButtonSign
-                  v-if="isSameCoachForBothTeams(game) && !!opponentCalls[index]"
-                  class="action"
+                  v-if="
+                    isSameCoachForBothTeams(game) && !!getGameCall(game, true)
+                  "
                   :game="game"
-                  :call="opponentCalls[index]"
+                  :call="getGameCall(game, true) as Call"
                   :signature-type="gameSignatureType"
                   :disabled="
                     signButtonTypeDisabled(
                       game,
-                      opponentCalls[index],
+                      getGameCall(game, true) as Call,
                       gameSignatureType,
                     )
                   "
@@ -437,13 +486,15 @@ onMounted(redirectIfSanctionedMembersToChange)
         />
       </EasyGrid>
       <EasyCountdown
-        v-if="game.status === 'finished'"
+        v-if="showSignatureCountdown(game, index)"
         :class="[
           `col-span-${ACTIONS_GRID_COLS[game.status ?? 'default']} mt-3`,
         ]"
         v-slot="{ minutes, seconds }"
         :target="getGameObservationsCountdownTarget(game)"
-        @countdown:ended="onCountdownEnded({ game, call: calls[index] })"
+        @countdown:ended="
+          onCountdownEnded({ game, call: getGameCall(game) as Call })
+        "
       >
         <div
           class="text-xs text-[var(--danger-color)] flex items-center justify-center"

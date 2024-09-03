@@ -45,7 +45,6 @@ export default function useEasyToast() {
     errorValue: unknown[],
     forceCorrectErrors: boolean = true,
   ) => {
-    console.log({ errorValue, forceCorrectErrors })
     if (forceCorrectErrors) {
       correctErrors()
       return

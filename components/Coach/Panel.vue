@@ -2,13 +2,8 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import CallService from '@/services/call'
-import {
-  Game,
-  isValidCoachPanelGame,
-  isSameCoachForBothTeams,
-  mapApiGameToGame,
-} from '@/domain/game'
-import { Call, mapApiCallToCall } from '@/domain/call'
+import { Game, mapApiGameToGame } from '@/domain/game'
+import { Call } from '@/domain/call'
 import {
   ApiCallUnlockedEventResponse,
   ApiRotationLockToggledEventResponse,
@@ -19,7 +14,6 @@ import {
   ApiGameSignatureCreatedEventResponse,
   ApiRequestChangeDateEventResponse,
 } from '@/types/api/event'
-import { TeamType } from '@/domain/team'
 import {
   Timeout,
   TimeoutStatusEnum,
@@ -41,23 +35,16 @@ const toast = useEasyToast()
 const listenedEvents = ref<string[]>([])
 const selectedDate = ref<Date>(new Date())
 const selectedDateGames = ref<Game[]>([])
-const calls = ref<Call[]>([])
-const opponentCalls = ref<Call[]>([])
 const loadingApi = ref<boolean>(false)
 
-const getGamesByDate = async (
-  date: Date | string = selectedDate.value,
-  type: TeamType = TeamType.LOCAL,
-) => {
+const getGamesByDate = async (date: Date | string = selectedDate.value) => {
   if (!auth.user) return
 
   leaveAllChannels()
 
   loadingApi.value = true
 
-  if (type === TeamType.LOCAL) {
-    selectedDateGames.value = []
-  }
+  selectedDateGames.value = []
 
   date = new Date(date)
   selectedDate.value = date
@@ -67,8 +54,8 @@ const getGamesByDate = async (
 
   const { data, error } = await gameService.fetch({
     where: `date:>=:${formatedDateLeft},date:<=:${formatedDateRight}`,
-    where_has: `${type}Team:coach_id:${auth.user.id}`,
-    with: `localTeam,visitorTeam,currentSet.rotations.players,currentSet.timeouts,currentSet.sanctions,signatures`,
+    scope: `hasCoach:${auth.user.id}`,
+    with: `localTeam,visitorTeam,currentSet.rotations.players,currentSet.timeouts,currentSet.sanctions,calls.currentRotation.players,signatures`,
   })
 
   if (error.value) {
@@ -76,65 +63,19 @@ const getGamesByDate = async (
   } else if (data.value) {
     selectedDateGames.value = [
       ...selectedDateGames.value,
-      ...data.value?.data.games
-        .map(mapApiGameToGame)
-        .filter(isValidCoachPanelGame),
+      ...data.value.data.games.map(mapApiGameToGame),
+      /* .filter(isValidCoachPanelGame) */
     ]
-
-    if (type === TeamType.LOCAL) {
-      await getGamesByDate(date, TeamType.VISITOR)
-    }
   }
 
-  // remove duplicated games
-  selectedDateGames.value = selectedDateGames.value.filter(
-    (game, index, self) =>
-      index === self.findIndex(g => g.id === game.id && g.date === game.date),
-  )
+  // remove duplicated games by id
+  // selectedDateGames.value = selectedDateGames.value.filter(
+  //   (game, index, self) => index === self.findIndex(g => g.id === game.id),
+  // )
 
-  if (selectedDateGames.value?.length) {
-    await getSelectedDateGamesCalls()
-  } else {
-    loadingApi.value = false
-  }
-}
+  listenAllChannels()
 
-const getSelectedDateGamesCalls = async () => {
-  loadingApi.value = true
-  calls.value = []
-
-  selectedDateGames.value?.forEach(async game => {
-    const { data } = await callService.fetch({
-      where: `game_id:${game.id}`,
-      with: 'currentRotation.players',
-    })
-
-    const teamType =
-      game.localTeam?.coachId === auth.user?.id
-        ? TeamType.LOCAL
-        : TeamType.VISITOR
-
-    const opponentTeamType =
-      teamType === TeamType.LOCAL ? TeamType.VISITOR : TeamType.LOCAL
-
-    const apiGameCall = data.value?.data.calls.find(
-      call => call.team_id === game?.[`${teamType}TeamId`],
-    )
-
-    const apiOpponentGameCall = isSameCoachForBothTeams(game)
-      ? data.value?.data.calls.find(
-          call => call.team_id === game?.[`${opponentTeamType}TeamId`],
-        )
-      : undefined
-
-    if (apiGameCall) calls.value.push(mapApiCallToCall(apiGameCall))
-    if (apiOpponentGameCall)
-      opponentCalls.value.push(mapApiCallToCall(apiOpponentGameCall))
-
-    listenAllChannels(game.id)
-
-    loadingApi.value = false
-  })
+  loadingApi.value = false
 }
 
 const setTimeoutStatus = (requestedTimeout: Timeout) => {
@@ -154,10 +95,12 @@ const setTimeoutStatus = (requestedTimeout: Timeout) => {
 }
 
 const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
+  if (game.id !== call.gameId) return
+
   const endedGame = selectedDateGames.value?.find(g => g.id === game.id)
   if (!endedGame) return
 
-  const callToSign = calls.value.find(c => c.id === call.id && !c.signedAt)
+  const callToSign = game.calls?.find(c => c.id === call.id && !c.signedAt)
 
   if (callToSign) {
     const signData = { signedAt: moment().format('YYYY-MM-DD HH:mm:ss') }
@@ -169,7 +112,7 @@ const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
     1,
   )
 
-  toast.info(t('reports.closed', { gameName: game.name }))
+  toast.info(t('reports.closed_game', { gameName: game.name }))
 }
 
 const onReportSigned = (game: Game) => {
@@ -181,7 +124,7 @@ const onReportSigned = (game: Game) => {
     1,
   )
 
-  toast.info(t('reports.closed', { gameName: game.name }))
+  toast.info(t('reports.closed_game', { gameName: game.name }))
 }
 
 const currentSetRotation = (
@@ -202,7 +145,7 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
           ? t('events.call_locked')
           : t('events.call_unlocked'),
       )
-      getSelectedDateGamesCalls()
+      getGamesByDate()
     },
   )
 }
@@ -211,10 +154,11 @@ const listenRotationLockToggledEvent = (
   gameId: number,
   rotationId?: number,
 ) => {
+  if (!rotationId) return
+
   listenedEvents.value.push(
     `game.${gameId}.rotation.${rotationId}.lock-toggled`,
   )
-  if (!rotationId) return
 
   window.Echo.channel(
     `game.${gameId}.rotation.${rotationId}.lock-toggled`,
@@ -316,7 +260,9 @@ const listenSanctionStoredEvent = (gameId: number) => {
         const game = selectedDateGames.value?.find(
           game => game.currentSet?.id === response.sanction.set_id,
         )
-        const call = calls.value.find(call => call.gameId === game?.id)
+        const call = game?.calls?.find(
+          call => call.gameId === game?.id && call.teamId === response.team.id,
+        )
         const rotation = currentSetRotation(game?.id ?? 0, call?.id ?? 0)
         const inCourtPlayerIds = rotation?.players?.map(
           player => player.inCourtProfileId,
@@ -379,52 +325,45 @@ const listenRequestChangeDateEvent = (gameId: number) => {
   )
 }
 
-const listenAllChannels = (gameId: number) => {
-  if (!listenedEvents.value.includes(`game.${gameId}.status.updated`)) {
-    listenGameStatusUpdatedEvent(gameId)
-  }
-  if (!listenedEvents.value.includes(`game.${gameId}.timeout.status.updated`)) {
-    listenTimeoutStatusUpdatedEvent(gameId)
-  }
-  if (!listenedEvents.value.includes(`game.${gameId}.sanction.stored`)) {
-    listenSanctionStoredEvent(gameId)
-  }
-  if (!listenedEvents.value.includes(`game.${gameId}.game_signature.created`)) {
-    listenGameSignatureCreatedEvent(gameId)
-  }
-  if (!listenedEvents.value.includes(`game.${gameId}.request-change-date`)) {
-    listenRequestChangeDateEvent(gameId)
-  }
+const listenAllChannels = () => {
+  selectedDateGames.value?.forEach(game => {
+    if (!listenedEvents.value.includes(`game.${game.id}.status.updated`)) {
+      listenGameStatusUpdatedEvent(game.id)
+    }
+    if (
+      !listenedEvents.value.includes(`game.${game.id}.timeout.status.updated`)
+    ) {
+      listenTimeoutStatusUpdatedEvent(game.id)
+    }
+    if (!listenedEvents.value.includes(`game.${game.id}.sanction.stored`)) {
+      listenSanctionStoredEvent(game.id)
+    }
+    if (
+      !listenedEvents.value.includes(`game.${game.id}.game_signature.created`)
+    ) {
+      listenGameSignatureCreatedEvent(game.id)
+    }
+    if (!listenedEvents.value.includes(`game.${game.id}.request-change-date`)) {
+      listenRequestChangeDateEvent(game.id)
+    }
 
-  calls.value?.forEach(call => {
-    if (
-      !listenedEvents.value.includes(`game.${gameId}.call.${call.id}.unlocked`)
-    ) {
-      listenCallUnlockedEvent(gameId, call.id)
-    }
-    if (
-      !listenedEvents.value.includes(
-        `game.${gameId}.rotation.${call.currentRotation?.id}.lock-toggled`,
-      )
-    ) {
-      listenRotationLockToggledEvent(gameId, call.currentRotation?.id)
-    }
-  })
-
-  opponentCalls.value?.forEach(call => {
-    if (
-      !listenedEvents.value.includes(`game.${gameId}.call.${call.id}.unlocked`)
-    ) {
-      listenCallUnlockedEvent(gameId, call.id)
-    }
-    if (
-      call.currentRotation?.id &&
-      !listenedEvents.value.includes(
-        `game.${gameId}.rotation.${call.currentRotation.id}.lock-toggled`,
-      )
-    ) {
-      listenRotationLockToggledEvent(gameId, call.currentRotation.id)
-    }
+    game.calls?.forEach(call => {
+      if (
+        !listenedEvents.value.includes(
+          `game.${game.id}.call.${call.id}.unlocked`,
+        )
+      ) {
+        listenCallUnlockedEvent(game.id, call.id)
+      }
+      if (
+        call.currentRotation &&
+        !listenedEvents.value.includes(
+          `game.${game.id}.rotation.${call.currentRotation.id}.lock-toggled`,
+        )
+      ) {
+        listenRotationLockToggledEvent(game.id, call.currentRotation.id)
+      }
+    })
   })
 }
 
@@ -476,8 +415,6 @@ onBeforeUnmount(() => {
       <CoachGames
         v-if="selectedDateGames?.length"
         :games="selectedDateGames"
-        :calls="calls"
-        :opponentCalls="opponentCalls"
         @date:requested="handleDateRequested"
         @date:approved="handleDateApproved"
         @timeout:requested="setTimeoutStatus"

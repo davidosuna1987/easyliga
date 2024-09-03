@@ -848,18 +848,18 @@ onMounted(() => {
       @hide="showSetPointWillEndSetDialog = false"
     >
       <template #header>
-        <Heading tag="h6">{{
-          t(`${gameFinishesIfSumPoint ? 'games' : 'sets'}.close`)
-        }}</Heading>
+        <Heading tag="h6">
+          {{ t(`${gameFinishesIfSumPoint ? 'games' : 'sets'}.close`) }}
+        </Heading>
       </template>
 
-      <p>
-        {{
+      <p
+        v-html="
           t(`games.point_will_end_${gameFinishesIfSumPoint ? 'game' : 'set'}`, {
             teamName: winnerTeamIfSumPoint?.name,
           })
-        }}
-      </p>
+        "
+      ></p>
 
       <p class="mt-3">
         {{

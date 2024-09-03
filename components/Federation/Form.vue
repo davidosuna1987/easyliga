@@ -143,7 +143,6 @@ const handleUpdate = async () => {
 }
 
 const handleResponsibleSelected = (responsible: User) => {
-  console.log('responsible', responsible)
   selectedResponsible.value = responsible
   form.value.responsible_id = responsible.id
 }

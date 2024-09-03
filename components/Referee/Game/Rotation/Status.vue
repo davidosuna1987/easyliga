@@ -85,6 +85,7 @@ const lock = async () => {
       v-if="
         props.gameStatus !== 'finished' &&
         props.gameStatus !== 'warmup' &&
+        props.gameStatus !== 'resting' &&
         props.rotation.playerChangesCount < MAX_ROTATION_PLAYER_CHANGES
       "
       class="unlock-button text-xs px-[0.5rem] py-[0.25rem]"

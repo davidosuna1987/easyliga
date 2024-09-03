@@ -82,7 +82,7 @@ const getRotation = async () => {
   const { data, error } = await rotationService.get(
     Number(route.params.rotation_id),
     {
-      with: 'game.sanctions,call,players,setSanctions',
+      with: 'game.sanctions,call.team,players,setSanctions',
       set_appends: 'current_rotation',
     },
   )
@@ -292,11 +292,18 @@ onBeforeUnmount(() => {
     class="easy-coach-rotation-player-change-form-component"
     @submit.prevent="handleSubmit"
   >
-    <Heading tag="h5" position="center" class="mb-5">{{ game?.name }}</Heading>
+    <Heading
+      tag="h5"
+      position="center"
+      class="mb-5"
+      v-highlight="rotation?.call?.team?.name"
+    >
+      {{ game?.name }}
+    </Heading>
 
-    <Message v-if="rotation?.locked" :closable="false">{{
-      t('rotations.locked_warning')
-    }}</Message>
+    <Message v-if="rotation?.locked" :closable="false">
+      {{ t('rotations.locked_warning') }}
+    </Message>
 
     <RotationPlayerSanctionedMessage
       v-if="rotationPlayersToBeReplacedForSanction.length"

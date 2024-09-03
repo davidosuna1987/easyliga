@@ -10,6 +10,18 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  rotationId: {
+    type: Number,
+    required: true,
+  },
+  teamId: {
+    type: Number,
+    required: true,
+  },
+  sanctionedPlayersToBeReplaced: {
+    type: Boolean,
+    required: false,
+  },
   severity: {
     type: String,
     required: false,
@@ -32,6 +44,26 @@ const { t } = useI18n()
 
 const labelText = computed(() => props.label ?? t('rotations.rotation'))
 
+const redirect = () => {
+  if (props.callUnlocked) {
+    showCallUnlockedLockedToast()
+    return
+  }
+
+  if (props.locked) {
+    showRotationLockedToast()
+    return
+  }
+
+  if (props.sanctionedPlayersToBeReplaced) {
+    navigateTo(
+      `/coach/games/${props.gameId}/teams/${props.teamId}/rotations/${props.rotationId}/player-change`,
+    )
+  }
+
+  navigateTo(`/coach/games/${props.gameId}/calls/${props.callId}/rotation`)
+}
+
 const showRotationLockedToast = () => toast.warn(t('rotations.locked'))
 
 const showCallUnlockedLockedToast = () =>
@@ -50,13 +82,7 @@ const showCallUnlockedLockedToast = () =>
         ? 'warning'
         : 'primary'
     "
-    @click.prevent="
-      props.callUnlocked
-        ? showCallUnlockedLockedToast()
-        : props.locked
-        ? showRotationLockedToast()
-        : navigateTo(`/coach/games/${gameId}/calls/${callId}/rotation`)
-    "
+    @click.prevent="redirect()"
   />
 </template>
 

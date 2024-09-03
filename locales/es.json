@@ -377,8 +377,8 @@
     "close_acta": "Cerrar acta",
     "change_window": "Ventana de cambios",
     "change_window_num": "Ventana de cambios {num}",
-    "point_will_end_set": "Al sumar este punto, {teamName} será el ganador del set.",
-    "point_will_end_game": "Al sumar este punto, {teamName} será el ganador del partido.",
+    "point_will_end_set": "Al sumar este punto, {teamName} será el <span class='text-highlight'>ganador del set</span>.",
+    "point_will_end_game": "Al sumar este punto, {teamName} será el <span class='text-highlight'>ganador del partido</span>.",
     "point_will_end_set_alert": "¿Estás seguro de que quieres sumar este punto y terminar el set?",
     "point_will_end_game_alert": "¿Estás seguro de que quieres sumar este punto y terminar el partido?",
     "finished": "Partido finalizado",
@@ -847,7 +847,8 @@
         "captain": "Firma capitán"
       }
     },
-    "closed": "El acta del partido {gameName} se ha cerrado",
+    "closed": "El acta del partido se ha cerrado",
+    "closed_game": "El acta del partido {gameName} se ha cerrado",
     "player_number": "Nº",
     "result": {
       "title": "Resultado final",

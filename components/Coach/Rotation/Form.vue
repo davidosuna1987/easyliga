@@ -25,7 +25,11 @@ import {
 } from '@/domain/sanction'
 import { getFullName } from '@/domain/player'
 import { mapApiProfileToProfile } from '@/domain/profile'
-import { ApiEvents, ApiSanctionStoredEventResponse } from '@/types/api/event'
+import {
+  ApiEvents,
+  ApiRotationLockToggledEventResponse,
+  ApiSanctionStoredEventResponse,
+} from '@/types/api/event'
 
 const props = defineProps({
   initialRotation: {
@@ -36,6 +40,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'update:set', value: Set): void
+  (e: 'update:call', value: Call | undefined): void
 }>()
 
 const { t } = useI18n()
@@ -85,19 +90,18 @@ const currentSetTeamMemberSanctions = computed((): Sanction[] | undefined =>
 
 const rotationPlayersToBeReplacedForSanction = computed(
   (): CallPlayerData[] => {
-    const playerIdsToBeReplaced = currentSetTeamMemberSanctions.value
-      ?.filter(sanction => {
-        const inCourtProfileIds = form.value?.players?.map(
-          player => player.in_court_profile_id,
-        )
+    const inCourtProfileIds = form.value?.players?.map(
+      player => player.in_court_profile_id,
+    )
 
-        return (
+    const playerIdsToBeReplaced = currentSetTeamMemberSanctions.value
+      ?.filter(
+        sanction =>
           sanction.type === SanctionType.member &&
           !!EXPULSION_SEVERITIES.includes(sanction.severity) &&
           sanction.playerProfileId &&
-          inCourtProfileIds?.includes(sanction.playerProfileId ?? 0)
-        )
-      })
+          inCourtProfileIds?.includes(sanction.playerProfileId ?? 0),
+      )
       .map(sanction => sanction.playerProfileId)
 
     return (
@@ -117,13 +121,21 @@ const createInitialRotation = (): void => {
     number: 1,
     players: [],
   }
+
+  if (currentSetRotation.value) {
+    setRotationPlayers(currentSetRotation.value.players)
+  }
 }
 
 const getInitialData = async (): Promise<void> => {
+  leaveAllChannels()
+
   loadingApi.value = true
   await Promise.all([getGameSets(), getCall()])
-  createInitialRotation()
   loadingApi.value = false
+
+  listenAllChannels()
+  createInitialRotation()
 }
 
 const getGameSets = async (): Promise<void> => {
@@ -142,7 +154,9 @@ const getGameSets = async (): Promise<void> => {
 }
 
 const getCall = async (): Promise<void> => {
-  const { data } = await callService.get(Number(route.params.call_id))
+  const { data } = await callService.get(Number(route.params.call_id), {
+    with: 'team',
+  })
 
   if (data.value?.data.call) {
     call.value = mapApiCallToCall(data.value?.data.call)
@@ -189,6 +203,27 @@ const handleSubmit = async (): Promise<void> => {
   }
 }
 
+const listenRotationLockToggledEvent = (rotationId: number) => {
+  listenedEvents.value.push(
+    `game.${route.params.game_id}.rotation.${rotationId}.lock-toggled`,
+  )
+
+  window.Echo.channel(
+    `game.${route.params.game_id}.rotation.${rotationId}.lock-toggled`,
+  ).listen(
+    ApiEvents.ROTATION_LOCK_TOGGLED,
+    (response: ApiRotationLockToggledEventResponse) => {
+      toast.info(
+        response.rotation.locked
+          ? t('events.rotation_locked')
+          : t('events.rotation_unlocked'),
+      )
+
+      getInitialData()
+    },
+  )
+}
+
 const listenSanctionStoredEvent = (): void => {
   listenedEvents.value.push(`game.${route.params.game_id}.sanction.stored`)
   window.Echo.channel(`game.${route.params.game_id}.sanction.stored`).listen(
@@ -210,6 +245,15 @@ const listenSanctionStoredEvent = (): void => {
 
 const listenAllChannels = () => {
   if (
+    !!currentSetRotation.value &&
+    !listenedEvents.value.includes(
+      `game.${route.params.game_id}.rotation.${currentSetRotation.value.id}.lock-toggled`,
+    )
+  ) {
+    listenRotationLockToggledEvent(currentSetRotation.value.id)
+  }
+
+  if (
     !listenedEvents.value.includes(
       `game.${route.params.game_id}.sanction.stored`,
     )
@@ -223,16 +267,27 @@ const leaveAllChannels = () => {
   listenedEvents.value = []
 }
 
-watch(currentSet, (): void => emit('update:set', currentSet.value))
+watch(currentSet, (): void => emit('update:set', currentSet.value), {
+  immediate: true,
+})
+
+watch(
+  call,
+  (): void => {
+    emit('update:call', call.value)
+  },
+  {
+    immediate: true,
+  },
+)
 
 watch(currentSetRotation, (): void => {
   if (currentSetRotation.value?.players) {
-    setRotationPlayers(currentSetRotation.value?.players)
+    setRotationPlayers(currentSetRotation.value.players)
   }
 })
 
 onMounted((): void => {
-  listenAllChannels()
   getInitialData()
 })
 
@@ -240,14 +295,13 @@ onBeforeUnmount((): void => {
   leaveAllChannels()
 })
 </script>
-
 <template>
   <div class="easy-coach-rotation-form-component">
     <Loading v-if="loadingApi" />
 
-    <Message v-if="currentSetHasRotation" :closable="false">{{
-      t('rotations.created_warning')
-    }}</Message>
+    <Message v-if="currentSetRotation?.locked" :closable="false">
+      {{ t('rotations.created_warning') }}
+    </Message>
 
     <RotationPlayerSanctionedMessage
       v-if="rotationPlayersToBeReplacedForSanction.length"
