@@ -134,7 +134,7 @@ watch(selectedDate, value => {
 
     <EasyGrid class="text-center" :cols="9">
       <Button
-        class="cursor-pointer hover:text-[var(--highlight-color)]"
+        class="relative rounded-lg cursor-pointer overflow-hidden p-3 grid place-content-center hover:text-[var(--highlight-color)]"
         unstyled
         @click="prevWeek"
       >
@@ -152,7 +152,7 @@ watch(selectedDate, value => {
         <span>{{ day.getDate() }}</span>
       </div>
       <Button
-        class="cursor-pointer hover:text-[var(--highlight-color)]"
+        class="relative rounded-lg cursor-pointer overflow-hidden p-3 grid place-content-center hover:text-[var(--highlight-color)]"
         unstyled
         @click="nextWeek"
       >
