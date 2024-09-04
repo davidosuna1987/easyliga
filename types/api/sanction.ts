@@ -21,6 +21,7 @@ export type ApiSanction = {
   id: number
   type: SanctionTypeKey
   severity: SanctionSeverityKey
+  player_replaced_at: string | null
   set_id: number
   team_id: number
   player_profile_id?: number

@@ -304,7 +304,7 @@ onBeforeUnmount((): void => {
     </Message>
 
     <RotationPlayerSanctionedMessage
-      v-if="rotationPlayersToBeReplacedForSanction.length"
+      v-if="!initialRotation && rotationPlayersToBeReplacedForSanction.length"
       :playersData="rotationPlayersToBeReplacedForSanction"
     />
 

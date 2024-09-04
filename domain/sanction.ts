@@ -70,6 +70,7 @@ export type Sanction = {
   id: number
   type: SanctionTypeKey
   severity: SanctionSeverityKey
+  playerReplacedAt?: string
   setId: number
   teamId: number
   playerProfileId?: number
@@ -95,6 +96,7 @@ export const mapApiSanctionToSanction = (
   id: apiSanction.id,
   type: apiSanction.type,
   severity: apiSanction.severity,
+  playerReplacedAt: apiSanction.player_replaced_at ?? undefined,
   setId: apiSanction.set_id,
   teamId: apiSanction.team_id,
   playerProfileId: apiSanction.player_profile_id ?? undefined,

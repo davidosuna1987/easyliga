@@ -196,8 +196,6 @@ const redirectIfSanctionedMembersToChange = () => {
           rotation => rotation.callId === call?.id,
         )
 
-        if (rotation && rotation.locked) return
-
         if (call && rotation) {
           navigateTo(
             `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
@@ -485,6 +483,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
           @date:approved="handleDateApproved(game)"
         />
       </EasyGrid>
+
       <EasyCountdown
         v-if="showSignatureCountdown(game, index)"
         :class="[
