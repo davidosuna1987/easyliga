@@ -141,7 +141,8 @@
     "add": "Añadir",
     "action": "Acción | Acciones",
     "settings": "Ajuste | Ajustes",
-    "options": "Opciones"
+    "options": "Opciones",
+    "deny": "Denegar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -184,7 +185,13 @@
     },
     "not_allowed_to_manage_federation": "No tienes permisos para gestionar esta federación",
     "not_allowed_to_manage_league": "No tienes permisos para gestionar esta liga",
-    "coach_already_in_team": "El entrenador seleccionado ya forma parte del equipo"
+    "coach_already_in_team": "El entrenador seleccionado ya forma parte del equipo",
+    "player_change_request": {
+      "missing_game": "No se ha encontrado el partido",
+      "missing_rotation": "No se ha encontrado la rotación",
+      "missing_position": "Debes seleccionar una posición",
+      "missing_captain": "Debes seleccionar un capitán"
+    }
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -677,7 +684,7 @@
     "undo_player_change": "Deshacer cambio | Deshacer cambios",
     "cancel_player_change": "Cancelar cambio | Cancelar cambios",
     "player_changed": "El jugador ha sido cambiado correctamente",
-    "player_change_requested": "El cambio de jugador ha sido solicitado correctamente",
+    "player_change_requested": "El cambio de jugador ha sido solicitado correctamente | El cambio de jugadores ha sido solicitados correctamente",
     "waiting_player_changes": "Esperando cambio | Esperando cambios",
     "no_rotation": "No se ha establecido una rotación",
     "replacement_taken": "El jugador seleccionado sólo puede ser reemplazado por {name}",
@@ -685,7 +692,27 @@
     "only_one_libero_in_court_allowed": "Sólo puedes alinear un líbero en la rotación",
     "max_player_change_changes_reached": "No puedes volver a sustituir a {name} en este set",
     "max_changes_reached": "No puedes hacer más de {num} cambios en cada set",
+    "player_in_change_request": "El cambio solicitado está pendiente de aprovación",
     "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación"
+  },
+  "player_change_requests": {
+    "player_change_request": "Solicitud de cambio de jugador | Solicitudes de cambio de jugadores",
+    "pending": "Cambios pendientes",
+    "approved": "El cambio de jugadores se ha aprovado correctamente",
+    "denied": "El cambio de jugadores ha sido denegado",
+    "denied_reason": "El cambio de jugadores ha sido denegado por el siguiente motivo:",
+    "denied_with_reason": "El cambio de jugadores ha sido denegado por el siguiente motivo: {reason}",
+    "deny_reason_dialog_title": "Motivo de la denegación",
+    "deny_reason_dialog_message": "Por favor, introduce el motivo de la denegación o deja en blanco si no quieres añadir un motivo",
+    "request": "Solicitar cambio de jugador | Solicitar cambio de jugadores",
+    "request_short": "Solicitar cambio | Solicitar cambios",
+    "cancel_request": "Cancelar solicitud de cambio | Cancelar solicitudes de cambio",
+    "cancel_request_short": "Cancelar solicitud | Cancelar solicitudes",
+    "waiting_for_approval": "Solicitud pendiente de aprovación | Solicitudes pendientes de aprovación",
+    "request_denied": "Solicitud denegada | Solicitudes denegadas",
+    "delete": "Eliminar solicitud de cambio | Eliminar solicitudes de cambio",
+    "delete_alert": "¿Seguro que quieres eliminar la solicitud de cambio?",
+    "deleted": "La solicitud de cambio se ha eliminado correctamente"
   },
   "sets": {
     "set": "Set | Sets",
@@ -1023,7 +1050,10 @@
       "captain": "El capitán de {teamName} ha firmado el acta"
     },
     "date_change_requested": "Se ha solicitado un cambio de fecha para jugar el partido {gameName} en la siguiente fecha: {date}",
-    "date_change_approved": "Se ha aprovado el cambio de fecha del partido {gameName} para la siguiente fecha: {date}"
+    "date_change_approved": "Se ha aprovado el cambio de fecha del partido {gameName} para la siguiente fecha: {date}",
+    "player_change_request": {
+      "requested": "El equipo {teamName} ha solicitado un cambio de jugador"
+    }
   },
   "countries": {
     "country": "País | Países",
