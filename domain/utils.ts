@@ -124,3 +124,9 @@ export const getInitials = (segments: string[]): string =>
     .map(s => s[0])
     .join('')
     .toLocaleUpperCase()
+
+export const $ = (selector: string): HTMLElement | null =>
+  document.querySelector(selector)
+
+export const $$ = (selector: string): NodeListOf<HTMLElement> =>
+  document.querySelectorAll(selector)
