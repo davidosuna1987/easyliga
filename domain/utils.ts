@@ -125,6 +125,40 @@ export const getInitials = (segments: string[]): string =>
     .join('')
     .toLocaleUpperCase()
 
+export const equalObjects = <T extends Record<string, any>>(
+  obj1: T,
+  obj2: T,
+): boolean => {
+  // Check if they are the same object
+  if (obj1 === obj2) return true
+
+  // Check if both are objects
+  if (
+    typeof obj1 !== 'object' ||
+    typeof obj2 !== 'object' ||
+    obj1 === null ||
+    obj2 === null
+  ) {
+    return false
+  }
+
+  // Check if they have the same number of keys
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
+
+  if (keys1.length !== keys2.length) return false
+
+  // Verify that all values and properties are equal
+  for (let key of keys1) {
+    // Ensure it's an object before doing recursive comparison
+    if (!keys2.includes(key) || !equalObjects(obj1[key], obj2[key])) {
+      return false
+    }
+  }
+
+  return true
+}
+
 export const $ = (selector: string): HTMLElement | null =>
   document.querySelector(selector)
 
