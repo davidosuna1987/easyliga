@@ -14,9 +14,12 @@
   --secondary-color-light: #f4f9fd;
   --secondary-color-dark: #72add5;
   --secondary-color-darkest: #69a8db;
+  --tertiary-color-rgb: 253, 195, 155;
   --tertiary-color: #fdc39b;
   --tertiary-color-light: #fff5e9;
+  --tertiary-color-medium: #ffd4ab;
   --tertiary-color-dark: #fea95a;
+  --tertiary-color-darken: #f68c1f;
   --link-color: #4c78c4;
   --pink-color: #e879f9;
   --blue-color: #3b82f6;
@@ -190,6 +193,11 @@
     --highlight-color-alpha: var(--seagreen-color-alpha);
     --highlight-color-text: var(--background-color);
     --background-overlay-opacity: 0.9;
+
+    --box-shadow: 0 0 #0000, 0 0 #0000, 0 4px 6px -1px rgb(150 150 150 / 0.1),
+      0 2px 4px -2px rgb(150 150 150 / 0.06);
+    --box-shadow-hard: 0 2px 5px 0 rgb(150 150 150 / 0.25);
+    --box-shadow-focus: 0 0 0 0.2rem var(--primary-color-medium);
 
     --signature-background: var(--primary-color-alpha);
     --signature-button-background: var(--primary-color-alpha);

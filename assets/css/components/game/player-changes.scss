@@ -3,27 +3,27 @@
     .action {
       height: 100%;
 
-      &.action-done {
-        color: var(--primary-color);
-      }
+      // &.action-done {
+      //   color: var(--primary-color);
+      // }
 
-      &.action-undo {
-        cursor: pointer;
-        color: var(--tertiary-color-dark);
+      // &.action-undo {
+      //   cursor: pointer;
+      //   color: var(--tertiary-color-dark);
 
-        &:hover {
-          color: var(--tertiary-color-dark);
-        }
-      }
+      //   &:hover {
+      //     color: var(--tertiary-color-dark);
+      //   }
+      // }
 
-      &.action-remove {
-        cursor: pointer;
-        color: var(--danger-color);
+      // &.action-remove {
+      //   cursor: pointer;
+      //   color: var(--danger-color);
 
-        &:hover {
-          color: var(--danger-color);
-        }
-      }
+      //   &:hover {
+      //     color: var(--danger-color);
+      //   }
+      // }
 
       &.is-replacement-sanctioned {
         cursor: not-allowed;
@@ -109,13 +109,14 @@
       color: var(--primary-color);
     }
 
+    &.action-undo {
+      cursor: pointer;
+      color: var(--tertiary-color-dark);
+    }
+
     &.action-remove {
       cursor: pointer;
       color: var(--danger-color);
-
-      &:hover {
-        color: var(--danger-color);
-      }
     }
   }
 

@@ -13,7 +13,8 @@
 
   &.warmup,
   &.timeout,
-  &.resting {
+  &.resting,
+  &.pending {
     color: var(--tertiary-color-dark);
 
     .stroke {
@@ -25,7 +26,8 @@
     }
   }
 
-  &.playing {
+  &.playing,
+  &.approved {
     color: var(--primary-color);
 
     .stroke {
@@ -34,6 +36,18 @@
 
     .fill {
       fill: var(--primary-color);
+    }
+  }
+
+  &.denied {
+    color: var(--danger-color);
+
+    .stroke {
+      stroke: var(--danger-color);
+    }
+
+    .fill {
+      fill: var(--danger-color);
     }
   }
 }

@@ -2120,7 +2120,7 @@
 .p-button.p-button-warning,
 .p-buttonset.p-button-warning > .p-button,
 .p-splitbutton.p-button-warning > .p-button {
-  color: #fff;
+  color: var(--primary-color-text);
   background: var(--tertiary-color-dark);
   border: 1px solid var(--tertiary-color-dark);
 }
@@ -2128,7 +2128,7 @@
 .p-buttonset.p-button-warning > .p-button:enabled:hover,
 .p-splitbutton.p-button-warning > .p-button:enabled:hover {
   background: #fcab73;
-  color: #fff;
+  color: var(--primary-color-text);
   border-color: #fcab73;
 }
 .p-button.p-button-warning:enabled:focus,
@@ -2140,7 +2140,7 @@
 .p-buttonset.p-button-warning > .p-button:enabled:active,
 .p-splitbutton.p-button-warning > .p-button:enabled:active {
   background: #fb934b;
-  color: #fff;
+  color: var(--primary-color-text);
   border-color: #fb934b;
 }
 .p-button.p-button-warning.p-button-outlined,

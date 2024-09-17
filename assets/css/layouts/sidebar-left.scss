@@ -91,3 +91,34 @@
     }
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-left-layout {
+    .easy-main {
+      transition: none;
+    }
+
+    .easy-sidebar {
+      transition: none;
+    }
+
+    .easy-sidebar-toggle {
+      transition: none;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar-left-layout {
+    .easy-sidebar {
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    .easy-sidebar-toggle {
+      background-color: var(--background-color);
+      color: var(--primary-color);
+      box-shadow: none;
+    }
+  }
+}
