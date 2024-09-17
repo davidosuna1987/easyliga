@@ -21,6 +21,11 @@ const { t } = useI18n()
 const showDialog = ref<boolean>(!!props.player)
 const shirtNumber = ref<number>(0)
 
+const handleSubmit = () => {
+  if (shirtNumber.value === 0) return
+  emit('update:player', { ...props.player, shirtNumber: shirtNumber.value })
+}
+
 watch(
   () => props.player,
   value => {
@@ -44,14 +49,16 @@ watch(
       <small>{{ t('shirts.call_number_update_disclaimer') }}</small>
     </Message>
 
-    <div class="flex justify-center items-center">
+    <form class="flex justify-center items-center" @submit="handleSubmit">
       <InputNumber
         v-model="shirtNumber"
         buttonLayout="horizontal"
         showButtons
         class="mt-4"
         inputClass="text-4xl text-center w-[100px]"
+        inputId="easy-game-call-shirt-number-dialog-input"
         :min="1"
+        @keypress.enter.prevent="handleSubmit"
       >
         <template #incrementbuttonicon>
           <Icon name="ic:round-plus" />
@@ -60,12 +67,12 @@ watch(
           <Icon name="ic:round-minus" />
         </template>
       </InputNumber>
-    </div>
+    </form>
 
     <template #footer>
       <FormFooterActions
         :submitLabel="t('shirts.number_change_short')"
-        @form:submit="emit('update:player', { ...player, shirtNumber })"
+        @form:submit="handleSubmit"
         hideCancel
       />
     </template>

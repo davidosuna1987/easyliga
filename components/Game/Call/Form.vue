@@ -21,6 +21,7 @@ import {
   mapApiGameSignatureToGameSignature,
 } from '@/domain/game-signature'
 import GameSignatureService from '@/services/game-signature'
+import { $ } from '@/domain/utils'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -182,6 +183,7 @@ const setLibero = (profileId: number) => {
 
 const setShirtNumberUpdatePlayer = (player: Player | TeamMember) => {
   shirtNumberUpdatePlayer.value = player
+  setTimeout(() => $('#easy-game-call-shirt-number-dialog-input')?.focus(), 50)
 }
 
 const changePlayerShirtNumber = (player?: Player) => {
@@ -368,6 +370,7 @@ onMounted(getTeamPlayers)
   </Message>
 
   <Loading v-if="loadingApi" />
+
   <form
     v-if="call"
     class="easy-game-call-form-component"
@@ -435,13 +438,14 @@ onMounted(getTeamPlayers)
         />
       </EasyGrid>
     </EasyGrid>
-    <GameCallShirtNumberDialog
-      :call="call"
-      :player="shirtNumberUpdatePlayer"
-      @update:player="changePlayerShirtNumber"
-      @hide="shirtNumberUpdatePlayer = undefined"
-    />
   </form>
+
+  <GameCallShirtNumberDialog
+    :call="call"
+    :player="shirtNumberUpdatePlayer"
+    @update:player="changePlayerShirtNumber"
+    @hide="shirtNumberUpdatePlayer = undefined"
+  />
 
   <SignatureDialog
     :visible="showSignatureDialog"
