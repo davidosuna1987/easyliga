@@ -14,6 +14,10 @@ const props = defineProps({
     type: String as PropType<ButtonProps['severity']>,
     required: false,
   },
+  cancelSeverity: {
+    type: String as PropType<ButtonProps['severity']>,
+    required: false,
+  },
   disabled: {
     type: Boolean,
     default: false,
@@ -38,6 +42,10 @@ const props = defineProps({
     type: String as PropType<ButtonProps['size']>,
     required: false,
   },
+  full: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -57,18 +65,18 @@ const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
   >
     <Button
       v-if="!hideCancel"
-      class="grayscale"
+      :class="{ grayscale: !cancelSeverity, 'flex-1': props.full }"
       :label="cancelLabelText"
-      severity="info"
+      :severity="cancelSeverity"
       :size="size"
       :disabled="disabled"
       :loading="loading"
-      outlined
+      :outlined="!cancelSeverity"
       @click="emit('form:cancel', true)"
     />
     <Button
       v-if="!hideSubmit"
-      :class="submitClass?.join(' ')"
+      :class="[submitClass?.join(' '), { 'flex-1': props.full }]"
       :label="submitLabelText"
       :severity="submitSeverity"
       :size="size"
