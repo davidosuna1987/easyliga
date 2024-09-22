@@ -18,19 +18,8 @@
         border: solid 1px;
       }
 
-      .easy-game-status-spin-icon-component {
-        position: absolute;
-        top: 0.3rem;
-        left: 0.3rem;
-        z-index: 2;
-      }
-
       &.max-player-changes-reached {
         cursor: not-allowed;
-      }
-
-      &.is-pending {
-        background-color: rgba(var(--tertiary-color-rgb), 0.25);
       }
 
       &.is-being-replaced {
@@ -93,10 +82,6 @@
               }
             }
           }
-        }
-
-        &.is-pending {
-          background-color: rgba(var(--tertiary-color-rgb), 0.5);
         }
 
         &.is-sanctioned {
@@ -169,17 +154,6 @@
     padding: 0.3rem 0.5rem 0.325rem;
   }
 
-  @media (min-width: 500px) {
-    .side.left {
-      [class^='position-'] {
-        .easy-game-status-spin-icon-component {
-          top: 1rem;
-          left: 1rem;
-        }
-      }
-    }
-  }
-
   @media (prefers-color-scheme: dark) {
     .side.left {
       [class^='position-'] {
@@ -195,11 +169,8 @@
         &:hover {
           background-color: var(--primary-color-lightest);
 
-          &.is-pending {
-            background-color: rgba(var(--tertiary-color-rgb), 0.175);
-          }
-
-          &.is-sanctioned {
+          &.is-sanctioned,
+          &.is-replacement-sanctioned {
             background-color: var(--danger-color-darkest);
           }
         }

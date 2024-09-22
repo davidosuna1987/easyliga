@@ -31,6 +31,13 @@
     display: grid;
     grid-template-rows: 1fr 1fr 1fr;
 
+    .easy-game-status-spin-icon-component {
+      position: absolute;
+      top: 0.3rem;
+      left: 0.3rem;
+      z-index: 2;
+    }
+
     .shirt-number {
       position: relative;
       z-index: 1;
@@ -116,19 +123,6 @@
       height: 100%;
       cursor: pointer;
 
-      &:hover {
-        .shirt-number {
-          .easy-icon-shirt-number-component {
-            // background-color: var(--primary-color);
-            border: solid 1px var(--primary-color);
-
-            &::after {
-              background-color: var(--primary-color);
-            }
-          }
-        }
-      }
-
       &.serving {
         .shirt-number {
           .easy-icon-shirt-number-component {
@@ -143,6 +137,10 @@
             }
           }
         }
+      }
+
+      &.is-pending {
+        background-color: rgba(var(--tertiary-color-rgb), 0.25);
       }
 
       &.is-sanctioned {
@@ -166,6 +164,23 @@
               background-color: var(--danger-color-medium) !important;
             }
           }
+        }
+      }
+
+      &:hover {
+        .shirt-number {
+          .easy-icon-shirt-number-component {
+            // background-color: var(--primary-color);
+            border: solid 1px var(--primary-color);
+
+            &::after {
+              background-color: var(--primary-color);
+            }
+          }
+        }
+
+        &.is-pending {
+          background-color: rgba(var(--tertiary-color-rgb), 0.5);
         }
       }
     }
@@ -322,6 +337,19 @@
         );
         background-size: 6.4px 6.4px;
 
+        &.is-pending {
+          background-image: linear-gradient(
+            45deg,
+            var(--tertiary-color-medium) 8.33%,
+            rgba(var(--tertiary-color-rgb), 0.25) 8.33%,
+            rgba(var(--tertiary-color-rgb), 0.25) 50%,
+            var(--tertiary-color-medium) 50%,
+            var(--tertiary-color-medium) 58.33%,
+            rgba(var(--tertiary-color-rgb), 0.25) 58.33%,
+            rgba(var(--tertiary-color-rgb), 0.25) 100%
+          );
+        }
+
         &:hover {
           background-image: linear-gradient(
             45deg,
@@ -333,6 +361,30 @@
             var(--primary-color-medium) 58.33%,
             var(--primary-color-medium) 100%
           );
+
+          &.is-pending {
+            background-image: linear-gradient(
+              45deg,
+              var(--tertiary-color-light) 8.33%,
+              rgba(var(--tertiary-color-rgb), 0.5) 8.33%,
+              rgba(var(--tertiary-color-rgb), 0.5) 50%,
+              var(--tertiary-color-light) 50%,
+              var(--tertiary-color-light) 58.33%,
+              rgba(var(--tertiary-color-rgb), 0.5) 58.33%,
+              rgba(var(--tertiary-color-rgb), 0.5) 100%
+            );
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: 500px) {
+    .side {
+      [class^='position-'] {
+        .easy-game-status-spin-icon-component {
+          top: 1rem;
+          left: 1rem;
         }
       }
     }
@@ -351,9 +403,13 @@
 
     .side {
       [class^='position'] {
-        &.is-sanctioned {
-          &:hover {
+        &:hover {
+          &.is-sanctioned {
             background-color: var(--danger-color-darkest) !important;
+          }
+
+          &.is-pending {
+            background-color: rgba(var(--tertiary-color-rgb), 0.175);
           }
         }
       }
@@ -465,6 +521,19 @@
           );
           background-size: 6.4px 6.4px;
 
+          &.is-pending {
+            background-image: linear-gradient(
+              45deg,
+              rgba(var(--tertiary-color-rgb), 0.15) 8.33%,
+              rgba(var(--tertiary-color-rgb), 0.25) 8.33%,
+              rgba(var(--tertiary-color-rgb), 0.25) 50%,
+              rgba(var(--tertiary-color-rgb), 0.15) 50%,
+              rgba(var(--tertiary-color-rgb), 0.15) 58.33%,
+              rgba(var(--tertiary-color-rgb), 0.25) 58.33%,
+              rgba(var(--tertiary-color-rgb), 0.25) 100%
+            );
+          }
+
           &:hover {
             background-image: linear-gradient(
               45deg,
@@ -476,6 +545,19 @@
               var(--primary-color-lightest) 58.33%,
               var(--primary-color-lightest) 100%
             );
+
+            &.is-pending {
+              background-image: linear-gradient(
+                45deg,
+                rgba(var(--tertiary-color-rgb), 0.25) 8.33%,
+                rgba(var(--tertiary-color-rgb), 0.15) 8.33%,
+                rgba(var(--tertiary-color-rgb), 0.15) 50%,
+                rgba(var(--tertiary-color-rgb), 0.25) 50%,
+                rgba(var(--tertiary-color-rgb), 0.25) 58.33%,
+                rgba(var(--tertiary-color-rgb), 0.15) 58.33%,
+                rgba(var(--tertiary-color-rgb), 0.15) 100%
+              );
+            }
           }
         }
       }
