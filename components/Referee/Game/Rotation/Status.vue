@@ -81,7 +81,7 @@ const lock = async () => {
   >
     <Loading v-if="loadingApi" />
 
-    <Button
+    <!-- <Button
       v-if="
         props.gameStatus !== 'finished' &&
         props.gameStatus !== 'warmup' &&
@@ -92,7 +92,7 @@ const lock = async () => {
       :severity="props.rotation.locked ? 'primary' : 'danger'"
       :label="props.rotation.locked ? t('forms.unlock') : t('forms.lock')"
       @click="props.rotation.locked ? unlock() : lock()"
-    />
+    /> -->
     <template
       v-if="
         !props.rotation.locked || props.requestedTimeout || props.runningTimeout

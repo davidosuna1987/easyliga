@@ -69,7 +69,7 @@ watch(
       </InputNumber>
     </form>
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitLabel="t('shirts.number_change_short')"
         @form:submit="handleSubmit"

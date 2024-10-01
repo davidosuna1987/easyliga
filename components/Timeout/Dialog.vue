@@ -77,7 +77,7 @@ watch(
       {{ props.team.name }}
     </Heading>
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitLabel="t('timeouts.init')"
         :disabled="loadingApi"

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { GameStatus } from '@/domain/game'
+import { RotationPlayerStatus } from '@/domain/rotation'
 
 const props = defineProps({
   status: {
-    type: String as PropType<GameStatus | string>,
+    type: String as PropType<GameStatus | RotationPlayerStatus | string>,
     required: false,
   },
   size: {
@@ -17,7 +18,7 @@ const { t } = useI18n()
 
 <template>
   <div
-    class="easy-game-status-spin-icon-component"
+    :class="[status, 'easy-game-status-spin-icon-component']"
     :style="{ width: size, height: size }"
   >
     <svg
@@ -47,6 +48,44 @@ const { t } = useI18n()
     </svg>
   </div>
 </template>
+
+<style scoped lang="scss">
+.easy-game-status-spin-icon-component {
+  &.warmup,
+  &.timeout,
+  &.resting,
+  &.pending {
+    .stroke {
+      stroke: var(--tertiary-color-dark);
+    }
+
+    .fill {
+      fill: var(--tertiary-color-dark);
+    }
+  }
+
+  &.playing,
+  &.approved {
+    .stroke {
+      stroke: var(--primary-color);
+    }
+
+    .fill {
+      fill: var(--primary-color);
+    }
+  }
+
+  &.denied {
+    .stroke {
+      stroke: var(--danger-color);
+    }
+
+    .fill {
+      fill: var(--danger-color);
+    }
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

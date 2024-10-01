@@ -13,7 +13,12 @@ import {
   mapProfileToTeamMember,
 } from '@/domain/team'
 import { Set, SetSide } from '@/domain/set'
-import { CurrentRotation, Rotation, POSITIONS } from '@/domain/rotation'
+import {
+  CurrentRotation,
+  Rotation,
+  POSITIONS,
+  RotationPlayer,
+} from '@/domain/rotation'
 import { GAME_OBSERVATIONS_DELAY, GameStatus } from '@/domain/game'
 import {
   EXPULSION_SEVERITIES,
@@ -113,6 +118,10 @@ const props = defineProps({
     type: Object as PropType<CustomTeamsShirtColor>,
     required: true,
   },
+  pendingPlayerChanges: {
+    type: Array as PropType<RotationPlayer[]>,
+    required: false,
+  },
 })
 
 const emit = defineEmits([
@@ -125,6 +134,7 @@ const emit = defineEmits([
   'timeout:init',
   'sanction:stored',
   'sidebar:toggle',
+  'pendingPlayerChange:show',
 ])
 
 const { t } = useI18n()
@@ -135,9 +145,9 @@ const sideTeamToSanction = ref<TeamSide>()
 const memberToSanction = ref<TeamMember>()
 const pendingGameSignatures = computed(() => props.gameSignatures.length < 5)
 
-const waitingForPlayerChanges = computed(() =>
-  props.rotations.some(rotation => !rotation.locked),
-)
+// const waitingForPlayerChanges = computed(() =>
+//   props.rotations.some(rotation => !rotation.locked),
+// )
 
 const leftSideTeamMembers = computed((): TeamMember[] =>
   props.leftSideTeam.coach
@@ -240,14 +250,18 @@ const getRotationPlayerDataAtPosition = (
       ? props.leftSideTeamRotation
       : props.rightSideTeamRotation
 
-  const inCourtProfileId = sideRotation?.players.find(
+  const inCourtPlayer = sideRotation?.players.find(
     player => player.currentPosition === position,
-  )?.inCourtProfileId
-
-  return (
-    call.playersData?.find(player => player.profileId === inCourtProfileId) ??
-    undefined
   )
+
+  const inCourtProfileId = inCourtPlayer?.inCourtProfileId
+  const changeStatus = inCourtPlayer?.status
+
+  const playerData = call.playersData?.find(
+    player => player.profileId === inCourtProfileId,
+  )
+
+  return playerData ? { ...playerData, changeStatus } : undefined
 }
 
 const localTeam = computed(() =>
@@ -403,7 +417,7 @@ onMounted(setInitialShowCountdown)
         <template
           v-if="
             playersToBeReplacedForSanction.length ||
-            waitingForPlayerChanges ||
+            // waitingForPlayerChanges ||
             timeoutRunning
           "
         >
@@ -420,7 +434,7 @@ onMounted(setInitialShowCountdown)
               :disabled="true"
             />
           </EasyGrid>
-          <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
+          <!-- <EasyGrid v-if="waitingForPlayerChanges" class="actions" center>
             <Button
               class="px-12 mb-3"
               :label="t('rotations.waiting_player_changes')"
@@ -428,7 +442,7 @@ onMounted(setInitialShowCountdown)
               :loading="true"
               :disabled="true"
             />
-          </EasyGrid>
+          </EasyGrid> -->
           <EasyGrid v-if="timeoutRunning" class="actions" center>
             <Button
               class="px-12 mb-3"
@@ -463,6 +477,10 @@ onMounted(setInitialShowCountdown)
               :rightSideTeamCall="rightSideTeamCall"
               :leftSideTeamRotation="leftSideTeamRotation"
               :rightSideTeamRotation="rightSideTeamRotation"
+              :pendingPlayerChanges="pendingPlayerChanges"
+              @pendingPlayerChange:show="
+                emit('pendingPlayerChange:show', $event)
+              "
             />
             <GamePointActions
               v-if="gameStatus === 'playing'"

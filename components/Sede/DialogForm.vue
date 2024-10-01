@@ -47,6 +47,7 @@ watch(
   <DialogBottom
     class="easy-alert-dialog-component"
     :visible="!!showDialog"
+    :hasStickyFooter="!props.readonly"
     @hide="emit('hide', true)"
   >
     <template #header>
@@ -65,7 +66,7 @@ watch(
       @cancel="emit('hide', true)"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         v-if="!props.readonly"
         class="mt-10"

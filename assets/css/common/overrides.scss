@@ -16,14 +16,49 @@
       padding-right: 1.75rem;
     }
 
-    .p-dialog-footer {
+    .p-dialog-footer,
+    .p-dialog-sticky-footer {
       border-bottom-right-radius: 0;
       border-bottom-left-radius: 0;
-      padding-inline: 1.75rem;
-      padding-bottom: 2rem;
+      // padding-inline: 1.75rem;
+      // padding-bottom: 2rem;
+      padding-block: 1.5rem;
 
       button {
         margin: 0;
+      }
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    .p-dialog-sticky-footer:empty {
+      display: none;
+    }
+
+    &.has-sticky-footer {
+      .p-dialog-content {
+        padding-bottom: 0;
+      }
+
+      .p-dialog-footer:empty {
+        display: none;
+      }
+
+      .p-dialog-sticky-footer {
+        margin: 1.5rem 0 0;
+        padding-inline: 0;
+
+        .easy-form-footer-actions-component {
+          display: flex;
+          margin: 0;
+        }
+
+        &:empty {
+          padding-top: 0;
+          background-color: var(--background-color);
+        }
       }
     }
   }
@@ -247,5 +282,54 @@ a:-webkit-any-link {
         color: var(--primary-color-medium);
       }
     }
+  }
+
+  .p-message.p-message-info {
+    background: #3235fd;
+    border: solid #696cff;
+    border-width: 0 0 0 6px;
+    color: #e9e9ff;
+  }
+  .p-message.p-message-info .p-message-icon {
+    color: #e9e9ff;
+  }
+  .p-message.p-message-info .p-message-close {
+    color: #e9e9ff;
+  }
+  .p-message.p-message-success {
+    background: #0d6c4e;
+    border: solid #1ea97c;
+    border-width: 0 0 0 6px;
+    color: #e4f8f0;
+  }
+  .p-message.p-message-success .p-message-icon {
+    color: #e4f8f0;
+  }
+  .p-message.p-message-success .p-message-close {
+    color: #e4f8f0;
+  }
+  .p-message.p-message-warn {
+    background: #8e5d13;
+    border: solid #cc8925;
+    border-width: 0 0 0 6px;
+    color: #fff2e2;
+  }
+  .p-message.p-message-warn .p-message-icon {
+    color: #fff2e2;
+  }
+  .p-message.p-message-warn .p-message-close {
+    color: #fff2e2;
+  }
+  .p-message.p-message-error {
+    background: #ba2d2d;
+    border: solid #ff5757;
+    border-width: 0 0 0 6px;
+    color: #ffe7e6;
+  }
+  .p-message.p-message-error .p-message-icon {
+    color: #ffe7e6;
+  }
+  .p-message.p-message-error .p-message-close {
+    color: #ffe7e6;
   }
 }

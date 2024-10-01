@@ -2,6 +2,7 @@
 import { ApiErrorObject } from '@/types/errors'
 import { Game } from '@/domain/game'
 import {
+  ROTATION_PLAYER_STATUS,
   Rotation,
   RotationPlayerChangeRequest,
   RotationUpdateRequest,
@@ -90,6 +91,16 @@ const getRotation = async () => {
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
+    return
+  }
+
+  const pendingPlayerChanges = data.value.data.rotation.players.filter(
+    player => player.status === ROTATION_PLAYER_STATUS.pending,
+  )
+
+  if (pendingPlayerChanges.length && !rotation.value) {
+    toast.warn(t('player_change_requests.changes_waiting_approval'))
+    navigateTo('/coach')
     return
   }
 
@@ -193,6 +204,7 @@ const handleSubmit = async () => {
   loadingApi.value = true
 
   const rotationUpdateRequest: RotationUpdateRequest = {
+    changeWindow: form.value.currentChangeWindow,
     inCourtCaptainProfileId: form.value.inCourtCaptainProfileId,
     players: requestedPlayerChanges.value.map(
       mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer,
@@ -211,10 +223,12 @@ const handleSubmit = async () => {
     return
   } else {
     toast.success(t('rotations.player_change_requested'))
-    navigateTo(`/coach`)
+    navigateTo('/coach')
+    // requestedPlayerChanges.value = []
+    // location.reload()
   }
 
-  await getRotation()
+  getRotation()
 }
 
 const listenRotationLockToggledEvent = (
@@ -323,9 +337,10 @@ onBeforeUnmount(() => {
         :sanctions="currentSetTeamMemberSanctions"
         @change:players="setFormPlayerChanges"
         @update:captain="setRotationCaptain"
+        @playerRotationStatusUpdated="getRotation"
       />
 
-      <footer class="flex justify-end items-center mt-24 md:mt-8">
+      <!-- <footer class="flex justify-end items-center mt-24 md:mt-8">
         <Button
           type="submit"
           :disabled="!requestedPlayerChanges.length"
@@ -335,7 +350,19 @@ onBeforeUnmount(() => {
               : t('rotations.player_change', requestedPlayerChanges.length)
           "
         />
-      </footer>
+      </footer> -->
+      <FormFooterActions
+        class="mt-8"
+        :disabled="!requestedPlayerChanges.length"
+        :submitLabel="
+          form?.locked
+            ? t('rotations.locked')
+            : t('rotations.player_change', requestedPlayerChanges.length)
+        "
+        hideCancel
+        stickyBreakpoint="sm"
+        @form:submit="handleSubmit"
+      />
     </div>
   </form>
 </template>

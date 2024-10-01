@@ -118,6 +118,13 @@
       cursor: pointer;
       color: var(--danger-color);
     }
+
+    &.action-help {
+      &.has-reason {
+        cursor: pointer;
+        color: var(--info-color);
+      }
+    }
   }
 
   @media (prefers-color-scheme: dark) {

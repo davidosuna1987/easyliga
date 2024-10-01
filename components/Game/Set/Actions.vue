@@ -69,6 +69,7 @@ const startSet = (setStartRequest: SetStartRequest) => {
     <DialogBottom
       class="easy-game-set-start-dialog-component"
       :visible="!!showStartSetDialog"
+      :hasStickyFooter="false"
       @hide="showStartSetDialog = false"
     >
       <template #header>

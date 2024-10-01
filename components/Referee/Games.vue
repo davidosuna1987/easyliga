@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Game, isMatchDay } from '@/domain/game'
+import { Game, isMatchDay, isMatchDayPassed } from '@/domain/game'
 
 const props = defineProps({
   games: {
@@ -15,7 +15,19 @@ const handleGameClick = (game: Game) => {
     navigateTo(`/referee/games/${game.id}/arbitrate`)
   }
 
+  if (showActa(game)) {
+    navigateTo(`/games/${game.id}/report`)
+  }
+
   return
+}
+
+const showActa = (game: Game) => {
+  return isMatchDayPassed(game) || game.status === 'finished'
+}
+
+const gameSigned = (game: Game) => {
+  return game.status === 'finished' && game.signatures?.length === 5
 }
 </script>
 
@@ -25,14 +37,21 @@ const handleGameClick = (game: Game) => {
       v-for="game in games"
       :key="game.id"
       v-tooltip.top="{
-        value: t('games.arbitrate'),
-        disabled: !isMatchDay(game),
+        value: showActa(game) ? t('reports.show_game') : t('games.arbitrate'),
+        disabled: !isMatchDay(game) && !showActa(game),
       }"
-      :class="['game', { 'is-disabled': !isMatchDay(game) }]"
+      :class="['game', { 'is-finished': game.status === 'finished' }]"
       @click="handleGameClick(game)"
     >
       <span class="name">{{ game.name }}</span>
       <GameStatus :status="game.status" :start="game.date" />
+      <Button
+        v-if="gameSigned(game)"
+        class="mt-3"
+        :label="t('reports.show_game')"
+        size="small"
+        @click.prevent="navigateTo(`/games/${game.id}/report`)"
+      />
     </div>
   </div>
 </template>

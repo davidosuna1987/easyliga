@@ -11,7 +11,7 @@ import {
 } from '@/domain/team'
 import { Call } from '@/domain/call'
 import { Set } from '@/domain/set'
-import { CurrentRotation, Rotation } from '@/domain/rotation'
+import { CurrentRotation, Rotation, RotationPlayer } from '@/domain/rotation'
 import { Game, type GameStatus } from '@/domain/game'
 import { Timeout } from '@/domain/timeout'
 import {
@@ -121,6 +121,10 @@ const props = defineProps({
     type: Object as PropType<CustomTeamsShirtColor>,
     required: true,
   },
+  pendingPlayerChanges: {
+    type: Array as PropType<RotationPlayer[]>,
+    required: false,
+  },
 })
 
 const emit = defineEmits([
@@ -135,6 +139,7 @@ const emit = defineEmits([
   'countdown:ended',
   'timeout:init',
   'sanction:stored',
+  'pendingPlayerChange:show',
 ])
 
 const sideTeamToSanction = ref<TeamSide>()
@@ -350,6 +355,7 @@ onUnmounted(() => {
         :timeoutRunning="timeoutRunning"
         :gameSignatures="gameSignatures"
         :customTeamsShirtColor="customTeamsShirtColor"
+        :pendingPlayerChanges="pendingPlayerChanges"
         @game:start="startGame"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
@@ -359,6 +365,7 @@ onUnmounted(() => {
         @timeout:init="emit('timeout:init', $event)"
         @sanction:stored="emit('sanction:stored', $event)"
         @sidebar:toggle="toggleSidebars($event)"
+        @pendingPlayerChange:show="emit('pendingPlayerChange:show', $event)"
       />
     </div>
     <div

@@ -81,7 +81,7 @@ watch(
       @signature:created="handleSignatureCreated"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :disabled="props.loading"
         :submitLabel="t('reports.sign')"

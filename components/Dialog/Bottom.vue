@@ -44,6 +44,10 @@ const props = defineProps({
       '0px': '400px',
     }),
   },
+  hasStickyFooter: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['hide'])
@@ -51,7 +55,10 @@ const emit = defineEmits(['hide'])
 const showDialog = ref<boolean>(props.visible)
 
 const classes = computed(
-  () => `easy-dialog-${props.position}-component ${props.class}`,
+  () =>
+    `easy-dialog-${props.position}-component ${props.class} ${
+      props.hasStickyFooter ? 'has-sticky-footer' : ''
+    }`,
 )
 
 watch(
@@ -75,6 +82,12 @@ watch(
   >
     <template #header><slot name="header" /></template>
     <slot />
+    <footer
+      v-if="hasStickyFooter"
+      class="p-dialog-sticky-footer is-sticky-action"
+    >
+      <slot name="stickyFooter" />
+    </footer>
     <template #footer><slot name="footer" /></template>
   </Dialog>
 </template>

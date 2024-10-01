@@ -73,16 +73,15 @@ onMounted(getClubs)
   <div class="easy-club-list-component">
     <header
       :class="[
-        'header flex justify-between items-center',
+        'header grid grid-cols-[1fr_auto] items-start',
         { 'mb-1': hoverable },
       ]"
     >
-      <Heading tag="h6" position="center">{{ heading }}</Heading>
-      <Button
-        class="action"
+      <Heading tag="h6">{{ heading }}</Heading>
+      <ListActionButton
+        class="mt-1"
         :label="t('clubs.add')"
-        size="small"
-        @click.prevent="emit('club:create', true)"
+        :onClick="() => emit('club:create', true)"
       />
     </header>
     <template v-if="loadingApi">

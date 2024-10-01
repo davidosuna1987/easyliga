@@ -42,7 +42,7 @@ const selectedCourt = ref<Court>()
 const loadingLeagues = ref<boolean>(false)
 const loadingTeams = ref<boolean>(false)
 const loadingCourts = ref<boolean>(false)
-const loadingStore = ref<boolean>(false)
+const loadingApi = ref<boolean>(false)
 
 const groupedLeagues = ref<Federation[]>([])
 const leagueTeams = ref<Team[]>([])
@@ -93,7 +93,7 @@ const handleCourtSelected = (court: Court) => {
 }
 
 const submit = async () => {
-  loadingStore.value = true
+  loadingApi.value = true
   const { data, error } = await gameService.store(form.value)
 
   if (error.value) {
@@ -104,7 +104,7 @@ const submit = async () => {
     navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
   }
 
-  loadingStore.value = false
+  loadingApi.value = false
 }
 
 const getGroupedLeagues = async () => {
@@ -188,25 +188,19 @@ watch(onChangeData, data => {
 </script>
 
 <template>
-  <form
-    class="easy-game-form-component grid gap-x-2 gap-y-4"
-    @submit.prevent="submit"
-  >
-    <EasyGrid
-      :breakpoints="{ xs: 1, sm: 2, xl: 3 }"
-      :gapX="2"
-      :gapY="4"
-      items="end"
-    >
+  <form class="easy-referee-game-form-component" @submit.prevent="submit">
+    <EasyGrid :breakpoints="{ xs: 1, sm: 2, xl: 3 }" :gap="4">
       <FormLabel :label="t('categories.category')">
         <CategorySelector @category:selected="handleCategorySelected" />
       </FormLabel>
+
       <FormLabel :label="t('genders.gender')">
         <GenderSelector
           :disabled="!selectedCategory"
           @gender:selected="handleGenderSelected"
         />
       </FormLabel>
+
       <FormLabel :label="t('leagues.league')" :error="errors?.league_id?.[0]">
         <FederationLeagueSelector
           :groupedLeagues="groupedLeagues"
@@ -217,6 +211,7 @@ watch(onChangeData, data => {
           @league:selected="handleLeagueSelected"
         />
       </FormLabel>
+
       <FormLabel :label="t('teams.local')">
         <TeamSelector
           :disabled="!selectedLeague || loadingTeams"
@@ -225,6 +220,7 @@ watch(onChangeData, data => {
           @team:selected="handleLocalTeamSelected"
         />
       </FormLabel>
+
       <FormLabel :label="t('teams.visitor')">
         <TeamSelector
           :disabled="!form.local_team_id || loadingTeams"
@@ -233,6 +229,7 @@ watch(onChangeData, data => {
           @team:selected="handleVisitorTeamSelected"
         />
       </FormLabel>
+
       <FormLabel :label="t('courts.court')" :error="errors?.court_id?.[0]">
         <SedeCourtSelector
           :groupedCourts="groupedCourts"
@@ -241,14 +238,14 @@ watch(onChangeData, data => {
         />
       </FormLabel>
     </EasyGrid>
-    <EasyGrid justify="end">
-      <Button
-        class="mt-3"
-        type="submit"
-        :label="t('games.create')"
-        :loading="loadingStore"
-      />
-    </EasyGrid>
+
+    <FormFooterActions
+      :loading="loadingApi"
+      :submitLabel="t('games.create')"
+      hideCancel
+      stickyBreakpoint="sm"
+      @form:submit="submit"
+    />
   </form>
 </template>
 

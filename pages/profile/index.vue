@@ -2,6 +2,12 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiProfile } from '@/types/api/profile'
 
+useHead({
+  bodyAttrs: {
+    class: 'is-profile-page',
+  },
+})
+
 definePageMeta({
   middleware: ['auth'],
 })

@@ -53,12 +53,12 @@ const visitorTeamRotation = computed((): Rotation | undefined => {
   )
 })
 
-const localTeamWinner = computed((): number | undefined => {
-  return props.set?.winnerTeamId === props.localTeam.id ? 1 : undefined
+const localTeamWinner = computed((): number => {
+  return props.set?.winnerTeamId === props.localTeam.id ? 1 : 0
 })
 
-const visitorTeamWinner = computed((): number | undefined => {
-  return props.set?.winnerTeamId === props.visitorTeam.id ? 1 : undefined
+const visitorTeamWinner = computed((): number => {
+  return props.set?.winnerTeamId === props.visitorTeam.id ? 1 : 0
 })
 
 const localTeamWonPointsCount = computed((): number | undefined => {
@@ -76,11 +76,17 @@ const visitorTeamWonPointsCount = computed((): number | undefined => {
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>{{ localTeamRotation?.playerChangesCount }}</span>
+    <span>{{
+      set
+        ? localTeamRotation
+          ? localTeamRotation?.playerChangesCount
+          : 0
+        : undefined
+    }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <span>{{ localTeamWinner }}</span>
+    <span>{{ set ? localTeamWinner : undefined }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
@@ -103,11 +109,17 @@ const visitorTeamWonPointsCount = computed((): number | undefined => {
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-x-0 border-t-0">
-    <span>{{ visitorTeamWinner }}</span>
+    <span>{{ set ? visitorTeamWinner : undefined }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-t-0">
-    <span>{{ visitorTeamRotation?.playerChangesCount }}</span>
+    <span>{{
+      set
+        ? visitorTeamRotation
+          ? visitorTeamRotation?.playerChangesCount
+          : 0
+        : undefined
+    }}</span>
   </div>
 
   <div class="grid place-content-center p-2 border-solid border-l-0 border-t-0">

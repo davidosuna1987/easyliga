@@ -19,6 +19,11 @@ export const IconNames = {
   gear: 'pepicons-pencil:gear',
   chevronLeft: 'pepicons-pencil:angle-left',
   chevronRight: 'pepicons-pencil:angle-right',
+  playerChangeRemove: 'ic:baseline-delete',
+  playerChangeDone: 'ic:baseline-check-circle',
+  playerChangeUndo: 'ic:baseline-replay-circle-filled',
+  playerChangeHelp: 'ic:baseline-help',
+  maxPlayerChangesReached: 'ic:round-autorenew',
 } as const
 
 export type IconName = keyof typeof IconNames

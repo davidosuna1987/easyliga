@@ -35,6 +35,24 @@ html {
   }
 }
 
+.easy-body {
+  &.is-profile-page {
+    margin-top: 13.1rem;
+
+    @media (min-width: $media-sm) {
+      margin-top: 10.1rem;
+    }
+
+    @media (min-width: 530px) {
+      margin-top: 10.1rem;
+    }
+
+    @media (min-width: $media-md) {
+      margin-top: 0;
+    }
+  }
+}
+
 p {
   text-wrap: pretty;
 }
@@ -80,4 +98,129 @@ input {
 
 .border-highlight {
   border-color: var(--highlight-color);
+}
+
+.is-disabled {
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+.is-sticky-action {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--background-color);
+  // margin-top: 1.5rem;
+  // padding: 3rem 1.5rem 1.5rem;
+  margin-top: 1rem;
+  padding: 1.5rem;
+  z-index: 10;
+  display: flex;
+  justify-content: flex-end;
+  margin-inline: calc(0px - var(--easy-main-padding-tablet));
+  // background: linear-gradient(
+  //   to bottom,
+  //   rgba(var(--background-color-rgb), 0) 0%,
+  //   rgba(var(--background-color-rgb), 0.75) 25%,
+  //   rgba(var(--background-color-rgb), 1) 100%
+  // );
+  background: linear-gradient(
+    to bottom,
+    rgba(var(--background-color-rgb), 0) 0%,
+    rgba(var(--background-color-rgb), 0.8) 65%,
+    rgba(var(--background-color-rgb), 1) 100%
+  );
+  backdrop-filter: blur(5px);
+
+  &.is-sticky-action__xs {
+    justify-content: center;
+    @media (min-width: $media-xs) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+
+  &.is-sticky-action__sm {
+    justify-content: center;
+    @media (min-width: $media-sm) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+  &.is-sticky-action__md {
+    justify-content: center;
+    @media (min-width: $media-md) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+  &.is-sticky-action__ml {
+    justify-content: center;
+    @media (min-width: $media-ml) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+  &.is-sticky-action__lg {
+    justify-content: center;
+    @media (min-width: $media-lg) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+  &.is-sticky-action__xl {
+    justify-content: center;
+    @media (min-width: $media-xl) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+  &.is-sticky-action__2xl {
+    justify-content: center;
+    @media (min-width: $media-2xl) {
+      margin: inherit;
+      padding: inherit;
+      position: inherit;
+      display: inherit;
+      background: inherit;
+      justify-content: inherit;
+      z-index: inherit;
+    }
+  }
+}
+
+.mini-layout {
+  .is-sticky-action {
+    padding: 1.5rem var(--easy-main-padding-tablet) 1.5rem;
+    margin-bottom: calc(0px - var(--easy-main-padding-tablet));
+  }
 }

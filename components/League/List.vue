@@ -4,7 +4,6 @@ import FederationService from '@/services/federation'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { League } from '@/domain/league'
 import { getListTagColor } from '@/domain/list'
-import { IconNames } from '@/domain/icon'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -79,9 +78,10 @@ onMounted(getLeagues)
     <template v-else>
       <EasyGrid v-if="groupedLeagues?.length" :gap="5">
         <div class="mb-3" v-for="federation in groupedLeagues">
-          <header class="header flex justify-between mb-1">
+          <header class="header grid grid-cols-[1fr_auto] items-start mb-1">
             <Heading tag="h6">{{ federation.name }}</Heading>
             <ListActionButton
+              class="mt-1"
               :label="t('leagues.add')"
               :onClick="() => handleAddLeague(federation)"
             />

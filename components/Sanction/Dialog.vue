@@ -392,7 +392,7 @@ onMounted(() => {
       </template>
     </template>
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitClass="
           showEnsureSubmitSanction

@@ -90,3 +90,9 @@
   background-color: var(--shirt-white) !important;
   border: solid 1px gray !important;
 }
+
+@media (prefers-color-scheme: dark) {
+  .shirt-item-black {
+    border-color: #333 !important;
+  }
+}

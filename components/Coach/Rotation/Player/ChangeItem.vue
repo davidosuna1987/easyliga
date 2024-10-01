@@ -4,6 +4,7 @@ import {
   RotationPlayerChangeRequest,
   ChangeType,
   mapPlayerChangeToChangeType,
+  ROTATION_PLAYER_STATUS,
 } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES, Sanction } from '@/domain/sanction'
 
@@ -40,6 +41,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideRotationPendingSpinner: {
+    type: Boolean,
+    default: false,
+  },
   block: {
     type: Boolean,
     default: false,
@@ -49,6 +54,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'remove:playerChange', value: RotationPlayerChangeRequest): void
   (e: 'undo:playerChange', value: RotationPlayerChangeRequest): void
+  (e: 'info:playerChange', value: RotationPlayerChangeRequest): void
 }>()
 
 const { t } = useI18n()
@@ -74,6 +80,8 @@ const initialPlayerChangeType = computed(
 
 const iconTypeBasedOnPlayerChangeTypes = computed((): string => {
   if (!props.playerChange.comesFromApi) return ICON_TYPE.REMOVE
+  if (props.playerChange.status === ROTATION_PLAYER_STATUS.denied)
+    return ICON_TYPE.HELP
 
   switch (props.changesCount) {
     case 1:
@@ -146,6 +154,8 @@ const handleActionClick = () => {
     emit('remove:playerChange', props.playerChange)
   } else if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.UNDO) {
     emit('undo:playerChange', props.playerChange)
+  } else if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.HELP) {
+    emit('info:playerChange', props.playerChange)
   }
 }
 </script>
@@ -178,11 +188,24 @@ const handleActionClick = () => {
       />
     </div>
     <div v-if="hasActions" class="actions">
+      <GameStatusSpinIcon
+        v-if="
+          props.playerChange.comesFromApi &&
+          props.playerChange.status === ROTATION_PLAYER_STATUS.pending &&
+          !hideRotationPendingSpinner
+        "
+        class="mx-1"
+        status="pending"
+      />
       <Icon
+        v-else
         class="action"
         :class="[
           `action-${iconTypeBasedOnPlayerChangeTypes}`,
-          { 'is-replacement-sanctioned': replacementPlayerIsSanctioned },
+          {
+            'is-replacement-sanctioned': replacementPlayerIsSanctioned,
+            'has-reason': !!props.playerChange.denyReason,
+          },
         ]"
         :name="iconNameBasedOnPlayerChangeTypes"
         size="1.5rem"

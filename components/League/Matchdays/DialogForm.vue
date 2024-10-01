@@ -60,7 +60,7 @@ watch(
       @matchdays:generated="emit('matchdays:generated', $event)"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :disabled="loading"
         @form:submit="handleFormSubmit"

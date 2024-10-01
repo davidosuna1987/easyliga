@@ -10,6 +10,7 @@
   --primary-color-alpha: rgba(0, 150, 136, 0.2);
   --foreground-color: #f1f1f1;
   --background-color: #ffffff;
+  --background-color-rgb: 255, 255, 255;
   --secondary-color: #cce1f7;
   --secondary-color-light: #f4f9fd;
   --secondary-color-dark: #72add5;
@@ -163,6 +164,7 @@
     color-scheme: dark;
     --foreground-color: #000000;
     --background-color: #121212;
+    --background-color-rgb: 18, 18, 18;
     // --primary-color: #003932;
     // --primary-color-medium: #004840;
     // --primary-color-light: #004d40;

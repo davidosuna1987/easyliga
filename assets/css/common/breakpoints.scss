@@ -7,3 +7,14 @@ $media-xl: 1280px;
 $media-2xl: 1536px;
 
 $media-sidebars: 1285px;
+
+$media-mapper: (
+  xs: $media-xs,
+  sm: $media-sm,
+  md: $media-md,
+  ml: $media-ml,
+  lg: $media-lg,
+  xl: $media-xl,
+  '2xl': $media-2xl,
+  sidebars: $media-sidebars,
+);

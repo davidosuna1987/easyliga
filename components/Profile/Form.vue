@@ -224,17 +224,14 @@ watch(
       reduced
     />
 
-    <footer
-      class="be-user-form-footer flex justify-content-between align-items-center w-full mt-4"
-    >
-      <Button
-        type="submit"
-        class="px-5 ml-auto mr-0"
-        :class="{ 'is-loading': loadingApi }"
-        :disabled="!!loadingApi || !props.profile"
-        >{{ t('forms.update') }}</Button
-      >
-    </footer>
+    <FormFooterActions
+      :disabled="!!loadingApi || !props.profile"
+      :loading="!!loadingApi || !props.profile"
+      hideCancel
+      isStickyAction
+      :submitLabel="t('forms.update')"
+      @form:submit="handleSubmit"
+    />
   </form>
 </template>
 

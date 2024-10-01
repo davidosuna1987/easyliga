@@ -3,6 +3,7 @@ import { CallPlayerData } from '@/domain/call'
 import { ApiPlayerRequest } from '@/types/api/player'
 import { Coach, TeamMember } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
+import { RotationPlayerStatus } from '@/domain/rotation'
 
 export type Player = {
   profileId: number
@@ -13,6 +14,7 @@ export type Player = {
   captain: boolean
   libero: boolean
   profile?: Profile
+  changeStatus?: RotationPlayerStatus
 }
 
 export type UpdateClubTeamPlayer =

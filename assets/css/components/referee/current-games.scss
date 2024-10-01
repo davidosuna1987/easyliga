@@ -16,12 +16,18 @@
       margin-bottom: 0.5rem;
     }
 
+    &.is-disabled {
+      pointer-events: none;
+    }
+
     &:hover {
       background-color: var(--primary-color-alpha);
     }
 
-    &.is-disabled {
-      pointer-events: none;
+    &.is-finished {
+      &:hover {
+        background-color: transparent;
+      }
     }
   }
 }

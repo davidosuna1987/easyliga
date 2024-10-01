@@ -123,6 +123,7 @@ defineExpose({
       v-if="showUnavailableShirtNumbers"
       class="easy-unavailable-shirt-numbers-dialog-component"
       :visible="showUnavailableShirtNumbersDialog"
+      :hasStickyFooter="false"
       @hide="showUnavailableShirtNumbersDialog = false"
     >
       <template #header>

@@ -33,12 +33,7 @@ const federationStore = useFederationStore()
 const selectedFederation = ref<Federation>()
 const loadingApi = ref<boolean>(false)
 
-const selectableFederations = ref<Federation[]>(
-  props.federations ??
-    easyStorage
-      .getNested('federations.groupedFederations', [])
-      .map(mapApiFederationToFederation),
-)
+const selectableFederations = ref<Federation[]>(props.federations ?? [])
 
 const options = computed(
   (): Federation[] => props.federations ?? selectableFederations.value,

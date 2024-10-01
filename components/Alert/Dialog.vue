@@ -67,7 +67,7 @@ watch(
 
     <slot />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitSeverity="severity"
         :submitLabel="acceptLabelText"

@@ -64,7 +64,7 @@ watch(
       @update:modelValue="emit('observations:changed', form.observations)"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitLabel="submitLabelText"
         :disabled="loading"

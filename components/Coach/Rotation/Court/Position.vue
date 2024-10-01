@@ -2,6 +2,7 @@
 import { CallPlayerData } from '@/domain/call'
 import { ChangeType } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES, Sanction } from '@/domain/sanction'
+import { IconNames } from '@/domain/icon'
 
 const props = defineProps({
   position: {
@@ -20,9 +21,17 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  itsBeingReplaced: {
+  isBeingReplaced: {
     type: Boolean,
     required: true,
+  },
+  isRequestPending: {
+    type: Boolean,
+    default: false,
+  },
+  showPendingStatus: {
+    type: Boolean,
+    default: false,
   },
   changesCount: {
     type: Number as PropType<ChangeType>,
@@ -37,6 +46,14 @@ const props = defineProps({
     required: false,
   },
 })
+
+const maxPlayerChangesReached = computed(
+  (): boolean => props.changesCount === ChangeType.SECOND,
+)
+
+const showReplacementShirtNumber = computed(
+  (): boolean => props.isBeingReplaced && !maxPlayerChangesReached.value,
+)
 
 const sanctionsProfileIds = computed((): number[] => {
   const initialPlayerSanctionProfileId =
@@ -58,7 +75,7 @@ const sanctionsProfileIds = computed((): number[] => {
 
 const replacementSanctioned = computed(
   (): boolean =>
-    !!props.itsBeingReplaced &&
+    !!props.isBeingReplaced &&
     !!props.player &&
     sanctionsProfileIds.value.includes(props.player.profileId),
 )
@@ -75,14 +92,18 @@ const inCourtSanctioned = computed(
     :class="[
       `position-${position}`,
       {
-        'is-being-replaced': props.itsBeingReplaced,
-        'max-player-changes-reached': props.changesCount === ChangeType.SECOND,
+        'is-pending': isRequestPending,
+        'is-being-replaced': showReplacementShirtNumber,
+        'max-player-changes-reached':
+          maxPlayerChangesReached && !isBeingReplaced,
         'is-sanctioned': inCourtSanctioned,
         'is-replacement-sanctioned': replacementSanctioned,
       },
     ]"
   >
-    <span v-if="props.itsBeingReplaced" class="shirt-number">
+    <GameStatusSpinIcon v-if="props.showPendingStatus" status="pending" />
+
+    <span v-if="props.isBeingReplaced" class="shirt-number">
       <IconShirtNumber
         :shirtNumber="props.inCourtPlayer?.shirtNumber"
         size="lg"
@@ -90,7 +111,7 @@ const inCourtSanctioned = computed(
       <IconCaptain
         v-if="
           props.captainProfileId === props.inCourtPlayer?.profileId &&
-          props.itsBeingReplaced
+          showReplacementShirtNumber
         "
         size="sm"
       />
@@ -108,16 +129,16 @@ const inCourtSanctioned = computed(
     <span
       v-if="props.player"
       class="shirt-number"
-      :class="{ 'is-replaced': props.itsBeingReplaced }"
+      :class="{ 'is-replaced': showReplacementShirtNumber }"
     >
       <IconShirtNumber
         :shirtNumber="props.player?.shirtNumber"
-        :size="props.itsBeingReplaced ? 'md' : 'lg'"
+        :size="showReplacementShirtNumber ? 'md' : 'lg'"
       />
       <IconCaptain
         v-if="
           props.captainProfileId === props.player?.profileId &&
-          !props.itsBeingReplaced
+          !showReplacementShirtNumber
         "
         size="sm"
       />
@@ -134,7 +155,7 @@ const inCourtSanctioned = computed(
       <Icon
         v-if="props.changesCount === ChangeType.SECOND"
         class="icon-max-changes-reached"
-        name="ic:round-autorenew"
+        :name="IconNames.maxPlayerChangesReached"
         size="1.5rem"
       />
     </span>

@@ -26,6 +26,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  showPendingStatus: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { t } = useI18n()
@@ -56,13 +60,12 @@ const showNoRotationToast = () => {
 
 <template>
   <Button
-    class="easy-coach-button-player-change-component"
+    class="easy-coach-button-player-change-component relative flex items-center justify-center"
     outlined
-    :label="labelText"
     :severity="
       props.severity
         ? props.severity
-        : props.locked || !props.rotation
+        : props.locked || !props.rotation || props.showPendingStatus
         ? 'warning'
         : 'primary'
     "
@@ -75,7 +78,14 @@ const showNoRotationToast = () => {
           )
         : showNoRotationToast()
     "
-  />
+  >
+    <GameStatusSpinIcon
+      v-if="props.showPendingStatus"
+      class="absolute left-3"
+      status="pending"
+    />
+    <span>{{ labelText }}</span>
+  </Button>
 </template>
 
 <script lang="ts">

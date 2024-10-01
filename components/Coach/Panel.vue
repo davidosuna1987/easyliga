@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import CallService from '@/services/call'
 import { Game, mapApiGameToGame } from '@/domain/game'
-import { Call } from '@/domain/call'
+import { Call, CallPlayerData } from '@/domain/call'
 import {
   ApiCallUnlockedEventResponse,
   ApiRotationLockToggledEventResponse,
@@ -13,6 +13,7 @@ import {
   ApiGameStatusUpdatedEventResponse,
   ApiGameSignatureCreatedEventResponse,
   ApiRequestChangeDateEventResponse,
+  ApiGamePlayerRotationStatusUpdatedEventResponse,
 } from '@/types/api/event'
 import {
   Timeout,
@@ -21,9 +22,10 @@ import {
 } from '@/domain/timeout'
 import { mapApiProfileToProfile } from '@/domain/profile'
 import { getFullName } from '@/domain/player'
-import { Rotation } from '@/domain/rotation'
+import { PlayerChangeInOut, Rotation } from '@/domain/rotation'
 import { EXPULSION_SEVERITIES } from '@/domain/sanction'
 import { formatDate, formatDateByLocale } from '@/domain/utils'
+import { Team } from '@/domain/team'
 import moment from 'moment'
 
 const { t, locale } = useI18n()
@@ -35,12 +37,17 @@ const toast = useEasyToast()
 const listenedEvents = ref<string[]>([])
 const selectedDate = ref<Date>(new Date())
 const selectedDateGames = ref<Game[]>([])
+const coachCurrentRotations = ref<Rotation[]>([])
+const playerChangeApprovedOrDeniedData = ref<{
+  gameId: number
+  setId: number
+  teamId: number
+  playerChange: PlayerChangeInOut
+}>()
 const loadingApi = ref<boolean>(false)
 
 const getGamesByDate = async (date: Date | string = selectedDate.value) => {
   if (!auth.user) return
-
-  leaveAllChannels()
 
   loadingApi.value = true
 
@@ -67,6 +74,35 @@ const getGamesByDate = async (date: Date | string = selectedDate.value) => {
       /* .filter(isValidCoachPanelGame) */
     ]
   }
+
+  const coachTeams: Team[] = []
+  selectedDateGames.value.forEach(game => {
+    if (
+      game.localTeam &&
+      !coachTeams.map(t => t.id).includes(game.localTeam?.id) &&
+      game.localTeam?.coachId === auth.user?.id
+    ) {
+      coachTeams.push(game.localTeam)
+    }
+    if (
+      game.visitorTeam &&
+      !coachTeams.map(t => t.id).includes(game.visitorTeam?.id) &&
+      game.visitorTeam?.coachId === auth.user?.id
+    ) {
+      coachTeams.push(game.visitorTeam)
+    }
+  })
+
+  const coachTeamIds: number[] = coachTeams.map(t => t.id)
+
+  const coachCalls: Call[] = selectedDateGames.value
+    .flatMap(game => game.calls)
+    .filter(call => !!call && coachTeamIds.includes(call?.teamId))
+    .filter(call => !!call)
+
+  coachCurrentRotations.value = coachCalls
+    .map(call => call.currentRotation)
+    .filter(rotation => !!rotation)
 
   // remove duplicated games by id
   // selectedDateGames.value = selectedDateGames.value.filter(
@@ -147,6 +183,33 @@ const listenCallUnlockedEvent = (gameId: number, callId: number) => {
       )
       getGamesByDate()
     },
+  )
+}
+
+const navigateToRotationChanges = (setId?: number, teamId?: number) => {
+  if (!setId || !teamId) return
+
+  const game = selectedDateGames.value?.find(
+    game => game.currentSet?.id === setId,
+  )
+  const call = game?.calls?.find(
+    call => call.gameId === game?.id && call.teamId === teamId,
+  )
+  const rotation = currentSetRotation(game?.id ?? 0, call?.id ?? 0)
+
+  if (game && call && rotation) {
+    navigateTo(
+      `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+    )
+  }
+}
+
+const handleToastNavigate = () => {
+  if (!playerChangeApprovedOrDeniedData.value) return
+
+  navigateToRotationChanges(
+    playerChangeApprovedOrDeniedData.value.setId,
+    playerChangeApprovedOrDeniedData.value.teamId,
   )
 }
 
@@ -260,22 +323,26 @@ const listenSanctionStoredEvent = (gameId: number) => {
         const game = selectedDateGames.value?.find(
           game => game.currentSet?.id === response.sanction.set_id,
         )
+
         const call = game?.calls?.find(
-          call => call.gameId === game?.id && call.teamId === response.team.id,
+          call =>
+            call.gameId === game?.id &&
+            call.teamId === response.sanction.team_id,
         )
+
         const rotation = currentSetRotation(game?.id ?? 0, call?.id ?? 0)
+
         const inCourtPlayerIds = rotation?.players?.map(
           player => player.inCourtProfileId,
         )
+
         if (
-          game &&
-          call &&
-          rotation &&
           sanctionedPlayer &&
           inCourtPlayerIds?.includes(sanctionedPlayer.id)
         ) {
-          navigateTo(
-            `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+          navigateToRotationChanges(
+            response.sanction.set_id,
+            response.sanction.team_id,
           )
         }
       }
@@ -325,6 +392,72 @@ const listenRequestChangeDateEvent = (gameId: number) => {
   )
 }
 
+const listenGamePlayerRotationStatusUpdatedEvent = (
+  gameId: number,
+  rotationId: number,
+) => {
+  listenedEvents.value.push(
+    `game.${gameId}.rotation.${rotationId}.player-rotation-status-updated`,
+  )
+  window.Echo.channel(
+    `game.${gameId}.rotation.${rotationId}.player-rotation-status-updated`,
+  ).listen(
+    ApiEvents.PLAYER_ROTATON_STATUS_UPDATED,
+    (response: ApiGamePlayerRotationStatusUpdatedEventResponse) => {
+      console.log('PLAYER_ROTATON_STATUS_UPDATED')
+      const call = selectedDateGames.value
+        ?.find(game => game.id === gameId)
+        ?.calls?.find(call => call.id === response.rotation.call_id)
+
+      const playerIn = call?.playersData.find(
+        player => player.profileId === response.player_in_profile_id,
+      )
+
+      const playerOut = call?.playersData.find(
+        player => player.profileId === response.player_out_profile_id,
+      )
+
+      playerChangeApprovedOrDeniedData.value =
+        playerIn && playerOut
+          ? {
+              gameId: response.game_id,
+              setId: response.set_id,
+              teamId: response.team_id,
+              playerChange: { in: playerIn, out: playerOut },
+            }
+          : undefined
+
+      if (response.status === 'approved') {
+        toast.success(
+          t('player_change_requests.approved_json', {
+            playerChange: JSON.stringify(
+              playerChangeApprovedOrDeniedData.value?.playerChange,
+            ),
+          }),
+          {
+            group: 'player-changes',
+            life: 10000,
+          },
+        )
+      } else {
+        toast.error(
+          t('player_change_requests.denied_json', {
+            playerChange: JSON.stringify(
+              playerChangeApprovedOrDeniedData.value?.playerChange,
+            ),
+          }),
+          {
+            group: 'player-changes',
+            life: 10000,
+          },
+        )
+      }
+
+      getGamesByDate()
+    },
+  )
+}
+
 const listenAllChannels = () => {
   selectedDateGames.value?.forEach(game => {
     if (!listenedEvents.value.includes(`game.${game.id}.status.updated`)) {
@@ -364,13 +497,23 @@ const listenAllChannels = () => {
         listenRotationLockToggledEvent(game.id, call.currentRotation.id)
       }
     })
+
+    coachCurrentRotations.value.forEach(rotation => {
+      if (
+        !listenedEvents.value.includes(
+          `game.${game.id}.rotation.${rotation.id}.player-rotation-status-updated`,
+        )
+      ) {
+        listenGamePlayerRotationStatusUpdatedEvent(game.id, rotation.id)
+      }
+    })
   })
 }
 
-const leaveAllChannels = () => {
-  window.Echo.leaveAllChannels()
-  listenedEvents.value = []
-}
+// const leaveAllChannels = () => {
+//   window.Echo.leaveAllChannels()
+//   listenedEvents.value = []
+// }
 
 const handleDateChanged = (date: Date) => getGamesByDate(date)
 
@@ -383,17 +526,18 @@ const handleDateApproved = (game: Game) => {
 }
 
 onMounted(() => {
-  leaveAllChannels()
   getGamesByDate()
-})
-
-onBeforeUnmount(() => {
-  leaveAllChannels()
 })
 </script>
 
 <template>
   <div class="easy-coach-panel-component flex flex-col">
+    <CoachRotationPlayerChangeToast
+      showButtonAction
+      @navigate="handleToastNavigate"
+      @close="playerChangeApprovedOrDeniedData = undefined"
+    />
+
     <Heading class="mb-5" position="center">
       {{
         auth.profile?.firstName

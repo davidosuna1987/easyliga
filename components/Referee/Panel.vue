@@ -22,7 +22,8 @@ const getGamesByDate = async (date: Date | string = new Date()) => {
   const formatedDateRight = `${formatedDate} 23:59:59`
 
   const { data } = await gameService.fetch({
-    where: `referee_id:${auth.user.id},status:!=:finished,date:>=:${formatedDateLeft},date:<=:${formatedDateRight}`,
+    where: `referee_id:${auth.user.id},date:>=:${formatedDateLeft},date:<=:${formatedDateRight}`, // status:!=:finished
+    with: 'signatures',
   })
 
   currentGames.value = data.value?.data.games.map(game =>

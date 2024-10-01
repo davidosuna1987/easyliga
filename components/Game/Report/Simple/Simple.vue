@@ -179,14 +179,13 @@ onMounted(() => {
         </main>
       </div>
 
-      <Button
-        class="easy-game-report-print-button float-right mt-3 no-print"
-        @click="print"
-        size="small"
-        variant="primary"
-      >
-        {{ t('forms.print') }}
-      </Button>
+      <FormFooterActions
+        class="easy-game-report-print-button is-sticky-action no-print"
+        :submitLabel="t('forms.print')"
+        :hideCancel="true"
+        @form:submit="print"
+        :fullWidthContainer="false"
+      />
     </template>
   </div>
 </template>

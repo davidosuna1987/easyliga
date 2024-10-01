@@ -37,4 +37,27 @@ export default class RotationService {
       method: 'PUT',
     })
   }
+
+  approvePlayerChange(rotationId: number, playerRotationId: number) {
+    return useApi<ApiRotationResponse>(
+      `${PREFIX}/${rotationId}/player-rotation/${playerRotationId}/approve`,
+      {
+        method: 'PUT',
+      },
+    )
+  }
+
+  denyPlayerChange(
+    rotationId: number,
+    playerRotationId: number,
+    denyReason?: string,
+  ) {
+    return useApi<ApiRotationResponse>(
+      `${PREFIX}/${rotationId}/player-rotation/${playerRotationId}/deny`,
+      {
+        method: 'PUT',
+        body: { deny_reason: denyReason },
+      },
+    )
+  }
 }

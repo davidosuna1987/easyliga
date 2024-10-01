@@ -265,6 +265,7 @@ defineExpose({
         props.federation ? t('federations.update') : t('federations.create')
       "
       hideCancel
+      stickyBreakpoint="sm"
       @form:submit="handleSubmit"
     />
   </form>

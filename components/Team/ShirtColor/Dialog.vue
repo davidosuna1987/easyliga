@@ -40,6 +40,7 @@ watch(
   <DialogBottom
     class="easy-team-shirt-color-dialog-component"
     :visible="!!showDialog"
+    :hasStickyFooter="false"
     @hide="emit('hide')"
   >
     <template #header>
@@ -56,8 +57,6 @@ watch(
         @click="$emit('selected', color)"
       />
     </div>
-
-    <template #footer> &nbsp; </template>
   </DialogBottom>
 </template>
 

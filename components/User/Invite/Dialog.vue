@@ -89,7 +89,7 @@ watch(
       <InputText v-model="form.email" type="email" class="w-full" />
     </div>
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitLabel="t('forms.invite')"
         :disabled="loadingApi"

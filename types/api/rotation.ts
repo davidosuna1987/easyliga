@@ -3,20 +3,45 @@ import { ApiGame } from '@/types/api/game'
 import { ApiSet } from '@/types/api/set'
 import { ApiTeam } from '@/types/api/team'
 import { ApiSanction } from '@/types/api/sanction'
+import { RotationPlayerStatus } from '@/domain/rotation'
+
+export type ApiRotationPlayerDeniedChangePlayerChange = {
+  id: number
+  profile_id: number
+  replacement_profile_id: number
+  in_court_profile_id: number
+  position: number
+  status: 'denied'
+  libero: boolean
+  change_windows: number[]
+  comes_from_api: boolean
+}
+
+export type ApiRotationPlayerDeniedChange = {
+  denied_at: string
+  denied_by: number
+  deny_reason: string | null
+  change_window: number
+  player_change: ApiRotationPlayerDeniedChangePlayerChange
+}
 
 export type ApiRotationPlayer = {
+  id: number
   profile_id: number
   rotation_id: number
   replacement_profile_id: number | null
   in_court_profile_id: number
   position: number
+  status: RotationPlayerStatus
   current_position: number
   libero: boolean
   change_windows: number[] | null
+  denied_changes: ApiRotationPlayerDeniedChange[] | null
 }
 
 export type ApiRotationUpdateRequestPlayer = Pick<
   ApiRotationPlayer,
+  | 'id'
   | 'profile_id'
   | 'replacement_profile_id'
   | 'in_court_profile_id'
@@ -39,6 +64,7 @@ export type ApiRotation = {
   call_id: number
   set_id: number
   in_court_captain_profile_id: number
+  requested_in_court_captain_profile_id: number | null
   player_changes_count: number
   number: number
   locked: boolean
@@ -82,6 +108,7 @@ export type ApiCurrentRotation = {
 }
 
 export type ApiRotationUpdateRequest = {
+  change_window: number
   in_court_captain_profile_id: number
   players: ApiRotationUpdateRequestPlayer[]
 }

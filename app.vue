@@ -54,7 +54,7 @@ useHead({
     },
   ],
   bodyAttrs: {
-    class: 'easy-body',
+    class: `easy-body`,
   },
 })
 </script>

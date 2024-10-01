@@ -135,7 +135,7 @@ defineExpose({
     <div
       :class="[
         'easy-user-search-form-input-component',
-        `flex gap-3 h-[42px]`,
+        `flex gap-3 grid-cols-[1fr_auto] sm:h-[42px]`,
         !!mappedBreakpoints
           ? mappedBreakpoints
           : showEditButton && 'grid-cols-[minmax(0,1fr)_auto]',

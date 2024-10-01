@@ -281,8 +281,10 @@ defineExpose({
       class="mt-10"
       :loading="loadingApi"
       :submitLabel="props.club ? t('clubs.update') : t('clubs.create')"
+      stickyBreakpoint="sm"
       hideCancel
       @form:submit="handleSubmit"
+      @mouseenter="stopEditingResponsible(true)"
     />
   </form>
 </template>

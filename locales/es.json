@@ -142,7 +142,8 @@
     "action": "Acción | Acciones",
     "settings": "Ajuste | Ajustes",
     "options": "Opciones",
-    "deny": "Denegar"
+    "deny": "Denegar",
+    "select": "Seleccionar"
   },
   "errors": {
     "all_required": "Todos los campos son requeridos",
@@ -693,22 +694,27 @@
     "max_player_change_changes_reached": "No puedes volver a sustituir a {name} en este set",
     "max_changes_reached": "No puedes hacer más de {num} cambios en cada set",
     "player_in_change_request": "El cambio solicitado está pendiente de aprovación",
-    "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación"
+    "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación",
+    "show": "Mostrar rotación | Mostrar rotaciones"
   },
   "player_change_requests": {
     "player_change_request": "Solicitud de cambio de jugador | Solicitudes de cambio de jugadores",
     "pending": "Cambios pendientes",
-    "approved": "El cambio de jugadores se ha aprovado correctamente",
+    "approved": "El cambio de jugadores ha sido aprovado",
     "denied": "El cambio de jugadores ha sido denegado",
+    "approved_json": "El siguiente cambio de jugadores ha sido aprovado{playerChange}",
+    "denied_json": "El siguiente cambio de jugadores ha sido denegado{playerChange}",
     "denied_reason": "El cambio de jugadores ha sido denegado por el siguiente motivo:",
     "denied_with_reason": "El cambio de jugadores ha sido denegado por el siguiente motivo: {reason}",
     "deny_reason_dialog_title": "Motivo de la denegación",
     "deny_reason_dialog_message": "Por favor, introduce el motivo de la denegación o deja en blanco si no quieres añadir un motivo",
+    "deny_reason_not_specifyed": "No se ha especificado el motivo de la denegación",
     "request": "Solicitar cambio de jugador | Solicitar cambio de jugadores",
     "request_short": "Solicitar cambio | Solicitar cambios",
     "cancel_request": "Cancelar solicitud de cambio | Cancelar solicitudes de cambio",
     "cancel_request_short": "Cancelar solicitud | Cancelar solicitudes",
     "waiting_for_approval": "Solicitud pendiente de aprovación | Solicitudes pendientes de aprovación",
+    "changes_waiting_approval": "Hay cambios pendientes de aprovación",
     "request_denied": "Solicitud denegada | Solicitudes denegadas",
     "delete": "Eliminar solicitud de cambio | Eliminar solicitudes de cambio",
     "delete_alert": "¿Seguro que quieres eliminar la solicitud de cambio?",
@@ -856,6 +862,8 @@
   "reports": {
     "report": "Acta | Actas",
     "countdown": "Tiempo restante para fiamar el acta",
+    "show": "Ver acta",
+    "show_game": "Ver acta del partido",
     "sign": "Firmar acta",
     "signed": "El acta ha sido firmada correctamente",
     "sign_description": "Firma el acta en el siguiente recuadro y haz click en el botón \"Firmar acta\" para cerrarla",
@@ -1034,7 +1042,7 @@
     "call_locked": "El árbitro ha bloqueado la convocatoria",
     "call_unlocked": "El árbitro ha desbloqueado la convocatoria",
     "rotation_created": "{teamName} ha asignado su rotación",
-    "rotation_updated": "{teamName} ha actualizado su rotación",
+    "rotation_updated": "{teamName} ha solicitado un cambio de jugador | {teamName} ha solicitado {changesCount} cambios de jugador",
     "rotation_locked": "El árbitro ha bloqueado la rotación",
     "rotation_unlocked": "El árbitro ha desbloqueado la rotación",
     "game_status_updated": "El estado del partido {gameName} ha cambiado a \"{status}\"",

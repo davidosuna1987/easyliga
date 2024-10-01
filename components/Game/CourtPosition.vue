@@ -2,6 +2,7 @@
 import { Player } from '@/domain/player'
 import { Sanction, EXPULSION_SEVERITIES } from '@/domain/sanction'
 import { ShirtColor } from '@/domain/team'
+import { ROTATION_PLAYER_STATUS } from '@/domain/rotation'
 
 const props = defineProps({
   position: {
@@ -29,6 +30,10 @@ const props = defineProps({
     required: false,
   },
 })
+
+const showPendingStatus = computed(
+  (): boolean => props.player?.changeStatus === ROTATION_PLAYER_STATUS.pending,
+)
 </script>
 
 <template>
@@ -37,12 +42,15 @@ const props = defineProps({
       `position-${position}`,
       {
         serving,
+        'is-pending': showPendingStatus,
         'is-sanctioned':
           props.sanction?.severity &&
           EXPULSION_SEVERITIES.includes(props.sanction?.severity),
       },
     ]"
   >
+    <GameStatusSpinIcon v-if="showPendingStatus" status="pending" />
+
     <span class="shirt-number">
       <IconShirtNumber
         :shirtNumber="player?.shirtNumber"

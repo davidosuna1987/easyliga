@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import GameService from '@/services/game'
-import PointService from '@/services/point'
 import SetService from '@/services/set'
+import RotationService from '@/services/rotation'
+import PointService from '@/services/point'
 import TimeoutService from '@/services/timeout'
 import {
   GameInitialData,
@@ -39,7 +40,11 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import {
   CurrentRotation,
   Rotation,
+  RotationPlayer,
   mapApiRotationToRotation,
+  ROTATION_PLAYER_STATUS,
+  mapRotationPlayersToRotationPlayerChanges,
+  RotationPlayerChange,
 } from '@/domain/rotation'
 import { ApiEvents } from '@/types/api/event'
 import {
@@ -62,8 +67,9 @@ const toast = useEasyToast()
 const easyStorage = useEasyStorage()
 
 const gameService = new GameService()
-const pointService = new PointService()
 const setService = new SetService()
+const rotationService = new RotationService()
+const pointService = new PointService()
 const timeoutService = new TimeoutService()
 
 const listenedEvents = ref<string[]>([])
@@ -90,6 +96,9 @@ const pointInterval = ref<NodeJS.Timeout>()
 
 const formPoint = ref<ApiPointStoreRequest>()
 const showSetPointWillEndSetDialog = ref<boolean>()
+
+const showPendingPlayerChangeDialog = ref<RotationPlayer>()
+const showDenyReasonDialog = ref<RotationPlayer>()
 
 const customTeamsShirtColor = ref<CustomTeamsShirtColor>({
   left: undefined,
@@ -263,6 +272,41 @@ const gameFinishesIfSumPoint = computed((): boolean => {
   return winnerTeamSetsWon + 1 === SETS_TO_WIN
 })
 
+const pendingRotationPlayers = computed(
+  (): RotationPlayer[] =>
+    gameInitialData.value?.game.currentSet?.rotations
+      ?.map(rotation => rotation.players)
+      .flat()
+      .filter(player => player.status === ROTATION_PLAYER_STATUS.pending) ?? [],
+)
+
+const pendingPlayerChanges = computed((): RotationPlayerChange[] => {
+  const playersData =
+    gameInitialData.value?.calls.flatMap(call => call.playersData) ?? []
+
+  return mapRotationPlayersToRotationPlayerChanges(
+    pendingRotationPlayers.value,
+    playersData,
+  )
+})
+
+const showPendingPlayerChange = computed((): RotationPlayerChange | undefined =>
+  pendingPlayerChanges.value.find(
+    playerChange =>
+      playerChange.in.profileId ===
+      showPendingPlayerChangeDialog.value?.inCourtProfileId,
+  ),
+)
+
+const showPendingPlayerChangeTeam = computed((): Team | undefined =>
+  showPendingPlayerChangeDialog.value?.profileId &&
+  leftSideTeamCall.value?.playersData
+    ?.map(playerData => playerData.profileId)
+    .includes(showPendingPlayerChangeDialog.value.profileId)
+    ? leftSideTeam.value
+    : rightSideTeam.value,
+)
+
 const getGameInitialData = async (firstCall: boolean = false) => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
@@ -288,6 +332,9 @@ const getGameInitialData = async (firstCall: boolean = false) => {
   )
   observationsForm.value.observations =
     gameInitialData.value.game.observations ?? undefined
+
+  showNextPendingPlayerChange()
+
   loadingApi.value = false
 
   if (firstCall) {
@@ -296,6 +343,67 @@ const getGameInitialData = async (firstCall: boolean = false) => {
   }
 
   setShirtColorsFromStorage()
+}
+
+const showNextPendingPlayerChange = () => {
+  showPendingPlayerChangeDialog.value = undefined
+  showDenyReasonDialog.value = undefined
+
+  if (pendingRotationPlayers.value.length > 0) {
+    setTimeout(
+      () =>
+        (showPendingPlayerChangeDialog.value = pendingRotationPlayers.value[0]),
+      50,
+    )
+  }
+}
+
+const handlePendingPlayerChangeShow = (rotationPlayer: RotationPlayer) => {
+  showPendingPlayerChangeDialog.value = rotationPlayer
+}
+
+const approvePlayerChangeRequest = async () => {
+  if (!showPendingPlayerChangeDialog.value) return
+
+  loadingApi.value = true
+
+  const { error } = await rotationService.approvePlayerChange(
+    showPendingPlayerChangeDialog.value.rotationId,
+    showPendingPlayerChangeDialog.value.id,
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+    return
+  }
+
+  toast.success(t('player_change_requests.approved'))
+  getGameInitialData()
+}
+
+const denyPlayerChangeRequest = async (denyReason?: string) => {
+  const pendingPlayerChangeRequest =
+    showPendingPlayerChangeDialog.value ?? showDenyReasonDialog.value
+
+  if (!pendingPlayerChangeRequest) return
+
+  loadingApi.value = true
+
+  const { error } = await rotationService.denyPlayerChange(
+    pendingPlayerChangeRequest.rotationId,
+    pendingPlayerChangeRequest.id,
+    denyReason,
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+    return
+  }
+
+  toast.success(t('player_change_requests.denied'))
+  getGameInitialData()
 }
 
 const sumPoint = async () => {
@@ -531,6 +639,16 @@ const setCustomTeamsShirtColor = (teamId?: number, shirtColor?: ShirtColor) => {
   }
 }
 
+const showDenyDialog = () => {
+  showDenyReasonDialog.value = showPendingPlayerChangeDialog.value
+  showPendingPlayerChangeDialog.value = undefined
+}
+
+const hideDenyDialog = () => {
+  showPendingPlayerChangeDialog.value = showDenyReasonDialog.value
+  showDenyReasonDialog.value = undefined
+}
+
 const listenCallUpdatedEvent = () => {
   listenedEvents.value.push(`game.${route.params.game_id}.call.updated`)
   window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
@@ -592,31 +710,34 @@ const listenRotationUpdatedEvent = () => {
   window.Echo.channel(`game.${route.params.game_id}.rotation.updated`).listen(
     ApiEvents.ROTATION_UPDATED,
     (response: ApiRotationUpdatedEventResponse) => {
-      toast.info(
+      toast.warn(
         t('events.rotation_updated', {
           teamName: response.team.name,
+          changesCount: response.changes_count,
         }),
         {
-          life: 30000,
+          life: 5000,
         },
       )
 
-      const oldRotation =
-        gameInitialData.value?.game.currentSet?.rotations?.find(
-          rotation => rotation.id === response.rotation.id,
-        )
+      getGameInitialData()
 
-      if (oldRotation) {
-        gameInitialData.value?.game.currentSet?.rotations?.splice(
-          gameInitialData.value?.game.currentSet?.rotations
-            ?.map(rotation => rotation.id)
-            .indexOf(oldRotation.id),
-          1,
-        )
-      }
+      // const oldRotation =
+      //   gameInitialData.value?.game.currentSet?.rotations?.find(
+      //     rotation => rotation.id === response.rotation.id,
+      //   )
 
-      const newRotation = mapApiRotationToRotation(response.rotation)
-      gameInitialData.value?.game.currentSet?.rotations?.push(newRotation)
+      // if (oldRotation) {
+      //   gameInitialData.value?.game.currentSet?.rotations?.splice(
+      //     gameInitialData.value?.game.currentSet?.rotations
+      //       ?.map(rotation => rotation.id)
+      //       .indexOf(oldRotation.id),
+      //     1,
+      //   )
+      // }
+
+      // const newRotation = mapApiRotationToRotation(response.rotation)
+      // gameInitialData.value?.game.currentSet?.rotations?.push(newRotation)
     },
   )
 }
@@ -811,6 +932,7 @@ onMounted(() => {
       :timeoutRunning="timeoutRunning"
       :gameSignatures="gameInitialData.game.signatures"
       :customTeamsShirtColor="customTeamsShirtColor"
+      :pendingPlayerChanges="pendingRotationPlayers"
       @game:start="startGame"
       @call:unlocked="getGameInitialData"
       @rotation:lock-toggled="getGameInitialData"
@@ -821,6 +943,7 @@ onMounted(() => {
       @observations:dialog="showObservationsDialog = true"
       @timeout:init="addTimeout"
       @sanction:stored="getGameInitialData"
+      @pendingPlayerChange:show="handlePendingPlayerChangeShow"
     />
 
     <ObservationsDialog
@@ -843,7 +966,7 @@ onMounted(() => {
     />
 
     <DialogBottom
-      class="easy-observations-dialog-component"
+      class="easy-game-point-will-end-set-or-game-dialog-component"
       :visible="!!showSetPointWillEndSetDialog"
       @hide="showSetPointWillEndSetDialog = false"
     >
@@ -871,7 +994,7 @@ onMounted(() => {
         }}
       </p>
 
-      <template #footer>
+      <template #stickyFooter>
         <FormFooterActions
           :submitLabel="t('forms.accept')"
           @form:submit="sumPoint"
@@ -879,6 +1002,55 @@ onMounted(() => {
         />
       </template>
     </DialogBottom>
+
+    <DialogBottom
+      v-if="showPendingPlayerChange"
+      class="easy-pending-player-change-request-dialog-component"
+      :visible="!!showPendingPlayerChangeDialog"
+      @hide="showPendingPlayerChangeDialog = undefined"
+      :dismissableMask="!loadingApi"
+      :closable="!loadingApi"
+    >
+      <template #header>
+        <Heading tag="h6">
+          {{ t('player_change_requests.player_change_request') }}
+        </Heading>
+      </template>
+
+      <p v-highlight="showPendingPlayerChangeTeam?.name" class="mt-3">
+        {{
+          t(`events.player_change_request.requested`, {
+            teamName: showPendingPlayerChangeTeam?.name,
+          })
+        }}
+      </p>
+
+      <RotationPlayerChangeItem
+        class="mt-4"
+        :playerIn="showPendingPlayerChange.in"
+        :playerOut="showPendingPlayerChange.out"
+        block
+      />
+
+      <template #stickyFooter>
+        <FormFooterActions
+          :submitLabel="t('forms.approve')"
+          :cancelLabel="t('forms.deny')"
+          cancelSeverity="danger"
+          :disabled="loadingApi"
+          full
+          @form:submit="approvePlayerChangeRequest"
+          @form:cancel="showDenyDialog"
+        />
+      </template>
+    </DialogBottom>
+
+    <RotationPlayerChangeDenyReasonDialog
+      :visible="!!showDenyReasonDialog"
+      :disabled="loadingApi"
+      @submit="denyPlayerChangeRequest"
+      @hide="hideDenyDialog"
+    />
 
     <!-- TODO: remove in production -->
     <div v-if="auth.isAdminOrHasRole('staff')" class="flex items-center mt-5">

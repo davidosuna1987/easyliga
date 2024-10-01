@@ -237,6 +237,7 @@ defineExpose({
       :loading="loadingApi"
       :submitLabel="props.league ? t('leagues.update') : t('leagues.create')"
       hideCancel
+      stickyBreakpoint="sm"
       @form:submit="handleSubmit"
     />
   </form>

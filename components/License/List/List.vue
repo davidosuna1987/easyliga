@@ -102,6 +102,7 @@ const handleLicenseDialogFormHide = () => {
     <DialogBottom
       class="easy-alert-dialog-component"
       :visible="!!licenseToShow"
+      :hasStickyFooter="false"
       @hide="licenseToShow = undefined"
     >
       <template #header>
@@ -109,8 +110,6 @@ const handleLicenseDialogFormHide = () => {
       </template>
 
       <LicenseShow v-if="licenseToShow" class="mt-6" :license="licenseToShow" />
-
-      <template #footer></template>
     </DialogBottom>
   </div>
 </template>

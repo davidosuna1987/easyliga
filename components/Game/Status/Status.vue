@@ -2,10 +2,11 @@
 import { IconNames } from '@/domain/icon'
 import { GameStatus } from '@/domain/game'
 import { formatTime } from '@/domain/utils'
+import { RotationPlayerStatus } from '@/domain/rotation'
 
 const props = defineProps({
   status: {
-    type: String as PropType<GameStatus>,
+    type: String as PropType<GameStatus | RotationPlayerStatus>,
     required: false,
   },
   statusLabel: {
@@ -34,6 +35,11 @@ const { t } = useI18n()
       <Icon
         v-if="status === 'finished'"
         :name="IconNames.gameFinished"
+        size="1.15rem"
+      />
+      <Icon
+        v-else-if="status === 'denied'"
+        :name="IconNames.times"
         size="1.15rem"
       />
       <GameStatusSpinIcon v-else :status="status" />

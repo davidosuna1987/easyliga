@@ -127,9 +127,9 @@ onMounted(() => {
         </div>
       </header>
 
-      <div class="flex flex-col sm:flex-row gap-8">
+      <div class="flex flex-col sm:flex-row sm:gap-8">
         <div class="teams">
-          <header class="flex justify-between items-center mb-2">
+          <header class="flex justify-between items-center mb-4">
             <Heading tag="h6">{{ t('teams.team', 2) }}</Heading>
             <ListActionButton
               v-if="!league.matchdays?.length"
@@ -174,7 +174,10 @@ onMounted(() => {
           </template>
         </EasyGrid>
 
-        <div v-else class="matchdays flex flex-col items-center gap-3">
+        <div
+          v-else
+          class="matchdays is-sticky-action is-sticky-action__sm flex flex-col items-center gap-3"
+        >
           <p>{{ t('games.matchdays.not_generated') }}</p>
           <Button
             :label="t('games.matchdays.generate')"

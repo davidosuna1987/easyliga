@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import {
   Rotation,
+  RotationPlayer,
   RotationPlayerChange,
   RotationWindowPlayerChange,
-  mapRotationToRotationPlayerChanges,
+  mapRotationPlayersToRotationPlayerChanges,
   mapRotationToRotationWindowPlayerChanges,
+  playerInProfileId,
+  playerOutProfileId,
 } from '@/domain/rotation'
-import { Call } from '@/domain/call'
+import { Call, CallPlayerData } from '@/domain/call'
 import { TeamSide, TeamSideEnum } from '@/domain/team'
 
 const props = defineProps({
@@ -26,7 +29,15 @@ const props = defineProps({
     type: Object as PropType<Rotation>,
     required: false,
   },
+  pendingPlayerChanges: {
+    type: Array as PropType<RotationPlayer[]>,
+    required: false,
+  },
 })
+
+const emit = defineEmits<{
+  (e: 'pendingPlayerChange:show', value: RotationPlayer): void
+}>()
 
 const { t } = useI18n()
 
@@ -68,8 +79,8 @@ const rotation = computed((): Rotation | undefined => {
 const leftSideTeamPlayerChanges = computed(
   () =>
     props.leftSideTeamRotation &&
-    mapRotationToRotationPlayerChanges(
-      props.leftSideTeamRotation,
+    mapRotationPlayersToRotationPlayerChanges(
+      props.leftSideTeamRotation.players,
       props.leftSideTeamCall.playersData,
     ),
 )
@@ -77,8 +88,8 @@ const leftSideTeamPlayerChanges = computed(
 const rightSideTeamPlayerChanges = computed(
   () =>
     props.rightSideTeamRotation &&
-    mapRotationToRotationPlayerChanges(
-      props.rightSideTeamRotation,
+    mapRotationPlayersToRotationPlayerChanges(
+      props.rightSideTeamRotation.players,
       props.rightSideTeamCall.playersData,
     ),
 )
@@ -101,6 +112,86 @@ const rightSideTeamWindowPlayerChanges = computed(
     ),
 )
 
+const leftSideTeamPendingPlayerChanges = computed(
+  (): RotationPlayer[] | undefined =>
+    props.pendingPlayerChanges?.filter(playerChange =>
+      props.leftSideTeamCall.playersData
+        .map(pd => pd.profileId)
+        .includes(playerChange.profileId),
+    ),
+)
+
+const rightSideTeamPendingPlayerChanges = computed(
+  (): RotationPlayer[] | undefined =>
+    props.pendingPlayerChanges?.filter(playerChange =>
+      props.rightSideTeamCall.playersData
+        .map(pd => pd.profileId)
+        .includes(playerChange.profileId),
+    ),
+)
+
+const leftSideTeamPendingPlayerChangeToShow = computed(
+  (): RotationPlayer | undefined => {
+    if (!leftSideTeamPendingPlayerChanges.value) return
+    return leftSideTeamPendingPlayerChanges.value[0]
+  },
+)
+
+const rightSideTeamPendingPlayerChangeToShow = computed(
+  (): RotationPlayer | undefined => {
+    if (!rightSideTeamPendingPlayerChanges.value) return
+    return rightSideTeamPendingPlayerChanges.value[0]
+  },
+)
+
+const leftTeamPendingPlayerChangePlayerIn = computed(
+  (): CallPlayerData | undefined => {
+    if (!leftSideTeamPendingPlayerChangeToShow.value) return
+
+    return props.leftSideTeamCall.playersData?.find(
+      player =>
+        player.profileId ===
+        playerInProfileId(leftSideTeamPendingPlayerChangeToShow.value),
+    )
+  },
+)
+
+const leftTeamPendingPlayerChangePlayerOut = computed(
+  (): CallPlayerData | undefined => {
+    if (!leftSideTeamPendingPlayerChangeToShow.value) return
+
+    return props.leftSideTeamCall.playersData?.find(
+      player =>
+        player.profileId ===
+        playerOutProfileId(leftSideTeamPendingPlayerChangeToShow.value),
+    )
+  },
+)
+
+const rightTeamPendingPlayerChangePlayerIn = computed(
+  (): CallPlayerData | undefined => {
+    if (!rightSideTeamPendingPlayerChangeToShow.value) return
+
+    return props.rightSideTeamCall.playersData?.find(
+      player =>
+        player.profileId ===
+        playerInProfileId(rightSideTeamPendingPlayerChangeToShow.value),
+    )
+  },
+)
+
+const rightTeamPendingPlayerChangePlayerOut = computed(
+  (): CallPlayerData | undefined => {
+    if (!rightSideTeamPendingPlayerChangeToShow.value) return
+
+    return props.rightSideTeamCall.playersData?.find(
+      player =>
+        player.profileId ===
+        playerOutProfileId(rightSideTeamPendingPlayerChangeToShow.value),
+    )
+  },
+)
+
 const numberToString = (playerChangesCount: number = 0) =>
   playerChangesCount.toString()
 
@@ -121,6 +212,34 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
   <div class="easy-game-changes-actions-component">
     <EasyGrid class="actions" :cols="2" :gap="3">
       <Button
+        v-if="
+          leftSideTeamPendingPlayerChangeToShow &&
+          leftTeamPendingPlayerChangePlayerIn &&
+          leftTeamPendingPlayerChangePlayerOut
+        "
+        class="relative pr-[4.25rem] justify-center col-span-5/10"
+        severity="warning"
+        @click.prevent="
+          emit(
+            'pendingPlayerChange:show',
+            leftSideTeamPendingPlayerChangeToShow,
+          )
+        "
+      >
+        <span>{{ t('player_change_requests.pending') }}</span>
+        <img
+          class="arrows-icon absolute right-[1.25rem]"
+          src="/icons/change-player.svg"
+          width="30"
+        />
+        <img
+          class="arrows-icon absolute right-[1.25rem] animate-ping"
+          src="/icons/change-player.svg"
+          width="30"
+        />
+      </Button>
+      <Button
+        v-else
         class="col-span-5/10"
         :label="t('games.show_player_change', 2)"
         :badge="numberToString(leftSideTeamRotation?.playerChangesCount)"
@@ -129,6 +248,34 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
         @click.prevent="selectedTeamSide = TeamSideEnum.left"
       />
       <Button
+        v-if="
+          rightSideTeamPendingPlayerChangeToShow &&
+          rightTeamPendingPlayerChangePlayerIn &&
+          rightTeamPendingPlayerChangePlayerOut
+        "
+        class="relative pr-[4.25rem] justify-center col-span-5/10"
+        severity="warning"
+        @click.prevent="
+          emit(
+            'pendingPlayerChange:show',
+            rightSideTeamPendingPlayerChangeToShow,
+          )
+        "
+      >
+        <span>{{ t('player_change_requests.pending') }}</span>
+        <img
+          class="arrows-icon absolute right-[1.25rem]"
+          src="/icons/change-player.svg"
+          width="30"
+        />
+        <img
+          class="arrows-icon absolute right-[1.25rem] animate-ping"
+          src="/icons/change-player.svg"
+          width="30"
+        />
+      </Button>
+      <Button
+        v-else
         class="col-span-5/10"
         :label="t('games.show_player_change', 2)"
         :badge="numberToString(rightSideTeamRotation?.playerChangesCount)"
@@ -141,15 +288,16 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
     <DialogBottom
       class="easy-coach-rotation-captain-selector-dialog-component"
       :visible="!!selectedTeamSide"
+      :hasStickyFooter="false"
       @hide="selectedTeamSide = undefined"
     >
       <template #header>
         <Heading tag="h6">{{ t('rotations.player_change_done', 2) }}</Heading>
       </template>
 
-      <Message v-if="playerChanges?.length === 0" :closable="false">{{
-        t('rotations.player_change_done', 0)
-      }}</Message>
+      <Message v-if="playerChanges?.length === 0" :closable="false">
+        {{ t('rotations.player_change_done', 0) }}
+      </Message>
 
       <!-- <template v-if="playerChanges">
         <RotationPlayerChangeItem

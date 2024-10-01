@@ -138,17 +138,6 @@
     }
   }
 
-  .court {
-    &.is-disabled {
-      .left {
-        [class^='position-'] {
-          filter: grayscale(100%);
-          pointer-events: none;
-        }
-      }
-    }
-  }
-
   .change-captain-button {
     font-size: 0.7rem;
     padding: 0.3rem 0.5rem 0.325rem;

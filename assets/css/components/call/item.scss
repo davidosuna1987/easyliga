@@ -18,6 +18,10 @@
     gap: 0.5rem;
   }
 
+  .team-player-captain {
+    flex-shrink: 0;
+  }
+
   .easy-sanction-item-component {
     position: absolute;
     top: -8px;

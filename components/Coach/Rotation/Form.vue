@@ -199,7 +199,7 @@ const handleSubmit = async (): Promise<void> => {
     loadingApi.value = false
   } else {
     toast.success(t('rotations.assign_success'))
-    navigateTo(`/coach`)
+    navigateTo('/coach')
   }
 }
 
@@ -324,17 +324,13 @@ onBeforeUnmount((): void => {
           @update:captain="setRotationInCourtCaptain"
         />
 
-        <div
-          v-if="!currentSetRotation?.players?.length"
-          class="flex items-center justify-end mt-5"
-        >
-          <Button
-            type="submit"
-            class="easy-coach-rotation-court-component__button"
-          >
-            {{ t('rotations.assign') }}
-          </Button>
-        </div>
+        <FormFooterActions
+          :loading="loadingApi"
+          :submitLabel="t('rotations.assign')"
+          hideCancel
+          stickyBreakpoint="xs"
+          @form:submit="handleSubmit"
+        />
       </form>
     </template>
     <template v-else>

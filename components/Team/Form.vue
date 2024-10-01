@@ -482,14 +482,14 @@ watch(
       </EasyGrid>
     </div>
 
-    <div class="flex justify-end mt-10" @mouseenter="stopEditingCoach()">
-      <FormFooterActions
-        :submitLabel="team ? t('teams.update') : t('teams.create')"
-        :loading="loadingApi"
-        hideCancel
-        @form:submit="handleSubmit"
-      />
-    </div>
+    <FormFooterActions
+      :submitLabel="team ? t('teams.update') : t('teams.create')"
+      :loading="loadingApi"
+      stickyBreakpoint="sm"
+      hideCancel
+      @form:submit="handleSubmit"
+      @mouseenter="stopEditingCoach()"
+    />
 
     <GameCallShirtNumberDialog
       :player="shirtNumberUpdatePlayer"

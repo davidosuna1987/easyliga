@@ -14,7 +14,11 @@ import {
   GameSignatureTypes,
 } from '@/domain/game-signature'
 import { Call, MIN_CALL_PLAYERS } from '@/domain/call'
-import { Rotation, MAX_ROTATION_PLAYER_CHANGES } from '@/domain/rotation'
+import {
+  Rotation,
+  MAX_ROTATION_PLAYER_CHANGES,
+  ROTATION_PLAYER_STATUS,
+} from '@/domain/rotation'
 import {
   Timeout,
   TimeoutStatusEnum,
@@ -46,21 +50,21 @@ const toast = useEasyToast()
 
 const timeoutService = new TimeoutService()
 
-const enableRequestTimeouts = ref<boolean>(false)
+const ENABLE_TIMEOUT_REQUESTS = false
 
 const getPlayingStatusGridCols = (game: Game) => {
   if (isSameCoachForBothTeams(game)) {
     return 2
   }
 
-  return enableRequestTimeouts.value ? 2 : 1
+  return ENABLE_TIMEOUT_REQUESTS ? 2 : 1
 }
 
 const ACTIONS_GRID_COLS: Record<string, number> = {
   default: 1,
   warmup: 2,
   resting: 1,
-  playing: enableRequestTimeouts.value ? 2 : 1, // grid-cols-2 if timeouts are enabled
+  playing: ENABLE_TIMEOUT_REQUESTS ? 2 : 1,
   finished: 2,
   undefined: 1,
 }
@@ -180,6 +184,24 @@ const currentSetRotationLocked = (
     : true
 }
 
+const initialRotationAssigned = (game: Game, opponent: boolean = false) => {
+  const rotation = currentSetRotation(game, opponent)
+  return rotation?.players.length === 6
+}
+
+const currentSetHasPendingPlayerChanges = (
+  game: Game,
+  opponent: boolean = false,
+): boolean => {
+  const rotation = currentSetRotation(game, opponent)
+  return !!rotation?.players.some(
+    player => player.status === ROTATION_PLAYER_STATUS.pending,
+  )
+}
+
+const showPendingPlayerChangesToast = () =>
+  toast.warn(t('player_change_requests.changes_waiting_approval'))
+
 const getGameObservationsCountdownTarget = (game: Game): number =>
   moment(game.end).add(GAME_OBSERVATIONS_DELAY, 'minutes').valueOf()
 
@@ -258,7 +280,7 @@ const gameCallSigned = (game: Game): boolean => {
 }
 
 const showReportSignedMessage = (game: Game, index: number): boolean =>
-  isMatchDay(game) ? gameCallSigned(game) : false
+  isMatchDay(game) ? gameCallSigned(game) : game.status === 'finished'
 
 const showSignatureCountdown = (game: Game, index: number): boolean =>
   game.status === 'finished' && !gameCallSigned(game)
@@ -354,7 +376,9 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 gamesWithSanctionedMembersToChange.includes(game)
               "
               :callUnlocked="callUnlocked(game)"
-              :locked="currentSetRotationLocked(game)"
+              :locked="
+                currentSetRotationLocked(game) || initialRotationAssigned(game)
+              "
             />
             <CoachButtonRotation
               v-if="isSameCoachForBothTeams(game)"
@@ -367,7 +391,10 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 gamesWithSanctionedMembersToChange.includes(game)
               "
               :callUnlocked="callUnlocked(game, true)"
-              :locked="currentSetRotationLocked(game, true)"
+              :locked="
+                currentSetRotationLocked(game, true) ||
+                initialRotationAssigned(game, true)
+              "
             />
           </template>
           <template v-if="game.status === 'playing'">
@@ -380,6 +407,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               :locked="
                 !!rotationLocked(game) || !!maxSetPlayerChangesReached(game)
               "
+              :showPendingStatus="currentSetHasPendingPlayerChanges(game)"
             />
             <CoachButtonPlayerChange
               v-if="isSameCoachForBothTeams(game) && !!getGameCall(game, true)"
@@ -391,8 +419,9 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 !!rotationLocked(game, true) ||
                 !!maxSetPlayerChangesReached(game, true)
               "
+              :showPendingStatus="currentSetHasPendingPlayerChanges(game, true)"
             />
-            <template v-if="enableRequestTimeouts">
+            <template v-if="ENABLE_TIMEOUT_REQUESTS">
               <CoachButtonTimeout
                 v-if="!!getGameCall(game)"
                 class="action"
@@ -429,7 +458,12 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 } text-xs text-[var(--danger-color)] flex items-center justify-center`,
               ]"
             >
-              {{ t('reports.closed') }}
+              <!-- {{ t('reports.closed') }} -->
+              <Button
+                :label="t('reports.show_game')"
+                size="small"
+                @click.prevent="navigateTo(`/games/${game.id}/report`)"
+              />
             </div>
             <template v-else>
               <template
@@ -515,7 +549,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
 
       <p>{{ t('timeouts.request_alert') }}</p>
 
-      <template #footer>
+      <template #stickyFooter>
         <FormFooterActions
           :submitLabel="t('forms.request')"
           @form:submit="requestTimeout"

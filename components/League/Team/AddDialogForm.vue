@@ -66,7 +66,7 @@ watch(
       @hide="emit('hide', true)"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         class="mt-10"
         :loading="formLoading"

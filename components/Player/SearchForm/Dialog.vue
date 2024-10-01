@@ -74,7 +74,7 @@ watch(
       @invited="emit('hide', true)"
     />
 
-    <template #footer>
+    <template #stickyFooter>
       <FormFooterActions
         :submitLabel="t('players.add')"
         :disabled="!selectedPlayer || loading"

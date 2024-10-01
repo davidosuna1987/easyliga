@@ -312,7 +312,7 @@ const handleSubmit = async () => {
     loadingApi.value = false
   } else {
     toast.success(t('calls.submitted'))
-    navigateTo(`/coach`)
+    navigateTo('/coach')
   }
 }
 
@@ -407,13 +407,13 @@ onMounted(getTeamPlayers)
     </div>
 
     <EasyGrid class="mt-4" :gap="3" :breakpoints="{ md: 2 }" items="start">
-      <div>
+      <EasyGrid :gap="3">
+        <GameCallSelectedCaptain :player="selectedCaptain" />
         <GameCallSelectedLibero
           v-for="libero in selectedLiberos"
-          class="mb-3"
           :player="libero"
         />
-      </div>
+      </EasyGrid>
       <EasyGrid v-if="!call?.locked" justify="end">
         <Button
           v-if="!showLowerCategoryTeamsWithPlayers"
@@ -429,15 +429,17 @@ onMounted(getTeamPlayers)
               !showLowerCategoryTeamsWithPlayers
           "
         />
-        <FormFooterActions
-          :submitLabel="call?.locked ? t('calls.locked') : t('calls.submit')"
-          :disabled="call?.locked"
-          :loading="loadingApi"
-          hideCancel
-          @form:submit="handleSignOrSubmit"
-        />
       </EasyGrid>
     </EasyGrid>
+
+    <FormFooterActions
+      :submitLabel="call?.locked ? t('calls.locked') : t('calls.submit')"
+      :disabled="call?.locked"
+      :loading="loadingApi"
+      hideCancel
+      stickyBreakpoint="xs"
+      @form:submit="handleSignOrSubmit"
+    />
   </form>
 
   <GameCallShirtNumberDialog

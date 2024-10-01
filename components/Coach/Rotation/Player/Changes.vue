@@ -40,7 +40,11 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['remove:playerChange', 'undo:playerChange'])
+const emit = defineEmits<{
+  (e: 'remove:playerChange', value: RotationPlayerChangeRequest): void
+  (e: 'undo:playerChange', value: RotationPlayerChangeRequest): void
+  (e: 'info:playerChange', value: RotationPlayerChangeRequest): void
+}>()
 
 const getPlayerSanction = (player?: CallPlayerData): Sanction | undefined => {
   if (!player || !props.rotation) return undefined
@@ -81,8 +85,12 @@ const getPlayerSanction = (player?: CallPlayerData): Sanction | undefined => {
         :type="ChangeType.FIRST"
         :changesCount="mapPlayerChangeToChangeType(playerChange)"
         hasActions
+        :hideRotationPendingSpinner="
+          mapPlayerChangeToChangeType(playerChange) === ChangeType.SECOND
+        "
         @remove:playerChange="emit('remove:playerChange', playerChange)"
         @undo:playerChange="emit('undo:playerChange', playerChange)"
+        @info:playerChange="emit('info:playerChange', playerChange)"
       />
       <CoachRotationPlayerChangeItem
         v-if="mapPlayerChangeToChangeType(playerChange) === ChangeType.SECOND"
