@@ -73,11 +73,11 @@ onMounted(getAuthuserClubWithSedesAndTeams)
     <template v-else>
       <EasyGrid v-if="clubManagesAnyTeam">
         <div class="club" v-for="club in clubsWithTeams">
-          <header class="header flex justify-between">
-            <Heading tag="h6">{{ club.name }}</Heading>
+          <header class="header flex justify-between items-start">
+            <Heading tag="h5">{{ club.name }}</Heading>
             <ListActionButton
-              class="mt-1"
-              :label="t('clubs.add')"
+              class="mt-1 flex-shrink-0"
+              :label="t('clubs.edit')"
               :onClick="() => goToEditClub(club)"
             />
           </header>

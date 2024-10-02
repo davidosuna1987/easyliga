@@ -1,6 +1,15 @@
 export default [
   {
     label: 'navbar.coach.label',
-    to: '/coach',
+    items: [
+      {
+        label: 'navbar.coach.calendar',
+        to: '/coach',
+      },
+      {
+        label: 'navbar.coach.teams',
+        to: '/coach/teams',
+      },
+    ],
   },
 ]

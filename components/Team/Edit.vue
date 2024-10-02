@@ -1,11 +1,15 @@
 <script lang="ts" setup>
+import { useAuthStore } from '@/stores/useAuthStore'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import TeamService from '@/services/team'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
+const auth = useAuthStore()
 const toast = useEasyToast()
 const easyProps = useEasyProps()
+
 const teamService = new TeamService()
 
 const team = ref<Team>()
@@ -13,18 +17,70 @@ const loadingApi = ref<boolean>(false)
 
 const getTeam = async () => {
   loadingApi.value = true
+
   const { data, error } = await teamService.get(Number(route.params.teamId), {
     with: 'division,category,gender,sedes,coach.profile,substituteCoaches.profile,players.address,licenses',
+    set_appends: 'responsible_ids,editor_ids',
   })
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
   } else if (data.value) {
+    if (!data.value.data.team) {
+      toast.error(t('teams.not_found'))
+      redirectUser()
+      return
+    }
+
     team.value = mapApiTeamToTeam(data.value.data.team, true)
+
+    if (!auth.user) {
+      toast.error(t('teams.not_allowed_to_edit', { teamName: team.value.name }))
+      redirectUser()
+      return
+    }
+
+    if (
+      !team.value.editorIds?.includes(auth.user.id) &&
+      !auth.hasAnyRole(['admin', 'staff'])
+    ) {
+      console.log({ id: auth.user.id, editorIds: team.value.editorIds })
+      toast.error(t('teams.not_allowed_to_edit', { teamName: team.value.name }))
+      redirectUser()
+      return
+    }
   }
 
   loadingApi.value = false
 }
+
+const redirectUser = () => {
+  if (auth.hasRole('club')) {
+    navigateTo('/clubs')
+  } else if (auth.hasRole('coach')) {
+    navigateTo('/coach')
+  } else {
+    navigateTo('/')
+  }
+}
+
+const isResponsible = computed(() => {
+  console.log({
+    admin: auth.isAdmin(),
+    staff: auth.isStaff(),
+    responsibleIds: team.value?.responsibleIds,
+    result:
+      !!auth.isAdmin() ||
+      !!auth.isStaff() ||
+      !!team.value?.responsibleIds?.includes(auth.user?.id ?? 0),
+  })
+  if (!auth.user) return false
+  return (
+    !!auth.isAdmin() ||
+    !!auth.isStaff() ||
+    !!team.value?.responsibleIds?.includes(auth.user.id)
+  )
+})
 
 const setInitialClubTeam = async () => {
   // const easyData = easyProps.get(
@@ -51,15 +107,17 @@ onMounted(setInitialClubTeam)
     <Loading v-if="loadingApi" />
     <template v-else-if="team">
       <Heading tag="h3" class="mb-5">
-        {{ t('teams.edit') }}
+        {{ t('teams.edit_name', { teamName: team.name }) }}
       </Heading>
       <TeamForm
         :sedes="team.sedes ?? []"
         :team="team"
+        :isResponsible="isResponsible"
         @refresh="setInitialClubTeam"
-        @updated="setInitialClubTeam"
+        @team:updated="setInitialClubTeam"
       />
     </template>
+    <p v-else class="text-center">{{ t('teams.not_found') }}</p>
   </div>
 </template>
 

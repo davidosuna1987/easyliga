@@ -15,7 +15,7 @@ const bgColor = computed(() =>
 <template>
   <span
     :class="[
-      'easy-game-report-sanction-team-item-component grid place-content-center leading-5 rounded-full w-5 h-5 text-xs font-semibold',
+      'easy-game-report-sanction-team-item-component grid place-content-center leading-5 rounded-full w-5 h-5 text-xs font-semibold flex-shrink-0',
       bgColor,
     ]"
   >

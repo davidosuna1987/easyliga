@@ -26,6 +26,7 @@ import { Role } from '@/domain/role'
 import { ApiLicense } from '@/types/api/license'
 import { LicensableModelType } from '@/domain/licensable'
 import { ApiProfile } from '@/types/api/profile'
+import { ApiTeamsResponse } from '@/types/api/team'
 
 export const useAuthStore = defineStore('auth', () => {
   const easyStorage = useEasyStorage()
@@ -153,6 +154,11 @@ export const useAuthStore = defineStore('auth', () => {
       'auth/managed/models?mapped=true',
     )
 
+  const coachedTeams = async (params?: Record<string, string>) =>
+    await useApi<ApiTeamsResponse>('auth/coached-teams', {
+      params,
+    })
+
   const refreshData = (data: ApiFreshData) => {
     user.value = data.user
     profile.value = mapApiProfileToProfile(data.profile)
@@ -252,6 +258,7 @@ export const useAuthStore = defineStore('auth', () => {
     managedModelMapped,
     managedModels,
     managedModelsMapped,
+    coachedTeams,
     refreshData,
     refreshToken,
     refreshLoginData,

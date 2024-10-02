@@ -168,7 +168,7 @@ const handleEditVisitorTeamCoachName = (): void => {
             </span>
             <EasyIcon
               v-if="authUserCanEditLocalCoachName"
-              class="no-print"
+              class="no-print flex-shrink-0"
               :name="editLocalTeamCoachName ? 'times' : 'edit'"
               :button="editLocalTeamCoachName ? 'danger' : 'primary'"
               @click="handleEditLocalTeamCoachName"
@@ -194,7 +194,7 @@ const handleEditVisitorTeamCoachName = (): void => {
             </span>
             <EasyIcon
               v-if="authUserCanEditVisitorCoachName"
-              class="no-print"
+              class="no-print flex-shrink-0"
               :name="editVisitorTeamCoachName ? 'times' : 'edit'"
               :button="editVisitorTeamCoachName ? 'danger' : 'primary'"
               @click="handleEditVisitorTeamCoachName"

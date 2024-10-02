@@ -41,10 +41,12 @@
     .shirt-number {
       position: relative;
       z-index: 1;
+      scale: 0.75;
 
       .easy-icon-shirt-number-component {
         // background-color: var(--primary-color-medium);
         border: solid 1px var(--primary-color);
+        border-radius: 50%;
 
         &::after {
           content: '';
@@ -61,7 +63,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(50%, -100%);
+        transform: translate(25%, -130%);
         z-index: 0;
 
         .easy-sanction-item-component {
@@ -98,11 +100,15 @@
 
     .easy-icon-easy-liga-component {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 51%;
+      left: 50.5%;
       transform: translate(-50%, -50%);
       width: 4rem;
       height: 4rem;
+
+      img {
+        scale: 0.8;
+      }
     }
 
     .easy-sanction-item-component {
@@ -394,8 +400,34 @@
     }
   }
 
+  @media (min-width: 400px) {
+    .side {
+      .shirt-number {
+        scale: 0.9;
+
+        &.is-replaced {
+          transform: translate(40%, -110%);
+        }
+      }
+
+      .easy-icon-easy-liga-component {
+        img {
+          scale: 1;
+        }
+      }
+    }
+  }
+
   @media (min-width: 500px) {
     .side {
+      .shirt-number {
+        scale: 1;
+
+        &.is-replaced {
+          transform: translate(50%, -100%);
+        }
+      }
+
       [class^='position-'] {
         .easy-game-status-spin-icon-component {
           top: 1rem;

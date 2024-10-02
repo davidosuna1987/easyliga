@@ -13,6 +13,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  preFetch: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -36,7 +40,7 @@ const getTeams = async () => {
 }
 
 onMounted(() => {
-  if (!teams.value.length) {
+  if (props.preFetch && !teams.value.length) {
     getTeams()
   }
 })

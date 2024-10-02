@@ -25,6 +25,13 @@ export type ApiTeamRelations = {
   licenses?: ApiLicense[]
 }
 
+export type ApiTeamAppends = {
+  responsibles?: ApiUser[]
+  responsible_ids?: number[]
+  editors?: ApiUser[]
+  editor_ids?: number[]
+}
+
 export type ApiTeam = {
   id: number
   club_id: number | null
@@ -39,7 +46,8 @@ export type ApiTeam = {
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
-} & ApiTeamRelations
+} & ApiTeamRelations &
+  ApiTeamAppends
 
 export type ApiTeamResponse = {
   success: boolean
@@ -68,4 +76,8 @@ export type ApiTeamRequest = {
   substitute_coaches_ids: number[] | null
   players: ApiPlayerRequest[] | null
   shirt_color: ShirtColor | null
+}
+
+export type ApiTeamPlayersRequest = {
+  players: ApiPlayerRequest[] | null
 }

@@ -1,7 +1,9 @@
 import { ApiTeamResponse, ApiTeamsResponse } from '@/types/api/team'
 import {
   TeamFormRequest,
+  TeamPlayersFormRequest,
   mapTeamFormRequestToApiTeamRequest,
+  mapTeamPlayersFormRequestToApiTeamPlayersRequest,
 } from '@/domain/team'
 import { ApiPlayerRequest } from '@/types/api/player'
 
@@ -27,6 +29,19 @@ export default class TeamService {
     return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}`, {
       method: 'PUT',
       body: mapTeamFormRequestToApiTeamRequest(data),
+    })
+  }
+
+  updatePlayers(teamId: number, data: TeamPlayersFormRequest) {
+    return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}/players`, {
+      method: 'PUT',
+      body: mapTeamPlayersFormRequestToApiTeamPlayersRequest(data),
+    })
+  }
+
+  deletePlayer(teamId: number, profileId: number) {
+    return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}/players/${profileId}`, {
+      method: 'DELETE',
     })
   }
 

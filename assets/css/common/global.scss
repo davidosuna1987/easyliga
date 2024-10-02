@@ -129,7 +129,7 @@ input {
     rgba(var(--background-color-rgb), 0.8) 65%,
     rgba(var(--background-color-rgb), 1) 100%
   );
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(1px);
 
   &.is-sticky-action__xs {
     justify-content: center;

@@ -59,6 +59,7 @@ watch(
       :hideAvatar="hideAvatar"
       :hidePlayerId="hidePlayerId"
       :hideRoles="hideRoles"
+      :isStickyAction="false"
       @updated="handleProfileFormUpdated"
     />
   </DialogBottom>

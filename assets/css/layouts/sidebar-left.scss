@@ -18,7 +18,7 @@
     box-shadow: var(--box-shadow);
     width: var(--layout-sidebar-width);
     position: absolute;
-    z-index: 1;
+    z-index: 20;
     height: calc(100svh - var(--container-margin-top) - 2 * var(--app-margin));
     overflow: visible;
     transform: translateX(

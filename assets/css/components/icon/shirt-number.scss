@@ -4,17 +4,21 @@
   color: white;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
   display: grid;
   place-content: center;
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   // -webkit-text-stroke: 1px var(--text-color);
   overflow: hidden;
+  flex-shrink: 0;
+
+  &.is-rounded {
+    border-radius: 50%;
+  }
 
   &.size-sm {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.75rem;
+    height: 1.75rem;
     font-size: 1rem;
   }
 

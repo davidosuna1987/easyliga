@@ -127,11 +127,11 @@ const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
   // margin-top: 1.5rem;
   // padding: 3rem 1.5rem 1.5rem;
   margin-top: 1rem;
-  padding: 1.5rem;
+  padding: 1.5rem 0;
   z-index: 10;
   display: flex;
   justify-content: var(--sticky-position);
-  margin-inline: calc(0px - var(--easy-main-padding) - var(--app-margin));
+  // margin-inline: calc(0px - var(--easy-main-padding) - var(--app-margin));
   // background: linear-gradient(
   //   to bottom,
   //   rgba(var(--background-color-rgb), 0) 0%,

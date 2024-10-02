@@ -135,7 +135,7 @@ const handleTeamSelected = (event: AutoCompleteItemSelectEvent) => {
 
         <template #empty>
           <div class="p-4 text-center">
-            <p>{{ t('teams.not_found') }}</p>
+            <p>{{ t('teams.name_not_found') }}</p>
           </div>
         </template>
       </AutoComplete>

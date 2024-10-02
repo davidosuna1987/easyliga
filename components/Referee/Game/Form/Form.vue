@@ -217,6 +217,7 @@ watch(onChangeData, data => {
           :disabled="!selectedLeague || loadingTeams"
           :teams="localTeams"
           :loading="loadingTeams"
+          :preFetch="false"
           @team:selected="handleLocalTeamSelected"
         />
       </FormLabel>
@@ -226,6 +227,7 @@ watch(onChangeData, data => {
           :disabled="!form.local_team_id || loadingTeams"
           :teams="visitorTeams"
           :loading="loadingTeams"
+          :preFetch="false"
           @team:selected="handleVisitorTeamSelected"
         />
       </FormLabel>

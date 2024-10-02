@@ -37,6 +37,10 @@ const props = defineProps({
     type: Object as PropType<UpdateClubTeamPlayer>,
     required: false,
   },
+  isStickyAction: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits<{
@@ -229,11 +233,30 @@ watch(
       :loading="!!loadingApi || !props.profile"
       hideCancel
       isStickyAction
+      fullWidthContainer
       :submitLabel="t('forms.update')"
       @form:submit="handleSubmit"
     />
   </form>
 </template>
+
+<style scoped lang="scss">
+.easy-profile-form-component {
+  .easy-form-footer-actions-component {
+    width: calc(100% + var(--easy-main-padding-tablet) * 2);
+  }
+}
+
+.easy-dialog-bottom-component {
+  .easy-profile-form-component {
+    .easy-form-footer-actions-component {
+      width: calc(100% + 1.75rem * 2);
+      margin-inline: calc(-1.75rem);
+      padding-inline: calc(1.75rem);
+    }
+  }
+}
+</style>
 
 <script lang="ts">
 export default {

@@ -31,6 +31,10 @@ const props = defineProps({
     type: Object as PropType<Team>,
     required: false,
   },
+  isResponsible: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -138,10 +142,28 @@ const removePlayerAlert = (id: number) => {
   )
 }
 
-const removePlayer = (id?: number) => {
-  form.value.players = form.value.players?.filter(
-    player => player.profileId !== id,
+const removePlayer = async (profileId?: number) => {
+  if (!profileId) return
+
+  loadingApi.value = true
+
+  const { data, error } = await teamService.deletePlayer(
+    form.value.id,
+    profileId,
   )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    toast.success(t('players.deleted'))
+    emit('refresh', true)
+  }
+
+  loadingApi.value = false
+
+  // form.value.players = form.value.players?.filter(
+  //   player => player.profileId !== profileId,
+  // )
   playerToRemove.value = undefined
 }
 
@@ -219,7 +241,12 @@ const handleStore = async () => {
 
 const handleUpdate = async () => {
   loadingApi.value = true
-  const { data, error } = await teamService.update(form.value.id, form.value)
+
+  const coachFormData = { players: form.value.players }
+
+  const { data, error } = props.isResponsible
+    ? await teamService.update(form.value.id, form.value)
+    : await teamService.updatePlayers(form.value.id, coachFormData)
 
   if (error.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
@@ -357,104 +384,106 @@ watch(
 
 <template>
   <form class="easy-team-form-component" @submit.prevent="handleSubmit">
-    <EasyGrid
-      :breakpoints="{ sm: 2, lg: 3 }"
-      :gap="3"
-      @mouseenter="stopEditingCoach()"
-    >
-      <FormLabel :label="t('forms.name')">
-        <InputText v-model="form.name" />
-      </FormLabel>
-
-      <SedeSelector
-        v-model="selectedSede"
-        :sedes="sedes"
-        :clubId="clubId"
-        :label="t('sedes.sede')"
-        @sede:selected="handleSedeSelected"
-      />
-
-      <FormLabel :label="t('teams.shirt_color')">
-        <TeamShirtColorSelector v-model="form.shirtColor" />
-      </FormLabel>
-
-      <FormLabel :label="t('divisions.division')">
-        <DivisionSelector
-          v-model="selectedDivision"
-          @division:selected="handleDivisionSelected"
-        />
-      </FormLabel>
-
-      <FormLabel :label="t('categories.category')">
-        <CategorySelector
-          v-model="selectedCategory"
-          @category:selected="handleCategorySelected"
-        />
-      </FormLabel>
-
-      <FormLabel :label="t('genders.gender')">
-        <GenderSelector
-          v-model="selectedGender"
-          @gender:selected="handleGenderSelected"
-        />
-      </FormLabel>
-    </EasyGrid>
-
-    <div v-if="team" class="mt-10" @mouseenter="stopEditingCoach()">
-      <LicenseList
-        :type="LICENSABLE_TYPE_MAPPER.team"
-        :licenses="teamLicenses"
-        :licensable="team"
-        @license:success="emit('refresh', true)"
-      />
-    </div>
-
-    <div class="mt-10">
-      <UserSearchFormInput
-        ref="coachSearchFormInputRef"
-        :userOriginal="props.team?.coach"
-        :userSelected="selectedCoach"
-        :invitedToId="props.team?.id"
-        :whereRole="ROLE_MAPPER.coach"
-        :label="coachSearchFormInputLabel"
-        :breakpoints="{ sm: 2, lg: 3 }"
-        @selected="handleCoachSelected"
-        @invited="stopEditingCoach(true)"
-        @cancel="stopEditingCoach(true)"
-      />
-    </div>
-
-    <div v-if="!!form.coachId" class="mt-10">
-      <FormLabel :label="substituteCoachesLabel" />
+    <template v-if="props.isResponsible">
       <EasyGrid
-        v-if="teamSubstituteCoaches.length"
-        class="substitute-coaches-list"
-        :breakpoints="{ sm: 2, lg: 3, xl: 4 }"
+        :breakpoints="{ sm: 2, lg: 3 }"
         :gap="3"
+        @mouseenter="stopEditingCoach()"
       >
-        <template v-for="coach in teamSubstituteCoaches">
-          <ProfileItem
-            v-if="coach.profile"
-            :profile="coach.profile"
-            :onRemove="setSubstituteCoachToRemove"
-            :removeTooltip="t('coaches.delete')"
+        <FormLabel :label="t('forms.name')">
+          <InputText v-model="form.name" />
+        </FormLabel>
+
+        <SedeSelector
+          v-model="selectedSede"
+          :sedes="sedes"
+          :clubId="clubId"
+          :label="t('sedes.sede')"
+          @sede:selected="handleSedeSelected"
+        />
+
+        <FormLabel :label="t('teams.shirt_color')">
+          <TeamShirtColorSelector v-model="form.shirtColor" />
+        </FormLabel>
+
+        <FormLabel :label="t('divisions.division')">
+          <DivisionSelector
+            v-model="selectedDivision"
+            @division:selected="handleDivisionSelected"
           />
-        </template>
+        </FormLabel>
+
+        <FormLabel :label="t('categories.category')">
+          <CategorySelector
+            v-model="selectedCategory"
+            @category:selected="handleCategorySelected"
+          />
+        </FormLabel>
+
+        <FormLabel :label="t('genders.gender')">
+          <GenderSelector
+            v-model="selectedGender"
+            @gender:selected="handleGenderSelected"
+          />
+        </FormLabel>
       </EasyGrid>
 
-      <UserSearchFormInput
-        ref="substituteCoachSearchFormInputRef"
-        class="mt-3"
-        :invitedToId="props.team?.id"
-        :whereRole="ROLE_MAPPER.coach"
-        :label="substituteCoachesSearchFormInputLabel"
-        :breakpoints="{ sm: 2, lg: 3 }"
-        :editable="false"
-        @selected="handleSubstituteCoachSelected"
-        @invited="stopEditingSubstituteCoach"
-        @cancel="stopEditingSubstituteCoach"
-      />
-    </div>
+      <div v-if="team" class="mt-10" @mouseenter="stopEditingCoach()">
+        <LicenseList
+          :type="LICENSABLE_TYPE_MAPPER.team"
+          :licenses="teamLicenses"
+          :licensable="team"
+          @license:success="emit('refresh', true)"
+        />
+      </div>
+
+      <div class="mt-10">
+        <UserSearchFormInput
+          ref="coachSearchFormInputRef"
+          :userOriginal="props.team?.coach"
+          :userSelected="selectedCoach"
+          :invitedToId="props.team?.id"
+          :whereRole="ROLE_MAPPER.coach"
+          :label="coachSearchFormInputLabel"
+          :breakpoints="{ sm: 2, lg: 3 }"
+          @selected="handleCoachSelected"
+          @invited="stopEditingCoach(true)"
+          @cancel="stopEditingCoach(true)"
+        />
+      </div>
+
+      <div v-if="!!form.coachId" class="mt-10">
+        <FormLabel :label="substituteCoachesLabel" />
+        <EasyGrid
+          v-if="teamSubstituteCoaches.length"
+          class="substitute-coaches-list"
+          :breakpoints="{ sm: 2, lg: 3, xl: 4 }"
+          :gap="3"
+        >
+          <template v-for="coach in teamSubstituteCoaches">
+            <ProfileItem
+              v-if="coach.profile"
+              :profile="coach.profile"
+              :onRemove="setSubstituteCoachToRemove"
+              :removeTooltip="t('coaches.delete')"
+            />
+          </template>
+        </EasyGrid>
+
+        <UserSearchFormInput
+          ref="substituteCoachSearchFormInputRef"
+          class="mt-3"
+          :invitedToId="props.team?.id"
+          :whereRole="ROLE_MAPPER.coach"
+          :label="substituteCoachesSearchFormInputLabel"
+          :breakpoints="{ sm: 2, lg: 3 }"
+          :editable="false"
+          @selected="handleSubstituteCoachSelected"
+          @invited="stopEditingSubstituteCoach"
+          @cancel="stopEditingSubstituteCoach"
+        />
+      </div>
+    </template>
 
     <div v-if="team" class="players mt-10" @mouseenter="stopEditingCoach()">
       <header class="header flex justify-between items-center mb-3">
@@ -485,7 +514,7 @@ watch(
     <FormFooterActions
       :submitLabel="team ? t('teams.update') : t('teams.create')"
       :loading="loadingApi"
-      stickyBreakpoint="sm"
+      stickyBreakpoint="xs"
       hideCancel
       @form:submit="handleSubmit"
       @mouseenter="stopEditingCoach()"

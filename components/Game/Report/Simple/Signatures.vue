@@ -89,9 +89,7 @@ const visitorTeamSignatures = computed(
       <strong class="uppercase">{{ t('reports.approval') }}</strong>
     </header>
     <main class="report-signature-main">
-      <div
-        class="report-signature-referee grid place-content-center border-solid border-t-0"
-      >
+      <div class="report-signature-referee grid border-solid border-t-0">
         <div
           class="h-[29.5px] border-solid border-x-0 grid place-content-center"
         >
@@ -116,12 +114,18 @@ const visitorTeamSignatures = computed(
       <div
         class="report-signature-teams grid grid-cols-2 border-solid border-t-0"
       >
+        <GameReportSimpleSidedTeam
+          class="border-solid border-l-0 border-t-0 p-2"
+          :team="localTeam"
+          :leftSideTeam="leftSideTeam"
+        />
+        <GameReportSimpleSidedTeam
+          class="border-solid border-x-0 border-t-0 p-2"
+          :team="visitorTeam"
+          :leftSideTeam="leftSideTeam"
+          direction="right"
+        />
         <div>
-          <GameReportSimpleSidedTeam
-            class="border-solid border-l-0 border-t-0 p-2"
-            :team="localTeam"
-            :leftSideTeam="leftSideTeam"
-          />
           <div
             class="report-signature-coach grid place-content-center border-solid border-l-0"
           >
@@ -168,12 +172,6 @@ const visitorTeamSignatures = computed(
         </div>
 
         <div>
-          <GameReportSimpleSidedTeam
-            class="border-solid border-x-0 border-t-0 p-2"
-            :team="visitorTeam"
-            :leftSideTeam="leftSideTeam"
-            direction="right"
-          />
           <div
             class="report-signature-coach grid place-content-center border-solid border-x-0"
           >

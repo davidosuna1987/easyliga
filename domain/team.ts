@@ -3,7 +3,11 @@ import {
   mapApiPlayersToPlayers,
   mapPlayerToApiPlayerRequest,
 } from '@/domain/player'
-import { ApiTeam, ApiTeamRequest } from '@/types/api/team'
+import {
+  ApiTeam,
+  ApiTeamPlayersRequest,
+  ApiTeamRequest,
+} from '@/types/api/team'
 import {
   Category,
   Gender,
@@ -33,6 +37,13 @@ export type TeamRelations = {
   licenses?: License[]
 }
 
+export type TeamAppends = {
+  responsibles?: User[]
+  responsibleIds?: number[]
+  editors?: User[]
+  editorIds?: number[]
+}
+
 export type Team = {
   id: number
   name: string
@@ -43,7 +54,8 @@ export type Team = {
   genderId?: number
   coachId?: number
   shirtColor?: ShirtColor
-} & TeamRelations
+} & TeamRelations &
+  TeamAppends
 
 export enum TeamType {
   LOCAL = 'local',
@@ -82,6 +94,10 @@ export type TeamFormRequest = {
   substituteCoachesIds?: number[]
   players: Player[]
   shirtColor?: ShirtColor
+}
+
+export type TeamPlayersFormRequest = {
+  players: Player[]
 }
 
 export const TeamMemberTypes = {
@@ -124,6 +140,7 @@ export const mapApiTeamToTeam = (
   shirtColor: apiTeam.shirt_color ?? undefined,
 
   ...mapApiTeamRelationsToTeamRelations(apiTeam, withProfiles),
+  ...mapApiTeamAppendsToTeamAppends(apiTeam),
 })
 
 export const mapApiTeamRelationsToTeamRelations = (
@@ -155,6 +172,17 @@ export const mapApiTeamRelationsToTeamRelations = (
     : undefined,
 })
 
+export const mapApiTeamAppendsToTeamAppends = (
+  apiTeam: ApiTeam,
+): TeamAppends => ({
+  responsibles: apiTeam.responsibles
+    ? apiTeam.responsibles.map(mapApiUserToUser)
+    : undefined,
+  responsibleIds: apiTeam.responsible_ids,
+  editors: apiTeam.editors ? apiTeam.editors.map(mapApiUserToUser) : undefined,
+  editorIds: apiTeam.editor_ids,
+})
+
 export const mapTeamFormRequestToApiTeamRequest = (
   teamFormRequest: TeamFormRequest,
 ): ApiTeamRequest => ({
@@ -170,6 +198,14 @@ export const mapTeamFormRequestToApiTeamRequest = (
     ? teamFormRequest.players.map(mapPlayerToApiPlayerRequest)
     : null,
   shirt_color: teamFormRequest.shirtColor ?? null,
+})
+
+export const mapTeamPlayersFormRequestToApiTeamPlayersRequest = (
+  teamPlayersFormRequest: TeamPlayersFormRequest,
+): ApiTeamPlayersRequest => ({
+  players: teamPlayersFormRequest.players
+    ? teamPlayersFormRequest.players.map(mapPlayerToApiPlayerRequest)
+    : null,
 })
 
 export const mapProfileToTeamMember = (

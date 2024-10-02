@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 definePageMeta({
   middleware: ['role'],
-  roles: ['club', 'coach'],
+  roles: ['coach'],
 })
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="easy-club-team-edit-page">
-      <TeamEdit />
+    <div class="easy-coach-team-list-page">
+      <CoachTeamList />
     </div>
   </NuxtLayout>
 </template>
