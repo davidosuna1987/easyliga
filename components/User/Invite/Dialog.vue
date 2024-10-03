@@ -84,10 +84,10 @@ watch(
       <Tag v-for="role in form.roles" :value="t(`roles.type.${role}`)" />
     </div>
 
-    <div class="mt-6">
+    <form class="mt-6" @submit.prevent="handleSubmit">
       <FormLabel :label="t('forms.email')" :error="errors?.email?.[0]" />
       <InputText v-model="form.email" type="email" class="w-full" />
-    </div>
+    </form>
 
     <template #stickyFooter>
       <FormFooterActions
