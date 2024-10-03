@@ -209,7 +209,7 @@ watch(
         <Calendar
           v-model="selectedExpiryDate"
           class="w-full"
-          :minDate="new Date()"
+          :minDate="new Date(new Date().setDate(new Date().getDate() + 1))"
           :touchUI="true"
           @update:modelValue="handleExpiryDateSelected($event as string)"
         />

@@ -129,7 +129,7 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           </div>
         </div>
       </EasyGrid>
-      <p v-else class="text-center">{{ t('clubs.no_managed_teams') }}</p>
+      <p v-else class="text-center">{{ t('clubs.no_managed') }}</p>
     </template>
   </div>
 </template>
