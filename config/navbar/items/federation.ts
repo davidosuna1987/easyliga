@@ -8,7 +8,7 @@ export default [
       },
       {
         label: 'navbar.federation.leagues.label',
-        to: '/leagues',
+        to: '/federations/leagues',
       },
       {
         label: 'navbar.federation.clubs.label',
