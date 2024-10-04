@@ -220,8 +220,10 @@ export const useAuthStore = defineStore('auth', () => {
       easyStorage.remove('loginRedirect')
       return navigateTo(storedLoginRedirect)
     } else {
-      if (!isLoggedIn) return navigateTo('/login')
+      if (!isLoggedIn.value) return navigateTo('/login')
 
+      if (roles.value.includes('federation')) return navigateTo('/federation')
+      if (roles.value.includes('club')) return navigateTo('/club')
       if (roles.value.includes('referee')) return navigateTo('/referee')
       if (roles.value.includes('coach')) return navigateTo('/coach')
 
