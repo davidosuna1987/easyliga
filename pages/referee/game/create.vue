@@ -3,7 +3,7 @@ import { GameStorePreviewData } from '@/domain/game'
 
 definePageMeta({
   middleware: ['role'],
-  roles: ['referee'],
+  roles: ['admin', 'referee'],
 })
 
 useEasyHead('pages.referee.game.create.title')

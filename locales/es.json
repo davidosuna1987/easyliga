@@ -238,8 +238,8 @@
     },
     "referee": {
       "label": "Árbitro",
+      "calendar": "Calendario",
       "games": {
-        "label": "Partidos",
         "create": "Crear partido"
       }
     },
