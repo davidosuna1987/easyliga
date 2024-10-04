@@ -16,7 +16,7 @@ const handleGameClick = (game: Game) => {
   }
 
   if (showActa(game)) {
-    navigateTo(`/games/${game.id}/report`)
+    navigateTo(`/game/${game.id}/report`)
   }
 
   return
@@ -50,7 +50,7 @@ const gameSigned = (game: Game) => {
         class="mt-3"
         :label="t('reports.show_game')"
         size="small"
-        @click.prevent="navigateTo(`/games/${game.id}/report`)"
+        @click.prevent="navigateTo(`/game/${game.id}/report`)"
       />
     </div>
   </div>
