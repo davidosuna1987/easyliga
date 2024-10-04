@@ -4,6 +4,8 @@ definePageMeta({
   roles: ['admin', 'referee'],
   containerClass: 'referee-arbitrate',
 })
+
+useEasyHead('pages.referee.game.arbitrate.title')
 </script>
 
 <template>

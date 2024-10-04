@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['role'],
   roles: ['federation'],
 })
+
+useEasyHead('pages.league.index.title')
 </script>
 
 <template>

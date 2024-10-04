@@ -4,6 +4,8 @@ definePageMeta({
   // roles: ['federation', 'club', 'referee', 'trainee'],
   containerClass: 'referee-report',
 })
+
+useEasyHead('pages.referee.game.report.title')
 </script>
 
 <template>

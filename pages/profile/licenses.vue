@@ -9,6 +9,8 @@ definePageMeta({
   roles: LICENSABLE_ROLES,
 })
 
+useEasyHead('pages.profile.licenses.title')
+
 const { t } = useI18n()
 const auth = useAuthStore()
 

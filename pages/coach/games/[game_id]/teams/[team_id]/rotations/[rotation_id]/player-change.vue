@@ -4,6 +4,8 @@ definePageMeta({
   roles: ['coach'],
 })
 
+useEasyHead('pages.coach.game.team.rotation.player-change.title')
+
 const { t } = useI18n()
 </script>
 

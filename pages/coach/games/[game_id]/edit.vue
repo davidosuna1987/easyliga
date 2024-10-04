@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['role'],
   roles: ['coach'],
 })
+
+useEasyHead('pages.coach.game.edit.title')
 </script>
 
 <template>

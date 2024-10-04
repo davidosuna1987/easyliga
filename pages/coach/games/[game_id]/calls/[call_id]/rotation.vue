@@ -7,6 +7,8 @@ definePageMeta({
   roles: ['coach'],
 })
 
+useEasyHead('pages.coach.game.call.rotation.title')
+
 const { t } = useI18n()
 
 const set = ref<Set>()

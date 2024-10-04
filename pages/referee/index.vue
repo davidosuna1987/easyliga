@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['role'],
   roles: ['referee'],
 })
+
+useEasyHead('pages.referee.index.title')
 </script>
 
 <template>

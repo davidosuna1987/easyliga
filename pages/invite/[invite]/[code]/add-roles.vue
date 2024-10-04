@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/useAuthStore'
 
+useEasyHead('pages.invite.add-roles.title')
+
 const { t } = useI18n()
 const route = useRoute()
 const easyStorage = useEasyStorage()

@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['role'],
   roles: ['federation'],
 })
+
+useEasyHead('pages.federation.edit.title')
 </script>
 
 <template>

@@ -6,6 +6,8 @@ definePageMeta({
   roles: ['referee'],
 })
 
+useEasyHead('pages.referee.game.create.title')
+
 const { t } = useI18n()
 
 const game = ref(<GameStorePreviewData>{

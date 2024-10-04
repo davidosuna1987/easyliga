@@ -8,6 +8,8 @@ useHead({
   },
 })
 
+useEasyHead('pages.profile.index.title')
+
 definePageMeta({
   middleware: ['auth'],
 })

@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['guest'],
 })
 
+useEasyHead('pages.invite.register.title')
+
 const { t } = useI18n()
 const route = useRoute()
 </script>

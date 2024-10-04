@@ -38,7 +38,7 @@ onMounted(getClub)
     <Loading v-if="loadingApi" />
     <template v-else-if="club">
       <Heading tag="h3" class="mb-5">
-        {{ t('teams.create') }}
+        {{ t('teams.add') }}
       </Heading>
       <Heading tag="h5" class="mb-5 font-bold">
         {{ club.name }}

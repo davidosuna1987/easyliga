@@ -251,7 +251,121 @@
   },
   "pages": {
     "index": {
+      "title": "¡Bienvenid{'@'} a Easy Liga!",
       "welcome": "¡Bienvenid{'@'} a Easy Liga!"
+    },
+    "club": {
+      "index": {
+        "title": "Clubs que gestionas"
+      },
+      "edit": {
+        "title": "Editar club"
+      },
+      "team": {
+        "create": {
+          "title": "Añadir equipo al club"
+        },
+        "edit": {
+          "title": "Editar equipo"
+        }
+      }
+    },
+    "coach": {
+      "index": {
+        "title": "Calendario de partidos"
+      },
+      "teams": {
+        "title": "Equipos que entrenas"
+      },
+      "game": {
+        "edit": {
+          "title": "Editar partido"
+        },
+        "call": {
+          "rotation": {
+            "title": "Rotaciones del partido"
+          }
+        },
+        "team": {
+          "call": {
+            "title": "Convocatoria del partido"
+          },
+          "rotation": {
+            "player-change": {
+              "title": "Cambiar jugadores en la rotación"
+            }
+          }
+        }
+      }
+    },
+    "federation": {
+      "index": {
+        "title": "Federaciones que gestionas"
+      },
+      "edit": {
+        "title": "Editar federación"
+      },
+      "clubs": {
+        "title": "Clubs de la federación"
+      },
+      "leagues": {
+        "title": "Ligas de la federación"
+      },
+      "club": {
+        "create": {
+          "title": "Añadir club a la federación"
+        }
+      },
+      "league": {
+        "create": {
+          "title": "Añadir liga a la federación"
+        },
+        "edit": {
+          "title": "Editar liga"
+        }
+      }
+    },
+    "game": {
+      "report": {
+        "title": "Acta del partido"
+      }
+    },
+    "invite": {
+      "register": {
+        "title": "Registrarse con invitación"
+      },
+      "add-roles": {
+        "title": "Añadir roles con invitación"
+      }
+    },
+    "league": {
+      "index": {
+        "title": "Información de la liga"
+      }
+    },
+    "profile": {
+      "index": {
+        "title": "Mi perfil de usuario"
+      },
+      "licenses": {
+        "title": "Mis licencias"
+      }
+    },
+    "referee": {
+      "index": {
+        "title": "Calendario de partidos"
+      },
+      "game": {
+        "create": {
+          "title": "Crear partido"
+        },
+        "arbitrare": {
+          "title": "Arbitrar partido"
+        },
+        "report": {
+          "title": "Acta del partido"
+        }
+      }
     }
   },
   "users": {
@@ -538,7 +652,7 @@
     "added": "El equipo ha sido añadido correctamente",
     "not_allowed_to_edit": "No tienes permisos para editar el equipo {teamName}",
     "no_coached_teams": "No entrenas a ningún equipo",
-    "coached": "Equipos entrenados"
+    "coached": "Equipos que entrenas"
   },
   "players": {
     "player": "Jugador | Jugadores",

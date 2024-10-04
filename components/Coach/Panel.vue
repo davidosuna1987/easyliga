@@ -3,7 +3,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import GameService from '@/services/game'
 import CallService from '@/services/call'
 import { Game, mapApiGameToGame } from '@/domain/game'
-import { Call, CallPlayerData } from '@/domain/call'
+import { Call } from '@/domain/call'
 import {
   ApiCallUnlockedEventResponse,
   ApiRotationLockToggledEventResponse,
