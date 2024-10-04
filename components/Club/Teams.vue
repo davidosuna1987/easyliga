@@ -53,12 +53,12 @@ const goToEditClub = (club: Club) => {
 
 const goToEditClubTeam = (club: Club, team: Team) => {
   // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
-  navigateTo(`/club/${club.id}/teams/${team.id}/edit`)
+  navigateTo(`/club/${club.id}/team/${team.id}/edit`)
 }
 
 const goToCreateClubTeam = (club: Club) => {
   // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
-  navigateTo(`/club/${club.id}/teams/create`)
+  navigateTo(`/club/${club.id}/team/create`)
 }
 
 onMounted(getAuthuserClubWithSedesAndTeams)
