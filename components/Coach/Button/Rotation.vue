@@ -57,11 +57,11 @@ const redirect = () => {
 
   if (props.sanctionedPlayersToBeReplaced) {
     navigateTo(
-      `/coach/games/${props.gameId}/teams/${props.teamId}/rotations/${props.rotationId}/player-change`,
+      `/coach/game/${props.gameId}/teams/${props.teamId}/rotations/${props.rotationId}/player-change`,
     )
   }
 
-  navigateTo(`/coach/games/${props.gameId}/calls/${props.callId}/rotation`)
+  navigateTo(`/coach/game/${props.gameId}/calls/${props.callId}/rotation`)
 }
 
 const showRotationLockedToast = () => toast.warn(t('rotations.locked'))

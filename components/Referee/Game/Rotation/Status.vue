@@ -1,6 +1,3 @@
-import LoadingVue from 'components/Loading.vue'; import { log } from 'console';
-import rotationVue from
-'pages/coach/games/[game_id]/calls/[call_id]/rotation.vue';
 <script setup lang="ts">
 import RotationService from '@/services/rotation'
 import { MAX_ROTATION_PLAYER_CHANGES, Rotation } from '@/domain/rotation'

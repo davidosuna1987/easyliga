@@ -43,7 +43,7 @@ const showCallLockedToast = () => {
     @click.prevent="
       props.locked
         ? showCallLockedToast()
-        : navigateTo(`/coach/games/${props.gameId}/teams/${props.teamId}/call`)
+        : navigateTo(`/coach/game/${props.gameId}/teams/${props.teamId}/call`)
     "
   />
 </template>

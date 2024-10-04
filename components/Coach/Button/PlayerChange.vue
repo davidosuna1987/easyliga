@@ -74,7 +74,7 @@ const showNoRotationToast = () => {
         ? handleLockedToast()
         : !!props.rotation
         ? navigateTo(
-            `/coach/games/${props.gameId}/teams/${props.teamId}/rotations/${props.rotation?.id}/player-change`,
+            `/coach/game/${props.gameId}/teams/${props.teamId}/rotations/${props.rotation?.id}/player-change`,
           )
         : showNoRotationToast()
     "

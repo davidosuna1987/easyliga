@@ -199,7 +199,7 @@ const navigateToRotationChanges = (setId?: number, teamId?: number) => {
 
   if (game && call && rotation) {
     navigateTo(
-      `/coach/games/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+      `/coach/game/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
     )
   }
 }
