@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useEasyHead('pages.auth.reset.title')
+
 const { t } = useI18n()
 </script>
 

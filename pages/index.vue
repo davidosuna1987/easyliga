@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useEasyHead('pages.index.title')
+
 const { t } = useI18n()
 // onMounted(() => navigateTo('/login'))
 </script>

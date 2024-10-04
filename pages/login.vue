@@ -3,6 +3,8 @@ definePageMeta({
   middleware: ['guest'],
 })
 
+useEasyHead('pages.auth.login.title')
+
 const { t } = useI18n()
 </script>
 

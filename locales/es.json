@@ -250,6 +250,23 @@
     }
   },
   "pages": {
+    "auth": {
+      "reset": {
+        "title": "Restablecer contraseña"
+      },
+      "verify": {
+        "title": "Verificar email"
+      },
+      "forgot": {
+        "title": "¿Has olvidado tu contraseña?"
+      },
+      "login": {
+        "title": "Iniciar sesión"
+      },
+      "register": {
+        "title": "Regístrate"
+      }
+    },
     "index": {
       "title": "¡Bienvenid{'@'} a Easy Liga!",
       "welcome": "¡Bienvenid{'@'} a Easy Liga!"
@@ -332,7 +349,7 @@
     },
     "invite": {
       "register": {
-        "title": "Registrarse con invitación"
+        "title": "Regístrate con invitación"
       },
       "add-roles": {
         "title": "Añadir roles con invitación"
