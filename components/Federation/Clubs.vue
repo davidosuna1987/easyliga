@@ -15,7 +15,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const goToCreateClub = (federation: Federation) =>
-  navigateTo(`/federations/${federation.id}/club/create`)
+  navigateTo(`/federation/${federation.id}/club/create`)
 </script>
 
 <template>

@@ -58,7 +58,7 @@ const getLeagues = async () => {
 }
 
 const handleAddLeague = (federation: Federation) => {
-  navigateTo(`/federations/${federation.id}/league/create`)
+  navigateTo(`/federation/${federation.id}/league/create`)
 }
 
 const goToLeague = (league: League) => {
@@ -66,7 +66,7 @@ const goToLeague = (league: League) => {
 }
 
 const goToEditLeague = (league: League) => {
-  navigateTo(`/federations/${league.federationId}/league/${league.id}/edit`)
+  navigateTo(`/federation/${league.federationId}/league/${league.id}/edit`)
 }
 
 onMounted(getLeagues)

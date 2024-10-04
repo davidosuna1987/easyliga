@@ -4,15 +4,15 @@ export default [
     items: [
       {
         label: 'navbar.federation.list.label',
-        to: '/federations',
+        to: '/federation',
       },
       {
         label: 'navbar.federation.leagues.label',
-        to: '/federations/leagues',
+        to: '/federation/leagues',
       },
       {
         label: 'navbar.federation.clubs.label',
-        to: '/federations/clubs',
+        to: '/federation/clubs',
       },
     ],
   },

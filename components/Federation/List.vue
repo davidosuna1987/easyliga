@@ -34,7 +34,7 @@ const getFederations = async () => {
 }
 
 const goToEditFederation = (federation: Federation) => {
-  navigateTo(`/federations/${federation.id}/edit`)
+  navigateTo(`/federation/${federation.id}/edit`)
 }
 
 onMounted(getFederations)
