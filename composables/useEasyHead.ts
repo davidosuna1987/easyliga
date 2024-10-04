@@ -1,4 +1,3 @@
-import { useRuntimeConfig, useHead } from '#imports'
 import type {
   MergeHead,
   UseHeadInput,
