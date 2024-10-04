@@ -49,7 +49,7 @@ const authUserCanUpdateLeague = (league: League) => {
 }
 
 const handleLeagueUpdated = (league: League) =>
-  navigateTo(`/leagues/${league.id}`)
+  navigateTo(`/league/${league.id}`)
 
 onMounted(getLeague)
 </script>

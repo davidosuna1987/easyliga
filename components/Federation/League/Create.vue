@@ -52,7 +52,7 @@ const authUserCanUpdateFederation = (federation: Federation) => {
 }
 
 const handleLeagueCreated = (league: League) =>
-  navigateTo(`/leagues/${league.id}`)
+  navigateTo(`/league/${league.id}`)
 
 onMounted(getFederation)
 </script>

@@ -99,7 +99,7 @@ const handleStore = async () => {
   } else if (data.value) {
     toast.success(t('leagues.created'))
     // emit('league:created', mapApiLeagueToLeague(data.value.data.league))
-    navigateTo(`/leagues/${data.value.data.league.id}`)
+    navigateTo(`/league/${data.value.data.league.id}`)
   }
 }
 
@@ -115,7 +115,7 @@ const handleUpdate = async () => {
   } else if (data.value) {
     toast.success(t('leagues.updated'))
     // emit('league:updated', mapApiLeagueToLeague(data.value.data.league))
-    navigateTo(`/leagues/${data.value.data.league.id}`)
+    navigateTo(`/league/${data.value.data.league.id}`)
   }
 }
 

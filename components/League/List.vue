@@ -62,7 +62,7 @@ const handleAddLeague = (federation: Federation) => {
 }
 
 const goToLeague = (league: League) => {
-  navigateTo(`/leagues/${league.id}`)
+  navigateTo(`/league/${league.id}`)
 }
 
 const goToEditLeague = (league: League) => {
