@@ -48,7 +48,7 @@ export type ApiRegisterByInviteRequest = ApiRegisterRequest & {
 }
 
 export type ApiVerifyRequest = {
-  user: number
+  user_id: number
   token: string
 }
 

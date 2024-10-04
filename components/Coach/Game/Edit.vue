@@ -16,7 +16,7 @@ const loadingApi = ref<boolean>(false)
 const getGame = async () => {
   loadingApi.value = true
 
-  const { data, error } = await gameService.get(Number(route.params.game_id), {
+  const { data, error } = await gameService.get(Number(route.params.gameId), {
     with: 'localTeam,visitorTeam,club,league.federation.federation',
   })
 

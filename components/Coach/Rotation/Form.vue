@@ -140,7 +140,7 @@ const getInitialData = async (): Promise<void> => {
 
 const getGameSets = async (): Promise<void> => {
   const { data } = await setService.fetch({
-    where: `game_id:${route.params.game_id}`,
+    where: `game_id:${route.params.gameId}`,
     with: 'rotations.players,sanctions',
     set_appends: 'game_sanctions',
   })
@@ -154,7 +154,7 @@ const getGameSets = async (): Promise<void> => {
 }
 
 const getCall = async (): Promise<void> => {
-  const { data } = await callService.get(Number(route.params.call_id), {
+  const { data } = await callService.get(Number(route.params.callId), {
     with: 'team',
   })
 
@@ -205,11 +205,11 @@ const handleSubmit = async (): Promise<void> => {
 
 const listenRotationLockToggledEvent = (rotationId: number) => {
   listenedEvents.value.push(
-    `game.${route.params.game_id}.rotation.${rotationId}.lock-toggled`,
+    `game.${route.params.gameId}.rotation.${rotationId}.lock-toggled`,
   )
 
   window.Echo.channel(
-    `game.${route.params.game_id}.rotation.${rotationId}.lock-toggled`,
+    `game.${route.params.gameId}.rotation.${rotationId}.lock-toggled`,
   ).listen(
     ApiEvents.ROTATION_LOCK_TOGGLED,
     (response: ApiRotationLockToggledEventResponse) => {
@@ -225,8 +225,8 @@ const listenRotationLockToggledEvent = (rotationId: number) => {
 }
 
 const listenSanctionStoredEvent = (): void => {
-  listenedEvents.value.push(`game.${route.params.game_id}.sanction.stored`)
-  window.Echo.channel(`game.${route.params.game_id}.sanction.stored`).listen(
+  listenedEvents.value.push(`game.${route.params.gameId}.sanction.stored`)
+  window.Echo.channel(`game.${route.params.gameId}.sanction.stored`).listen(
     ApiEvents.SANCTION_STORED,
     (response: ApiSanctionStoredEventResponse) => {
       const sanctionedPlayer = response.profile
@@ -247,7 +247,7 @@ const listenAllChannels = () => {
   if (
     !!currentSetRotation.value &&
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.rotation.${currentSetRotation.value.id}.lock-toggled`,
+      `game.${route.params.gameId}.rotation.${currentSetRotation.value.id}.lock-toggled`,
     )
   ) {
     listenRotationLockToggledEvent(currentSetRotation.value.id)
@@ -255,7 +255,7 @@ const listenAllChannels = () => {
 
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.sanction.stored`,
+      `game.${route.params.gameId}.sanction.stored`,
     )
   ) {
     listenSanctionStoredEvent()

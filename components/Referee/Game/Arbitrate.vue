@@ -310,7 +310,7 @@ const showPendingPlayerChangeTeam = computed((): Team | undefined =>
 const getGameInitialData = async (firstCall: boolean = false) => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
-    Number(route.params.game_id),
+    Number(route.params.gameId),
     {
       with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts,signatures',
     },
@@ -593,7 +593,7 @@ const setObservations = (observations?: string) =>
 const submitObservations = async () => {
   loadingObservations.value = true
   const { data, error } = await gameService.observations(
-    Number(route.params.game_id),
+    Number(route.params.gameId),
     observationsForm.value,
   )
   loadingObservations.value = false
@@ -650,8 +650,8 @@ const hideDenyDialog = () => {
 }
 
 const listenCallUpdatedEvent = () => {
-  listenedEvents.value.push(`game.${route.params.game_id}.call.updated`)
-  window.Echo.channel(`game.${route.params.game_id}.call.updated`).listen(
+  listenedEvents.value.push(`game.${route.params.gameId}.call.updated`)
+  window.Echo.channel(`game.${route.params.gameId}.call.updated`).listen(
     ApiEvents.CALL_UPDATED,
     (response: ApiCallUpdatedEventResponse) => {
       toast.info(
@@ -672,8 +672,8 @@ const listenCallUpdatedEvent = () => {
 }
 
 const listenRotationCreatedEvent = () => {
-  listenedEvents.value.push(`game.${route.params.game_id}.rotation.created`)
-  window.Echo.channel(`game.${route.params.game_id}.rotation.created`).listen(
+  listenedEvents.value.push(`game.${route.params.gameId}.rotation.created`)
+  window.Echo.channel(`game.${route.params.gameId}.rotation.created`).listen(
     ApiEvents.ROTATION_CREATED,
     (response: ApiRotationCreatedEventResponse) => {
       toast.info(
@@ -706,8 +706,8 @@ const listenRotationCreatedEvent = () => {
 }
 
 const listenRotationUpdatedEvent = () => {
-  listenedEvents.value.push(`game.${route.params.game_id}.rotation.updated`)
-  window.Echo.channel(`game.${route.params.game_id}.rotation.updated`).listen(
+  listenedEvents.value.push(`game.${route.params.gameId}.rotation.updated`)
+  window.Echo.channel(`game.${route.params.gameId}.rotation.updated`).listen(
     ApiEvents.ROTATION_UPDATED,
     (response: ApiRotationUpdatedEventResponse) => {
       toast.warn(
@@ -744,10 +744,10 @@ const listenRotationUpdatedEvent = () => {
 
 const listenTimeoutStatusUpdatedEvent = () => {
   listenedEvents.value.push(
-    `game.${route.params.game_id}.timeout.status.updated`,
+    `game.${route.params.gameId}.timeout.status.updated`,
   )
   window.Echo.channel(
-    `game.${route.params.game_id}.timeout.status.updated`,
+    `game.${route.params.gameId}.timeout.status.updated`,
   ).listen(
     ApiEvents.TIMEOUT_STATUS_UPDATED,
     (response: ApiTimeoutStatusUpdatedEventResponse) => {
@@ -783,10 +783,10 @@ const listenTimeoutStatusUpdatedEvent = () => {
 
 const listenGameSignatureCreatedEvent = () => {
   listenedEvents.value.push(
-    `game.${route.params.game_id}.game_signature.created`,
+    `game.${route.params.gameId}.game_signature.created`,
   )
   window.Echo.channel(
-    `game.${route.params.game_id}.game_signature.created`,
+    `game.${route.params.gameId}.game_signature.created`,
   ).listen(
     ApiEvents.GAME_SIGNATURE_CREATED,
     (response: ApiGameSignatureCreatedEventResponse) => {
@@ -808,34 +808,34 @@ const listenGameSignatureCreatedEvent = () => {
 
 const listenAllChannels = () => {
   if (
-    !listenedEvents.value.includes(`game.${route.params.game_id}.call.updated`)
+    !listenedEvents.value.includes(`game.${route.params.gameId}.call.updated`)
   ) {
     listenCallUpdatedEvent()
   }
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.rotation.created`,
+      `game.${route.params.gameId}.rotation.created`,
     )
   ) {
     listenRotationCreatedEvent()
   }
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.rotation.updated`,
+      `game.${route.params.gameId}.rotation.updated`,
     )
   ) {
     listenRotationUpdatedEvent()
   }
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.timeout.status.updated`,
+      `game.${route.params.gameId}.timeout.status.updated`,
     )
   ) {
     listenTimeoutStatusUpdatedEvent()
   }
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.game_signature.created`,
+      `game.${route.params.gameId}.game_signature.created`,
     )
   ) {
     listenGameSignatureCreatedEvent()

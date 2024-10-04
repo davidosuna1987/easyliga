@@ -81,7 +81,7 @@ const getRotation = async () => {
   loadingApi.value = true
 
   const { data, error } = await rotationService.get(
-    Number(route.params.rotation_id),
+    Number(route.params.rotationId),
     {
       with: 'game.sanctions,call.team,players,setSanctions',
       set_appends: 'current_rotation',
@@ -212,7 +212,7 @@ const handleSubmit = async () => {
   }
 
   const { data, error } = await rotationService.update(
-    Number(route.params.rotation_id),
+    Number(route.params.rotationId),
     mapRotationUpdateRequestToApiRotationUpdateRequest(rotationUpdateRequest),
   )
 

@@ -238,8 +238,8 @@ const getTeamPlayers = async () => {
   loadingApi.value = true
 
   const { data, error } = await gameService.teamPlayers(
-    Number(route.params.game_id),
-    Number(route.params.team_id),
+    Number(route.params.gameId),
+    Number(route.params.teamId),
   )
 
   loadingApi.value = false
@@ -318,10 +318,10 @@ const handleSubmit = async () => {
 
 const listenCallUnlockedEvent = () => {
   listenedEvents.value.push(
-    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+    `game.${route.params.gameId}.call.${call.value?.id}.unlocked`,
   )
   window.Echo.channel(
-    `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+    `game.${route.params.gameId}.call.${call.value?.id}.unlocked`,
   ).listen(
     ApiEvents.CALL_UNLOCKED,
     (response: ApiCallUnlockedEventResponse) => {
@@ -338,7 +338,7 @@ const listenCallUnlockedEvent = () => {
 const listenAllChannels = () => {
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+      `game.${route.params.gameId}.call.${call.value?.id}.unlocked`,
     )
   ) {
     listenCallUnlockedEvent()
@@ -353,7 +353,7 @@ const leaveAllChannels = () => {
 // INFO: replaced with window.Echo.leaveAllChannels()
 // const leaveCallUnlockedEvent = () => {
 //   window.Echo.leaveChannel(
-//     `game.${route.params.game_id}.call.${call.value?.id}.unlocked`,
+//     `game.${route.params.gameId}.call.${call.value?.id}.unlocked`,
 //   )
 // }
 

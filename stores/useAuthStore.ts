@@ -86,7 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const verify = async (data: ApiVerifyRequest) => {
     const response = await useApi<ApiMessageResponse>(
-      `auth/verify/${data.user}/${data.token}`,
+      `auth/verify/${data.user_id}/${data.token}`,
       {
         method: 'POST',
       },

@@ -20,7 +20,7 @@ onMounted(() => {
     <div class="easy-auth-page easy-invite-add-roles-page">
       <InviteAddRolesForm
         v-if="auth.isLoggedIn"
-        :inviteId="Number(route.params.invite as string)"
+        :inviteId="Number(route.params.inviteId as string)"
         :code="(route.params.code as string)"
       />
       <EasyGrid v-else :gap="5">

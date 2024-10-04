@@ -8,7 +8,7 @@ const auth = useAuthStore()
 const toast = useEasyToast()
 
 const form = ref<ApiVerifyRequest>({
-  user: Number(route.params.user),
+  user_id: Number(route.params.userId),
   token: String(route.params.token),
 })
 

@@ -705,10 +705,10 @@ const hideDenyDialog = () => {
 
 const listenGamePlayerRotationStatusUpdatedEvent = () => {
   listenedEvents.value.push(
-    `game.${route.params.game_id}.rotation.${route.params.rotation_id}.player-rotation-status-updated`,
+    `game.${route.params.gameId}.rotation.${route.params.rotationId}.player-rotation-status-updated`,
   )
   window.Echo.channel(
-    `game.${route.params.game_id}.rotation.${route.params.rotation_id}.player-rotation-status-updated`,
+    `game.${route.params.gameId}.rotation.${route.params.rotationId}.player-rotation-status-updated`,
   ).listen(
     ApiEvents.PLAYER_ROTATON_STATUS_UPDATED,
     (response: ApiGamePlayerRotationStatusUpdatedEventResponse) => {
@@ -760,7 +760,7 @@ const listenGamePlayerRotationStatusUpdatedEvent = () => {
 const listenAllChannels = () => {
   if (
     !listenedEvents.value.includes(
-      `game.${route.params.game_id}.rotation.${route.params.rotation_id}.player-rotation-status-updated`,
+      `game.${route.params.gameId}.rotation.${route.params.rotationId}.player-rotation-status-updated`,
     )
   ) {
     listenGamePlayerRotationStatusUpdatedEvent()

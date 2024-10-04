@@ -24,7 +24,7 @@ const firstSet = ref<Set>()
 const getReport = async () => {
   loadingApi.value = true
   const { data, error } = await gameService.reportSimple(
-    Number(route.params.game_id),
+    Number(route.params.gameId),
   )
   loadingApi.value = false
 
