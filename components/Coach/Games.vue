@@ -220,7 +220,7 @@ const redirectIfSanctionedMembersToChange = () => {
 
         if (call && rotation) {
           navigateTo(
-            `/coach/game/${game.id}/teams/${call.teamId}/rotations/${rotation.id}/player-change`,
+            `/coach/game/${game.id}/team/${call.teamId}/rotations/${rotation.id}/player-change`,
           )
         }
       })

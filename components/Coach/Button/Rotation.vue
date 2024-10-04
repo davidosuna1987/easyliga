@@ -57,7 +57,7 @@ const redirect = () => {
 
   if (props.sanctionedPlayersToBeReplaced) {
     navigateTo(
-      `/coach/game/${props.gameId}/teams/${props.teamId}/rotations/${props.rotationId}/player-change`,
+      `/coach/game/${props.gameId}/team/${props.teamId}/rotations/${props.rotationId}/player-change`,
     )
   }
 
