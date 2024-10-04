@@ -61,7 +61,7 @@ const redirect = () => {
     )
   }
 
-  navigateTo(`/coach/game/${props.gameId}/calls/${props.callId}/rotation`)
+  navigateTo(`/coach/game/${props.gameId}/call/${props.callId}/rotation`)
 }
 
 const showRotationLockedToast = () => toast.warn(t('rotations.locked'))
