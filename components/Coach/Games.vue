@@ -232,14 +232,13 @@ const signButtonTypeDisabled = (
   game: Game,
   call: Call,
   signatureType: GameSignatureType,
-): boolean => {
-  return !!gameSignatures.value?.find(
+): boolean =>
+  !!gameSignatures.value?.find(
     signature =>
       signature.gameId === game.id &&
       signature.type === signatureType &&
       signature.teamId === call.teamId,
   )
-}
 
 const reportAlreadySignedByCoachAndCaptain = (
   game: Game,
@@ -279,11 +278,16 @@ const gameCallSigned = (game: Game): boolean => {
   return callSigned
 }
 
-const showReportSignedMessage = (game: Game, index: number): boolean =>
-  isMatchDay(game) ? gameCallSigned(game) : game.status === 'finished'
+const showReportSignedMessage = (game: Game): boolean =>
+  isMatchDay(game)
+    ? gameCallSigned(game) ||
+      moment().valueOf() > getGameObservationsCountdownTarget(game)
+    : game.status === 'finished'
 
-const showSignatureCountdown = (game: Game, index: number): boolean =>
-  game.status === 'finished' && !gameCallSigned(game)
+const showSignatureCountdown = (game: Game): boolean =>
+  game.status === 'finished' &&
+  !gameCallSigned(game) &&
+  moment().valueOf() < getGameObservationsCountdownTarget(game)
 
 const handleSignatureStored = (gameSignature: GameSignature) => {
   gameSignatures.value.push(gameSignature)
@@ -451,7 +455,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
           </template>
           <template v-if="game.status === 'finished'">
             <div
-              v-if="showReportSignedMessage(game, index)"
+              v-if="showReportSignedMessage(game)"
               :class="[
                 `col-span-${
                   ACTIONS_GRID_COLS[game.status ?? 'default']
@@ -462,7 +466,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               <Button
                 :label="t('reports.show_game')"
                 size="small"
-                @click.prevent="navigateTo(`/games/${game.id}/report`)"
+                @click.prevent="navigateTo(`/game/${game.id}/report`)"
               />
             </div>
             <template v-else>
@@ -475,7 +479,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 <CoachButtonSign
                   v-if="!!getGameCall(game)"
                   :game="game"
-                  :call="getGameCall(game) as Call"
+                  :call="(getGameCall(game) as Call)"
                   :signature-type="gameSignatureType"
                   :disabled="
                     signButtonTypeDisabled(
@@ -491,7 +495,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                     isSameCoachForBothTeams(game) && !!getGameCall(game, true)
                   "
                   :game="game"
-                  :call="getGameCall(game, true) as Call"
+                  :call="(getGameCall(game, true) as Call)"
                   :signature-type="gameSignatureType"
                   :disabled="
                     signButtonTypeDisabled(
@@ -519,7 +523,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
       </EasyGrid>
 
       <EasyCountdown
-        v-if="showSignatureCountdown(game, index)"
+        v-if="showSignatureCountdown(game)"
         :class="[
           `col-span-${ACTIONS_GRID_COLS[game.status ?? 'default']} mt-3`,
         ]"

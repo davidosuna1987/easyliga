@@ -143,10 +143,10 @@ const onCountdownEnded = async ({ game, call }: { game: Game; call: Call }) => {
     await callService.sign(call.id, signData)
   }
 
-  selectedDateGames.value?.splice(
-    selectedDateGames.value?.map(g => g.id).indexOf(endedGame.id),
-    1,
-  )
+  // selectedDateGames.value?.splice(
+  //   selectedDateGames.value?.map(g => g.id).indexOf(endedGame.id),
+  //   1,
+  // )
 
   toast.info(t('reports.closed_game', { gameName: game.name }))
 }
