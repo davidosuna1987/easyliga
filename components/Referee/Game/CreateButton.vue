@@ -8,7 +8,7 @@ const { t } = useI18n()
       class="create-game-button"
       :label="t('games.create')"
       size="large"
-      @click.prevent="navigateTo('/referee/games/create')"
+      @click.prevent="navigateTo('/referee/game/create')"
     >
       <NuxtImg
         class="create-game-button__logo"

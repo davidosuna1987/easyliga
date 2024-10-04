@@ -101,7 +101,7 @@ const submit = async () => {
     errors.value = error.value.data?.errors
   } else {
     toast.success(t('games.created'))
-    navigateTo(`/referee/games/${data.value?.data.game.id}/arbitrate`)
+    navigateTo(`/referee/game/${data.value?.data.game.id}/arbitrate`)
   }
 
   loadingApi.value = false

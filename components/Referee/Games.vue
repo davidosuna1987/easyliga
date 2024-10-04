@@ -12,7 +12,7 @@ const { t } = useI18n()
 
 const handleGameClick = (game: Game) => {
   if (isMatchDay(game)) {
-    navigateTo(`/referee/games/${game.id}/arbitrate`)
+    navigateTo(`/referee/game/${game.id}/arbitrate`)
   }
 
   if (showActa(game)) {

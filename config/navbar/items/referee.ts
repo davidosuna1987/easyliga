@@ -8,7 +8,7 @@ export default [
     items: [
       {
         label: 'navbar.referee.games.create',
-        to: '/referee/games/create',
+        to: '/referee/game/create',
       },
     ],
   },
