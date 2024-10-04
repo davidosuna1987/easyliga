@@ -48,7 +48,7 @@ const authUserCanUpdateFederation = (federation: Federation) => {
   )
 }
 
-const handleClubCreated = (club: Club) => navigateTo(`/clubs/${club.id}`)
+const handleClubCreated = (club: Club) => navigateTo(`/club/${club.id}`)
 
 onMounted(getFederation)
 </script>

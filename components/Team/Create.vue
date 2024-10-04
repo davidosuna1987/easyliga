@@ -27,7 +27,7 @@ const getClub = async () => {
 }
 
 const handleTeamCreated = (team: Team) => {
-  navigateTo(`/clubs/${club.value?.id}/teams/${team.id}/edit`)
+  navigateTo(`/club/${club.value?.id}/teams/${team.id}/edit`)
 }
 
 onMounted(getClub)

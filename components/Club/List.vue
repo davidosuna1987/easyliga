@@ -60,7 +60,7 @@ const getClubs = async () => {
 }
 
 const goToEditClub = (club: Club) => {
-  navigateTo(`/clubs/${club.id}/edit`)
+  navigateTo(`/club/${club.id}/edit`)
 }
 
 const teamsCount = (club: Club) =>

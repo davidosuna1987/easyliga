@@ -36,7 +36,7 @@ const getCoachedTeams = async () => {
 }
 
 const goToEditClubTeam = (team: Team) =>
-  navigateTo(`/clubs/${team.clubId}/teams/${team.id}/edit`)
+  navigateTo(`/club/${team.clubId}/teams/${team.id}/edit`)
 
 onMounted(getCoachedTeams)
 </script>

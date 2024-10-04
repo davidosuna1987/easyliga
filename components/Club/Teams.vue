@@ -48,17 +48,17 @@ const clubManagesAnyTeam = computed(() => !!clubsWithTeams.value?.length)
 const sedeContainsTeams = (sede: Sede) => !!sede.teams?.length
 
 const goToEditClub = (club: Club) => {
-  navigateTo(`/clubs/${club.id}/edit`)
+  navigateTo(`/club/${club.id}/edit`)
 }
 
 const goToEditClubTeam = (club: Club, team: Team) => {
   // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
-  navigateTo(`/clubs/${club.id}/teams/${team.id}/edit`)
+  navigateTo(`/club/${club.id}/teams/${team.id}/edit`)
 }
 
 const goToCreateClubTeam = (club: Club) => {
   // easyProps.set(`clubs.${club.id}.teams.${team.id}.edit`, { club, team })
-  navigateTo(`/clubs/${club.id}/teams/create`)
+  navigateTo(`/club/${club.id}/teams/create`)
 }
 
 onMounted(getAuthuserClubWithSedesAndTeams)

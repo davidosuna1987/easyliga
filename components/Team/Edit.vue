@@ -56,7 +56,7 @@ const getTeam = async () => {
 
 const redirectUser = () => {
   if (auth.hasRole('club')) {
-    navigateTo('/clubs')
+    navigateTo('/club')
   } else if (auth.hasRole('coach')) {
     navigateTo('/coach')
   } else {
