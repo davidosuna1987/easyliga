@@ -75,11 +75,13 @@ onMounted(getGame)
       />
 
       <CoachGameDateForm
+        v-if="!game.status"
         :game="game"
         inlineButton
         @date:requested="getGame"
         @date:approved="getGame"
       />
+      <GameStatus v-else :status="game.status" />
     </template>
   </div>
 </template>
