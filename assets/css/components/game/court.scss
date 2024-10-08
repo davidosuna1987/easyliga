@@ -371,6 +371,19 @@
           );
         }
 
+        &.is-sanctioned {
+          background-image: linear-gradient(
+            45deg,
+            var(--danger-color-lighten) 8.33%,
+            var(--danger-color-lightest) 8.33%,
+            var(--danger-color-lightest) 50%,
+            var(--danger-color-lighten) 50%,
+            var(--danger-color-lighten) 58.33%,
+            var(--danger-color-lightest) 58.33%,
+            var(--danger-color-lightest) 100%
+          );
+        }
+
         &:hover {
           background-image: linear-gradient(
             45deg,
@@ -393,6 +406,19 @@
               var(--tertiary-color-light) 58.33%,
               rgba(var(--tertiary-color-rgb), 0.5) 58.33%,
               rgba(var(--tertiary-color-rgb), 0.5) 100%
+            );
+          }
+
+          &.is-sanctioned {
+            background-image: linear-gradient(
+              45deg,
+              var(--danger-color-lightest) 8.33%,
+              var(--danger-color-lighten) 8.33%,
+              var(--danger-color-lighten) 50%,
+              var(--danger-color-lightest) 50%,
+              var(--danger-color-lightest) 58.33%,
+              var(--danger-color-lighten) 58.33%,
+              var(--danger-color-lighten) 100%
             );
           }
         }
@@ -598,6 +624,19 @@
             );
           }
 
+          &.is-sanctioned {
+            background-image: linear-gradient(
+              45deg,
+              var(--danger-color-darken) 8.33%,
+              var(--danger-color-darkest) 8.33%,
+              var(--danger-color-darkest) 50%,
+              var(--danger-color-darken) 50%,
+              var(--danger-color-darken) 58.33%,
+              var(--danger-color-darkest) 58.33%,
+              var(--danger-color-darkest) 100%
+            );
+          }
+
           &:hover {
             background-image: linear-gradient(
               45deg,
@@ -620,6 +659,19 @@
                 rgba(var(--tertiary-color-rgb), 0.25) 58.33%,
                 rgba(var(--tertiary-color-rgb), 0.15) 58.33%,
                 rgba(var(--tertiary-color-rgb), 0.15) 100%
+              );
+            }
+
+            &.is-sanctioned {
+              background-image: linear-gradient(
+                45deg,
+                var(--danger-color-darkest) 8.33%,
+                var(--danger-color-darken) 8.33%,
+                var(--danger-color-darken) 50%,
+                var(--danger-color-darkest) 50%,
+                var(--danger-color-darkest) 58.33%,
+                var(--danger-color-darken) 58.33%,
+                var(--danger-color-darken) 100%
               );
             }
           }

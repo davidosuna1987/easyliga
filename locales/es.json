@@ -832,7 +832,8 @@
     "max_changes_reached": "No puedes hacer más de {num} cambios en cada set",
     "player_in_change_request": "El cambio solicitado está pendiente de aprovación",
     "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación",
-    "show": "Mostrar rotación | Mostrar rotaciones"
+    "show": "Mostrar rotación | Mostrar rotaciones",
+    "set_changed": "No puedes hacer cambios en este set"
   },
   "player_change_requests": {
     "player_change_request": "Solicitud de cambio de jugador | Solicitudes de cambio de jugadores",

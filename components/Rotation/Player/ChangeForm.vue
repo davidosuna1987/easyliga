@@ -83,7 +83,7 @@ const getRotation = async () => {
   const { data, error } = await rotationService.get(
     Number(route.params.rotationId),
     {
-      with: 'game.sanctions,call.team,players,setSanctions',
+      with: 'game.sanctions,game.currentSet,call.team,players,setSanctions',
       set_appends: 'current_rotation',
     },
   )
@@ -91,6 +91,15 @@ const getRotation = async () => {
   if (error.value || !data.value) {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     errors.value = error.value?.data?.errors
+    return
+  }
+
+  if (
+    data.value.data.rotation?.game?.current_set?.id !==
+    data.value.data.rotation?.set_id
+  ) {
+    toast.warn(t('rotations.set_changed'))
+    navigateTo('/coach')
     return
   }
 

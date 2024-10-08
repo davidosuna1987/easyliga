@@ -299,17 +299,21 @@ onBeforeUnmount((): void => {
   <div class="easy-coach-rotation-form-component">
     <Loading v-if="loadingApi" />
 
-    <Message v-if="currentSetRotation?.locked" :closable="false">
+    <Message v-if="!loadingApi && currentSetRotation?.locked" :closable="false">
       {{ t('rotations.created_warning') }}
     </Message>
 
     <RotationPlayerSanctionedMessage
-      v-if="!initialRotation && rotationPlayersToBeReplacedForSanction.length"
+      v-if="
+        !loadingApi &&
+        !initialRotation &&
+        rotationPlayersToBeReplacedForSanction.length
+      "
       :playersData="rotationPlayersToBeReplacedForSanction"
     />
 
     <template v-if="call?.locked">
-      <p v-if="!currentSetHasRotation" class="text-center mb-8">
+      <p v-if="!loadingApi && !currentSetHasRotation" class="text-center mb-8">
         {{ t('rotations.assign_howto') }}
       </p>
       <form @submit.prevent="handleSubmit">

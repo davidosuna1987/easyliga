@@ -939,6 +939,13 @@ onUpdated(() => {
     <div>
       <CoachRotationPlayerChanges
         v-if="!props.isInitialRotationAssignment"
+        :class="[
+          {
+            'is-disabled':
+              !!props.isInitialRotationAssignment &&
+              props.rotation?.players.length === 6,
+          },
+        ]"
         :playersData="props.call.playersData"
         :playerChanges="playerChanges"
         :initialPlayerChanges="initialPlayerChanges"
@@ -953,7 +960,12 @@ onUpdated(() => {
         v-if="
           !props.isInitialRotationAssignment && !!deniedPlayerChanges?.length
         "
-        :class="{ 'mt-8': !!playerChanges.length }"
+        :class="{
+          'mt-8': !!playerChanges.length,
+          'is-disabled':
+            !!props.isInitialRotationAssignment &&
+            props.rotation?.players.length === 6,
+        }"
       >
         <GameStatus
           class="mb-3"
@@ -984,6 +996,13 @@ onUpdated(() => {
 
     <Button
       v-if="isInitialRotationAssignment && !rotationPlayers.length"
+      :class="[
+        {
+          'is-disabled':
+            !!props.isInitialRotationAssignment &&
+            props.rotation?.players.length === 6,
+        },
+      ]"
       label="AUTO ROTACIÓN"
       @click="handleAutoRotation"
     />
