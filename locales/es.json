@@ -192,7 +192,8 @@
       "missing_rotation": "No se ha encontrado la rotación",
       "missing_position": "Debes seleccionar una posición",
       "missing_captain": "Debes seleccionar un capitán"
-    }
+    },
+    "rotation_players_sanctioned": "No puedes alinear a un jugador expulsado en la rotación inicial"
   },
   "auth": {
     "login": "Iniciar sesión",

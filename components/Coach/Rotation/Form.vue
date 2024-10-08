@@ -176,6 +176,11 @@ const setRotationInCourtCaptain = (profileId: number): void => {
 const handleSubmit = async (): Promise<void> => {
   if (!form.value) return
 
+  if (rotationPlayersToBeReplacedForSanction.value.length) {
+    toast.error(t('errors.rotation_players_sanctioned'))
+    return
+  }
+
   if (form.value.players.length < ROTATION_PLAYERS_LENGTH) {
     toast.error(
       t('errors.assign_min_rotation_players', {
