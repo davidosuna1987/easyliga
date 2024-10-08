@@ -1047,7 +1047,8 @@
         "set": "D",
         "game": "E"
       }
-    }
+    },
+    "not_available_until_game_finishes": "El acta estará disponible una vez finalizado el partido"
   },
   "sanctions": {
     "sanction": "Sanción | Sanciones",

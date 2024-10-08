@@ -62,6 +62,7 @@ export type RotationPlayer = {
   libero: boolean
   changeWindows: number[]
   deniedChanges?: RotationPlayerDeniedChange[]
+  sanctionId?: number
 }
 
 export type RotationRelations = {
@@ -159,6 +160,7 @@ export const mapRotationPlayerToApiRotationPlayer = (
         mapRotationPlayerDeniedChangeToApiRotationPlayerDeniedChange,
       )
     : null,
+  sanction_id: rotationPlayer.sanctionId ?? null,
 })
 
 export const mapApiRotationPlayerToRotationPlayer = (
@@ -179,6 +181,7 @@ export const mapApiRotationPlayerToRotationPlayer = (
         mapApiRotationPlayerDeniedChangeToRotationPlayerDeniedChange,
       )
     : undefined,
+  sanctionId: apiRotationPlayer.sanction_id ?? undefined,
 })
 
 export const mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer = (

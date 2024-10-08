@@ -101,8 +101,14 @@ const showPendingPlayerChangeDialog = ref<RotationPlayer>()
 const showDenyReasonDialog = ref<RotationPlayer>()
 
 const customTeamsShirtColor = ref<CustomTeamsShirtColor>({
-  left: undefined,
-  right: undefined,
+  local: {
+    id: 0,
+    color: undefined,
+  },
+  visitor: {
+    id: 0,
+    color: undefined,
+  },
 })
 
 const leftSideTeam = computed((): Team | undefined =>
@@ -617,26 +623,66 @@ const handleTeamShirtColorSelected = (shirtColor: ShirtColor) => {
 }
 
 const setCustomTeamsShirtColor = (teamId?: number, shirtColor?: ShirtColor) => {
-  if (!leftSideTeam.value || !rightSideTeam.value) return
+  const localTeam = gameInitialData.value?.localTeam
+  const visitorTeam = gameInitialData.value?.visitorTeam
 
-  const leftSideTeamShirtColor =
-    teamId === leftSideTeam.value.id
-      ? shirtColor
-      : customTeamsShirtColor.value.left
-      ? customTeamsShirtColor.value.left
-      : leftSideTeam.value.shirtColor
+  if (!localTeam || !visitorTeam) return
 
-  const rightSideTeamShirtColor =
-    teamId === rightSideTeam.value.id
+  const customTeamsShirtColorFromStorage = getShirtColorsFromStorage()
+
+  const localTeamShirtColor =
+    teamId === localTeam.id
       ? shirtColor
-      : customTeamsShirtColor.value.right
-      ? customTeamsShirtColor.value.right
-      : rightSideTeam.value.shirtColor
+      : customTeamsShirtColorFromStorage?.local?.color
+      ? customTeamsShirtColorFromStorage.local.color
+      : customTeamsShirtColor.value.local.color
+      ? customTeamsShirtColor.value.local.color
+      : localTeam.shirtColor
+
+  const visitorTeamShirtColor =
+    teamId === visitorTeam.id
+      ? shirtColor
+      : customTeamsShirtColorFromStorage?.visitor?.color
+      ? customTeamsShirtColorFromStorage.visitor.color
+      : customTeamsShirtColor.value.visitor.color
+      ? customTeamsShirtColor.value.visitor.color
+      : visitorTeam.shirtColor
 
   customTeamsShirtColor.value = {
-    left: leftSideTeamShirtColor,
-    right: rightSideTeamShirtColor,
+    local: {
+      id: localTeam.id,
+      color: localTeamShirtColor,
+    },
+    visitor: {
+      id: visitorTeam.id,
+      color: visitorTeamShirtColor,
+    },
   }
+
+  // const localTeamShirtColor =
+  //   teamId === localTeam.id
+  //     ? shirtColor
+  //     : teamId && customTeamsShirtColor.value.local.color
+  //     ? customTeamsShirtColor.value.local.color
+  //     : localTeam.shirtColor
+
+  // const visitorTeamShirtColor =
+  //   teamId === visitorTeam.id
+  //     ? shirtColor
+  //     : teamId && customTeamsShirtColor.value.visitor.color
+  //     ? customTeamsShirtColor.value.visitor.color
+  //     : visitorTeam.shirtColor
+
+  // customTeamsShirtColor.value = {
+  //   local: {
+  //     id: localTeam.id,
+  //     color: localTeamShirtColor,
+  //   },
+  //   visitor: {
+  //     id: visitorTeam.id,
+  //     color: visitorTeamShirtColor,
+  //   },
+  // }
 }
 
 const showDenyDialog = () => {
@@ -847,10 +893,11 @@ const leaveAllChannels = () => {
   listenedEvents.value = []
 }
 
+const getShirtColorsFromStorage = () =>
+  easyStorage.get(`games.${gameInitialData.value?.game.id}.shirtColors`)
+
 const setShirtColorsFromStorage = () => {
-  const shirtColors = easyStorage.get(
-    `games.${gameInitialData.value?.game.id}.shirtColors`,
-  )
+  const shirtColors = getShirtColorsFromStorage()
 
   if (shirtColors) {
     customTeamsShirtColor.value = shirtColors

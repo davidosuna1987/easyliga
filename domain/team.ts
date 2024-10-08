@@ -121,8 +121,14 @@ export const SHIRT_COLORS = [
 export type ShirtColor = (typeof SHIRT_COLORS)[number]
 
 export type CustomTeamsShirtColor = {
-  left: ShirtColor | undefined
-  right: ShirtColor | undefined
+  local: {
+    id: number
+    color: ShirtColor | undefined
+  }
+  visitor: {
+    id: number
+    color: ShirtColor | undefined
+  }
 }
 
 export const mapApiTeamToTeam = (
@@ -246,3 +252,11 @@ export const mapTeamToTeamFormRequest = (
   players: team?.players ?? [],
   shirtColor: team?.shirtColor ?? undefined,
 })
+
+export const getCustomShirtColorByTeam = (
+  customTeamsShirtColor: CustomTeamsShirtColor,
+  team: Team,
+) =>
+  team.id === customTeamsShirtColor.local.id
+    ? customTeamsShirtColor.local.color
+    : customTeamsShirtColor.visitor.color

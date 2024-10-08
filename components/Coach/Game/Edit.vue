@@ -17,7 +17,7 @@ const getGame = async () => {
   loadingApi.value = true
 
   const { data, error } = await gameService.get(Number(route.params.gameId), {
-    with: 'localTeam,visitorTeam,club,league.federation.federation',
+    with: 'localTeam,visitorTeam,club,league.federation.federation,league.category,league.gender',
   })
 
   if (error.value) {
@@ -59,13 +59,7 @@ onMounted(getGame)
   >
     <Loading v-if="loadingApi" />
     <template v-else-if="game">
-      <header class="mb-5">
-        <Heading tag="h3">{{ game.name }}</Heading>
-
-        <Heading tag="h6" class="mb-2">{{ game.league?.nameLong }}</Heading>
-
-        <p v-if="game.date">{{ formatDateByLocale(game.date, locale) }}</p>
-      </header>
+      <GameInfoHeader class="mb-5" :game="game" center />
 
       <GameChangeDateStatus
         v-if="game.requestedDate && !game.status && !isMatchDayPassed(game)"

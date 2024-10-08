@@ -2,7 +2,7 @@
 definePageMeta({
   // middleware: ['role'],
   // roles: ['federation', 'club', 'referee', 'trainee'],
-  containerClass: 'referee-report',
+  containerClass: 'game-report',
 })
 
 useEasyHead('pages.game.report.title')

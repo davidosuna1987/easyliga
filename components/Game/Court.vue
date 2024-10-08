@@ -9,6 +9,7 @@ import {
   TeamSide,
   TeamSideEnum,
   TeamType,
+  getCustomShirtColorByTeam,
   mapCallPlayerDataToTeamMember,
   mapProfileToTeamMember,
 } from '@/domain/team'
@@ -364,7 +365,9 @@ onMounted(setInitialShowCountdown)
             :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
-            :color="customTeamsShirtColor.left"
+            :color="
+              getCustomShirtColorByTeam(customTeamsShirtColor, leftSideTeam)
+            "
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.left,
@@ -387,7 +390,9 @@ onMounted(setInitialShowCountdown)
             :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
-            :color="customTeamsShirtColor.right"
+            :color="
+              getCustomShirtColorByTeam(customTeamsShirtColor, rightSideTeam)
+            "
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.right,

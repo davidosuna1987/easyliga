@@ -34,6 +34,7 @@ export type ApiRotationPlayer = {
   position: number
   status: RotationPlayerStatus
   current_position: number
+  sanction_id: number | null
   libero: boolean
   change_windows: number[] | null
   denied_changes: ApiRotationPlayerDeniedChange[] | null
