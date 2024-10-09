@@ -88,11 +88,15 @@ const visitorTeamLiberoPlayers = computed((): CallPlayerData[] | undefined =>
 )
 
 const localTeamCoach = computed(
-  (): Profile | undefined => localTeamCall.value?.coach?.profile,
+  (): Profile | undefined =>
+    localTeamCall.value?.signingCoach?.profile ??
+    localTeamCall.value?.coach?.profile,
 )
 
 const visitorTeamCoach = computed(
-  (): Profile | undefined => visitorTeamCall.value?.coach?.profile,
+  (): Profile | undefined =>
+    visitorTeamCall.value?.signingCoach?.profile ??
+    visitorTeamCall.value?.coach?.profile,
 )
 
 const handleEditLocalTeamCoachName = (): void => {

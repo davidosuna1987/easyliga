@@ -18,6 +18,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  rounded: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const sizeClass = computed(() => {
@@ -33,7 +37,11 @@ const colorClass = computed(() => {
   <div
     v-if="shirtNumber !== undefined"
     class="easy-icon-shirt-number-component"
-    :class="[sizeClass, colorClass, { 'is-icon': !!isIcon }]"
+    :class="[
+      sizeClass,
+      colorClass,
+      { 'is-icon': !!isIcon, 'is-rounded': rounded },
+    ]"
   >
     <span class="relative z-10">{{ shirtNumber }}</span>
   </div>

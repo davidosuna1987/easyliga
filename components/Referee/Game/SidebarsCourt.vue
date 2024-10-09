@@ -173,7 +173,8 @@ const rightSideTeamRotation = computed(() =>
 )
 
 const leftSideTeamMembers = computed((): TeamMember[] => {
-  const leftSideTeamCoachProfile = props.leftSideTeam.coach?.profile
+  const leftSideTeamCoachProfile =
+    props.leftSideTeamCoach?.profile ?? props.leftSideTeam.coach?.profile
 
   return leftSideTeamCoachProfile
     ? [
@@ -186,7 +187,8 @@ const leftSideTeamMembers = computed((): TeamMember[] => {
 })
 
 const rightSideTeamMembers = computed((): TeamMember[] => {
-  const rightSideTeamCoachProfile = props.rightSideTeam.coach?.profile
+  const rightSideTeamCoachProfile =
+    props.rightSideTeamCoach?.profile ?? props.rightSideTeam.coach?.profile
   return rightSideTeamCoachProfile
     ? [
         ...props.rightSideTeamCall.playersData.map(

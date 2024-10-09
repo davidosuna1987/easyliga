@@ -126,11 +126,13 @@ const rightSideTeam = computed((): Team | undefined =>
 )
 
 const leftSideTeamCoach = computed(
-  (): User | undefined => leftSideTeam.value?.coach,
+  (): User | undefined =>
+    leftSideTeamCall.value?.signingCoach ?? leftSideTeam.value?.coach,
 )
 
 const rightSideTeamCoach = computed(
-  (): User | undefined => rightSideTeam.value?.coach,
+  (): User | undefined =>
+    rightSideTeamCall.value?.signingCoach ?? rightSideTeam.value?.coach,
 )
 
 const leftSideTeamCall = computed((): Call | undefined =>

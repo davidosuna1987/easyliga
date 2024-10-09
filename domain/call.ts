@@ -29,6 +29,7 @@ export type CallRelations = {
   team?: Team
   players?: Player[]
   coach?: User
+  signingCoach?: User
   rotations?: Rotation[]
   currentRotation?: Rotation
 }
@@ -40,6 +41,7 @@ export type Call = {
   playersData: CallPlayerData[]
   locked: boolean
   observations?: string
+  signingCoachId?: number
   signedAt?: string
 } & CallRelations
 
@@ -58,12 +60,22 @@ export const mapApiCallToCall = (apiCall: ApiCall): Call => ({
   playersData: mapApiCallPlayersDataToCallPlayersData(apiCall.players_data),
   locked: apiCall.locked ? true : false,
   observations: apiCall.observations ?? undefined,
+  signingCoachId: apiCall.signing_coach_id ?? undefined,
   signedAt: apiCall.signed_at ?? undefined,
 
+  ...mapApiCallRelationsToCallRelations(apiCall),
+})
+
+export const mapApiCallRelationsToCallRelations = (
+  apiCall: ApiCall,
+): CallRelations => ({
   game: apiCall.game ? mapApiGameToGame(apiCall.game) : undefined,
   team: apiCall.team ? mapApiTeamToTeam(apiCall.team) : undefined,
   players: mapApiPlayersToPlayers(apiCall.players),
   coach: apiCall.coach ? mapApiUserToUser(apiCall.coach) : undefined,
+  signingCoach: apiCall.signing_coach
+    ? mapApiUserToUser(apiCall.signing_coach)
+    : undefined,
   rotations: apiCall.rotations
     ? apiCall.rotations.map(mapApiRotationToRotation)
     : [],
@@ -85,18 +97,22 @@ export const mapCallPlayersDataToPlayers = (
     libero: callPlayerData.libero ? true : false,
   }))
 
+export const mapApiCallPlayerDataToCallPlayerData = (
+  apiCallPlayerData: ApiCallPlayersData,
+): CallPlayerData => ({
+  profileId: apiCallPlayerData.profile_id,
+  firstName: apiCallPlayerData.first_name,
+  lastName: apiCallPlayerData.last_name,
+  avatar: apiCallPlayerData.avatar ?? undefined,
+  shirtNumber: apiCallPlayerData.shirt_number,
+  captain: apiCallPlayerData.captain ? true : false,
+  libero: apiCallPlayerData.libero ? true : false,
+})
+
 export const mapApiCallPlayersDataToCallPlayersData = (
   apiCallPlayersData: ApiCallPlayersData[],
 ): CallPlayerData[] =>
-  apiCallPlayersData.map(apiCallPlayerData => ({
-    profileId: apiCallPlayerData.profile_id,
-    firstName: apiCallPlayerData.first_name,
-    lastName: apiCallPlayerData.last_name,
-    avatar: apiCallPlayerData.avatar ?? undefined,
-    shirtNumber: apiCallPlayerData.shirt_number,
-    captain: apiCallPlayerData.captain ? true : false,
-    libero: apiCallPlayerData.libero ? true : false,
-  }))
+  apiCallPlayersData.map(mapApiCallPlayerDataToCallPlayerData)
 
 export const mapCallObservationsRequestToApiCallObservationsRequest = (
   callObservationsRequest: CallObservationsRequest,

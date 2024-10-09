@@ -53,7 +53,7 @@ const timeoutService = new TimeoutService()
 const ENABLE_TIMEOUT_REQUESTS = false
 
 const getPlayingStatusGridCols = (game: Game) => {
-  if (isSameCoachForBothTeams(game)) {
+  if (isSameCoachForBothTeams(game, auth.user?.id)) {
     return 2
   }
 
@@ -96,7 +96,7 @@ const getGameCall = (
 const gamesWithSanctionedMembersToChange = computed((): Game[] =>
   props.games.filter(game => {
     const teamRotations = game.currentSet?.rotations?.filter(rotation => {
-      return isSameCoachForBothTeams(game)
+      return isSameCoachForBothTeams(game, auth.user?.id)
         ? game.calls?.map(call => call.id).includes(rotation.callId)
         : rotation.callId === getGameCall(game)?.id
     })
@@ -109,7 +109,7 @@ const gamesWithSanctionedMembersToChange = computed((): Game[] =>
       sanction =>
         sanction.type === SanctionType.member &&
         EXPULSION_SEVERITIES.includes(sanction.severity) &&
-        (isSameCoachForBothTeams(game)
+        (isSameCoachForBothTeams(game, auth.user?.id)
           ? game.calls?.map(call => call.teamId).includes(sanction.teamId)
           : sanction.teamId === getGameCall(game)?.teamId) &&
         sanction.playerProfileId &&
@@ -264,7 +264,7 @@ const gameCallSigned = (game: Game): boolean => {
     ? reportAlreadySignedByCoachAndCaptain(game, getGameCall(game) as Call)
     : false
 
-  if (isSameCoachForBothTeams(game)) {
+  if (isSameCoachForBothTeams(game, auth.user?.id)) {
     const opponentCallSigned = !!getGameCall(game, true)
       ? reportAlreadySignedByCoachAndCaptain(
           game,
@@ -331,7 +331,7 @@ const getActionsGridCols = (game: Game): number => {
     case 'playing':
       return getPlayingStatusGridCols(game)
     case 'resting':
-      return isSameCoachForBothTeams(game) ? 2 : 1
+      return isSameCoachForBothTeams(game, auth.user?.id) ? 2 : 1
     default:
       return ACTIONS_GRID_COLS[game.status ?? 'default']
   }
@@ -362,7 +362,10 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               :locked="!!getGameCall(game)?.locked"
             />
             <CoachButtonCall
-              v-if="isSameCoachForBothTeams(game) && getGameCall(game, true)"
+              v-if="
+                isSameCoachForBothTeams(game, auth.user?.id) &&
+                getGameCall(game, true)
+              "
               class="action"
               :gameId="game.id"
               :teamId="getGameCall(game, true)?.teamId ?? 0"
@@ -385,7 +388,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               "
             />
             <CoachButtonRotation
-              v-if="isSameCoachForBothTeams(game)"
+              v-if="isSameCoachForBothTeams(game, auth.user?.id)"
               class="action"
               :gameId="game.id"
               :callId="getGameCall(game, true)?.id ?? 0"
@@ -414,7 +417,10 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               :showPendingStatus="currentSetHasPendingPlayerChanges(game)"
             />
             <CoachButtonPlayerChange
-              v-if="isSameCoachForBothTeams(game) && !!getGameCall(game, true)"
+              v-if="
+                isSameCoachForBothTeams(game, auth.user?.id) &&
+                !!getGameCall(game, true)
+              "
               class="action"
               :gameId="game.id"
               :teamId="getGameCall(game, true)?.teamId ?? 0"
@@ -438,7 +444,8 @@ onMounted(() => redirectIfSanctionedMembersToChange())
               />
               <CoachButtonTimeout
                 v-if="
-                  isSameCoachForBothTeams(game) && !!getGameCall(game, true)
+                  isSameCoachForBothTeams(game, auth.user?.id) &&
+                  !!getGameCall(game, true)
                 "
                 class="action"
                 :game="game"
@@ -492,7 +499,8 @@ onMounted(() => redirectIfSanctionedMembersToChange())
                 />
                 <CoachButtonSign
                   v-if="
-                    isSameCoachForBothTeams(game) && !!getGameCall(game, true)
+                    isSameCoachForBothTeams(game, auth.user?.id) &&
+                    !!getGameCall(game, true)
                   "
                   :game="game"
                   :call="(getGameCall(game, true) as Call)"

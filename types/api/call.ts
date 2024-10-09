@@ -20,6 +20,7 @@ export type ApiCallRelations = {
   team?: ApiTeam
   players?: ApiPlayer[]
   coach?: ApiUser
+  signing_coach?: ApiUser
   rotations?: ApiRotation[]
   current_rotation?: ApiRotation
 }
@@ -31,6 +32,7 @@ export type ApiCall = {
   players_data: ApiCallPlayersData[]
   locked: boolean
   observations: string | null
+  signing_coach_id: number | null
   signed_at: string | null
   created_at: string | null
   updated_at: string | null

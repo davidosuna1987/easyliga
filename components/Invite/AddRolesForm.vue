@@ -90,7 +90,7 @@ const handleAddRoles = async () => {
   if (error.value) {
     toast.mapError(
       Object.values(error.value?.data?.errors),
-      isInvitedAsPlayer.value,
+      !isInvitedAsPlayer.value,
     )
 
     if (isInvitedAsPlayer.value) {

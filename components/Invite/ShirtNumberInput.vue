@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { Invite, invitedAsPlayer } from '@/domain/invite'
+import { Invite } from '@/domain/invite'
 
 const props = defineProps({
   invite: {
@@ -136,6 +136,7 @@ defineExpose({
           :shirtNumber="shirtNumber"
           size="lg"
           isIcon
+          rounded
         />
       </div>
     </DialogBottom>
