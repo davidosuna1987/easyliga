@@ -218,7 +218,7 @@ const redirectIfSanctionedMembersToChange = () => {
           rotation => rotation.callId === call?.id,
         )
 
-        if (call && rotation) {
+        if (game.status !== 'finished' && call && rotation) {
           navigateTo(
             `/coach/game/${game.id}/team/${call.teamId}/rotations/${rotation.id}/player-change`,
           )
