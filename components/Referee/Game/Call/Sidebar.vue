@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import GameSignatureService from '@/services/game-signature'
+import { User } from '@/domain/user'
 import { Team, TeamSide, TeamType, mapProfileToTeamMember } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Call, CallPlayerData } from '@/domain/call'
-import { Rotation } from '@/domain/rotation'
+import { POSITIONS, Rotation } from '@/domain/rotation'
 import { Timeout, TimeoutStatusEnum } from '@/domain/timeout'
 import { GameStatus } from '@/domain/game'
 import { Player } from '@/domain/player'
@@ -23,8 +25,7 @@ import {
   mapApiGameSignatureToGameSignature,
   mapGameSignatureStoreRequestToApiGameSignatureStoreRequest,
 } from '@/domain/game-signature'
-import GameSignatureService from '@/services/game-signature'
-import { User } from '@/domain/user'
+import { Injury } from '@/domain/injury'
 
 const props = defineProps({
   team: {
@@ -67,12 +68,29 @@ const props = defineProps({
     type: Array as PropType<Sanction[]>,
     required: false,
   },
+  injuries: {
+    type: Array as PropType<Injury[]>,
+    required: false,
+  },
   gameStatus: {
     type: String as PropType<GameStatus>,
     required: false,
   },
   gameSignatures: {
     type: Array as PropType<GameSignature[]>,
+    required: true,
+  },
+  getPlayerInOutByPosition: {
+    type: Function as PropType<
+      (
+        position: number,
+        side: TeamSide,
+      ) => {
+        playerIn: CallPlayerData | undefined
+        playerOut: CallPlayerData | undefined
+        injured: boolean
+      }
+    >,
     required: true,
   },
 })
@@ -93,14 +111,14 @@ const selectedSignatureType = ref<GameSignatureType>()
 const showSignatureDialog = ref<boolean>(false)
 const loadingSignature = ref<boolean>(false)
 
-const inCourtPlayers = computed((): CallPlayerData[] => {
-  const inCourtPlayerIds = props.rotation?.players.map(
-    rotation => rotation.inCourtProfileId,
+const inCourtPlayersData = computed(() => {
+  let players: CallPlayerData[] = []
+  POSITIONS.forEach(position =>
+    players.push(
+      props.getPlayerInOutByPosition(position, props.side).playerIn!,
+    ),
   )
-
-  return props.call.playersData.filter(player =>
-    inCourtPlayerIds?.includes(player.profileId),
-  )
+  return players
 })
 
 const expelledPlayers = computed((): CallPlayerData[] => {
@@ -119,20 +137,61 @@ const expelledPlayers = computed((): CallPlayerData[] => {
   )
 })
 
+const injuredPlayers = computed((): CallPlayerData[] => {
+  const injuriesPlayerIds =
+    props.injuries?.map(injury => injury.profileId) ?? []
+
+  const playerChangesInjuredPlayerIds =
+    props.rotation?.players
+      .filter(playerChange => playerChange.injured)
+      .map(playerChange => playerChange.injuredProfileId) ?? []
+
+  console.log({ injuriesPlayerIds, playerChangesInjuredPlayerIds })
+
+  const injuredProfileIds = [
+    ...injuriesPlayerIds,
+    ...playerChangesInjuredPlayerIds,
+  ]
+
+  return props.call.playersData.filter(player =>
+    injuredProfileIds?.includes(player.profileId),
+  )
+})
+
 const benchPlayers = computed((): CallPlayerData[] => {
-  const inCourtPlayerIds = props.rotation?.players.map(
-    rotation => rotation.inCourtProfileId,
+  const inCourtPlayerIds = inCourtPlayersData.value.map(
+    player => player.profileId,
   )
 
   const expelledPlayerIds = expelledPlayers.value.map(
     player => player.profileId,
   )
 
+  const injuredPlayerIds = injuredPlayers.value.map(player => player.profileId)
+
   return props.call.playersData.filter(
     player =>
       !inCourtPlayerIds?.includes(player.profileId) &&
-      !expelledPlayerIds.includes(player.profileId),
+      !expelledPlayerIds.includes(player.profileId) &&
+      !injuredPlayerIds.includes(player.profileId),
   )
+})
+
+const inCourtPlayers = computed((): CallPlayerData[] => {
+  return inCourtPlayersData.value
+  // const inCourtPlayerIds: number[] | undefined = props.rotation?.players
+  //   .map(rotation => rotation.inCourtProfileId)
+  //   .map(profileId => {
+  //     const playerInjury = props.injuries?.find(
+  //       injury => injury.profileId === profileId,
+  //     )
+
+  //     return playerInjury ? playerInjury.replacementProfileId : profileId
+  //   })
+
+  // return props.call.playersData.filter(player =>
+  //   inCourtPlayerIds?.includes(player.profileId),
+  // )
 })
 
 const requestedTimeout = computed((): Timeout | undefined =>
@@ -265,8 +324,18 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             :sanction="getRotationMemberSanction(player)"
             @click="emit('member:clicked', { player })"
           />
+          <Heading
+            v-if="
+              benchPlayers.length ||
+              expelledPlayers.length ||
+              injuredPlayers.length
+            "
+            tag="h6"
+          >
+            {{ t('rotations.bench') }}
+          </Heading>
           <template v-if="benchPlayers.length">
-            <Heading tag="h6">{{ t('rotations.bench') }}</Heading>
+            <!-- <Heading tag="h6">{{ t('rotations.bench') }}</Heading> -->
             <PlayerItem
               v-for="player in benchPlayers"
               :key="player.profileId"
@@ -282,18 +351,33 @@ const handleOpenSignatureDialog = (gameSignatureType: GameSignatureType) => {
             />
           </template>
           <template v-if="expelledPlayers.length">
-            <Heading class="mb-1" tag="h6">{{
-              t('sanctions.expelled_player', 2)
-            }}</Heading>
+            <!-- <Heading class="mb-1" tag="h6">
+              {{ t('sanctions.expelled_player', 2) }}
+            </Heading> -->
             <PlayerItem
               v-for="player in expelledPlayers"
               :key="player.profileId"
-              class="pointer-events-none"
               :player="player"
               :showIcons="false"
               :showCaptain="!!player.captain"
               :showLibero="!!player.libero"
               :sanction="getRotationMemberSanction(player)"
+              @click="emit('member:clicked', { player })"
+            />
+          </template>
+          <template v-if="injuredPlayers.length">
+            <!-- <Heading class="mb-1" tag="h6">
+              {{ t('injuries.player', 2) }}
+            </Heading> -->
+            <PlayerItem
+              v-for="player in injuredPlayers"
+              :key="player.profileId"
+              :player="player"
+              :showIcons="false"
+              :showCaptain="!!player.captain"
+              :showLibero="!!player.libero"
+              :sanction="getRotationMemberSanction(player)"
+              :injured="true"
               @click="emit('member:clicked', { player })"
             />
           </template>

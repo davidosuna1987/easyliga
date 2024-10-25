@@ -4,6 +4,7 @@ import { ApiRotation } from '@/types/api/rotation'
 import { ApiTimeout } from '@/types/api/timeout'
 import { ApiSanction } from '@/types/api/sanction'
 import { ApiDuration } from '@/types/api/utils'
+import { SanctionSeverityKey } from '@/domain/sanction'
 
 export type ApiSetRelations = {
   last_point?: ApiPoint
@@ -43,7 +44,7 @@ export type ApiSet = {
   ApiSetRelationsCount
 
 export type ApiSetResponse = {
-  success: boolean
+  success: true
   data: {
     set: ApiSet
   }
@@ -51,7 +52,7 @@ export type ApiSetResponse = {
 }
 
 export type ApiSetsResponse = {
-  success: boolean
+  success: true
   data: {
     sets: ApiSet[]
   }
@@ -65,11 +66,14 @@ export type ApiSetStartRequest = {
 }
 
 export type ApiSetTeamIncompleteResponse = {
-  success: boolean
+  success: true
   data: {
     incomplete: {
       game: boolean
       set: boolean
+      sanctioned_player_rotation: number
+      sanctioned_profile_id: number
+      sanctioned_severity: SanctionSeverityKey
     }
   }
   errors: null

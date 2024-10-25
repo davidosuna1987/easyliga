@@ -71,6 +71,7 @@
         }
 
         .easy-icon-shirt-number-component {
+          border-color: var(--danger-color-dark);
           &::after {
             background-color: var(--danger-color-dark);
           }

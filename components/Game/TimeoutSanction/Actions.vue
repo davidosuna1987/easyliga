@@ -4,6 +4,7 @@ import { Set } from '@/domain/set'
 import { GameStatus } from '@/domain/game'
 import { MAX_TIMEOUTS_PER_SET, Timeout } from '@/domain/timeout'
 import { Sanction } from '@/domain/sanction'
+import { Injury } from '@/domain/injury'
 
 const props = defineProps({
   leftSideTeam: {
@@ -21,6 +22,14 @@ const props = defineProps({
   rightSideTeamMembers: {
     type: Array as PropType<TeamMember[]>,
     required: true,
+  },
+  leftSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    default: [],
+  },
+  rightSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    default: [],
   },
   leftSideTeamTimeouts: {
     type: Array as PropType<Timeout[]>,
@@ -67,16 +76,21 @@ const teamToSanction = computed((): Team | undefined => {
   }
 })
 
-const teamMembersToSanction = computed((): TeamMember[] => {
-  switch (sideTeamToSanction.value) {
-    case TeamSideEnum.left:
-      return props.leftSideTeamMembers
-    case TeamSideEnum.right:
-      return props.rightSideTeamMembers
-    default:
-      return []
-  }
-})
+const teamMembersToSanction = computed((): TeamMember[] =>
+  teamToSanction.value
+    ? teamToSanction.value.id === props.leftSideTeam.id
+      ? props.leftSideTeamMembers
+      : props.rightSideTeamMembers
+    : [],
+)
+
+const teamToSanctionInjuries = computed((): Injury[] =>
+  teamToSanction.value
+    ? teamToSanction.value.id === props.leftSideTeam.id
+      ? props.leftSideTeamInjuries
+      : props.rightSideTeamInjuries
+    : [],
+)
 
 const teamToTimeout = computed((): Team | undefined => {
   switch (sideTeamToTimeout.value) {
@@ -178,6 +192,7 @@ const setSideTeamToTimeout = (side: TeamSide) => {
       :members="teamMembersToSanction"
       :currentSet="currentSet"
       :gameSanctions="props.gameSanctions"
+      :injuries="teamToSanctionInjuries"
       @sanction:stored="emit('sanction:stored', $event)"
       @hide="sideTeamToSanction = undefined"
     />

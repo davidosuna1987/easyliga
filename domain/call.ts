@@ -140,7 +140,6 @@ export const getLiberoIdFromCallPlayersData = (
 
 export const getPlayerDataByProfileId = (
   playersData: CallPlayerData[],
-  profileId: number,
-): CallPlayerData | undefined => {
-  return playersData.find(p => p.profileId === profileId)
-}
+  profileId?: number,
+): CallPlayerData | undefined =>
+  profileId ? playersData.find(p => p.profileId === profileId) : undefined

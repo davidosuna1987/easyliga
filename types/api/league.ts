@@ -62,7 +62,7 @@ export type ApiLeagueAddTeamFormRequest = {
 }
 
 export type ApiLeagueResponse = {
-  success: boolean
+  success: true
   data: {
     league: ApiLeague
   }
@@ -70,7 +70,7 @@ export type ApiLeagueResponse = {
 }
 
 export type ApiLeaguesResponse = {
-  success: boolean
+  success: true
   data: {
     leagues: ApiLeague[]
   }
@@ -78,7 +78,7 @@ export type ApiLeaguesResponse = {
 }
 
 export type ApiCreateMatchdaysGamesResponse = {
-  success: boolean
+  success: true
   data: {
     league: ApiLeague
     games: ApiGame[]
@@ -87,7 +87,7 @@ export type ApiCreateMatchdaysGamesResponse = {
 }
 
 export type ApiLeagueTeamFormResponse = {
-  success: boolean
+  success: true
   data: {
     league: ApiLeague
     team: ApiTeam

@@ -1,5 +1,7 @@
 {
   "forms": {
+    "and": "y",
+    "or": "o",
     "download": "Descargar",
     "accept": "Aceptar",
     "salutation": "¡Hola {name}!",
@@ -146,6 +148,7 @@
     "select": "Seleccionar"
   },
   "errors": {
+    "whoops": "¡Whoops! Algo ha ido mal...",
     "all_required": "Todos los campos son requeridos",
     "fill_all_fields": "Por favor, rellena todos los campos para continuar",
     "email_exists": "Ya existe un usuario con el correo electrónico proporcionado",
@@ -193,7 +196,20 @@
       "missing_position": "Debes seleccionar una posición",
       "missing_captain": "Debes seleccionar un capitán"
     },
-    "rotation_players_sanctioned": "No puedes alinear a un jugador expulsado en la rotación inicial"
+    "rotation_players_sanctioned": "No puedes alinear a un jugador expulsado en la rotación inicial",
+    "injuries": {
+      "injuries": "Tienes que añadir al menos una lesión",
+      "formRequest": "Debes rellenar el parte de lesión",
+      "gameId": "Debes asignar un partido al parte de lesión",
+      "setId": "Debes asignar un set al parte de lesión",
+      "rotationId": "Debes asignar una rotación al parte de lesión",
+      "teamId": "Debes asignar un equipo al parte de lesión",
+      "playerRotationId": "Debes asignar una rotación de jugador al parte de lesión",
+      "profileId": "Debes asignar un jugador al parte de lesión",
+      "replacementProfileId": "Debes asignar un jugador de reemplazo al parte de lesión",
+      "description": "Debes añadir una descripción al parte de lesión",
+      "description_min_length": "La descripción debe tener al menos {min} caracteres"
+    }
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -697,7 +713,10 @@
     "find_by": "Escribe el nombre, email o ID del jugador",
     "you_selected": "Has seleccionado al siguiente jugador",
     "add_disclaimer": "Si deseas añadirlo a tu equipo haz clic en el botón \"Añadir jugador\" y cuando se cierre esta ventana deberás hacer click en el botón \"Actualizar equipo\" para que la operación finalice correctamente.",
-    "already_added": "El jugador que intentas añadir ya forma parte de tu equipo"
+    "already_added": "El jugador que intentas añadir ya forma parte de tu equipo",
+    "injured": "Jugador lesionado | Jugadores lesionados",
+    "injury_description": "Lesión del jugador reemplazado",
+    "injury_reason": "Indica la lesión del jugador reemplazado"
   },
   "shirts": {
     "shirt": "Camiseta | Camisetas",
@@ -814,9 +833,12 @@
     "assign_call": "La convocatoria no está creada, para assignar una rotación primero tienes que crear la convocatoria",
     "in_court": "En pista",
     "bench": "Banquillo",
+    "regular_change": "Cambio regular | Cambios regulares",
     "libero_not_allowed_in_initial_rotation": "No puedes alinear un líbero en la rotación inicial",
     "max_player_changes_reached": "No puedes hacer más cambios en este set",
+    "max_player_changes_reached_alert": "Sólo te quedan {remaining} cambios en esta rotación y estás intentando hacer {trying}",
     "player_change": "Cambiar jugador | Cambiar jugadores",
+    "player_change_injury": "Cambio por lesión | Cambios por lesión",
     "player_change_done": "No se ha realizado ningún cambio | Cambio realizado | Cambios realizados",
     "request_player_change": "Solicitar cambio de jugador | Solicitar cambio de jugadores",
     "do_player_change": "Realizar cambio | Realizar cambios",
@@ -834,7 +856,12 @@
     "player_in_change_request": "El cambio solicitado está pendiente de aprovación",
     "replacement_player_sanctioned": "El jugador de reemplazo está sancionado y no puede entrar en la rotación",
     "show": "Mostrar rotación | Mostrar rotaciones",
-    "set_changed": "No puedes hacer cambios en este set"
+    "set_changed": "No puedes hacer cambios en este set",
+    "player_change_injury_description_required": "Debes indicar la lesión del jugador para realizar el cambio",
+    "max_changes_reached_no_num": "No puedes hacer más cambios en este set",
+    "player_change_injured": "Jugador de reemplazo lesionado",
+    "submit_requested_changes_before_injury": "Solicita los cambios pendientes antes de hacer un cambio extraordinario",
+    "replacement_player_replacing_injured": "El jugador de reemplazo está jugando en lugar de un jugador lesionado"
   },
   "player_change_requests": {
     "player_change_request": "Solicitud de cambio de jugador | Solicitudes de cambio de jugadores",
@@ -1200,7 +1227,8 @@
     "date_change_requested": "Se ha solicitado un cambio de fecha para jugar el partido {gameName} en la siguiente fecha: {date}",
     "date_change_approved": "Se ha aprovado el cambio de fecha del partido {gameName} para la siguiente fecha: {date}",
     "player_change_request": {
-      "requested": "El equipo {teamName} ha solicitado un cambio de jugador"
+      "requested": "El equipo {teamName} ha solicitado un cambio de jugador",
+      "injury_requested": "El equipo {teamName} ha solicitado un cambio por lesión"
     }
   },
   "countries": {
@@ -1286,5 +1314,17 @@
   },
   "game": {
     "unlocked": "El partido se ha desbloqueado correctamente"
+  },
+  "injuries": {
+    "add": "Añadir lesión",
+    "stored": "El cambio por lesión se ha realizado correctamente",
+    "player": "Jugador lesionado | Jugadores lesionados",
+    "elegible_player": "Jugador apto | Jugadores aptos",
+    "player_long": "El jugador está lesionado | Los jugadores están lesionados",
+    "elegible_player_long": "El jugador es apto | Los jugadores son aptos",
+    "changes": "Cambio por lesión | Cambios por lesión",
+    "change_request": "Solicitud de cambio por lesión",
+    "change_not_allowed_by_injury": "No se puede deshacer el cambio porque el jugador de reemplazo está lesionado. Si el jugador en pista está lesionado puedes hacer un cambio extraordinario.",
+    "extraordinay_change": "Cambio extraordinario | Cambios extraordinarios"
   }
 }

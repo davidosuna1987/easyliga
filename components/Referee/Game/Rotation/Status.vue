@@ -92,7 +92,8 @@ const lock = async () => {
     /> -->
     <template
       v-if="
-        !props.rotation.locked || props.requestedTimeout || props.runningTimeout
+        /* !props.rotation.locked ||  */ props.requestedTimeout ||
+        props.runningTimeout
       "
     >
       <FormSpinner size="0.75rem" />

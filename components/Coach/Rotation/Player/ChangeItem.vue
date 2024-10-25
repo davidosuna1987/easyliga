@@ -29,6 +29,14 @@ const props = defineProps({
     type: Object as PropType<Sanction>,
     required: false,
   },
+  initialPlayerInjured: {
+    type: Boolean,
+    default: false,
+  },
+  replacementPlayerInjured: {
+    type: Boolean,
+    default: false,
+  },
   type: {
     type: Number as PropType<ChangeType>,
     required: true,
@@ -36,6 +44,10 @@ const props = defineProps({
   changesCount: {
     type: Number,
     required: true,
+  },
+  maxChangesReached: {
+    type: Boolean,
+    default: false,
   },
   hasActions: {
     type: Boolean,
@@ -79,7 +91,11 @@ const initialPlayerChangeType = computed(
 )
 
 const iconTypeBasedOnPlayerChangeTypes = computed((): string => {
-  if (!props.playerChange.comesFromApi) return ICON_TYPE.REMOVE
+  if (
+    !props.playerChange.comesFromApi &&
+    !props.initialPlayerChange?.comesFromApi
+  )
+    return ICON_TYPE.REMOVE
   if (props.playerChange.status === ROTATION_PLAYER_STATUS.denied)
     return ICON_TYPE.HELP
 
@@ -145,6 +161,14 @@ const replacementPlayer = computed(() => {
   return getPlayerDataByProfileId(profileId)
 })
 
+const disableUndo = computed(
+  (): boolean => false,
+  // iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.UNDO &&
+  // (props.maxChangesReached ||
+  //   props.initialPlayerInjured ||
+  //   props.initialPlayerInjured),
+)
+
 const handleActionClick = () => {
   if (replacementPlayerIsSanctioned.value) {
     toast.error(t('rotations.replacement_player_sanctioned'))
@@ -153,7 +177,12 @@ const handleActionClick = () => {
   if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.REMOVE) {
     emit('remove:playerChange', props.playerChange)
   } else if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.UNDO) {
-    emit('undo:playerChange', props.playerChange)
+    if (props.maxChangesReached) {
+      toast.error(t('rotations.max_changes_reached_no_num'))
+      return
+    } else {
+      emit('undo:playerChange', props.playerChange)
+    }
   } else if (iconTypeBasedOnPlayerChangeTypes.value === ICON_TYPE.HELP) {
     emit('info:playerChange', props.playerChange)
   }
@@ -174,6 +203,7 @@ const handleActionClick = () => {
         :showIcons="false"
         :selectable="false"
         :sanction="props.replacementPlayerSanction"
+        :injured="props.replacementPlayerInjured"
       />
     </div>
     <img class="arrows-icon" src="/icons/change-player.svg" width="40" />
@@ -185,6 +215,7 @@ const handleActionClick = () => {
         :showIcons="false"
         :selectable="false"
         :sanction="props.initialPlayerSanction"
+        :injured="props.initialPlayerInjured"
       />
     </div>
     <div v-if="hasActions" class="actions">
@@ -205,6 +236,7 @@ const handleActionClick = () => {
           {
             'is-replacement-sanctioned': replacementPlayerIsSanctioned,
             'has-reason': !!props.playerChange.denyReason,
+            'grayscale cursor-[default_!important]': disableUndo,
           },
         ]"
         :name="iconNameBasedOnPlayerChangeTypes"

@@ -9,21 +9,33 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  player: {
+  playerIn: {
     type: Object as PropType<CallPlayerData>,
     required: false,
   },
-  inCourtPlayer: {
+  playerOut: {
     type: Object as PropType<CallPlayerData>,
+    required: false,
+  },
+  playerInSanction: {
+    type: Object as PropType<Sanction>,
+    required: false,
+  },
+  playerOutSanction: {
+    type: Object as PropType<Sanction>,
     required: false,
   },
   captainProfileId: {
     type: Number,
     required: true,
   },
-  isBeingReplaced: {
+  isInjured: {
     type: Boolean,
-    required: true,
+    default: false,
+  },
+  isPlayerOutInExtraordinaryChanges: {
+    type: Boolean,
+    default: false,
   },
   isRequestPending: {
     type: Boolean,
@@ -37,54 +49,32 @@ const props = defineProps({
     type: Number as PropType<ChangeType>,
     required: true,
   },
-  initialPlayerSanction: {
-    type: Object as PropType<Sanction>,
-    required: false,
-  },
-  replacementPlayerSanction: {
-    type: Object as PropType<Sanction>,
-    required: false,
-  },
 })
 
 const maxPlayerChangesReached = computed(
   (): boolean => props.changesCount === ChangeType.SECOND,
 )
 
-const showReplacementShirtNumber = computed(
-  (): boolean => props.isBeingReplaced && !maxPlayerChangesReached.value,
-)
-
-const sanctionsProfileIds = computed((): number[] => {
-  const initialPlayerSanctionProfileId =
-    props.initialPlayerSanction &&
-    EXPULSION_SEVERITIES.includes(props.initialPlayerSanction.severity)
-      ? props.initialPlayerSanction.playerProfileId ?? 0
+const expulsedProfileIds = computed((): number[] => {
+  const playerInSanctionProfileId =
+    props.playerInSanction &&
+    EXPULSION_SEVERITIES.includes(props.playerInSanction.severity)
+      ? props.playerInSanction.playerProfileId ?? 0
       : 0
 
-  const replacementPlayerSanctionProfileId =
-    props.replacementPlayerSanction &&
-    EXPULSION_SEVERITIES.includes(props.replacementPlayerSanction.severity)
-      ? props.replacementPlayerSanction.playerProfileId ?? 0
+  const playerOutSanctionProfileId =
+    props.playerOutSanction &&
+    EXPULSION_SEVERITIES.includes(props.playerOutSanction.severity)
+      ? props.playerOutSanction.playerProfileId ?? 0
       : 0
-  return [
-    initialPlayerSanctionProfileId,
-    replacementPlayerSanctionProfileId,
-  ].filter(id => id !== 0)
+
+  return [playerInSanctionProfileId, playerOutSanctionProfileId].filter(
+    id => !!id,
+  )
 })
 
-const replacementSanctioned = computed(
-  (): boolean =>
-    !!props.isBeingReplaced &&
-    !!props.player &&
-    sanctionsProfileIds.value.includes(props.player.profileId),
-)
-
-const inCourtSanctioned = computed(
-  (): boolean =>
-    !!props.inCourtPlayer &&
-    sanctionsProfileIds.value.includes(props.inCourtPlayer.profileId),
-)
+const isPlayerExpulsed = (player?: CallPlayerData): boolean =>
+  !!player && expulsedProfileIds.value.includes(player.profileId)
 </script>
 
 <template>
@@ -93,63 +83,31 @@ const inCourtSanctioned = computed(
       `position-${position}`,
       {
         'is-pending': isRequestPending,
-        'is-being-replaced': showReplacementShirtNumber,
-        'max-player-changes-reached':
-          maxPlayerChangesReached && !isBeingReplaced,
-        'is-sanctioned': inCourtSanctioned,
-        'is-replacement-sanctioned': replacementSanctioned,
+        'max-player-changes-reached': maxPlayerChangesReached && !playerOut,
+        'is-sanctioned': isPlayerExpulsed(playerIn),
+        'is-replacement-sanctioned': isPlayerExpulsed(playerOut),
+        'is-injured': isInjured,
+        'is-player-out-in-extraordinary-changes':
+          isPlayerOutInExtraordinaryChanges,
       },
     ]"
   >
     <GameStatusSpinIcon v-if="props.showPendingStatus" status="pending" />
 
-    <span v-if="props.isBeingReplaced" class="shirt-number">
-      <IconShirtNumber
-        :shirtNumber="props.inCourtPlayer?.shirtNumber"
-        size="lg"
-      />
-      <IconCaptain
-        v-if="
-          props.captainProfileId === props.inCourtPlayer?.profileId &&
-          showReplacementShirtNumber
-        "
-        size="sm"
-      />
-      <IconLibero v-if="props.inCourtPlayer?.libero" size="sm" />
-      <SanctionItem
-        v-if="
-          props.replacementPlayerSanction &&
-          props.replacementPlayerSanction.playerProfileId ===
-            props.inCourtPlayer?.profileId
-        "
-        :severity="props.replacementPlayerSanction.severity"
-        size="1.5rem"
-      />
-    </span>
     <span
-      v-if="props.player"
+      v-if="props.playerIn"
       class="shirt-number"
-      :class="{ 'is-replaced': showReplacementShirtNumber }"
+      :data-profile-id="playerIn?.profileId"
     >
-      <IconShirtNumber
-        :shirtNumber="props.player?.shirtNumber"
-        :size="showReplacementShirtNumber ? 'md' : 'lg'"
-      />
+      <IconShirtNumber :shirtNumber="props.playerIn?.shirtNumber" size="lg" />
       <IconCaptain
-        v-if="
-          props.captainProfileId === props.player?.profileId &&
-          !showReplacementShirtNumber
-        "
+        v-if="props.captainProfileId === props.playerIn?.profileId"
         size="sm"
       />
-      <IconLibero v-if="props.player.libero" size="sm" />
+      <IconLibero v-if="props.playerIn.libero" size="sm" />
       <SanctionItem
-        v-if="
-          props.initialPlayerSanction &&
-          props.initialPlayerSanction.playerProfileId ===
-            props.player?.profileId
-        "
-        :severity="props.initialPlayerSanction.severity"
+        v-if="props.playerInSanction"
+        :severity="props.playerInSanction.severity"
         size="1.5rem"
       />
       <Icon
@@ -160,5 +118,34 @@ const inCourtSanctioned = computed(
       />
     </span>
     <span v-else class="placeholder">{{ props.position }}</span>
+
+    <span
+      v-if="props.playerOut"
+      :data-profile-id="playerOut?.profileId"
+      :class="[
+        'shirt-number is-replaced',
+        { 'brightness-75': props.isPlayerOutInExtraordinaryChanges },
+      ]"
+    >
+      <IconShirtNumber :shirtNumber="props.playerOut?.shirtNumber" size="md" />
+      <IconLibero v-if="props.playerOut?.libero" size="sm" />
+      <SanctionItem
+        v-if="props.playerOutSanction"
+        :severity="props.playerOutSanction.severity"
+        size="1.5rem"
+      />
+      <IconInjury
+        v-if="props.isInjured"
+        class="absolute -top-2 -right-2"
+        size="1.25rem"
+        bordered
+      />
+      <Icon
+        v-if="props.isPlayerOutInExtraordinaryChanges"
+        class="icon-max-changes-reached"
+        :name="IconNames.maxPlayerChangesReached"
+        size="1.25rem"
+      />
+    </span>
   </div>
 </template>

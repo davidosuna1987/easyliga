@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import GameService from '@/services/game'
+import SanctionService from '@/services/sanction'
 import {
   SanctionType,
   SanctionTypeKey,
@@ -16,8 +18,7 @@ import {
 import { Team, TeamMember } from '@/domain/team'
 import { getFullName } from '@/domain/player'
 import { Set } from '@/domain/set'
-import SanctionService from '@/services/sanction'
-import GameService from '@/services/game'
+import { Injury } from '@/domain/injury'
 
 const props = defineProps({
   visible: {
@@ -47,6 +48,10 @@ const props = defineProps({
   gameSanctions: {
     type: Array as PropType<Sanction[]>,
     required: false,
+  },
+  injuries: {
+    type: Array as PropType<Injury[]>,
+    default: [],
   },
 })
 
@@ -163,6 +168,12 @@ const loadingDialog = computed(
   (): boolean =>
     showEnsureSubmitSanction.value &&
     (loadingIncompleteTeam.value || loadingApi.value),
+)
+
+const selectedMemberInjured = computed((): boolean =>
+  props.injuries.some(
+    injury => injury.profileId === selectedMember?.value?.profileId,
+  ),
 )
 
 const hide = () => {
@@ -300,6 +311,7 @@ onMounted(() => {
           v-else
           class="pointer-events-none w-min whitespace-nowrap"
           :player="selectedMember"
+          :injured="selectedMemberInjured"
           :selectable="false"
           :showIcons="false"
           :showCaptain="false"
@@ -368,7 +380,7 @@ onMounted(() => {
       <SanctionGrid
         v-if="selectedType === SanctionType.team"
         class="mt-6"
-        :type="selectedType"
+        :type="SanctionType.team"
         :availableSeverities="availableSeverities"
         @sanction:selected="handleSeveritySelected"
       />
@@ -380,12 +392,13 @@ onMounted(() => {
           :member="props.member"
           :members="props.members"
           :setSanctions="setSanctions"
+          :injuries="props.injuries"
           @member:selected="setSelectedMember"
         />
 
         <SanctionGrid
           class="mt-6"
-          :type="selectedType"
+          :type="SanctionType.member"
           :availableSeverities="availableSeverities"
           @sanction:selected="handleSeveritySelected"
         />

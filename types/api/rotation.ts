@@ -3,7 +3,8 @@ import { ApiGame } from '@/types/api/game'
 import { ApiSet } from '@/types/api/set'
 import { ApiTeam } from '@/types/api/team'
 import { ApiSanction } from '@/types/api/sanction'
-import { RotationPlayerStatus } from '@/domain/rotation'
+import { ChangeType, RotationPlayerStatus } from '@/domain/rotation'
+import { ApiInjury } from '@/types/api/injury'
 
 export type ApiRotationPlayerDeniedChangePlayerChange = {
   id: number
@@ -13,6 +14,9 @@ export type ApiRotationPlayerDeniedChangePlayerChange = {
   position: number
   status: 'denied'
   libero: boolean
+  injured: boolean
+  injured_profile_id: number | null
+  injury_description: string | null
   change_windows: number[]
   comes_from_api: boolean
 }
@@ -22,7 +26,14 @@ export type ApiRotationPlayerDeniedChange = {
   denied_by: number
   deny_reason: string | null
   change_window: number
-  player_change: ApiRotationPlayerDeniedChangePlayerChange
+  player_in_profile_id: number
+  player_out_profile_id: number
+  injured: boolean
+}
+
+export type ApiRotationPlayerRelations = {
+  injuries?: ApiInjury[]
+  injuryReplacenent?: ApiInjury
 }
 
 export type ApiRotationPlayer = {
@@ -36,9 +47,12 @@ export type ApiRotationPlayer = {
   current_position: number
   sanction_id: number | null
   libero: boolean
+  injured: boolean
+  injured_profile_id: number | null
+  injury_description: string | null
   change_windows: number[] | null
   denied_changes: ApiRotationPlayerDeniedChange[] | null
-}
+} & ApiRotationPlayerRelations
 
 export type ApiRotationUpdateRequestPlayer = Pick<
   ApiRotationPlayer,
@@ -48,6 +62,9 @@ export type ApiRotationUpdateRequestPlayer = Pick<
   | 'in_court_profile_id'
   | 'position'
   | 'libero'
+  | 'injured'
+  | 'injured_profile_id'
+  | 'injury_description'
   | 'change_windows'
 >
 
@@ -58,6 +75,7 @@ export type ApiRotationRelations = {
   game?: ApiGame
   team?: ApiTeam
   set_sanctions?: ApiSanction[]
+  injuries?: ApiInjury[]
 }
 
 export type ApiRotation = {
@@ -76,7 +94,7 @@ export type ApiRotation = {
 } & ApiRotationRelations
 
 export type ApiRotationResponse = {
-  success: boolean
+  success: true
   data: {
     rotation: ApiRotation
   }
@@ -84,7 +102,7 @@ export type ApiRotationResponse = {
 }
 
 export type ApiRotationsResponse = {
-  success: boolean
+  success: true
   data: {
     rotations: ApiRotation[]
   }

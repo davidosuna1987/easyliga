@@ -126,13 +126,11 @@ export const getInitials = (segments: string[]): string =>
     .toLocaleUpperCase()
 
 export const equalObjects = <T extends Record<string, any>>(
-  obj1: T,
-  obj2: T,
+  obj1: T | undefined,
+  obj2: T | undefined,
 ): boolean => {
-  // Check if they are the same object
   if (obj1 === obj2) return true
 
-  // Check if both are objects
   if (
     typeof obj1 !== 'object' ||
     typeof obj2 !== 'object' ||

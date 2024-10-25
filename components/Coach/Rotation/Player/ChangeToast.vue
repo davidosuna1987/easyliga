@@ -16,10 +16,8 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const getMessage = (message: string): string => {
-  console.log({ message })
-  return message.substring(0, message.indexOf('{'))
-}
+const getMessage = (message: string): string =>
+  message.substring(0, message.indexOf('{'))
 
 const getPlayerChange = (message: string): PlayerChangeInOut =>
   JSON.parse(message.substring(message.indexOf('{')))

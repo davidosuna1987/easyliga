@@ -65,7 +65,7 @@ export type ApiCallSignRequest = {
 }
 
 export type ApiCallResponse = {
-  success: boolean
+  success: true
   data: {
     call: ApiCall
   }
@@ -73,7 +73,7 @@ export type ApiCallResponse = {
 }
 
 export type ApiCallsResponse = {
-  success: boolean
+  success: true
   data: {
     calls: ApiCall[]
   }

@@ -44,7 +44,6 @@ const getTeam = async () => {
       !team.value.editorIds?.includes(auth.user.id) &&
       !auth.hasAnyRole(['admin', 'staff'])
     ) {
-      console.log({ id: auth.user.id, editorIds: team.value.editorIds })
       toast.error(t('teams.not_allowed_to_edit', { teamName: team.value.name }))
       redirectUser()
       return
@@ -65,16 +64,8 @@ const redirectUser = () => {
 }
 
 const isResponsible = computed(() => {
-  console.log({
-    admin: auth.isAdmin(),
-    staff: auth.isStaff(),
-    responsibleIds: team.value?.responsibleIds,
-    result:
-      !!auth.isAdmin() ||
-      !!auth.isStaff() ||
-      !!team.value?.responsibleIds?.includes(auth.user?.id ?? 0),
-  })
   if (!auth.user) return false
+
   return (
     !!auth.isAdmin() ||
     !!auth.isStaff() ||

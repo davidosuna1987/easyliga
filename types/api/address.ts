@@ -12,7 +12,7 @@ export type ApiAddress = {
 }
 
 export type ApiAddressResponse = {
-  success: boolean
+  success: true
   data: {
     address: ApiAddress
   }

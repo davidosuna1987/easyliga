@@ -10,7 +10,7 @@ import {
   mapProfileToTeamMember,
 } from '@/domain/team'
 import { Call } from '@/domain/call'
-import { Set } from '@/domain/set'
+import { Set, SetSide } from '@/domain/set'
 import { CurrentRotation, Rotation, RotationPlayer } from '@/domain/rotation'
 import { Game, type GameStatus } from '@/domain/game'
 import { Timeout } from '@/domain/timeout'
@@ -23,6 +23,7 @@ import {
 import { Player } from '@/domain/player'
 import { GameSignature } from '@/domain/game-signature'
 import { User } from '@/domain/user'
+import { Injury } from '@/domain/injury'
 
 const props = defineProps({
   game: {
@@ -75,6 +76,14 @@ const props = defineProps({
   },
   rightSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
+    required: true,
+  },
+  leftSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    required: true,
+  },
+  rightSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
     required: true,
   },
   leftSideTeamTimeouts: {
@@ -229,16 +238,21 @@ const teamToSanction = computed((): Team | undefined => {
   }
 })
 
-const teamMembersToSanction = computed((): TeamMember[] => {
-  switch (sideTeamToSanction.value) {
-    case TeamSideEnum.left:
-      return leftSideTeamMembers.value
-    case TeamSideEnum.right:
-      return rightSideTeamMembers.value
-    default:
-      return []
-  }
-})
+const teamMembersToSanction = computed((): TeamMember[] =>
+  teamToSanction.value
+    ? teamToSanction.value.id === props.leftSideTeam.id
+      ? leftSideTeamMembers.value
+      : rightSideTeamMembers.value
+    : [],
+)
+
+const teamToSanctionInjuries = computed((): Injury[] =>
+  teamToSanction.value
+    ? teamToSanction.value.id === props.leftSideTeam.id
+      ? props.leftSideTeamInjuries
+      : props.rightSideTeamInjuries
+    : [],
+)
 
 const gameSanctions = computed(() =>
   props.gameSanctions?.filter(
@@ -288,6 +302,59 @@ const undoLastPoint = () => {
   emit('point:undo')
 }
 
+const getCallPlayerDataByProfileId = (profileId?: number, side?: TeamSide) => {
+  const call = side
+    ? side === SetSide.LEFT
+      ? props.leftSideTeamCall
+      : props.rightSideTeamCall
+    : undefined
+
+  return call?.playersData.find(player => player.profileId === profileId)
+}
+
+const getRotationPlayerByPosition = (position: number, side: TeamSide) => {
+  const sideRotation =
+    side === SetSide.LEFT
+      ? props.leftSideTeamRotation
+      : props.rightSideTeamRotation
+
+  return sideRotation?.players.find(rp => rp.currentPosition === position)
+}
+
+const getPlayerInOutByPosition = (position: number, side: TeamSide) => {
+  const rotationPlayer = getRotationPlayerByPosition(position, side)
+
+  let injured =
+    rotationPlayer?.injuredProfileId ===
+    (rotationPlayer?.inCourtProfileId === rotationPlayer?.replacementProfileId
+      ? rotationPlayer?.profileId
+      : rotationPlayer?.replacementProfileId)
+  let playerInProfileId = rotationPlayer?.inCourtProfileId
+  let playerOutProfileId =
+    rotationPlayer?.inCourtProfileId === rotationPlayer?.replacementProfileId
+      ? rotationPlayer?.profileId
+      : rotationPlayer?.replacementProfileId
+
+  const sideRotation =
+    side === SetSide.LEFT
+      ? props.leftSideTeamRotation
+      : props.rightSideTeamRotation
+
+  for (const injury of sideRotation?.injuries ?? []) {
+    if (injury.profileId === playerInProfileId) {
+      playerInProfileId = injury.replacementProfileId
+      playerOutProfileId = injury.profileId
+      injured = true
+    }
+  }
+
+  return {
+    playerIn: getCallPlayerDataByProfileId(playerInProfileId, side),
+    playerOut: getCallPlayerDataByProfileId(playerOutProfileId, side),
+    injured,
+  }
+}
+
 onMounted(() => {
   easyListen('game-call-sidebar:open', (teamSide: TeamSide) => {
     sidebarOpened.value[teamSide] = true
@@ -321,6 +388,7 @@ onUnmounted(() => {
         :currentSet="currentSet"
         :setSanctions="leftSideTeamSanctions"
         :gameSanctions="gameSanctions"
+        :injuries="leftSideTeamInjuries"
         :gameStatus="gameStatus"
         :gameSignatures="gameSignatures"
         :teamType="
@@ -328,6 +396,7 @@ onUnmounted(() => {
             ? TeamType.LOCAL
             : TeamType.VISITOR
         "
+        :getPlayerInOutByPosition="getPlayerInOutByPosition"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
@@ -346,6 +415,8 @@ onUnmounted(() => {
         :rightSideTeamRotation="rightSideTeamRotation"
         :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
         :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
+        :leftSideTeamInjuries="leftSideTeamInjuries"
+        :rightSideTeamInjuries="rightSideTeamInjuries"
         :leftSideTeamTimeouts="leftSideTeamTimeouts"
         :rightSideTeamTimeouts="rightSideTeamTimeouts"
         :undoPointButtonDisabled="undoPointButtonDisabled"
@@ -358,6 +429,7 @@ onUnmounted(() => {
         :gameSignatures="gameSignatures"
         :customTeamsShirtColor="customTeamsShirtColor"
         :pendingPlayerChanges="pendingPlayerChanges"
+        :getPlayerInOutByPosition="getPlayerInOutByPosition"
         @game:start="startGame"
         @point:sum="sumPoint"
         @point:undo="undoLastPoint"
@@ -386,6 +458,7 @@ onUnmounted(() => {
         :currentSet="currentSet"
         :setSanctions="rightSideTeamSanctions"
         :gameSanctions="gameSanctions"
+        :injuries="rightSideTeamInjuries"
         :gameStatus="gameStatus"
         :gameSignatures="gameSignatures"
         :teamType="
@@ -393,6 +466,7 @@ onUnmounted(() => {
             ? TeamType.LOCAL
             : TeamType.VISITOR
         "
+        :getPlayerInOutByPosition="getPlayerInOutByPosition"
         @call:unlocked="emit('call:unlocked')"
         @rotation:lock-toggled="emit('rotation:lock-toggled')"
         @timeout:start="emit('timeout:start', $event)"
@@ -408,6 +482,7 @@ onUnmounted(() => {
       :team="teamToSanction"
       :member="memberToSanction"
       :members="teamMembersToSanction"
+      :injuries="teamToSanctionInjuries"
       @sanction:stored="emit('sanction:stored', $event)"
       @hide="sideTeamToSanction = undefined"
     />

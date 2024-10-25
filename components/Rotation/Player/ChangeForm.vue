@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ApiErrorObject } from '@/types/errors'
+import RotationService from '@/services/rotation'
+import InjuryService from '@/services/injury'
 import { Game } from '@/domain/game'
 import {
   ROTATION_PLAYER_STATUS,
@@ -10,7 +12,6 @@ import {
   mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer,
   mapRotationUpdateRequestToApiRotationUpdateRequest,
 } from '@/domain/rotation'
-import RotationService from '@/services/rotation'
 import {
   ApiEvents,
   ApiRotationLockToggledEventResponse,
@@ -26,12 +27,14 @@ import {
 import { CallPlayerData } from '@/domain/call'
 import { getFullName } from '@/domain/player'
 import { mapApiProfileToProfile } from '@/domain/profile'
+import { InjuryFormRequest } from '@/domain/injury'
 
 const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 
 const rotationService = new RotationService()
+const injuryService = new InjuryService()
 
 const listenedEvents = ref<string[]>([])
 const game = ref<Game>()
@@ -83,8 +86,8 @@ const getRotation = async () => {
   const { data, error } = await rotationService.get(
     Number(route.params.rotationId),
     {
-      with: 'game.sanctions,game.currentSet,call.team,players,setSanctions',
-      set_appends: 'current_rotation',
+      with: 'game.currentSet,game.sanctions,call.team,players,setSanctions,injuries',
+      set_appends: 'current_rotation,player_changes_count',
     },
   )
 
@@ -240,6 +243,22 @@ const handleSubmit = async () => {
   getRotation()
 }
 
+const handleInjuryStore = async (injuryFormRequest: InjuryFormRequest) => {
+  loadingApi.value = true
+
+  const { data, error } = await injuryService.store(injuryFormRequest)
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    errors.value = error.value?.data?.errors
+    loadingApi.value = false
+    return
+  } else {
+    toast.success(t('injuries.stored'))
+    getRotation()
+  }
+}
+
 const listenRotationLockToggledEvent = (
   gameId?: number,
   rotationId?: number,
@@ -347,6 +366,7 @@ onBeforeUnmount(() => {
         @change:players="setFormPlayerChanges"
         @update:captain="setRotationCaptain"
         @playerRotationStatusUpdated="getRotation"
+        @injury:changed="handleInjuryStore"
       />
 
       <!-- <footer class="flex justify-end items-center mt-24 md:mt-8">

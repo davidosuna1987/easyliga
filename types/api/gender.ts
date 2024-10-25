@@ -10,7 +10,7 @@ export type ApiGender = {
 }
 
 export type ApiGenderResponse = {
-  success: boolean
+  success: true
   data: {
     genders: ApiGender[]
   }

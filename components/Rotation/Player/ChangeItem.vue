@@ -11,6 +11,10 @@ const props = defineProps({
     type: Object as PropType<CallPlayerData>,
     required: true,
   },
+  injured: {
+    type: Boolean,
+    default: false,
+  },
   mini: {
     type: Boolean,
     default: false,
@@ -59,7 +63,15 @@ const onActionClick = () => {
         :showAvatar="false"
       />
     </div>
-    <img class="arrows-icon" src="/icons/change-player.svg" width="40" />
+    <div class="arrows-icon relative">
+      <img src="/icons/change-player.svg" width="40" />
+      <IconInjury
+        v-if="props.injured && props.block"
+        :class="['absolute -top-1 -left-1']"
+        size="1.25rem"
+        bordered
+      />
+    </div>
     <div class="player-container">
       <IconShirtNumber
         v-if="props.mini"
@@ -74,6 +86,7 @@ const onActionClick = () => {
         :showIcons="false"
         :selectable="false"
         :showAvatar="false"
+        :injured="props.injured"
       />
     </div>
     <div v-if="props.action" class="actions">

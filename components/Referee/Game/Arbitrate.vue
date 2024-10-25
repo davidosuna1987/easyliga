@@ -45,6 +45,7 @@ import {
   ROTATION_PLAYER_STATUS,
   mapRotationPlayersToRotationPlayerChanges,
   RotationPlayerChange,
+  mapRotationPlayerToFakeInjury,
 } from '@/domain/rotation'
 import { ApiEvents } from '@/types/api/event'
 import {
@@ -59,6 +60,7 @@ import {
   mapApiGameSignatureToGameSignature,
 } from '@/domain/game-signature'
 import { User } from '@/domain/user'
+import { Injury } from '@/domain/injury'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -176,6 +178,46 @@ const rightSideTeamCurrentRotation = computed(
       : gameInitialData.value?.localTeamRotation
   },
 )
+
+// const leftSideTeamInjuries = computed((): Injury[] => {
+//   return leftSideTeamRotation.value?.injuries ?? []
+// })
+
+// const rightSideTeamInjuries = computed((): Injury[] => {
+//   return rightSideTeamRotation.value?.injuries ?? []
+// })
+
+const leftSideTeamInjuries = computed((): Injury[] => {
+  const injuredPlayers = leftSideTeamRotation.value?.players.filter(
+    player => player.injured,
+  )
+
+  const injuredPlayersInjuries: Injury[] =
+    injuredPlayers
+      ?.map(mapRotationPlayerToFakeInjury)
+      .filter(injury => !!injury) ?? []
+
+  return [
+    ...injuredPlayersInjuries,
+    ...(leftSideTeamRotation.value?.injuries ?? []),
+  ]
+})
+
+const rightSideTeamInjuries = computed((): Injury[] => {
+  const injuredPlayers = rightSideTeamRotation.value?.players.filter(
+    player => player.injured,
+  )
+
+  const injuredPlayersInjuries: Injury[] =
+    injuredPlayers
+      ?.map(mapRotationPlayerToFakeInjury)
+      .filter(injury => !!injury) ?? []
+
+  return [
+    ...injuredPlayersInjuries,
+    ...(rightSideTeamRotation.value?.injuries ?? []),
+  ]
+})
 
 const leftSideTeamTimeouts = computed((): Timeout[] | undefined =>
   gameInitialData.value?.game.currentSet?.timeouts?.filter(
@@ -315,12 +357,24 @@ const showPendingPlayerChangeTeam = computed((): Team | undefined =>
     : rightSideTeam.value,
 )
 
+const showPendingPlayerChangeMessage = computed((): string | undefined => {
+  if (!showPendingPlayerChangeTeam.value) return
+
+  const translationKey = showPendingPlayerChange.value?.injured
+    ? 'injury_requested'
+    : 'requested'
+
+  return t(`events.player_change_request.${translationKey}`, {
+    teamName: showPendingPlayerChangeTeam.value?.name,
+  })
+})
+
 const getGameInitialData = async (firstCall: boolean = false) => {
   loadingApi.value = true
   const { data, error } = await gameService.initialData(
     Number(route.params.gameId),
     {
-      with: 'sanctions,currentSet.rotations.players,currentSet.sanctions,currentSet.timeouts,signatures',
+      with: 'sanctions,currentSet.rotations.players,currentSet.rotations.injuries,currentSet.sanctions,currentSet.timeouts,signatures',
     },
   )
 
@@ -970,6 +1024,8 @@ onMounted(() => {
       :rightSideTeamRotation="rightSideTeamRotation"
       :leftSideTeamCurrentRotation="leftSideTeamCurrentRotation"
       :rightSideTeamCurrentRotation="rightSideTeamCurrentRotation"
+      :leftSideTeamInjuries="leftSideTeamInjuries"
+      :rightSideTeamInjuries="rightSideTeamInjuries"
       :leftSideTeamTimeouts="leftSideTeamTimeouts"
       :rightSideTeamTimeouts="rightSideTeamTimeouts"
       :undoPointButtonDisabled="undoPointButtonDisabled"
@@ -1061,23 +1117,27 @@ onMounted(() => {
       :closable="!loadingApi"
     >
       <template #header>
-        <Heading tag="h6">
+        <header
+          v-if="!!showPendingPlayerChange.injured"
+          class="flex items-center gap-2 mb-3"
+        >
+          <IconInjury size="1.25rem" />
+          <Heading tag="h6">{{ t('injuries.change_request') }}</Heading>
+        </header>
+        <Heading v-else tag="h6">
           {{ t('player_change_requests.player_change_request') }}
         </Heading>
       </template>
 
       <p v-highlight="showPendingPlayerChangeTeam?.name" class="mt-3">
-        {{
-          t(`events.player_change_request.requested`, {
-            teamName: showPendingPlayerChangeTeam?.name,
-          })
-        }}
+        {{ showPendingPlayerChangeMessage }}
       </p>
 
       <RotationPlayerChangeItem
         class="mt-4"
         :playerIn="showPendingPlayerChange.in"
         :playerOut="showPendingPlayerChange.out"
+        :injured="!!showPendingPlayerChange.injured"
         block
       />
 

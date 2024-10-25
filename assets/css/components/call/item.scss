@@ -2,13 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
   padding: 0.5rem;
   border-radius: var(--border-radius);
-
-  &:hover {
-    background-color: var(--primary-color-alpha);
-  }
 
   .team-player-info {
     position: relative;
@@ -26,6 +21,12 @@
     position: absolute;
     top: -8px;
     left: 11px;
+  }
+
+  .easy-icon-injury-component {
+    position: absolute;
+    bottom: -5px;
+    left: -5px;
   }
 
   .easy-icon-captain-component,
@@ -57,6 +58,14 @@
 
     .easy-icon-shirt-number-component {
       pointer-events: none;
+    }
+  }
+
+  &.is-hoverable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--primary-color-alpha);
     }
   }
 

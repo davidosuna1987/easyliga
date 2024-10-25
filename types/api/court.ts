@@ -19,7 +19,7 @@ export type ApiCourt = {
 } & ApiCourtRelations
 
 export type ApiCourtResponse = {
-  success: boolean
+  success: true
   data: {
     courts: ApiCourt[]
   }

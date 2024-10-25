@@ -54,7 +54,7 @@ export type ApiLicenseUpdateRequest = {
 }
 
 export type ApiLicenseResponse = {
-  success: boolean
+  success: true
   data: {
     license: ApiLicense
   }

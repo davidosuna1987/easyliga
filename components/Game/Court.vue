@@ -32,6 +32,10 @@ import {
 import { Timeout } from '@/domain/timeout'
 import { GameSignature } from '@/domain/game-signature'
 import { Profile } from '@/domain/profile'
+import {
+  getInjuryReplacementProfileIdByProfileId,
+  Injury,
+} from '@/domain/injury'
 import moment from 'moment'
 
 const props = defineProps({
@@ -73,6 +77,14 @@ const props = defineProps({
   },
   rightSideTeamCurrentRotation: {
     type: Object as PropType<CurrentRotation>,
+    required: true,
+  },
+  leftSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    required: true,
+  },
+  rightSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
     required: true,
   },
   leftSideTeamTimeouts: {
@@ -122,6 +134,19 @@ const props = defineProps({
   pendingPlayerChanges: {
     type: Array as PropType<RotationPlayer[]>,
     required: false,
+  },
+  getPlayerInOutByPosition: {
+    type: Function as PropType<
+      (
+        position: number,
+        side: TeamSide,
+      ) => {
+        playerIn: CallPlayerData | undefined
+        playerOut: CallPlayerData | undefined
+        injured: boolean
+      }
+    >,
+    required: true,
   },
 })
 
@@ -239,31 +264,53 @@ const undoLastPoint = () => {
   emit('point:undo')
 }
 
-const getRotationPlayerDataAtPosition = (
-  position: number,
-  side: SetSide,
-): Player | undefined => {
-  const call =
-    side === SetSide.LEFT ? props.leftSideTeamCall : props.rightSideTeamCall
+// const getRotationPlayerDataAtPosition = (
+//   position: number,
+//   side: SetSide,
+// ): Player | undefined => {
+//   const sideRotation =
+//     side === SetSide.LEFT
+//       ? props.leftSideTeamRotation
+//       : props.rightSideTeamRotation
 
-  const sideRotation =
-    side === SetSide.LEFT
-      ? props.leftSideTeamRotation
-      : props.rightSideTeamRotation
+//   const inCourtPlayer = sideRotation?.players.find(
+//     player => player.currentPosition === position,
+//   )
 
-  const inCourtPlayer = sideRotation?.players.find(
-    player => player.currentPosition === position,
-  )
+//   // let inCourtProfileId = inCourtPlayer?.inCourtProfileId
+//   // if (!inCourtProfileId) return
 
-  const inCourtProfileId = inCourtPlayer?.inCourtProfileId
-  const changeStatus = inCourtPlayer?.status
+//   // const sideInjuries =
+//   //   side === SetSide.LEFT
+//   //     ? props.leftSideTeamInjuries
+//   //     : props.rightSideTeamInjuries
 
-  const playerData = call.playersData?.find(
-    player => player.profileId === inCourtProfileId,
-  )
+//   // do {
+//   //   const injuryReplacementProfileId = getInjuryReplacementProfileIdByProfileId(
+//   //     inCourtProfileId,
+//   //     sideInjuries,
+//   //   )
 
-  return playerData ? { ...playerData, changeStatus } : undefined
-}
+//   //   if (injuryReplacementProfileId) {
+//   //     inCourtProfileId = injuryReplacementProfileId
+//   //   } else {
+//   //     break
+//   //   }
+//   // } while (true)
+
+//   const changeStatus = inCourtPlayer?.status
+
+//   // const call =
+//   //   side === SetSide.LEFT ? props.leftSideTeamCall : props.rightSideTeamCall
+
+//   // const playerData = call.playersData?.find(
+//   //   player => player.profileId === inCourtProfileId,
+//   // )
+
+//   const { playerIn } = getPlayerInOutByPosition(position, side)
+
+//   return playerIn ? { ...playerIn, changeStatus } : undefined
+// }
 
 const localTeam = computed(() =>
   props.currentSet.localTeamSide === SetSide.LEFT
@@ -282,17 +329,17 @@ const teams = computed(() => ({
   visitor: visitorTeam.value,
 }))
 
-const leftSideTeamCurrentRotationPlayersData = computed(() =>
-  Array.from({ length: 6 }, (_, i) => i + 1)
-    .map(position => getRotationPlayerDataAtPosition(position, SetSide.LEFT))
-    .filter(player => player !== null),
-)
+// const leftSideTeamCurrentRotationPlayersData = computed(() =>
+//   Array.from({ length: 6 }, (_, i) => i + 1)
+//     .map(position => getRotationPlayerDataAtPosition(position, SetSide.LEFT))
+//     .filter(player => player !== null),
+// )
 
-const rightSideTeamCurrentRotationPlayersData = computed(() =>
-  Array.from({ length: 6 }, (_, i) => i + 1)
-    .map(position => getRotationPlayerDataAtPosition(position, SetSide.RIGHT))
-    .filter(player => player !== null),
-)
+// const rightSideTeamCurrentRotationPlayersData = computed(() =>
+//   Array.from({ length: 6 }, (_, i) => i + 1)
+//     .map(position => getRotationPlayerDataAtPosition(position, SetSide.RIGHT))
+//     .filter(player => player !== null),
+// )
 
 const setActionsDisabled = computed(() => {
   return (
@@ -362,7 +409,7 @@ onMounted(setInitialShowCountdown)
             v-for="position in POSITIONS"
             :key="position"
             :position="position"
-            :player="leftSideTeamCurrentRotationPlayersData[position - 1]"
+            :player="getPlayerInOutByPosition(position, 'left').playerIn"
             :serving="position === 1 && servingTeamId === leftSideTeam.id"
             :captainProfileId="leftSideTeamRotation?.inCourtCaptainProfileId"
             :color="
@@ -371,13 +418,13 @@ onMounted(setInitialShowCountdown)
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.left,
-                leftSideTeamCurrentRotationPlayersData[position - 1],
+                getPlayerInOutByPosition(position, 'left').playerIn,
               )
             "
             @click="
               setMemberToSanction(
                 TeamSideEnum.left,
-                leftSideTeamCurrentRotationPlayersData[position - 1],
+                getPlayerInOutByPosition(position, 'left').playerIn,
               )
             "
           />
@@ -387,7 +434,7 @@ onMounted(setInitialShowCountdown)
             v-for="position in POSITIONS"
             :key="position"
             :position="position"
-            :player="rightSideTeamCurrentRotationPlayersData[position - 1]"
+            :player="getPlayerInOutByPosition(position, 'right').playerIn"
             :serving="position === 1 && servingTeamId === rightSideTeam.id"
             :captainProfileId="rightSideTeamRotation?.inCourtCaptainProfileId"
             :color="
@@ -396,13 +443,13 @@ onMounted(setInitialShowCountdown)
             :sanction="
               getPlayerSanction(
                 TeamSideEnum.right,
-                rightSideTeamCurrentRotationPlayersData[position - 1],
+                getPlayerInOutByPosition(position, 'right').playerIn,
               )
             "
             @click="
               setMemberToSanction(
                 TeamSideEnum.right,
-                rightSideTeamCurrentRotationPlayersData[position - 1],
+                getPlayerInOutByPosition(position, 'right').playerIn,
               )
             "
           />
@@ -482,6 +529,8 @@ onMounted(setInitialShowCountdown)
               :rightSideTeamCall="rightSideTeamCall"
               :leftSideTeamRotation="leftSideTeamRotation"
               :rightSideTeamRotation="rightSideTeamRotation"
+              :leftSideTeamInjuries="leftSideTeamInjuries"
+              :rightSideTeamInjuries="rightSideTeamInjuries"
               :pendingPlayerChanges="pendingPlayerChanges"
               @pendingPlayerChange:show="
                 emit('pendingPlayerChange:show', $event)
@@ -503,6 +552,8 @@ onMounted(setInitialShowCountdown)
               :rightSideTeam="rightSideTeam"
               :leftSideTeamMembers="leftSideTeamMembers"
               :rightSideTeamMembers="rightSideTeamMembers"
+              :leftSideTeamInjuries="leftSideTeamInjuries"
+              :rightSideTeamInjuries="rightSideTeamInjuries"
               :leftSideTeamTimeouts="leftSideTeamTimeouts ?? []"
               :rightSideTeamTimeouts="rightSideTeamTimeouts ?? []"
               :currentSet="currentSet"

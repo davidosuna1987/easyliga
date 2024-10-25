@@ -27,7 +27,7 @@ export type ApiTimeoutUpdateRequest = {
 }
 
 export type ApiTimeoutResponse = {
-  success: boolean
+  success: true
   data: {
     timeout: ApiTimeout
   }

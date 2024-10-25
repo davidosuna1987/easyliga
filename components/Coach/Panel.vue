@@ -404,7 +404,6 @@ const listenGamePlayerRotationStatusUpdatedEvent = (
   ).listen(
     ApiEvents.PLAYER_ROTATON_STATUS_UPDATED,
     (response: ApiGamePlayerRotationStatusUpdatedEventResponse) => {
-      console.log('PLAYER_ROTATON_STATUS_UPDATED')
       const call = selectedDateGames.value
         ?.find(game => game.id === gameId)
         ?.calls?.find(call => call.id === response.rotation.call_id)

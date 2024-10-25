@@ -38,6 +38,10 @@ const props = defineProps({
     type: Array as PropType<Sanction[]>,
     required: false,
   },
+  maxChangesReached: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -57,10 +61,36 @@ const getPlayerSanction = (player?: CallPlayerData): Sanction | undefined => {
     'game',
   )
 }
+
+const initialPlayerInjured = (index: number): boolean => {
+  const initialPlayerChange = props.initialPlayerChanges[index]
+  const playerChange = props.playerChanges[index]
+  return (
+    (initialPlayerChange?.injured &&
+      initialPlayerChange?.inCourtProfileId ===
+        initialPlayerChange?.replacementProfileId) ||
+    (playerChange?.injured &&
+      playerChange?.inCourtProfileId === playerChange?.replacementProfileId)
+  )
+}
+
+const replacementPlayerInjured = (index: number): boolean => {
+  const initialPlayerChange = props.initialPlayerChanges[index]
+  const playerChange = props.playerChanges[index]
+  return (
+    (initialPlayerChange?.injured &&
+      initialPlayerChange?.inCourtProfileId ===
+        initialPlayerChange?.profileId) ||
+    (playerChange?.injured &&
+      playerChange?.inCourtProfileId === playerChange?.profileId)
+  )
+}
 </script>
 
 <template>
-  <div class="easy-player-changes-component">
+  <div
+    class="easy-player-changes-component easy-coach-rotation-player-changes-component"
+  >
     <template
       v-for="(playerChange, index) in playerChanges"
       :key="playerChange.profileId"
@@ -82,8 +112,11 @@ const getPlayerSanction = (player?: CallPlayerData): Sanction | undefined => {
             ),
           )
         "
+        :initialPlayerInjured="initialPlayerInjured(index)"
+        :replacementPlayerInjured="replacementPlayerInjured(index)"
         :type="ChangeType.FIRST"
         :changesCount="mapPlayerChangeToChangeType(playerChange)"
+        :maxChangesReached="props.maxChangesReached"
         hasActions
         :hideRotationPendingSpinner="
           mapPlayerChangeToChangeType(playerChange) === ChangeType.SECOND

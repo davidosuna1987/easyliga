@@ -1,5 +1,6 @@
 <template>
   <div :class="['default-layout', $route.meta.layoutClass]">
+    <NuxtLoadingIndicator />
     <NavbarApp />
 
     <main :class="['easy-main', $route.meta.mainClass]">

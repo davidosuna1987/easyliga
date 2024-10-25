@@ -10,8 +10,14 @@ import {
 import { Game, mapApiGameToGame } from '@/domain/game'
 import { Set, mapApiSetToSet } from '@/domain/set'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
-import { Call, CallPlayerData, mapApiCallToCall } from '@/domain/call'
+import {
+  Call,
+  CallPlayerData,
+  getPlayerDataByProfileId,
+  mapApiCallToCall,
+} from '@/domain/call'
 import { Sanction, mapApiSanctionToSanction } from '@/domain/sanction'
+import { Injury, mapApiInjuryToInjury } from '@/domain/injury'
 
 export const ROTATION_PLAYERS_LENGTH = 6
 export const MAX_ROTATION_PLAYER_CHANGES = 6
@@ -34,6 +40,13 @@ export enum ChangeActionIcon {
 
 export type ChangeAction = keyof typeof ChangeActionIcon
 
+export const PLAYER_CHANGE_TYPES = {
+  regular: 'regular',
+  injury: 'injury',
+} as const
+
+export type PlayerChangeType = keyof typeof PLAYER_CHANGE_TYPES
+
 export const ROTATION_PLAYER_STATUS = {
   pending: 'pending',
   approved: 'approved',
@@ -47,7 +60,14 @@ export type RotationPlayerDeniedChange = {
   deniedBy: number
   denyReason: string | null
   changeWindow: number
-  playerChange: RotationPlayerChangeRequest
+  playerInProfileId: number
+  playerOutProfileId: number
+  injured: boolean
+}
+
+export type RotationPlayerRelations = {
+  injuries?: Injury[]
+  injuryReplacenent?: Injury
 }
 
 export type RotationPlayer = {
@@ -60,10 +80,13 @@ export type RotationPlayer = {
   status: RotationPlayerStatus
   currentPosition: number
   libero: boolean
+  injured: boolean
+  injuredProfileId?: number
+  injuryDescription?: string
   changeWindows: number[]
   deniedChanges?: RotationPlayerDeniedChange[]
   sanctionId?: number
-}
+} & RotationPlayerRelations
 
 export type RotationRelations = {
   players: RotationPlayer[]
@@ -72,6 +95,7 @@ export type RotationRelations = {
   game?: Game
   team?: Team
   setSanctions?: Sanction[]
+  injuries?: Injury[]
 }
 
 export type Rotation = {
@@ -93,6 +117,9 @@ export type RotationUpdateRequestPlayer = {
   inCourtProfileId: number
   position: number
   libero: boolean
+  injured: boolean
+  injuredProfileId?: number
+  injuryDescription?: string
   changeWindows: number[]
 }
 
@@ -114,6 +141,9 @@ export type RotationPlayerChangeRequest = {
   position: number
   status: RotationPlayerStatus
   libero: boolean
+  injured: boolean
+  injuredProfileId?: number
+  injuryDescription?: string
   changeWindows: number[]
   comesFromApi: boolean
   denyReason?: string
@@ -128,6 +158,7 @@ export type RotationPlayerChangeForm = {
 export type RotationPlayerChange = {
   in: CallPlayerData
   out: CallPlayerData
+  injured?: CallPlayerData
   changeWindow: number
 }
 
@@ -152,6 +183,9 @@ export const mapRotationPlayerToApiRotationPlayer = (
   status: rotationPlayer.status,
   current_position: rotationPlayer.currentPosition,
   libero: rotationPlayer.libero,
+  injured: rotationPlayer.injured,
+  injured_profile_id: rotationPlayer.injuredProfileId ?? null,
+  injury_description: rotationPlayer.injuryDescription ?? null,
   change_windows: rotationPlayer.changeWindows.length
     ? rotationPlayer.changeWindows
     : null,
@@ -175,6 +209,9 @@ export const mapApiRotationPlayerToRotationPlayer = (
   status: apiRotationPlayer.status,
   currentPosition: apiRotationPlayer.current_position,
   libero: apiRotationPlayer.libero,
+  injured: apiRotationPlayer.injured,
+  injuredProfileId: apiRotationPlayer.injured_profile_id ?? undefined,
+  injuryDescription: apiRotationPlayer.injury_description ?? undefined,
   changeWindows: apiRotationPlayer.change_windows ?? [],
   deniedChanges: apiRotationPlayer.denied_changes
     ? apiRotationPlayer.denied_changes.map(
@@ -193,6 +230,9 @@ export const mapRotationPlayerChangeRequestToRotationUpdateRequestPlayer = (
   inCourtProfileId: rotationPlayerChangeRequest.inCourtProfileId,
   position: rotationPlayerChangeRequest.position,
   libero: rotationPlayerChangeRequest.libero,
+  injured: rotationPlayerChangeRequest.injured,
+  injuredProfileId: rotationPlayerChangeRequest.injuredProfileId,
+  injuryDescription: rotationPlayerChangeRequest.injuryDescription,
   changeWindows: rotationPlayerChangeRequest.changeWindows,
 })
 
@@ -205,6 +245,9 @@ export const mapRotationPlayerToApiRotationPlayerChange = (
   in_court_profile_id: rotationPlayer.inCourtProfileId,
   position: rotationPlayer.position,
   libero: rotationPlayer.libero,
+  injured: rotationPlayer.injured,
+  injured_profile_id: rotationPlayer.injuredProfileId ?? null,
+  injury_description: rotationPlayer.injuryDescription ?? null,
   change_windows: rotationPlayer.changeWindows.length
     ? rotationPlayer.changeWindows
     : null,
@@ -220,6 +263,9 @@ export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
   in_court_profile_id: rotationUpdateRequestPlayer.inCourtProfileId,
   position: rotationUpdateRequestPlayer.position,
   libero: rotationUpdateRequestPlayer.libero,
+  injured: rotationUpdateRequestPlayer.injured,
+  injured_profile_id: rotationUpdateRequestPlayer.injuredProfileId ?? null,
+  injury_description: rotationUpdateRequestPlayer.injuryDescription ?? null,
   change_windows: rotationUpdateRequestPlayer.changeWindows.length
     ? rotationUpdateRequestPlayer.changeWindows
     : null,
@@ -227,27 +273,37 @@ export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
 
 export const mapApiRotationToRotation = (
   apiRotation: ApiRotation,
-): Rotation => ({
-  id: apiRotation.id,
-  callId: apiRotation.call_id,
-  setId: apiRotation.set_id,
-  inCourtCaptainProfileId: apiRotation.in_court_captain_profile_id,
-  requestedInCourtCaptainProfileId:
-    apiRotation.requested_in_court_captain_profile_id ?? undefined,
-  playerChangesCount: apiRotation.player_changes_count,
-  number: apiRotation.number,
-  locked: apiRotation.locked,
-  currentChangeWindow: apiRotation.current_change_window,
+): Rotation => {
+  console.log({ apiRotation })
+  return {
+    id: apiRotation.id,
+    callId: apiRotation.call_id,
+    setId: apiRotation.set_id,
+    inCourtCaptainProfileId: apiRotation.in_court_captain_profile_id,
+    requestedInCourtCaptainProfileId:
+      apiRotation.requested_in_court_captain_profile_id ?? undefined,
+    playerChangesCount: apiRotation.player_changes_count,
+    number: apiRotation.number,
+    locked: apiRotation.locked,
+    currentChangeWindow: apiRotation.current_change_window,
 
-  players: apiRotation.players
-    ? apiRotation.players.map(mapApiRotationPlayerToRotationPlayer)
-    : [],
+    ...mapApiRotationRelationsToRotationRelations(apiRotation),
+  }
+}
+
+export const mapApiRotationRelationsToRotationRelations = (
+  apiRotation: ApiRotation,
+): RotationRelations => ({
+  players: apiRotation.players.map(mapApiRotationPlayerToRotationPlayer),
   call: apiRotation.call ? mapApiCallToCall(apiRotation.call) : undefined,
   set: apiRotation.set ? mapApiSetToSet(apiRotation.set) : undefined,
   game: apiRotation.game ? mapApiGameToGame(apiRotation.game) : undefined,
   team: apiRotation.team ? mapApiTeamToTeam(apiRotation.team) : undefined,
   setSanctions: apiRotation.set_sanctions
     ? apiRotation.set_sanctions.map(mapApiSanctionToSanction)
+    : undefined,
+  injuries: apiRotation.injuries
+    ? apiRotation.injuries.map(mapApiInjuryToInjury)
     : undefined,
 })
 
@@ -319,11 +375,18 @@ export const mapRotationPlayersToRotationPlayerChanges = (
       callPlayerData => callPlayerData.profileId === player.profileId,
     )
 
+    const playerInjured = player.injuredProfileId
+      ? player.injuredProfileId === playerIn?.profileId
+        ? playerIn
+        : playerOut
+      : undefined
+
     if (!playerIn || !playerOut) continue
 
     playerChanges.push({
       in: playerIn,
       out: playerOut,
+      injured: playerInjured,
       changeWindow: player.changeWindows[0],
     })
 
@@ -336,11 +399,18 @@ export const mapRotationPlayersToRotationPlayerChanges = (
           callPlayerData.profileId === player.replacementProfileId,
       )
 
+      const playerInjured = player.injuredProfileId
+        ? player.injuredProfileId === playerIn?.profileId
+          ? playerIn
+          : playerOut
+        : undefined
+
       if (!playerIn || !playerOut) continue
 
       playerChanges.push({
         in: playerIn,
         out: playerOut,
+        injured: playerInjured,
         changeWindow: player.changeWindows[1],
       })
     }
@@ -374,19 +444,22 @@ export const mapRotationToRotationWindowPlayerChanges = (
 
 export const mapApiRotationPlayerDeniedChangePlayerChangeToRotationPlayerChangeRequest =
   (
-    deniedChange: ApiRotationPlayerDeniedChangePlayerChange,
+    apiDeniedChange: ApiRotationPlayerDeniedChangePlayerChange,
     denyReason?: string,
     deniedAt?: string,
   ): RotationPlayerChangeRequest => ({
-    id: deniedChange.id,
-    profileId: deniedChange.profile_id,
-    replacementProfileId: deniedChange.replacement_profile_id ?? undefined,
-    inCourtProfileId: deniedChange.in_court_profile_id,
-    position: deniedChange.position,
+    id: apiDeniedChange.id,
+    profileId: apiDeniedChange.profile_id,
+    replacementProfileId: apiDeniedChange.replacement_profile_id ?? undefined,
+    inCourtProfileId: apiDeniedChange.in_court_profile_id,
+    position: apiDeniedChange.position,
     status: 'denied',
-    libero: deniedChange.libero,
-    changeWindows: deniedChange.change_windows ?? [],
-    comesFromApi: deniedChange.comes_from_api,
+    libero: apiDeniedChange.libero,
+    injured: apiDeniedChange.injured,
+    injuredProfileId: apiDeniedChange.injured_profile_id ?? undefined,
+    injuryDescription: apiDeniedChange.injury_description ?? undefined,
+    changeWindows: apiDeniedChange.change_windows ?? [],
+    comesFromApi: apiDeniedChange.comes_from_api,
     denyReason,
     deniedAt: deniedAt ? new Date(deniedAt) : undefined,
   })
@@ -402,6 +475,9 @@ export const mapRotationPlayerChangeRequestToApiRotationPlayerDeniedChangePlayer
     position: playerChange.position,
     status: 'denied',
     libero: playerChange.libero,
+    injured: playerChange.injured,
+    injured_profile_id: playerChange.injuredProfileId ?? null,
+    injury_description: playerChange.injuryDescription ?? null,
     change_windows: playerChange.changeWindows,
     comes_from_api: playerChange.comesFromApi,
   })
@@ -413,12 +489,9 @@ export const mapApiRotationPlayerDeniedChangeToRotationPlayerDeniedChange = (
   deniedBy: apiRotationPlayerDeniedChange.denied_by,
   denyReason: apiRotationPlayerDeniedChange.deny_reason,
   changeWindow: apiRotationPlayerDeniedChange.change_window,
-  playerChange:
-    mapApiRotationPlayerDeniedChangePlayerChangeToRotationPlayerChangeRequest(
-      apiRotationPlayerDeniedChange.player_change,
-      apiRotationPlayerDeniedChange.deny_reason ?? undefined,
-      apiRotationPlayerDeniedChange.denied_at ?? undefined,
-    ),
+  playerInProfileId: apiRotationPlayerDeniedChange.player_in_profile_id,
+  playerOutProfileId: apiRotationPlayerDeniedChange.player_out_profile_id,
+  injured: apiRotationPlayerDeniedChange.injured,
 })
 
 export const mapRotationPlayerDeniedChangeToApiRotationPlayerDeniedChange = (
@@ -428,11 +501,51 @@ export const mapRotationPlayerDeniedChangeToApiRotationPlayerDeniedChange = (
   denied_by: rotationPlayerDeniedChange.deniedBy,
   deny_reason: rotationPlayerDeniedChange.denyReason,
   change_window: rotationPlayerDeniedChange.changeWindow,
-  player_change:
-    mapRotationPlayerChangeRequestToApiRotationPlayerDeniedChangePlayerChange(
-      rotationPlayerDeniedChange.playerChange,
-    ),
+  player_in_profile_id: rotationPlayerDeniedChange.playerInProfileId,
+  player_out_profile_id: rotationPlayerDeniedChange.playerOutProfileId,
+  injured: rotationPlayerDeniedChange.injured,
 })
+
+export const mapDeniedPlayerChangeToPlayerInOut = (
+  deniedPlayerChange: RotationPlayerDeniedChange,
+  playersData: CallPlayerData[],
+): Omit<RotationPlayerChange, 'changeWindow'> | undefined => {
+  const playerIn = getPlayerDataByProfileId(
+    playersData,
+    deniedPlayerChange.playerInProfileId,
+  )
+  const playerOut = getPlayerDataByProfileId(
+    playersData,
+    deniedPlayerChange.playerOutProfileId,
+  )
+
+  if (!playerIn || !playerOut) return
+
+  return {
+    in: playerIn,
+    out: playerOut,
+  }
+}
+
+export const mapRotationPlayerToFakeInjury = (
+  rotationPlayer: RotationPlayer,
+): Injury | undefined => {
+  if (!rotationPlayer.replacementProfileId) return
+
+  return {
+    id: 0,
+    gameId: 0,
+    setId: 0,
+    rotationId: rotationPlayer.rotationId,
+    teamId: 0,
+    playerRotationId: rotationPlayer.id,
+    profileId: rotationPlayer.injuredProfileId ?? rotationPlayer.profileId,
+    replacementProfileId: rotationPlayer.replacementProfileId,
+    libero: false,
+    description: rotationPlayer.injuryDescription ?? '',
+    isPlayerChangeInjury: true,
+  }
+}
 
 export const playerChangeCanBeRemovedOLD = (
   playerChange: RotationPlayerChange,
@@ -471,3 +584,36 @@ export const playerOutProfileId = (playerChange?: RotationPlayer): number => {
     ? playerChange.replacementProfileId ?? 0
     : playerChange.profileId
 }
+
+export const getRotationPlayerInjury = (
+  rotationPlayer?: RotationPlayer,
+  injuries?: Injury[],
+): Injury | undefined => {
+  if (!rotationPlayer || !injuries) return
+
+  return injuries.find(
+    injury =>
+      injury.rotationId === rotationPlayer.rotationId &&
+      (injury.profileId === rotationPlayer.profileId ||
+        injury.replacementProfileId === rotationPlayer.replacementProfileId),
+  )
+}
+
+export const isPlayerInjured = (
+  profileId: number,
+  rotationPlayers: RotationPlayer[],
+  injuries?: Injury[],
+): boolean =>
+  injuries?.some(injury => injury.profileId === profileId) ||
+  rotationPlayers.some(player => player.injuredProfileId === profileId)
+
+export const isPlayerReplacingInjured = (
+  profileId: number,
+  rotationPlayers: RotationPlayer[],
+  injuries?: Injury[],
+): boolean =>
+  !isPlayerInjured(profileId, rotationPlayers, injuries) &&
+  (injuries?.some(injury => injury.replacementProfileId === profileId) ||
+    rotationPlayers.some(
+      player => player.replacementProfileId === profileId && player.injured,
+    ))

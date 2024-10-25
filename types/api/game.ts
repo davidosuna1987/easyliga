@@ -17,6 +17,8 @@ import { ApiCategory } from '@/types/api/category'
 import { ApiGender } from '@/types/api/gender'
 import { ApiDuration } from '@/types/api/utils'
 import { TeamType } from '@/domain/team'
+import { ApiInjury } from '@/types/api/injury'
+import { SanctionSeverityKey } from '@/domain/sanction'
 
 export type ApiGameRelations = {
   league?: ApiLeague
@@ -34,6 +36,7 @@ export type ApiGameRelations = {
   current_set?: ApiSet
   calls?: ApiCall[]
   sanctions?: ApiSanction[]
+  injuries?: ApiInjury[]
   signatures?: ApiGameSignature[]
 }
 
@@ -91,7 +94,7 @@ export type ApiGameReportSimple = {
 }
 
 export type ApiGameResponse = {
-  success: boolean
+  success: true
   data: {
     game: ApiGame
   }
@@ -99,7 +102,7 @@ export type ApiGameResponse = {
 }
 
 export type ApiGamesResponse = {
-  success: boolean
+  success: true
   data: {
     games: ApiGame[]
   }
@@ -125,7 +128,7 @@ export type ApiGameRequestChangeDateRequest = {
 }
 
 export type ApiGameInitialDataResponse = {
-  success: boolean
+  success: true
   data: {
     game: ApiGame
     calls: ApiCall[]
@@ -144,7 +147,7 @@ export type ApiGameInitialDataResponse = {
 }
 
 export type ApiGameTeamPlayersResponse = {
-  success: boolean
+  success: true
   data: {
     team: ApiTeam
     game: ApiGame
@@ -156,11 +159,14 @@ export type ApiGameTeamPlayersResponse = {
 }
 
 export type ApiGameTeamIncompleteResponse = {
-  success: boolean
+  success: true
   data: {
     incomplete: {
       game: boolean
       current_set: boolean
+      sanctioned_player_rotation: number
+      sanctioned_profile_id: number
+      sanctioned_severity: SanctionSeverityKey
     }
   }
   errors: null

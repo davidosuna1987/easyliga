@@ -91,6 +91,14 @@
   border: solid 1px gray !important;
 }
 
+.text-color {
+  color: var(--text-color) !important;
+}
+
+.border-primary {
+  border-color: var(--primary-color) !important;
+}
+
 @media (prefers-color-scheme: dark) {
   .shirt-item-black {
     border-color: #333 !important;

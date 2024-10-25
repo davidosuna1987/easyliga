@@ -35,7 +35,7 @@ export type ApiProfileResponse = {
 }
 
 export type ApiProfilesResponse = {
-  success: boolean
+  success: true
   data: {
     profiles: ApiProfile[]
   }
@@ -43,7 +43,7 @@ export type ApiProfilesResponse = {
 }
 
 export type ApiClubTeamPlayerProfileUpdateResponse = {
-  success: boolean
+  success: true
   data: {
     profile: ApiProfile
   }

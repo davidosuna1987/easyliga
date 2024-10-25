@@ -10,7 +10,10 @@ import {
   RotationPlayer,
   RotationPlayerChangeRequest,
   RotationPlayerDeniedChange,
+  getRotationPlayerInjury,
+  isPlayerInjured,
   mapApiRotationToRotation,
+  mapDeniedPlayerChangeToPlayerInOut,
   mapPlayerChangeToChangeType,
 } from '@/domain/rotation'
 import { Rotation, POSITIONS } from '@/domain/rotation'
@@ -31,6 +34,18 @@ import {
   ApiEvents,
   ApiGamePlayerRotationStatusUpdatedEventResponse,
 } from '@/types/api/event'
+import {
+  getInjuryReplacementProfileIdByProfileId,
+  getInvalidInjuryFormRequestInjuriesTranslationKey,
+  getInvalidInjuryFormRequestTranslationKey,
+  Injury,
+  INJURY_DESCRIPTION_MIN_LENGTH,
+  InjuryFormRequest,
+  isValidInjuryFormRequest,
+  isValidInjuryFormRequestInjury,
+  mapInjuryToPlayerInOut,
+} from '@/domain/injury'
+import { equalObjects } from '@/domain/utils'
 
 const props = defineProps({
   call: {
@@ -68,6 +83,7 @@ const emit = defineEmits<{
   (e: 'update:captain', value: number): void
   (e: 'change:players', value: RotationPlayerChangeRequest[]): void
   (e: 'playerRotationStatusUpdated', value: Rotation): void
+  (e: 'injury:changed', value: InjuryFormRequest): void
 }>()
 
 const { t } = useI18n()
@@ -76,24 +92,96 @@ const toast = useEasyToast()
 
 const listenedEvents = ref<string[]>([])
 const rotationPlayers = ref<RotationPlayer[]>([])
-const selectedPosition = ref<number | null>(null)
+const selectedPosition = ref<number>()
 const selectedRotationInCourtCaptain = ref<RotationPlayer>()
 const showCaptainSelector = ref(false)
 const showUndoPlayerChange = ref(false)
 const playerChangeToUndo = ref<RotationPlayerChangeRequest>()
 const initialPlayerChangeToUndo = ref<RotationPlayerChangeRequest>()
+const playerChangeToUndoPosition = ref<number>()
 const playerChangeApprovedOrDenied = ref<PlayerChangeInOut>()
 const showDenyReasonDialog = ref<RotationPlayerChangeRequest>()
 
 const playerChanges = ref<RotationPlayerChangeRequest[]>([])
 const initialPlayerChanges = ref<RotationPlayerChangeRequest[]>([])
 
+const showPlayerChangeInjuryForm = ref<Boolean>(false)
+const injuryFormRequest = ref<InjuryFormRequest>({
+  gameId: 0,
+  setId: 0,
+  rotationId: 0,
+  teamId: 0,
+  injuries: [],
+})
+const injuryFormRequestInjury = ref<InjuryFormRequest['injuries'][number]>({
+  playerRotationId: 0,
+  profileId: 0,
+  replacementProfileId: 0,
+  libero: false,
+  description: '',
+  playerInShirtNumber: undefined,
+  playerOutShirtNumber: undefined,
+})
+
+const playerChangeInjured = ref<boolean>(false)
+const playerChangeInjuryDescription = ref<string>()
+
+const rotationPlayersMergePlayerChanges = computed(() =>
+  rotationPlayers.value.map(rotationPlayer => {
+    const playerChange = playerChanges.value.find(
+      pc => pc.profileId === rotationPlayer.profileId,
+    )
+
+    return playerChange
+      ? {
+          ...rotationPlayer,
+          ...playerChange,
+        }
+      : rotationPlayer
+  }),
+)
+
+const injuredPlayerChangeToUndo = computed((): CallPlayerData | undefined => {
+  const { playerOut } = getPlayerInOutByPosition(
+    playerChangeToUndoPosition.value ?? 0,
+  )
+
+  const injury = props.rotation?.injuries?.find(
+    i => i.profileId === playerOut?.profileId,
+  )
+
+  return injury
+    ? getPlayerDataByProfileId(props.call.playersData, injury?.profileId)
+    : playerChangeToUndo.value?.injuredProfileId
+    ? getPlayerDataByProfileId(
+        props.call.playersData,
+        playerChangeToUndo.value.injuredProfileId,
+      )
+    : undefined
+})
+
+const injuryPlayerIn = computed(() =>
+  getPlayerDataByProfileId(
+    props.call.playersData,
+    injuryFormRequestInjury.value.replacementProfileId,
+  ),
+)
+
+const injuryPlayerOut = computed(() =>
+  getPlayerDataByProfileId(
+    props.call.playersData,
+    injuryFormRequestInjury.value.profileId,
+  ),
+)
+
 const callCaptain = computed(() =>
   props.call.playersData.find(player => player.captain),
 )
 
 const totalPlayerChanges = computed(
-  () => playerChanges.value.length + (props.rotation?.playerChangesCount ?? 0),
+  () =>
+    requestedPlayerChanges.value.length +
+    (props.rotation?.playerChangesCount ?? 0),
 )
 
 const isTeamMembeSanction = (sanction: Sanction): boolean =>
@@ -115,6 +203,14 @@ const expulsionSanctions = computed((): Sanction[] =>
   ),
 )
 
+const expelledPlayers = computed((): CallPlayerData[] =>
+  benchPlayers.value.filter(player =>
+    expulsionSanctions.value
+      ?.map(sanction => sanction.playerProfileId)
+      .includes(player.profileId),
+  ),
+)
+
 const benchPlayers = computed((): CallPlayerData[] =>
   props.call.playersData.filter(
     player =>
@@ -128,21 +224,82 @@ const benchPlayers = computed((): CallPlayerData[] =>
   ),
 )
 
+const injuredPlayers = computed((): CallPlayerData[] =>
+  props.call.playersData.filter(player =>
+    props.rotation?.injuries
+      ?.map(injury => injury.profileId)
+      .includes(player.profileId),
+  ),
+)
+
 const availableBenchPlayers = computed((): CallPlayerData[] =>
   benchPlayers.value.filter(
     player =>
       !expulsionSanctions.value
         ?.map(sanction => sanction.playerProfileId)
+        .includes(player.profileId) &&
+      !injuredPlayers.value
+        .map(player => player.profileId)
+        .includes(player.profileId) &&
+      !props.rotation?.injuries
+        ?.map(injury => injury.replacementProfileId)
+        .includes(player.profileId) &&
+      !props.rotation?.players
+        .map(player => player.injuredProfileId)
         .includes(player.profileId),
   ),
 )
 
-const expelledPlayers = computed((): CallPlayerData[] =>
-  benchPlayers.value.filter(player =>
-    expulsionSanctions.value
-      ?.map(sanction => sanction.playerProfileId)
-      .includes(player.profileId),
+const availableInjuryPlayers = computed((): CallPlayerData[] =>
+  props.call.playersData.filter(
+    player =>
+      !player.libero &&
+      !isPlayerInjured(
+        player.profileId,
+        rotationPlayersMergePlayerChanges.value,
+        props.rotation?.injuries,
+      ) &&
+      !rotationPlayers.value
+        .map(rp => rp.inCourtProfileId)
+        .includes(player.profileId) &&
+      !playerChanges.value
+        .filter(pc => pc.comesFromApi)
+        .map(pc => pc.inCourtProfileId)
+        .includes(player.profileId) &&
+      !requestedPlayerChanges.value
+        .map(pc => pc.replacementProfileId)
+        .includes(player.profileId) &&
+      !requestedPlayerChanges.value
+        .filter(pc => pc.inCourtProfileId !== pc.profileId)
+        .map(pc => pc.profileId)
+        .includes(player.profileId) &&
+      !expulsionSanctions.value
+        ?.map(sanction => sanction.playerProfileId)
+        .includes(player.profileId) &&
+      !injuredPlayers.value
+        .map(player => player.profileId)
+        .includes(player.profileId) &&
+      !props.rotation?.injuries
+        ?.map(injury => injury.replacementProfileId)
+        .includes(player.profileId) &&
+      !props.rotation?.players
+        .map(player => player.injuredProfileId)
+        .includes(player.profileId),
   ),
+)
+
+const availableChangePlayers = computed((): CallPlayerData[] =>
+  !!showPlayerChangeInjuryForm.value
+    ? availableInjuryPlayers.value
+    : availableBenchPlayers.value,
+)
+
+const requestedPlayerChanges = computed((): RotationPlayerChangeRequest[] =>
+  playerChanges.value.filter(pc => !pc.comesFromApi),
+)
+
+const apiPlayerChanges = computed((): RotationPlayerChangeRequest[] =>
+  playerChanges.value.filter(pc => pc.comesFromApi),
 )
 
 const selectableCaptainPlayers = computed(() =>
@@ -159,10 +316,8 @@ const selectableCaptainPlayers = computed(() =>
 )
 
 const selectedCaptain = computed(() =>
-  props.call.playersData.find(
-    player =>
-      player.profileId ===
-      selectedRotationInCourtCaptain.value?.inCourtProfileId,
+  getCallPlayerDataByProfileId(
+    selectedRotationInCourtCaptain.value?.inCourtProfileId,
   ),
 )
 
@@ -170,13 +325,30 @@ const liberoPlayers = computed(() =>
   props.call.playersData.filter(player => player.libero),
 )
 
-const playerToReplace = computed(() => {
-  const rotationPlayer = rotationPlayers.value.find(
+const rotationPlayerToReplace = computed(() =>
+  rotationPlayers.value.find(
     rp => rp.currentPosition === selectedPosition.value,
-  )
-  return props.call.playersData.find(
-    p => p.profileId === rotationPlayer?.profileId,
-  )
+  ),
+)
+
+const playerToReplace = computed(() => {
+  let inCourtProfileId = rotationPlayerToReplace.value?.inCourtProfileId
+  if (!inCourtProfileId) return
+
+  do {
+    const injuryReplacementProfileId = getInjuryReplacementProfileIdByProfileId(
+      inCourtProfileId,
+      props.rotation?.injuries ?? [],
+    )
+
+    if (injuryReplacementProfileId) {
+      inCourtProfileId = injuryReplacementProfileId
+    } else {
+      break
+    }
+  } while (true)
+
+  return getCallPlayerDataByProfileId(inCourtProfileId)
 })
 
 const canChangeCaptain = computed(
@@ -226,13 +398,26 @@ const initialRotationPlayersToBeReplacedForSanction = computed(
   },
 )
 
-const submitLabel = computed((): string =>
+const submitLabelAction = computed((): string =>
   !!initialPlayerChangeToUndo.value &&
   playerChangeToUndo.value?.inCourtProfileId ===
     initialPlayerChangeToUndo.value.inCourtProfileId
-    ? t('rotations.do_player_change')
-    : t('rotations.cancel_player_change'),
+    ? injuredPlayerChangeToUndo.value
+      ? 'injury'
+      : 'change'
+    : 'cancel',
 )
+
+const submitLabel = computed((): string => {
+  switch (submitLabelAction.value) {
+    case 'injury':
+      return t('rotations.player_change_injured')
+    case 'change':
+      return t('rotations.do_player_change')
+    default:
+      return t('rotations.cancel_player_change')
+  }
+})
 
 const breakpoints = computed((): GridBreakpoints | undefined =>
   !!playerChanges.value.length || deniedPlayerChanges.value.length
@@ -258,6 +443,64 @@ const deniedPlayerChanges = computed((): RotationPlayerDeniedChange[] =>
     ),
 )
 
+const maxPlayerChangesReached = computed(
+  (): boolean => totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES,
+)
+
+const cannotReplacePlayersMessage = computed((): string => {
+  const messages = []
+
+  if (!availableChangePlayers.value.length) {
+    messages.push(t('players.no_available'))
+  }
+
+  if (maxPlayerChangesReached.value) {
+    messages.push(t('rotations.max_player_changes_reached'))
+  }
+
+  const parsedMessages = messages.map((message, index) =>
+    index === 0 ? message : message.toLocaleLowerCase(),
+  )
+
+  // join messages with a comma and space and last occurence with ' and '
+  return parsedMessages.join(', ').replace(/,([^,]*)$/, ` ${t('forms.and')}$1`)
+})
+
+const showExtraordinaryChangesButton = computed(
+  (): boolean =>
+    !props.isInitialRotationAssignment &&
+    !showPlayerChangeInjuryForm.value &&
+    !availableBenchPlayers.value.length &&
+    !!availableInjuryPlayers.value.length,
+)
+
+const showExtraordinaryUndoChangesButton = computed(
+  (): boolean =>
+    !!playerChangeToUndo.value?.comesFromApi &&
+    !props.isInitialRotationAssignment &&
+    !showPlayerChangeInjuryForm.value &&
+    !availableBenchPlayers.value.length &&
+    !!availableInjuryPlayers.value.length,
+)
+
+const showPlayerChangeInjuredToastMessage = computed((): string | undefined => {
+  if (!!playerChangeInjured.value && !playerChangeInjuryDescription.value) {
+    return t('errors.injuries.description')
+  }
+
+  if (
+    !!playerChangeInjured.value &&
+    !!playerChangeInjuryDescription.value &&
+    playerChangeInjuryDescription.value.length < INJURY_DESCRIPTION_MIN_LENGTH
+  ) {
+    return t('errors.injuries.description_min_length', {
+      min: INJURY_DESCRIPTION_MIN_LENGTH,
+    })
+  }
+
+  return
+})
+
 const setRotationPlayersFromRtotation = () => {
   playerChanges.value = []
 
@@ -275,6 +518,9 @@ const setRotationPlayersFromRtotation = () => {
       position: player.currentPosition,
       status: player.status,
       libero: player.libero,
+      injured: player.injured,
+      injuredProfileId: player.injuredProfileId,
+      injuryDescription: player.injuryDescription,
       changeWindows: player.changeWindows,
       comesFromApi: true,
     })
@@ -303,6 +549,9 @@ const handleAutoRotation = () => {
       position: POSITIONS[i],
       status: ROTATION_PLAYER_STATUS.approved,
       libero: false,
+      injured: false,
+      injuredProfileId: undefined,
+      injuryDescription: undefined,
       changeWindows: [],
     })
   }
@@ -320,10 +569,39 @@ const handleAutoRotation = () => {
   emit('update:players', rotationPlayers.value)
 }
 
+const handleHideCoachRotationPlayersDialog = () => {
+  selectedPosition.value = undefined
+  showPlayerChangeInjuryForm.value = false
+  playerChangeInjured.value = false
+  playerChangeInjuryDescription.value = undefined
+  resetInjuryFormRequestInjury()
+}
+
+const toggleShowPlayerChangeInjuryForm = () => {
+  if (requestedPlayerChanges.value.length) {
+    toast.error(t('rotations.submit_requested_changes_before_injury'))
+    handleHideCoachRotationPlayersDialog()
+    return
+  }
+  showPlayerChangeInjuryForm.value
+    ? resetInjuryFormRequest()
+    : prepareInjuryFormRequest()
+  showPlayerChangeInjuryForm.value = !showPlayerChangeInjuryForm.value
+}
+
+const handleShowPlayerChangeInjuredForm = (injured: boolean) => {
+  if (playerChangeInjured.value === injured) return
+
+  playerChangeInjured.value = injured
+  playerChangeInjuryDescription.value = undefined
+}
+
 const hideUndoPlayerChangeDialog = () => {
   showUndoPlayerChange.value = false
   playerChangeToUndo.value = undefined
   initialPlayerChangeToUndo.value = undefined
+  playerChangeToUndoPosition.value = undefined
+  handleHideCoachRotationPlayersDialog()
 }
 
 const setRotationCaptain = (profileId: number) => {
@@ -355,6 +633,7 @@ const selectPosition = (position: number) => {
 }
 
 const setPlayerChangeToUndo = (playerChange: RotationPlayerChangeRequest) => {
+  playerChangeToUndoPosition.value = playerChange.position
   playerChangeToUndo.value = playerChange
 
   const initialPlayerChange = initialPlayerChanges.value.find(
@@ -377,6 +656,35 @@ const removeUnchangedPlayerChanges = (
       initialPlayerChange?.inCourtProfileId !== playerChange.inCourtProfileId
     )
   })
+
+const prepareInjuryFormRequest = () => {
+  injuryFormRequest.value.gameId = props.call.gameId
+  injuryFormRequest.value.setId = props.rotation?.setId ?? 0
+  injuryFormRequest.value.rotationId = props.rotation?.id ?? 0
+  injuryFormRequest.value.teamId = props.call.teamId
+}
+
+const resetInjuryFormRequest = () => {
+  injuryFormRequest.value = {
+    gameId: 0,
+    setId: 0,
+    rotationId: 0,
+    teamId: 0,
+    injuries: [],
+  }
+}
+
+const resetInjuryFormRequestInjury = () => {
+  injuryFormRequestInjury.value = {
+    playerRotationId: 0,
+    profileId: 0,
+    replacementProfileId: 0,
+    libero: false,
+    description: '',
+    playerInShirtNumber: undefined,
+    playerOutShirtNumber: undefined,
+  }
+}
 
 const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
   if (!selectedPosition.value) return
@@ -414,6 +722,9 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
     status: ROTATION_PLAYER_STATUS.approved,
     currentPosition: selectedPosition.value,
     libero: false,
+    injured: false,
+    injuredProfileId: undefined,
+    injuryDescription: undefined,
     changeWindows: [],
   })
 
@@ -421,11 +732,16 @@ const addOrReplaceRotationPlayer = (player: CallPlayerData) => {
     setRotationCaptain(player.profileId)
   }
 
-  selectedPosition.value = null
+  selectedPosition.value = undefined
 }
 
 const changePlayer = (replacementPlayer: CallPlayerData) => {
   if (!playerToReplace.value) return
+
+  if (showPlayerChangeInjuredToastMessage.value) {
+    toast.error(showPlayerChangeInjuredToastMessage.value)
+    return
+  }
 
   const playerChangesHasLibero = !!playerChanges.value.find(pc => pc.libero)
 
@@ -441,6 +757,11 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
 
   if (isReplacementPlayerLiberoInAttackPosition) {
     toast.error(t('rotations.libero_not_allowed_in_attack_positions'))
+    return
+  }
+
+  if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
+    toast.error(t('rotations.max_player_changes_reached'))
     return
   }
 
@@ -482,23 +803,95 @@ const changePlayer = (replacementPlayer: CallPlayerData) => {
     position: selectedPosition.value ?? 0,
     status: ROTATION_PLAYER_STATUS.pending,
     libero: replacementPlayer.libero,
+    injured: playerChangeInjured.value,
+    injuredProfileId: playerChangeInjured.value
+      ? rotationPlayerToReplace.inCourtProfileId ===
+        rotationPlayerToReplace.profileId
+        ? rotationPlayerToReplace.profileId
+        : replacementPlayer.profileId
+      : undefined,
+    injuryDescription: playerChangeInjuryDescription.value,
     comesFromApi: false,
     changeWindows: rotationPlayerToReplace.changeWindows,
   })
 
   emit('change:players', removeUnchangedPlayerChanges(playerChanges.value))
 
-  const callPlayerSelectedCaptain = props.call.playersData.find(
-    player =>
-      player.profileId ===
-      selectedRotationInCourtCaptain.value?.inCourtProfileId,
+  const callPlayerSelectedCaptain = getCallPlayerDataByProfileId(
+    selectedRotationInCourtCaptain.value?.inCourtProfileId,
   )
 
   if (!callPlayerSelectedCaptain?.captain && replacementPlayer.captain) {
     setRotationCaptain(replacementPlayer.profileId)
   }
 
-  selectedPosition.value = null
+  selectedPosition.value = undefined
+  playerChangeInjured.value = false
+  playerChangeInjuryDescription.value = undefined
+}
+
+const addInjury = (replacementPlayer: CallPlayerData) => {
+  const { playerIn, playerOut } = getPlayerInOutByPosition(
+    playerChangeToUndoPosition.value ?? 0,
+  )
+  console.log({
+    playerIn,
+    playerOut,
+    playerInShirtNumber: replacementPlayer.shirtNumber,
+  })
+  injuryFormRequestInjury.value = {
+    playerRotationId:
+      rotationPlayerToReplace.value?.id ?? playerChangeToUndo.value?.id ?? 0,
+    profileId:
+      playerIn?.profileId ??
+      playerToReplace.value?.profileId ??
+      playerChangeToUndo.value?.inCourtProfileId ??
+      0,
+    replacementProfileId: replacementPlayer.profileId,
+    libero: replacementPlayer.libero,
+    description: '',
+    playerInShirtNumber:
+      // playerOut?.shirtNumber ??
+      replacementPlayer.shirtNumber ??
+      // getCallPlayerDataByProfileId(
+      //   playerChangeToUndo.value?.replacementProfileId,
+      // )?.shirtNumber ??
+      undefined,
+    playerOutShirtNumber:
+      // playerIn?.shirtNumber ??
+      // playerToReplace.value?.shirtNumber ??
+      getCallPlayerDataByProfileId(playerChangeToUndo.value?.inCourtProfileId)
+        ?.shirtNumber ?? undefined,
+  }
+
+  injuryFormRequest.value.injuries.push(injuryFormRequestInjury.value)
+
+  // handleHideCoachRotationPlayersDialog()
+}
+
+const handleAddInjury = () => {
+  if (
+    !!showPlayerChangeInjuryForm.value &&
+    (!isValidInjuryFormRequest(injuryFormRequest.value) ||
+      !isValidInjuryFormRequestInjury(injuryFormRequestInjury.value))
+  ) {
+    const ifrTk = getInvalidInjuryFormRequestTranslationKey(
+      injuryFormRequest.value,
+    )
+    const ifriTk = getInvalidInjuryFormRequestInjuriesTranslationKey([
+      injuryFormRequestInjury.value,
+    ])
+    const ifrTranslationKey = ifrTk ?? ifriTk
+    const translationKey = ifrTranslationKey ?? 'errors.whoops'
+    toast.error(t(translationKey, { min: INJURY_DESCRIPTION_MIN_LENGTH }))
+    return
+  }
+
+  playerChangeToUndo.value
+    ? hideUndoPlayerChangeDialog()
+    : handleHideCoachRotationPlayersDialog()
+
+  emit('injury:changed', injuryFormRequest.value)
 }
 
 const handlePlayerChangeUndo = (playerChange: RotationPlayerChangeRequest) => {
@@ -510,14 +903,34 @@ const handlePlayerChangeUndo = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const undoPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
+  if (showPlayerChangeInjuredToastMessage.value) {
+    toast.error(showPlayerChangeInjuredToastMessage.value)
+    return
+  }
+
+  if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
+    toast.error(t('rotations.max_player_changes_reached'))
+    return
+  }
+
   checkIfInCourtCaptainIsRemoved(playerChange.inCourtProfileId)
 
-  console.log('undoPlayerChange', props.rotation?.inCourtCaptainProfileId)
-
   playerChanges.value.map(pc => {
-    if (pc.profileId === playerChange.profileId) {
-      pc.inCourtProfileId = pc.profileId
-      pc.libero = false
+    // if (pc.profileId === playerChange.profileId) {
+    //   pc.inCourtProfileId = pc.profileId
+    //   pc.libero = false
+    // }
+    if (playerChange.profileId === playerChange.profileId) {
+      playerChange.libero = false
+      playerChange.injured = playerChangeInjured.value
+      playerChange.injuredProfileId = playerChangeInjured.value
+        ? playerChange.inCourtProfileId === playerChange.profileId
+          ? playerChange.profileId
+          : playerChange.replacementProfileId
+        : undefined
+      playerChange.injuryDescription = playerChangeInjuryDescription.value
+      playerChange.comesFromApi = false
+      playerChange.inCourtProfileId = playerChange.profileId
     }
   })
 
@@ -525,9 +938,7 @@ const undoPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 
   emit('change:players', removeUnchangedPlayerChanges(playerChanges.value))
 
-  const playerIn = props.call.playersData.find(
-    player => player.profileId === playerChange.inCourtProfileId,
-  )
+  const playerIn = getCallPlayerDataByProfileId(playerChange.inCourtProfileId)
 
   if (playerIn?.captain) {
     emit('update:captain', playerIn.profileId)
@@ -535,6 +946,7 @@ const undoPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const undoSecondPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
+  console.log('undoSecondPlayerChange')
   playerChanges.value.map(pc => {
     if (pc.profileId === playerChange.profileId) {
       pc.inCourtProfileId = pc.replacementProfileId
@@ -547,9 +959,34 @@ const undoSecondPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const removePlayerChange = (playerChange: RotationPlayerChangeRequest) => {
-  playerChanges.value = playerChanges.value.filter(
-    pc => pc.profileId !== playerChange.profileId,
-  )
+  console.log('removePlayerChange')
+  if (equalObjects(playerChangeToUndo.value, initialPlayerChangeToUndo.value)) {
+    playerChanges.value = playerChanges.value.filter(
+      pc => pc.profileId !== playerChange.profileId,
+    )
+  } else {
+    playerChanges.value.map(pc => {
+      if (initialPlayerChangeToUndo.value) {
+        if (pc.profileId === playerChange.profileId) {
+          pc.inCourtProfileId =
+            initialPlayerChangeToUndo.value?.inCourtProfileId
+          pc.replacementProfileId =
+            initialPlayerChangeToUndo.value?.replacementProfileId
+          pc.libero = initialPlayerChangeToUndo.value?.libero
+          pc.injured = initialPlayerChangeToUndo.value?.injured
+          pc.injuredProfileId =
+            initialPlayerChangeToUndo.value?.injuredProfileId
+          pc.injuryDescription =
+            initialPlayerChangeToUndo.value?.injuryDescription
+          pc.comesFromApi = initialPlayerChangeToUndo.value?.comesFromApi
+        }
+      } else {
+        playerChanges.value = playerChanges.value.filter(
+          pc => pc.id !== playerChange.id,
+        )
+      }
+    })
+  }
 
   checkIfInCourtCaptainIsRemoved(playerChange.inCourtProfileId)
 
@@ -559,12 +996,7 @@ const removePlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const checkIfInCourtCaptainIsRemoved = (profileId: number) => {
-  console.log('checkIfInCourtCaptainIsRemoved', {
-    profileId,
-    icProfileId: props.rotation?.inCourtCaptainProfileId,
-  })
   if (profileId === props.rotation?.inCourtCaptainProfileId) {
-    console.log('entra en check')
     selectedRotationInCourtCaptain.value = undefined
     emit('update:captain', 0)
 
@@ -576,34 +1008,133 @@ const checkIfInCourtCaptainIsRemoved = (profileId: number) => {
   }
 }
 
+const isReplacementPlayerInInjuriesPlayerIn = (profileId?: number): boolean => {
+  const replacementPlayer = props.call.playersData.find(
+    player => player.profileId === profileId,
+  )
+
+  if (!replacementPlayer) return false
+
+  const isReplacingInjuries = props.rotation?.injuries?.some(
+    i => i.replacementProfileId === replacementPlayer.profileId,
+  )
+
+  const isInjuredInInjuries = props.rotation?.injuries?.some(
+    i => i.profileId === replacementPlayer.profileId,
+  )
+
+  return !!isReplacingInjuries && !isInjuredInInjuries
+}
+
 const getPlayerChangeByPosition = (position: number) =>
   playerChanges.value.find(pc => pc.position === position)
 
+const getRotationPlayerByPosition = (position: number) =>
+  rotationPlayers.value.find(rp => rp.currentPosition === position)
+
+const getCallPlayerDataByProfileId = (profileId?: number) =>
+  profileId
+    ? props.call.playersData.find(p => p.profileId === profileId)
+    : undefined
+
+const getPlayerInOutByPosition = (position: number) => {
+  const rotationPlayer = getRotationPlayerByPosition(position)
+
+  let injured =
+    rotationPlayer?.injuredProfileId ===
+    (rotationPlayer?.inCourtProfileId === rotationPlayer?.replacementProfileId
+      ? rotationPlayer?.profileId
+      : rotationPlayer?.replacementProfileId)
+  let playerInProfileId = rotationPlayer?.inCourtProfileId
+  let playerOutProfileId =
+    rotationPlayer?.inCourtProfileId === rotationPlayer?.replacementProfileId
+      ? rotationPlayer?.profileId
+      : rotationPlayer?.replacementProfileId
+
+  for (const injury of props.rotation?.injuries ?? []) {
+    if (injury.profileId === playerInProfileId) {
+      playerInProfileId = injury.replacementProfileId
+      playerOutProfileId = injury.profileId
+      injured = true
+    }
+  }
+
+  return {
+    playerIn: getCallPlayerDataByProfileId(playerInProfileId),
+    playerOut: getCallPlayerDataByProfileId(playerOutProfileId),
+    injured,
+  }
+}
+
 const getCallPlayerDataByPosition = (
   position: number,
-): CallPlayerData | undefined =>
-  props.call.playersData.find(
-    p =>
-      p.profileId ===
-      rotationPlayers.value.find(rp => rp.currentPosition === position)
-        ?.profileId,
-  )
+): CallPlayerData | undefined => {
+  const rotationPlayer = getRotationPlayerByPosition(position)
+
+  let profileId =
+    rotationPlayer?.injuredProfileId === rotationPlayer?.profileId
+      ? rotationPlayer?.replacementProfileId
+      : rotationPlayer?.profileId
+
+  let injuryProfileIdToSearch = profileId
+  for (const injury of props.rotation?.injuries ?? []) {
+    if (injury.profileId === injuryProfileIdToSearch) {
+      injuryProfileIdToSearch = injury.replacementProfileId
+      profileId = injury.profileId
+    }
+  }
+
+  return getCallPlayerDataByProfileId(profileId)
+}
 
 const getRotationInCourtPlayerByPosition = (
   position: number,
-): CallPlayerData | undefined =>
-  props.call.playersData.find(
-    p =>
-      p.profileId ===
-      rotationPlayers.value.find(rp => rp.currentPosition === position)
-        ?.inCourtProfileId,
+): CallPlayerData | undefined => {
+  const rotationPlayer = getRotationPlayerByPosition(position)
+
+  let profileId = rotationPlayer?.inCourtProfileId
+  if (!profileId) return
+
+  for (const injury of props.rotation?.injuries ?? []) {
+    if (injury.profileId === profileId) {
+      profileId = injury.replacementProfileId
+    }
+  }
+
+  return getCallPlayerDataByProfileId(profileId)
+}
+
+const getRotationPlayerInjuryByPosition = (
+  position: number,
+): Injury | undefined => {
+  const rotationPlayer = getRotationPlayerByPosition(position)
+  return getRotationPlayerInjury(rotationPlayer, props.rotation?.injuries)
+}
+
+const hasRotationPlayerInjuryByPosition = (position: number): boolean => {
+  const { playerOut, injured } = getPlayerInOutByPosition(position)
+  return (
+    getRotationPlayerInjuryByPosition(position)?.profileId ===
+      playerOut?.profileId || injured
   )
+}
+
+const isRotationPlayerInjuredByPosition = (position: number): boolean => {
+  const rotationPlayer = getRotationPlayerByPosition(position)
+  return (
+    !!rotationPlayer?.injured ||
+    !!playerChanges.value.find(pc => pc.profileId === rotationPlayer?.profileId)
+      ?.injured
+  )
+}
 
 const isPlayerInCurrentChanges = (player?: CallPlayerData): boolean => {
-  return !!playerChanges.value.find(
-    pc =>
-      pc.profileId === player?.profileId &&
-      pc.inCourtProfileId !== pc.profileId,
+  return (
+    !!playerChanges.value.find(
+      pc =>
+        pc.profileId === player?.profileId &&
+        pc.inCourtProfileId !== pc.profileId,
+    ) ?? props.rotation?.injuries?.find(i => i.profileId === player?.profileId)
   )
 }
 
@@ -628,17 +1159,6 @@ const toggleCaptainSelector = () => {
 }
 
 const handleRotationCourtPositionClick = (position: number) => {
-  const playerData = getCallPlayerDataByPosition(position)
-
-  if (totalPlayerChanges.value >= MAX_ROTATION_PLAYER_CHANGES) {
-    toast.warn(
-      t('rotations.max_changes_reached', {
-        num: MAX_ROTATION_PLAYER_CHANGES,
-      }),
-    )
-    return
-  }
-
   const playerChange = getPlayerChangeByPosition(position)
 
   if (
@@ -667,21 +1187,12 @@ const handleRotationCourtPositionClick = (position: number) => {
     case ChangeType.FIRST:
       return selectPosition(position)
     case ChangeType.SECOND:
-      return playerData && showMaxChangesReachedToast(playerData)
+      return selectPosition(position)
   }
-}
-
-const showMaxChangesReachedToast = (playerData: CallPlayerData) => {
-  toast.warn(
-    t('rotations.max_player_change_changes_reached', {
-      name: getFullName(playerData),
-    }),
-  )
 }
 
 const getPlayerSanction = (player?: Player): Sanction | undefined => {
   if (!player) return undefined
-
   const scope =
     props.rotation && props.isInitialRotationAssignment ? 'set' : 'game'
 
@@ -695,9 +1206,15 @@ const getPlayerSanction = (player?: Player): Sanction | undefined => {
   )
 }
 
-const showDenyDialog = (deniedChange: RotationPlayerChangeRequest) => {
-  showDenyReasonDialog.value = deniedChange
-}
+const initialPlayerChangeToUndoInjured = (): boolean =>
+  !!playerChangeToUndo.value?.injured &&
+  !!playerChangeToUndo.value?.inCourtProfileId ===
+    !!playerChangeToUndo.value?.replacementProfileId
+
+const replacementPlayerChangeToUndoInjured = (): boolean =>
+  !!playerChangeToUndo.value?.injured &&
+  !!playerChangeToUndo.value?.inCourtProfileId ===
+    !!playerChangeToUndo.value?.profileId
 
 const hideDenyDialog = () => {
   showDenyReasonDialog.value = undefined
@@ -712,16 +1229,16 @@ const listenGamePlayerRotationStatusUpdatedEvent = () => {
   ).listen(
     ApiEvents.PLAYER_ROTATON_STATUS_UPDATED,
     (response: ApiGamePlayerRotationStatusUpdatedEventResponse) => {
-      console.log('PLAYER_ROTATON_STATUS_UPDATED', response)
       playerChangeToUndo.value = undefined
       initialPlayerChangeToUndo.value = undefined
+      playerChangeToUndoPosition.value = undefined
 
-      const playerIn = props.call.playersData.find(
-        player => player.profileId === response.player_in_profile_id,
+      const playerIn = getCallPlayerDataByProfileId(
+        response.player_in_profile_id,
       )
 
-      const playerOut = props.call.playersData.find(
-        player => player.profileId === response.player_out_profile_id,
+      const playerOut = getCallPlayerDataByProfileId(
+        response.player_out_profile_id,
       )
 
       playerChangeApprovedOrDenied.value =
@@ -857,15 +1374,21 @@ onUpdated(() => {
               v-for="position in POSITIONS"
               :key="position"
               :position="position"
-              :player="getCallPlayerDataByPosition(position)"
-              :inCourtPlayer="getRotationInCourtPlayerByPosition(position)"
+              :playerIn="getPlayerInOutByPosition(position).playerIn"
+              :playerOut="getPlayerInOutByPosition(position).playerOut"
               :captainProfileId="
                 isInitialRotationAssignment
                   ? selectedCaptain?.profileId ?? 0
                   : rotation?.inCourtCaptainProfileId ?? 0
               "
-              :isBeingReplaced="
-                isPlayerInCurrentChanges(getCallPlayerDataByPosition(position))
+              :isInjured="
+                hasRotationPlayerInjuryByPosition(position) ||
+                isRotationPlayerInjuredByPosition(position)
+              "
+              :isPlayerOutInExtraordinaryChanges="
+                isReplacementPlayerInInjuriesPlayerIn(
+                  getPlayerInOutByPosition(position).playerOut?.profileId,
+                )
               "
               :isRequestPending="
                 getPlayerChangeByPosition(position)?.status === 'pending'
@@ -877,11 +1400,11 @@ onUpdated(() => {
               :changesCount="
                 mapPlayerChangeToChangeType(getPlayerChangeByPosition(position))
               "
-              :initialPlayerSanction="
-                getPlayerSanction(getCallPlayerDataByPosition(position))
+              :playerInSanction="
+                getPlayerSanction(getPlayerInOutByPosition(position).playerIn)
               "
-              :replacementPlayerSanction="
-                getPlayerSanction(getRotationInCourtPlayerByPosition(position))
+              :playerOutSanction="
+                getPlayerSanction(getPlayerInOutByPosition(position).playerOut)
               "
               @click="handleRotationCourtPositionClick(position)"
             />
@@ -952,9 +1475,33 @@ onUpdated(() => {
         :call="props.call"
         :rotation="props.rotation"
         :sanctions="memberSanctions"
+        :maxChangesReached="
+          totalPlayerChanges >= MAX_ROTATION_PLAYER_CHANGES /*  ||
+          !availableBenchPlayers.length */
+        "
         @remove:playerChange="setPlayerChangeToUndo"
         @undo:playerChange="setPlayerChangeToUndo"
       />
+
+      <div
+        v-if="!props.isInitialRotationAssignment && rotation?.injuries?.length"
+        :class="{
+          'mt-8': !!playerChanges.length || !!deniedPlayerChanges.length,
+        }"
+      >
+        <header class="flex items-center gap-2 mb-3">
+          <IconInjury size="1.25rem" />
+          <p>{{ t('injuries.extraordinay_change', 2) }}</p>
+        </header>
+
+        <template v-for="injury in rotation.injuries">
+          <RotationPlayerChangeItem
+            v-if="mapInjuryToPlayerInOut(injury, props.call.playersData)"
+            :playerIn="mapInjuryToPlayerInOut(injury, props.call.playersData)?.in!"
+            :playerOut="mapInjuryToPlayerInOut(injury, props.call.playersData)?.out!"
+          />
+        </template>
+      </div>
 
       <div
         v-if="
@@ -970,27 +1517,22 @@ onUpdated(() => {
         <GameStatus
           class="mb-3"
           status="denied"
-          :statusLabel="
-            t(
-              'player_change_requests.request_denied',
-              deniedPlayerChanges?.length,
-            )
-          "
+          :statusLabel="t('player_change_requests.request_denied', 2)"
         />
-        <CoachRotationPlayerChanges
-          :playersData="props.call.playersData"
-          :playerChanges="
-            deniedPlayerChanges
-              .flatMap(dc => dc.playerChange)
-              .filter(dc => !!dc)
-              .sort((a, b) => a.position - b.position)
-          "
-          :initialPlayerChanges="initialPlayerChanges"
-          :call="props.call"
-          :rotation="props.rotation"
-          :sanctions="memberSanctions"
-          @info:playerChange="showDenyDialog"
-        />
+
+        <template v-for="deniedPlayerChange of deniedPlayerChanges">
+          <RotationPlayerChangeItem
+            v-if="
+              mapDeniedPlayerChangeToPlayerInOut(
+                deniedPlayerChange,
+                props.call.playersData,
+              )
+            "
+            :playerIn="mapDeniedPlayerChangeToPlayerInOut(deniedPlayerChange, props.call.playersData)?.in!"
+            :playerOut="mapDeniedPlayerChangeToPlayerInOut(deniedPlayerChange, props.call.playersData)?.out!"
+            :injured="deniedPlayerChange.injured"
+          />
+        </template>
       </div>
     </div>
 
@@ -1009,50 +1551,6 @@ onUpdated(() => {
   </EasyGrid>
 
   <DialogBottom
-    class="easy-coach-rotation-players-dialog-component"
-    :visible="!!selectedPosition"
-    :hasStickyFooter="false"
-    @hide="selectedPosition = null"
-  >
-    <template #header>
-      <Heading tag="h6">{{
-        playerToReplace
-          ? t('players.replace_player', { name: getFullName(playerToReplace) })
-          : t('players.select')
-      }}</Heading>
-    </template>
-
-    <template v-if="availableBenchPlayers.length">
-      <CoachRotationPlayer
-        v-for="player in availableBenchPlayers"
-        :key="player.profileId"
-        :player="player"
-        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
-        @click="
-          !!props.isInitialRotationAssignment
-            ? addOrReplaceRotationPlayer(player)
-            : changePlayer(player)
-        "
-      />
-    </template>
-
-    <Message v-else :closable="false">{{ t('players.no_available') }}</Message>
-
-    <template v-if="expelledPlayers.length">
-      <Heading class="mt-5" tag="h6">
-        {{ t('sanctions.expelled_player', 2) }}
-      </Heading>
-      <CoachRotationPlayer
-        v-for="player in expelledPlayers"
-        :key="player.profileId"
-        class="pointer-events-none"
-        :player="player"
-        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
-      />
-    </template>
-  </DialogBottom>
-
-  <DialogBottom
     class="easy-coach-rotation-captain-selector-dialog-component"
     :visible="showCaptainSelector"
     :hasStickyFooter="false"
@@ -1069,59 +1567,357 @@ onUpdated(() => {
     />
   </DialogBottom>
 
-  <DialogBottom
+  <!-- CHANGE --><DialogBottom
+    class="easy-coach-rotation-players-dialog-component"
+    :visible="!!selectedPosition"
+    :hasStickyFooter="
+      !!showPlayerChangeInjuryForm || !availableChangePlayers.length
+    "
+    @hide="handleHideCoachRotationPlayersDialog"
+  >
+    <template #header>
+      <Heading class="flex gap-2" tag="h6">
+        <IconInjury
+          v-if="!!showPlayerChangeInjuryForm || !!playerChangeInjured"
+          bordered
+        />
+        {{
+          playerToReplace
+            ? t('players.replace_player', {
+                name: getFullName(playerToReplace),
+              })
+            : t('players.select')
+        }}
+      </Heading>
+    </template>
+
+    <div v-if="availableChangePlayers.length" class="mt-3">
+      <RotationPlayerChangeItem
+        v-if="!!injuryPlayerIn && !!injuryPlayerOut"
+        :playerIn="injuryPlayerIn"
+        :playerOut="injuryPlayerOut"
+        injured
+        block
+      />
+      <CoachRotationPlayer
+        v-else
+        v-for="player in availableChangePlayers"
+        :key="player.profileId"
+        :player="player"
+        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
+        @click="
+          !!props.isInitialRotationAssignment
+            ? addOrReplaceRotationPlayer(player)
+            : !!showPlayerChangeInjuryForm
+            ? addInjury(player)
+            : changePlayer(player)
+        "
+      />
+
+      <FormLabel
+        v-if="!!showPlayerChangeInjuryForm"
+        class="mt-4"
+        :label="t('players.injury_reason')"
+        required
+      >
+        <Textarea
+          class="w-full"
+          v-model="injuryFormRequestInjury.description"
+          :rows="5"
+          autoResize
+        />
+      </FormLabel>
+
+      <FormLabel
+        v-if="!!playerChangeInjured"
+        class="mt-4"
+        :label="t('players.injury_reason')"
+        required
+      >
+        <Textarea
+          class="w-full"
+          v-model="playerChangeInjuryDescription"
+          :rows="5"
+          autoResize
+        />
+      </FormLabel>
+    </div>
+    <Message v-else :closable="false">
+      {{ cannotReplacePlayersMessage }}
+    </Message>
+
+    <Button
+      v-if="showExtraordinaryChangesButton"
+      class="mt-4 w-full flex justify-center items-center"
+      :outlined="!!showPlayerChangeInjuryForm"
+      @click.prevent="toggleShowPlayerChangeInjuryForm"
+    >
+      <IconInjury class="absolute left-[0.65625rem]" bordered />
+      {{ t('injuries.extraordinay_change') }}
+    </Button>
+
+    <CoachRotationPlayerChangeTypeButtons
+      v-else-if="
+        !props.isInitialRotationAssignment &&
+        !showPlayerChangeInjuryForm &&
+        availableChangePlayers.length
+      "
+      class="mt-4"
+      :injured="!!playerChangeInjured"
+      @injury="handleShowPlayerChangeInjuredForm"
+    />
+
+    <template
+      v-if="!props.isInitialRotationAssignment && expelledPlayers.length"
+    >
+      <Heading class="mt-5" tag="h6">
+        {{ t('sanctions.expelled_player', 2) }}
+      </Heading>
+      <CoachRotationPlayer
+        v-for="player in expelledPlayers"
+        :key="player.profileId"
+        class="pointer-events-none"
+        :player="player"
+        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
+      />
+    </template>
+
+    <template v-if="!availableChangePlayers.length" #stickyFooter>
+      <FormFooterActions
+        :cancelLabel="t('forms.close')"
+        hideSubmit
+        @form:cancel="handleHideCoachRotationPlayersDialog"
+      />
+    </template>
+    <template v-else-if="showPlayerChangeInjuryForm" #stickyFooter>
+      <FormFooterActions
+        :submitLabel="t('rotations.do_player_change')"
+        @form:submit="handleAddInjury"
+        @form:cancel="handleHideCoachRotationPlayersDialog"
+      />
+    </template>
+  </DialogBottom>
+
+  <!-- UNDO --><DialogBottom
     class="easy-coach-rotation-undo-player-change-dialog-component"
     :visible="showUndoPlayerChange"
     @hide="hideUndoPlayerChangeDialog"
   >
     <template #header>
-      <Heading tag="h6">{{
-        initialPlayerChangeToUndo &&
-        playerChangeToUndo?.inCourtProfileId ===
-          initialPlayerChangeToUndo.inCourtProfileId
-          ? t('rotations.do_player_change')
-          : t('rotations.cancel_player_change')
-      }}</Heading>
+      <Heading tag="h6">{{ submitLabel }}</Heading>
     </template>
 
-    <CoachRotationPlayerChangeItem
-      v-if="playerChangeToUndo"
-      class="my-5"
-      :playersData="props.call.playersData"
-      :playerChange="playerChangeToUndo"
-      :initialPlayerChange="initialPlayerChangeToUndo ?? playerChangeToUndo"
-      :initialPlayerSanction="
-        getPlayerSanction(
-          getPlayerDataByProfileId(
-            props.call.playersData,
-            initialPlayerChangeToUndo
-              ? playerChangeToUndo.replacementProfileId
-              : playerChangeToUndo.profileId,
-          ),
-        )
+    <template v-if="showPlayerChangeInjuryForm">
+      <RotationPlayerChangeItem
+        v-if="!!injuryPlayerIn && !!injuryPlayerOut"
+        :playerIn="injuryPlayerIn"
+        :playerOut="injuryPlayerOut"
+        injured
+        block
+      />
+      <CoachRotationPlayer
+        v-else
+        v-for="player in availableInjuryPlayers"
+        :key="player.profileId"
+        :player="player"
+        :sanction="getPlayerSanction(mapCallPlayerDataToPlayer(player))"
+        @click="addInjury(player)"
+        hoverable
+      />
+
+      <FormLabel class="mt-4" :label="t('players.injury_reason')" required>
+        <Textarea
+          class="w-full"
+          v-model="injuryFormRequestInjury.description"
+          :rows="5"
+          autoResize
+        />
+      </FormLabel>
+    </template>
+    <template v-else-if="playerChangeToUndo">
+      <template
+        v-if="injuredPlayerChangeToUndo && playerChangeToUndo.comesFromApi"
+      >
+        <template v-if="availableInjuryPlayers.length">
+          <Message :closable="false" icon="undefined">
+            {{ t('injuries.change_not_allowed_by_injury') }}
+          </Message>
+
+          <div class="flex items-center gap-3">
+            <PlayerItem
+              :player="injuredPlayerChangeToUndo"
+              :showIcons="false"
+              :showCaptain="!!injuredPlayerChangeToUndo.captain"
+              :showLibero="!!injuredPlayerChangeToUndo.libero"
+              :sanction="getPlayerSanction(injuredPlayerChangeToUndo)"
+              :hoverable="false"
+              :shirtNumberEditable="false"
+            />
+            <IconInjury />
+          </div>
+        </template>
+        <Message v-else :closable="false">{{
+          cannotReplacePlayersMessage
+        }}</Message>
+      </template>
+      <Message
+        v-else-if="
+          isReplacementPlayerInInjuriesPlayerIn(playerChangeToUndo.profileId)
+        "
+        severity="warn"
+        :closable="false"
+      >
+        {{ t('rotations.replacement_player_replacing_injured') }}
+      </Message>
+      <Message
+        v-else-if="
+          submitLabelAction !== 'cancel' &&
+          mapPlayerChangeToChangeType(playerChangeToUndo) === ChangeType.SECOND
+        "
+        :closable="false"
+      >
+        {{
+          t('rotations.max_player_change_changes_reached', {
+            name: getFullName(
+              getCallPlayerDataByProfileId(playerChangeToUndo.inCourtProfileId),
+            ),
+          })
+        }}
+      </Message>
+      <CoachRotationPlayerChangeItem
+        v-else
+        class="my-5"
+        :playersData="props.call.playersData"
+        :playerChange="playerChangeToUndo"
+        :initialPlayerChange="initialPlayerChangeToUndo ?? playerChangeToUndo"
+        :initialPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(
+              props.call.playersData,
+              initialPlayerChangeToUndo
+                ? playerChangeToUndo.replacementProfileId
+                : playerChangeToUndo.profileId,
+            ),
+          )
+        "
+        :replacementPlayerSanction="
+          getPlayerSanction(
+            getPlayerDataByProfileId(
+              props.call.playersData,
+              initialPlayerChangeToUndo
+                ? playerChangeToUndo.profileId
+                : playerChangeToUndo.replacementProfileId,
+            ),
+          )
+        "
+        :initialPlayerInjured="initialPlayerChangeToUndoInjured()"
+        :playerInjured="replacementPlayerChangeToUndoInjured()"
+        :type="initialPlayerChangeToUndo ? ChangeType.SECOND : ChangeType.FIRST"
+        :changesCount="
+          mapPlayerChangeToChangeType(
+            initialPlayerChangeToUndo ?? playerChangeToUndo,
+          )
+        "
+        block
+      />
+    </template>
+
+    <FormLabel
+      v-if="!!playerChangeInjured"
+      class="mt-4"
+      :label="t('players.injury_reason')"
+      required
+    >
+      <Textarea
+        class="w-full"
+        v-model="playerChangeInjuryDescription"
+        :rows="5"
+        autoResize
+      />
+    </FormLabel>
+
+    <Button
+      v-if="
+        submitLabelAction !== 'cancel' &&
+        ((((playerChangeToUndo &&
+          injuredPlayerChangeToUndo &&
+          playerChangeToUndo.comesFromApi) ||
+          mapPlayerChangeToChangeType(playerChangeToUndo) ===
+            ChangeType.SECOND) &&
+          !showPlayerChangeInjuryForm) ||
+          isReplacementPlayerInInjuriesPlayerIn(
+            playerChangeToUndo?.profileId,
+          )) &&
+        availableInjuryPlayers.length
       "
-      :replacementPlayerSanction="
-        getPlayerSanction(
-          getPlayerDataByProfileId(
-            props.call.playersData,
-            initialPlayerChangeToUndo
-              ? playerChangeToUndo.profileId
-              : playerChangeToUndo.replacementProfileId,
-          ),
-        )
+      class="mt-4 w-full flex justify-center items-center"
+      :outlined="!!showPlayerChangeInjuryForm"
+      @click.prevent="toggleShowPlayerChangeInjuryForm"
+    >
+      <IconInjury class="absolute left-[0.65625rem]" bordered />
+      {{ t('injuries.extraordinay_change') }}
+    </Button>
+    <CoachRotationPlayerChangeTypeButtons
+      v-else-if="
+        submitLabelAction !== 'cancel' &&
+        !showPlayerChangeInjuryForm &&
+        !!playerChangeToUndo &&
+        !!initialPlayerChangeToUndo &&
+        playerChangeToUndo.inCourtProfileId ===
+          initialPlayerChangeToUndo.inCourtProfileId &&
+        ((initialPlayerChangeToUndo.comesFromApi &&
+          (initialPlayerChangeToUndo.replacementProfileId ===
+            initialPlayerChangeToUndo.profileId ||
+            availableChangePlayers.length)) ||
+          !initialPlayerChangeToUndo.comesFromApi)
       "
-      :type="initialPlayerChangeToUndo ? ChangeType.SECOND : ChangeType.FIRST"
-      :changesCount="
-        mapPlayerChangeToChangeType(
-          initialPlayerChangeToUndo ?? playerChangeToUndo,
-        )
-      "
-      block
+      class="mt-5"
+      :injured="!!playerChangeInjured"
+      @injury="handleShowPlayerChangeInjuredForm"
     />
 
     <template #stickyFooter>
+      <Button
+        v-if="
+          submitLabelAction !== 'injury' &&
+          injuredPlayerChangeToUndo &&
+          playerChangeToUndo?.comesFromApi &&
+          !showPlayerChangeInjuryForm &&
+          availableChangePlayers.length
+        "
+        class="mt-4 w-full flex justify-center items-center"
+        :outlined="!!showPlayerChangeInjuryForm"
+        @click.prevent="toggleShowPlayerChangeInjuryForm"
+      >
+        <IconInjury class="absolute left-[0.65625rem]" bordered />
+        {{ t('injuries.extraordinay_change') }}
+      </Button>
       <FormFooterActions
+        v-else-if="
+          showPlayerChangeInjuryForm && playerChangeToUndo?.comesFromApi
+        "
+        :submitLabel="t('rotations.do_player_change')"
+        @form:submit="handleAddInjury"
+        @form:cancel="handleHideCoachRotationPlayersDialog"
+      />
+      <FormFooterActions
+        v-else
         :submitLabel="submitLabel"
+        :cancelLabel="
+          !availableChangePlayers.length ? t('forms.close') : undefined
+        "
+        :hideSubmit="
+          submitLabelAction !== 'cancel'
+            ? (!!injuredPlayerChangeToUndo &&
+                playerChangeToUndo?.comesFromApi) ||
+              (playerChangeToUndo &&
+                playerChangeToUndo.inCourtProfileId ===
+                  playerChangeToUndo.profileId) ||
+              isReplacementPlayerInInjuriesPlayerIn(
+                playerChangeToUndo?.profileId,
+              )
+            : false
+        "
         @form:submit="
           playerChangeToUndo && handlePlayerChangeUndo(playerChangeToUndo)
         "

@@ -11,6 +11,7 @@ import {
 } from '@/domain/rotation'
 import { Call, CallPlayerData } from '@/domain/call'
 import { TeamSide, TeamSideEnum } from '@/domain/team'
+import { Injury, mapInjuryToPlayerInOut } from '@/domain/injury'
 
 const props = defineProps({
   leftSideTeamCall: {
@@ -28,6 +29,14 @@ const props = defineProps({
   rightSideTeamRotation: {
     type: Object as PropType<Rotation>,
     required: false,
+  },
+  leftSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    required: true,
+  },
+  rightSideTeamInjuries: {
+    type: Array as PropType<Injury[]>,
+    required: true,
   },
   pendingPlayerChanges: {
     type: Array as PropType<RotationPlayer[]>,
@@ -49,6 +58,28 @@ const playerChanges = computed((): RotationPlayerChange[] => {
       return leftSideTeamPlayerChanges.value ?? []
     case TeamSideEnum.right:
       return rightSideTeamPlayerChanges.value ?? []
+    default:
+      return []
+  }
+})
+
+const injuries = computed((): Injury[] => {
+  switch (selectedTeamSide.value) {
+    case TeamSideEnum.left:
+      return props.leftSideTeamInjuries.filter(i => !i.isPlayerChangeInjury)
+    case TeamSideEnum.right:
+      return props.rightSideTeamInjuries.filter(i => !i.isPlayerChangeInjury)
+    default:
+      return []
+  }
+})
+
+const injuryCallPlayers = computed((): CallPlayerData[] => {
+  switch (selectedTeamSide.value) {
+    case TeamSideEnum.left:
+      return props.leftSideTeamCall.playersData
+    case TeamSideEnum.right:
+      return props.rightSideTeamCall.playersData
     default:
       return []
   }
@@ -286,7 +317,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
     </EasyGrid>
 
     <DialogBottom
-      class="easy-coach-rotation-captain-selector-dialog-component"
+      class="easy-game-changes-dialog-component"
       :visible="!!selectedTeamSide"
       :hasStickyFooter="false"
       @hide="selectedTeamSide = undefined"
@@ -299,22 +330,18 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
         {{ t('rotations.player_change_done', 0) }}
       </Message>
 
-      <!-- <template v-if="playerChanges">
+      <template v-if="playerChanges">
         <RotationPlayerChangeItem
           v-for="(change, index) in playerChanges"
           :key="index"
           class="mt-4"
           :playerIn="change.in"
           :playerOut="change.out"
-          :action="
-            playerChangeCanBeRemoved(change, rotation?.currentChangeWindow ?? 0)
-              ? 'remove'
-              : 'done'
-          "
+          :injured="!!change.injured"
           @change:remove="removePlayerChange(change)"
         />
-      </template> -->
-      <template
+      </template>
+      <!-- <template
         v-if="windowPlayerChanges"
         v-for="windowPlayerChange in windowPlayerChanges"
       >
@@ -333,6 +360,7 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
             class="mt-4"
             :playerIn="change.in"
             :playerOut="change.out"
+            :injured="!!change.injured"
             :action="
               // TODO: Implement this method when remove player changes also captain to previous one
               // playerChangeCanBeRemoved(
@@ -346,7 +374,22 @@ const removePlayerChange = async (playerChange: RotationPlayerChange) => {
             @change:remove="removePlayerChange(change)"
           />
         </div>
-      </template>
+      </template> -->
+      <div v-if="injuries.length" class="mt-8">
+        <header class="flex items-center gap-2 mb-3">
+          <IconInjury size="1.25rem" />
+          <p>{{ t('injuries.extraordinay_change', 2) }}</p>
+        </header>
+
+        <div v-for="injury of injuries" class="mt-4">
+          <RotationPlayerChangeItem
+            v-if="mapInjuryToPlayerInOut(injury, injuryCallPlayers)"
+            :playerIn="mapInjuryToPlayerInOut(injury, injuryCallPlayers)?.in!"
+            :playerOut="mapInjuryToPlayerInOut(injury, injuryCallPlayers)?.out!"
+            injured
+          />
+        </div>
+      </div>
     </DialogBottom>
   </div>
 </template>

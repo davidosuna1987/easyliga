@@ -61,7 +61,7 @@ export type ApiFederationFormRequest = {
 }
 
 export type ApiFederationResponse = {
-  success: boolean
+  success: true
   data: {
     federation: ApiFederation
   }
@@ -69,7 +69,7 @@ export type ApiFederationResponse = {
 }
 
 export type ApiFederationsResponse = {
-  success: boolean
+  success: true
   data: {
     federations: ApiFederation[]
   }

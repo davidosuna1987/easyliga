@@ -166,7 +166,7 @@ const rotationLocked = (game: Game, opponent: boolean = false): boolean => {
 
 const maxSetPlayerChangesReached = (
   game: Game,
-  opponent: boolean = true,
+  opponent: boolean = false,
 ): boolean | undefined => {
   const rotation = currentSetRotation(game, opponent)
   if (!rotation) return

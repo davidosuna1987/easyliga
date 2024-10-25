@@ -12,6 +12,10 @@ const props = defineProps({
     type: Object as PropType<Sanction>,
     required: false,
   },
+  hoverable: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const countPlayerCaptainIcons = (player: CallPlayerData) => {
@@ -23,7 +27,12 @@ const countPlayerCaptainIcons = (player: CallPlayerData) => {
 </script>
 
 <template>
-  <div class="easy-game-player-item easy-coach-rotation-player-component">
+  <div
+    :class="[
+      'easy-game-player-item easy-coach-rotation-player-component',
+      { 'is-hoverable': hoverable },
+    ]"
+  >
     <div class="team-player-info">
       <IconShirtNumber :shirtNumber="player.shirtNumber" />
       {{ getFullName(player) }}

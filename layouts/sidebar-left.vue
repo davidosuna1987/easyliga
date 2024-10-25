@@ -12,6 +12,7 @@ const toggleClass = ref<string>('closed')
     class="sidebar-left-layout"
     :class="[`sidebar-${toggleClass}`, $route.meta.layoutClass]"
   >
+    <NuxtLoadingIndicator />
     <NavbarAuth v-if="authuser" />
     <NavbarGuest v-else />
 

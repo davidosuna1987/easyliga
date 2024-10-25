@@ -42,7 +42,7 @@ export type ApiAddRolesRequest = {
 }
 
 export type ApiInviteResponse = {
-  success: boolean
+  success: true
   data: {
     invite: ApiInvite
   }

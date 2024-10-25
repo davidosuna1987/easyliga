@@ -54,7 +54,7 @@ export type ApiClubFormRequest = {
 }
 
 export type ApiClubResponse = {
-  success: boolean
+  success: true
   data: {
     club: ApiClub
   }
@@ -62,7 +62,7 @@ export type ApiClubResponse = {
 }
 
 export type ApiClubsResponse = {
-  success: boolean
+  success: true
   data: {
     clubs: ApiClub[]
   }

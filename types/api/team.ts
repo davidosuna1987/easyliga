@@ -50,7 +50,7 @@ export type ApiTeam = {
   ApiTeamAppends
 
 export type ApiTeamResponse = {
-  success: boolean
+  success: true
   data: {
     team: ApiTeam
   }
@@ -58,7 +58,7 @@ export type ApiTeamResponse = {
 }
 
 export type ApiTeamsResponse = {
-  success: boolean
+  success: true
   data: {
     teams: ApiTeam[]
   }

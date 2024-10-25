@@ -42,7 +42,7 @@ export type ApiSanctionStoreRequest = {
 }
 
 export type ApiSanctionResponse = {
-  success: boolean
+  success: true
   data: {
     sanction: ApiSanction
   }

@@ -54,6 +54,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hoverable: {
+    type: Boolean,
+    default: true,
+  },
   showAvatar: {
     type: Boolean,
     default: true,
@@ -74,9 +78,17 @@ const props = defineProps({
     type: Object as PropType<Sanction>,
     required: false,
   },
+  injured: {
+    type: Boolean,
+    default: false,
+  },
   editable: {
     type: Boolean,
     default: false,
+  },
+  shirtNumberEditable: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -106,9 +118,11 @@ const removeProfileTooltipText = computed(() => {
 
 <template>
   <div
+    :data-player-profile-id="player.profileId"
     class="easy-game-player-item"
     :class="{
       'is-selectable': selectable,
+      'is-hoverable': hoverable,
       'is-selected': selected,
       'is-captain': player.captain,
       'is-libero': player.libero,
@@ -131,13 +145,16 @@ const removeProfileTooltipText = computed(() => {
         :image="player.avatar"
         shape="circle"
       />
+      <IconInjury v-if="props.injured" size="1rem" bordered />
       <IconShirtNumber
         v-tooltip.top="{
           value: t('shirts.number_change'),
-          disabled: tooltipDisabled,
+          disabled: tooltipDisabled || !shirtNumberEditable,
         }"
         :shirtNumber="player.shirtNumber"
-        @click.stop="setShirtNumberUpdatePlayer(player)"
+        @click.stop="
+          shirtNumberEditable ? setShirtNumberUpdatePlayer(player) : undefined
+        "
       />
       <span class="player-name">{{ getFullName(player) }}</span>
     </div>

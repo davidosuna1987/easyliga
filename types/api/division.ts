@@ -22,7 +22,7 @@ export type ApiDivision = {
 } & ApiDivisionRelations
 
 export type ApiDivisionResponse = {
-  success: boolean
+  success: true
   data: {
     divisions: ApiDivision[]
   }

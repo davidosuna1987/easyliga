@@ -10,7 +10,7 @@ export type ApiCategory = {
 }
 
 export type ApiCategoryResponse = {
-  success: boolean
+  success: true
   data: {
     categories: ApiCategory[]
   }

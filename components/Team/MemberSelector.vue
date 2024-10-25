@@ -3,6 +3,10 @@ import { TeamMember } from '@/domain/team'
 import { Set } from '@/domain/set'
 import { Team } from '@/domain/team'
 import { Sanction, getPlayerItemSanction } from '@/domain/sanction'
+import {
+  Injury,
+  isPlayerInjured as injuryIsPlayerInjured,
+} from '@/domain/injury'
 
 const props = defineProps({
   currentSet: {
@@ -25,6 +29,10 @@ const props = defineProps({
     type: Array as PropType<Sanction[]>,
     required: false,
   },
+  injuries: {
+    type: Array as PropType<Injury[]>,
+    default: [],
+  },
 })
 
 const emit = defineEmits<{
@@ -34,6 +42,9 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const selectedMember = ref<TeamMember | undefined>(props.member)
+
+const isPlayerInjured = (profileId: number): boolean =>
+  injuryIsPlayerInjured(profileId, props.injuries)
 </script>
 
 <template>
@@ -84,6 +95,7 @@ const selectedMember = ref<TeamMember | undefined>(props.member)
               'game',
             )
           "
+          :injured="isPlayerInjured(slotProps.value.profileId)"
         />
       </template>
       <template v-else>
@@ -124,6 +136,7 @@ const selectedMember = ref<TeamMember | undefined>(props.member)
             'game',
           )
         "
+        :injured="isPlayerInjured(slotProps.option.profileId)"
       />
     </template>
     <template #dropdownicon>

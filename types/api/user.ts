@@ -44,7 +44,7 @@ export type ApiUserSearchRequest = {
 }
 
 export type ApiUserResponse = {
-  success: boolean
+  success: true
   data: {
     user: ApiUser
   }
@@ -52,7 +52,7 @@ export type ApiUserResponse = {
 }
 
 export type ApiUsersResponse = {
-  success: boolean
+  success: true
   data: {
     users: ApiUser[]
   }

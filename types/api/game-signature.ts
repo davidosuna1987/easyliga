@@ -21,7 +21,7 @@ export type ApiGameSignature = {
 } & ApiGameSignatureRelations
 
 export type ApiGameSignatureResponse = {
-  success: boolean
+  success: true
   data: {
     game_signature: ApiGameSignature
   }
@@ -29,7 +29,7 @@ export type ApiGameSignatureResponse = {
 }
 
 export type ApiGameSignaturesResponse = {
-  success: boolean
+  success: true
   data: {
     game_signatures: ApiGameSignature[]
   }

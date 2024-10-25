@@ -30,6 +30,7 @@ import {
 import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 import { IconName } from '@/domain/icon'
+import { Injury, mapApiInjuryToInjury } from '@/domain/injury'
 
 export const SETS_TO_WIN = 3
 export const GAME_OBSERVATIONS_DELAY = 10
@@ -119,6 +120,7 @@ export type GameRelations = {
   calls?: Call[]
   currentSet?: Set
   sanctions?: Sanction[]
+  injuries?: Injury[]
   signatures?: GameSignature[]
 }
 
@@ -266,6 +268,9 @@ export const mapApiGameRelationsToGameRelations = (
     : undefined,
   sanctions: apiGame.sanctions
     ? apiGame.sanctions.map(mapApiSanctionToSanction)
+    : undefined,
+  injuries: apiGame.injuries
+    ? apiGame.injuries.map(mapApiInjuryToInjury)
     : undefined,
   signatures: apiGame.signatures
     ? apiGame.signatures.map(mapApiGameSignatureToGameSignature)

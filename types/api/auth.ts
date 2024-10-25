@@ -68,7 +68,7 @@ export type ApiLoginAsRequest = {
 }
 
 export type AuthuserResponse = {
-  success: boolean
+  success: true
   data: {
     user: ApiUser
   }
@@ -100,7 +100,7 @@ export type ApiFreshResponse = {
 }
 
 export type ApiManagedModelResponse = {
-  success: boolean
+  success: true
   data: {
     managed: ApiManagedModel[]
   }
@@ -108,7 +108,7 @@ export type ApiManagedModelResponse = {
 }
 
 export type ApiManagedModelMappedResponse = {
-  success: boolean
+  success: true
   data: {
     managed: ApiManagedModelMapped[]
   }
@@ -116,7 +116,7 @@ export type ApiManagedModelMappedResponse = {
 }
 
 export type ApiManagedModelsResponse = {
-  success: boolean
+  success: true
   data: {
     managed: ApiManagedModels
   }
@@ -124,7 +124,7 @@ export type ApiManagedModelsResponse = {
 }
 
 export type ApiManagedModelsMappedResponse = {
-  success: boolean
+  success: true
   data: {
     managed: ApiManagedModelsMapped
   }
@@ -132,7 +132,7 @@ export type ApiManagedModelsMappedResponse = {
 }
 
 export type ApiMessageResponse = {
-  success: boolean
+  success: true
   data: {
     message: string
   }
@@ -148,7 +148,7 @@ export type ErrorResponseErrors =
     }
 
 export type ErrorResponse = {
-  success: boolean
+  success: false
   data: null
   errors: ErrorResponseErrors
 }
