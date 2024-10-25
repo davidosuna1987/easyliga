@@ -8,6 +8,7 @@ import { ApiProfile } from '@/types/api/profile'
 import { ApiGameSignature } from '@/types/api/game-signature'
 import { ApiGame } from '@/types/api/game'
 import { ApiUser } from '@/types/api/user'
+import { ApiInjury } from '@/types/api/injury'
 import { RotationPlayerStatus } from '@/domain/rotation'
 
 export enum ApiEvents {
@@ -22,6 +23,7 @@ export enum ApiEvents {
   GAME_SIGNATURE_CREATED = 'GameSignatureCreatedEvent',
   REQUEST_CHANGE_DATE = 'RequestChangeDateEvent',
   PLAYER_ROTATON_STATUS_UPDATED = 'PlayerRotationStatusUpdatedEvent',
+  INJURY_STORED = 'InjuryStoredEvent',
 }
 
 export type ApiCallUpdatedEventResponse = {
@@ -84,4 +86,9 @@ export type ApiGamePlayerRotationStatusUpdatedEventResponse = {
   player_in_profile_id: number
   player_out_profile_id: number
   status: RotationPlayerStatus
+}
+
+export type ApiGameInjuryStoredEvent = {
+  injury: ApiInjury
+  team_name: string
 }

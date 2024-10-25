@@ -1229,7 +1229,8 @@
     "player_change_request": {
       "requested": "El equipo {teamName} ha solicitado un cambio de jugador",
       "injury_requested": "El equipo {teamName} ha solicitado un cambio por lesión"
-    }
+    },
+    "injury_sroted_for_referee": "El equipo {teamName} ha realizado un cambio extraordinario por lesión."
   },
   "countries": {
     "country": "País | Países",

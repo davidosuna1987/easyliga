@@ -10,10 +10,11 @@ import {
   mapApiGameInitialDataToGameInitialData,
   SETS_TO_WIN,
 } from '@/domain/game'
-import { Call, mapApiCallToCall } from '@/domain/call'
+import { Call, getPlayerDataByProfileId, mapApiCallToCall } from '@/domain/call'
 import { ApiErrorObject } from '@/types/errors'
 import {
   ApiCallUpdatedEventResponse,
+  ApiGameInjuryStoredEvent,
   ApiGameSignatureCreatedEventResponse,
   ApiRotationCreatedEventResponse,
   ApiRotationUpdatedEventResponse,
@@ -60,7 +61,7 @@ import {
   mapApiGameSignatureToGameSignature,
 } from '@/domain/game-signature'
 import { User } from '@/domain/user'
-import { Injury } from '@/domain/injury'
+import { Injury, mapApiInjuryToInjury } from '@/domain/injury'
 
 const { t } = useI18n()
 const auth = useAuthStore()
@@ -102,6 +103,9 @@ const showSetPointWillEndSetDialog = ref<boolean>()
 const showPendingPlayerChangeDialog = ref<RotationPlayer>()
 const showDenyReasonDialog = ref<RotationPlayer>()
 
+const gameInjuryStoredInjury = ref<Injury>()
+const gameInjuryStoredTeamName = ref<string>()
+
 const customTeamsShirtColor = ref<CustomTeamsShirtColor>({
   local: {
     id: 0,
@@ -112,6 +116,30 @@ const customTeamsShirtColor = ref<CustomTeamsShirtColor>({
     color: undefined,
   },
 })
+
+const gameInjuryCall = computed(() => {
+  return leftSideTeam.value?.id === gameInjuryStoredInjury.value?.teamId
+    ? leftSideTeamCall.value
+    : rightSideTeamCall.value
+})
+
+const gameInjuryPlayerIn = computed(() =>
+  gameInjuryCall.value
+    ? getPlayerDataByProfileId(
+        gameInjuryCall.value?.playersData,
+        gameInjuryStoredInjury.value?.replacementProfileId,
+      )
+    : undefined,
+)
+
+const gameInjuryPlayerOut = computed(() =>
+  gameInjuryCall.value
+    ? getPlayerDataByProfileId(
+        gameInjuryCall.value?.playersData,
+        gameInjuryStoredInjury.value?.profileId,
+      )
+    : undefined,
+)
 
 const leftSideTeam = computed((): Team | undefined =>
   !gameInitialData.value?.game.currentSet?.localTeamSide ||
@@ -751,6 +779,11 @@ const hideDenyDialog = () => {
   showDenyReasonDialog.value = undefined
 }
 
+const hideGameInjuryStoredDialog = () => {
+  gameInjuryStoredInjury.value = undefined
+  gameInjuryStoredTeamName.value = undefined
+}
+
 const listenCallUpdatedEvent = () => {
   listenedEvents.value.push(`game.${route.params.gameId}.call.updated`)
   window.Echo.channel(`game.${route.params.gameId}.call.updated`).listen(
@@ -908,6 +941,18 @@ const listenGameSignatureCreatedEvent = () => {
   )
 }
 
+const listenGameInjuryStoredEvent = () => {
+  listenedEvents.value.push(`game.${route.params.gameId}.injury.stored`)
+  window.Echo.channel(`game.${route.params.gameId}.injury.stored`).listen(
+    ApiEvents.INJURY_STORED,
+    (response: ApiGameInjuryStoredEvent) => {
+      gameInjuryStoredInjury.value = mapApiInjuryToInjury(response.injury)
+      gameInjuryStoredTeamName.value = response.team_name
+      getGameInitialData()
+    },
+  )
+}
+
 const listenAllChannels = () => {
   if (
     !listenedEvents.value.includes(`game.${route.params.gameId}.call.updated`)
@@ -941,6 +986,11 @@ const listenAllChannels = () => {
     )
   ) {
     listenGameSignatureCreatedEvent()
+  }
+  if (
+    !listenedEvents.value.includes(`game.${route.params.gameId}.injury.stored`)
+  ) {
+    listenGameInjuryStoredEvent()
   }
 }
 
@@ -1104,6 +1154,43 @@ onMounted(() => {
           :submitLabel="t('forms.accept')"
           @form:submit="sumPoint"
           @form:cancel="showSetPointWillEndSetDialog = false"
+        />
+      </template>
+    </DialogBottom>
+
+    <DialogBottom
+      class="easy-game-injury-stored-dialog-component"
+      :visible="!!gameInjuryStoredInjury && !!gameInjuryStoredTeamName"
+      @hide="hideGameInjuryStoredDialog"
+    >
+      <template #header>
+        <Heading class="flex gap-2" tag="h6">
+          <IconInjury bordered />
+          {{ t('injuries.extraordinay_change') }}
+        </Heading>
+      </template>
+
+      <p v-highlight="gameInjuryStoredTeamName" class="mt-3 mb-5">
+        {{
+          t('events.injury_sroted_for_referee', {
+            teamName: gameInjuryStoredTeamName,
+          })
+        }}
+      </p>
+
+      <RotationPlayerChangeItem
+        v-if="!!gameInjuryPlayerIn && !!gameInjuryPlayerOut"
+        :playerIn="gameInjuryPlayerIn"
+        :playerOut="gameInjuryPlayerOut"
+        injured
+        block
+      />
+
+      <template #stickyFooter>
+        <FormFooterActions
+          :submitLabel="t('forms.accept')"
+          hideCancel
+          @form:submit="hideGameInjuryStoredDialog"
         />
       </template>
     </DialogBottom>
