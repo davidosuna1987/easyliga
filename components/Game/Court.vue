@@ -573,10 +573,10 @@ onMounted(setInitialShowCountdown)
             />
             <Button
               v-else
-              class="px-12 mb-3"
-              :label="t('games.finished')"
-              outlined
-              disabled
+              :label="t('reports.show_game')"
+              @click.prevent="
+                navigateTo(`/game/${props.currentSet.gameId}/report`)
+              "
             />
           </EasyGrid>
         </template>
@@ -585,7 +585,7 @@ onMounted(setInitialShowCountdown)
       <a
         v-if="gameStatus !== 'finished' || showCountdown"
         href=""
-        class="w-full text-center block mt-5 mb-3 text-primary"
+        class="w-full text-center block mt-5 text-primary"
         @click.prevent="emit('observations:dialog')"
       >
         {{ t('observations.record') }}
