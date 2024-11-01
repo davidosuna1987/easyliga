@@ -72,6 +72,14 @@ a {
   color: var(--link-color);
 }
 
+s {
+  text-decoration: line-through;
+}
+
+u {
+  text-decoration: underline;
+}
+
 input {
   border-color: var(--text-color);
 }
