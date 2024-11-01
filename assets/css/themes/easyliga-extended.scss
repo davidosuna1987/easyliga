@@ -868,22 +868,22 @@
   background-color: transparent;
 }
 .p-editor-container .p-editor-toolbar {
-  background: #f8f9fa;
+  background: var(--background-color);
   border-top-right-radius: 6px;
   border-top-left-radius: 6px;
 }
 .p-editor-container .p-editor-toolbar.ql-snow {
-  border: 1px solid var(--primary-color-medium);
+  border: 1px solid var(--input-border-color);
 }
 .p-editor-container .p-editor-toolbar.ql-snow .ql-stroke {
-  stroke: #b9a7a7;
+  stroke: var(--text-color);
 }
 .p-editor-container .p-editor-toolbar.ql-snow .ql-fill {
-  fill: #b9a7a7;
+  fill: var(--text-color);
 }
 .p-editor-container .p-editor-toolbar.ql-snow .ql-picker .ql-picker-label {
   border: 0 none;
-  color: #b9a7a7;
+  color: var(--text-color);
 }
 .p-editor-container
   .p-editor-toolbar.ql-snow
@@ -896,14 +896,14 @@
   .ql-picker
   .ql-picker-label:hover
   .ql-stroke {
-  stroke: #495057;
+  stroke: var(--highlight-color);
 }
 .p-editor-container
   .p-editor-toolbar.ql-snow
   .ql-picker
   .ql-picker-label:hover
   .ql-fill {
-  fill: #495057;
+  fill: var(--highlight-color);
 }
 .p-editor-container
   .p-editor-toolbar.ql-snow
@@ -961,7 +961,7 @@
   border-bottom-left-radius: 6px;
 }
 .p-editor-container .p-editor-content.ql-snow {
-  border: 1px solid var(--primary-color-medium);
+  border: 1px solid var(--input-border-color);
 }
 .p-editor-container .p-editor-content .ql-editor {
   background: var(--background-color);
@@ -975,11 +975,11 @@
 }
 .p-editor-container .ql-snow.ql-toolbar button:hover .ql-stroke,
 .p-editor-container .ql-snow.ql-toolbar button:focus .ql-stroke {
-  stroke: #495057;
+  stroke: var(--highlight-color);
 }
 .p-editor-container .ql-snow.ql-toolbar button:hover .ql-fill,
 .p-editor-container .ql-snow.ql-toolbar button:focus .ql-fill {
-  fill: #495057;
+  fill: var(--highlight-color);
 }
 .p-editor-container .ql-snow.ql-toolbar button.ql-active,
 .p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,

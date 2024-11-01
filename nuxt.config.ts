@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   ssr: false,
   spaLoadingTemplate: false,
+  devtools: true,
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/i18n',
@@ -27,6 +28,9 @@ export default defineNuxtConfig({
       pusherAppHost: process.env.PUSHER_APP_HOST,
     },
     devtools: { enabled: true },
+  },
+  alias: {
+    quill: process.dev ? 'quill/dist/quill.js' : 'quill',
   },
   css: ['@/assets/css/app.scss'],
   build: {

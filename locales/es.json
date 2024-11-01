@@ -145,7 +145,8 @@
     "settings": "Ajuste | Ajustes",
     "options": "Opciones",
     "deny": "Denegar",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "template": "Plantilla | Plantillas"
   },
   "errors": {
     "whoops": "¡Whoops! Algo ha ido mal...",
@@ -216,6 +217,7 @@
     "register": "Registrarme",
     "logout": "Cerrar sesión",
     "login_as": "Entrar como {name}",
+    "login_as_quick": "Login rápido",
     "access_as": "Acceder como {name}",
     "remember": "Recuérdame",
     "forgot": "¿Has olvidado tu contraseña?",
@@ -1327,5 +1329,52 @@
     "change_request": "Solicitud de cambio por lesión",
     "change_not_allowed_by_injury": "No se puede deshacer el cambio porque el jugador de reemplazo está lesionado. Si el jugador en pista está lesionado puedes hacer un cambio extraordinario.",
     "extraordinay_change": "Cambio extraordinario | Cambios extraordinarios"
+  },
+  "emails": {
+    "email": "Email | Emails",
+    "custom": "Email personalizado | Emails personalizados",
+    "custom_quick": "Email personalizado rápido",
+    "destinatary": "Destinatario | Destinatarios",
+    "subject": "Asunto",
+    "greeting": "Saludo",
+    "submitted": "El email se ha enviado correctamente",
+    "action_url": "URL del enlace",
+    "action_text": "Texto del enlace"
+  },
+  "email_templates": {
+    "email": "Email | Emails",
+    "email_template": "Plantilla de email | Plantillas de email",
+    "create": "Crear plantilla de email",
+    "sincerely": "Atentamente",
+    "show": "Ver plantilla de email",
+    "edit": "Editar plantilla de email",
+    "delete": "Eliminar plantilla de email",
+    "delete_alert": "¿Seguro que quieres eliminar la plantilla de email?",
+    "deleted": "La plantilla de email se ha eliminado correctamente"
+  },
+  "editor": {
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "underlined": "Subrallado",
+    "strike": "Tachado",
+    "list_ordered": "Lista ordenada",
+    "list_unordered": "Lista desordenada",
+    "link": "Enlace"
+  },
+  "attachments": {
+    "attachment": "Archivo adjunto | Archivos adjuntos",
+    "delete": "Eliminar archivo adjunto",
+    "delete_alert": "¿Seguro que quieres eliminar el archivo {name}?",
+    "deleted": "El archivo adjunto se ha eliminado correctamente.",
+    "filename_exists": "Ya existe un archivo con el nombre \"{name}\". Por favor selecciona un archivo distinto o cambia el nombre al archivo que deseas subir.",
+    "added": "El archivo adjunto se ha añadido correctamente.",
+    "show": "Ver archivo adjunto",
+    "open": "Abrir el archivo adjunto",
+    "not_fonund": "No se han encontrado archivos adjuntos.",
+    "videos_limit": "No puedes adjuntar más de {num} vídeo | No puedes adjuntar más de {num} vídeos",
+    "images_limit": "No puedes adjuntar más de {num} imágene | No puedes adjuntar más de {num} imágenes",
+    "pdfs_limit": "No puedes adjuntar más de {num} PDF | No puedes adjuntar más de {num} PDF",
+    "audios_limit": "No puedes adjuntar más de {num} audio | No puedes adjuntar más de {num} audios",
+    "limit_reached": "Has alcanzado el límite de archivos adjuntos"
   }
 }

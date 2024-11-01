@@ -7,8 +7,10 @@ import Badge from 'primevue/badge'
 import Button from 'primevue/button'
 import Calendar from 'primevue/calendar'
 import Checkbox from 'primevue/checkbox'
+import Chips from 'primevue/chips'
 import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
+import Editor from 'primevue/editor'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import Menu from 'primevue/menu'
@@ -49,8 +51,10 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('Button', Button)
   nuxtApp.vueApp.component('Calendar', Calendar)
   nuxtApp.vueApp.component('Checkbox', Checkbox)
+  nuxtApp.vueApp.component('Chips', Chips)
   nuxtApp.vueApp.component('Dialog', Dialog)
   nuxtApp.vueApp.component('Dropdown', Dropdown)
+  nuxtApp.vueApp.component('Editor', Editor)
   nuxtApp.vueApp.component('InputNumber', InputNumber)
   nuxtApp.vueApp.component('InputText', InputText)
   nuxtApp.vueApp.component('Menu', Menu)

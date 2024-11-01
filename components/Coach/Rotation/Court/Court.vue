@@ -462,8 +462,7 @@ const cannotReplacePlayersMessage = computed((): string => {
     index === 0 ? message : message.toLocaleLowerCase(),
   )
 
-  // join messages with a comma and space and last occurence with ' and '
-  return parsedMessages.join(', ').replace(/,([^,]*)$/, ` ${t('forms.and')}$1`)
+  return parsedMessages.joinReplaceLast(', ', ` ${t('forms.and')} `)
 })
 
 const showExtraordinaryChangesButton = computed(
