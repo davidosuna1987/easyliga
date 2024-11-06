@@ -1376,5 +1376,17 @@
     "pdfs_limit": "No puedes adjuntar más de {num} PDF | No puedes adjuntar más de {num} PDF",
     "audios_limit": "No puedes adjuntar más de {num} audio | No puedes adjuntar más de {num} audios",
     "limit_reached": "Has alcanzado el límite de archivos adjuntos"
+  },
+  "translate": {
+    "quick": "Traducción rápida",
+    "input_locale": "Idioma de entrada",
+    "output_locales": "Idiomas de salida",
+    "json": "Objeto JSON a traducir",
+    "translated": "La traducción se ha realizado correctamente",
+    "input_locale_required": "Debes seleccionar un idioma de entrada",
+    "output_locales_required": "Debes seleccionar al menos un idioma de salida",
+    "json_required": "Debes introducir un objeto JSON para traducir",
+    "translate": "Traducir",
+    "translation": "Traducción"
   }
 }

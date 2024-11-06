@@ -1,3 +1,5 @@
+import prototipes from 'plugins/prototipes'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
@@ -14,6 +16,15 @@ export default defineNuxtConfig({
     '@kevinmarrec/nuxt-pwa',
     '@nuxtjs/color-mode',
   ],
+  vite: {
+    optimizeDeps: {
+      esbuildOptions: {
+        define: {
+          global: 'globalThis',
+        },
+      },
+    },
+  },
   runtimeConfig: {
     // private keys
     pusherAppSecret: process.env.PUSHER_APP_SECRET,

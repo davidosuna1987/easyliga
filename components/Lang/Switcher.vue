@@ -15,9 +15,13 @@ const langMenu = ref()
       size="2rem"
       @click="langMenu.toggle($event)"
     />
-    <TieredMenu ref="langMenu" :model="(locales as MenuItem[])" popup>
+    <TieredMenu
+      ref="langMenu"
+      :model="(Array.from(locales) as MenuItem[])"
+      popup
+    >
       <template #item="props">
-        <LangItem :item="props.item" />
+        <LangItemLink :item="props.item" />
       </template>
     </TieredMenu>
   </div>

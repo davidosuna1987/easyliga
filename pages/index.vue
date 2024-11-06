@@ -21,28 +21,21 @@ onMounted(() => redirectIfNotAdmin())
   <NuxtLayout name="default">
     <div v-if="showPage" class="easy-index-page">
       <template v-if="auth.isAdmin()">
-        <aside class="mb-10">
-          <Heading class="mb-5" tag="h3" position="center">
-            {{ t('pages.index.welcome') }}
-          </Heading>
-          <Heading
-            class="mb-5 pb-2 [border-bottom:solid_1px_var(--text-color)]"
-            tag="h6"
-          >
-            {{ t('auth.login_as_quick') }}
-          </Heading>
-          <FormAdminLoginAs class="my-3" />
-        </aside>
+        <Heading class="mb-5" tag="h3" position="center">
+          {{ t('pages.index.welcome') }}
+        </Heading>
 
-        <aside class="mb-10">
-          <Heading
-            class="mb-5 pb-2 [border-bottom:solid_1px_var(--text-color)]"
-            tag="h6"
-          >
-            {{ t('emails.custom_quick') }}
-          </Heading>
-          <EmailForm class="my-3" />
-        </aside>
+        <QuickAside class="mb-10" :title="t('auth.login_as_quick')">
+          <FormAdminLoginAs />
+        </QuickAside>
+
+        <QuickAside class="mb-10" :title="t('emails.custom_quick')">
+          <EmailForm />
+        </QuickAside>
+
+        <QuickAside class="mb-10" :title="t('translate.quick')">
+          <TranslateJson />
+        </QuickAside>
       </template>
     </div>
   </NuxtLayout>

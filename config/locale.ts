@@ -7,17 +7,17 @@ export const locales = [
     flag: 'es',
   },
   {
-    code: 'ct',
+    code: 'ca',
     name: 'Català',
     iso: 'es-CT',
-    file: 'ct.json',
+    file: 'ca.json',
     flag: 'es-ct',
   },
   {
-    code: 'pv',
+    code: 'eu',
     name: 'Euskera',
     iso: 'es-PV',
-    file: 'pv.json',
+    file: 'eu.json',
     flag: 'es-pv',
   },
   {
