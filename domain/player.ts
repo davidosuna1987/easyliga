@@ -5,6 +5,14 @@ import { Coach, TeamMember } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { RotationPlayerStatus } from '@/domain/rotation'
 
+export const ADD_PLAYER_STEPS = {
+  search: 'search',
+  invite: 'invite',
+  create: 'create',
+} as const
+
+export type AddPlayerStep = keyof typeof ADD_PLAYER_STEPS
+
 export type Player = {
   profileId: number
   firstName: string

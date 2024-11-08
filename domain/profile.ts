@@ -15,6 +15,16 @@ export const PROFILE_GENDER_TYPES = {
 
 export type ProfileGender = keyof typeof PROFILE_GENDER_TYPES
 
+export const NIF_TYPES = {
+  dni: 'dni',
+  nif: 'nif',
+  nie: 'nie',
+  passport: 'passport',
+  cif: 'cif',
+} as const
+
+export type NifType = keyof typeof NIF_TYPES
+
 export const AVATAR_STYLES = {
   background: '#333333',
   color: '#ffffff',
@@ -44,6 +54,8 @@ export type Profile = {
   avatar?: string
   email: string
   phone?: string
+  nif?: string
+  nifType?: NifType
   playerId?: number
 } & ProfileRelations
 
@@ -55,6 +67,8 @@ export type ProfileUpdateRequest = {
   gender?: ProfileGender
   avatar?: Image
   phone?: string
+  nif?: string
+  nifType?: NifType
   address?: Address
 }
 
@@ -77,6 +91,8 @@ export const mapApiProfileToProfile = (apiProfile: ApiProfile): Profile => ({
   avatar: apiProfile.avatar ?? undefined,
   email: apiProfile.email ?? undefined,
   phone: apiProfile.phone ?? undefined,
+  nif: apiProfile.nif ?? undefined,
+  nifType: apiProfile.nif_type ?? undefined,
   playerId: apiProfile.player_id ?? undefined,
   address: apiProfile.address
     ? mapApiAddressToAddress(apiProfile.address)
@@ -104,6 +120,8 @@ export const mapProfileUpdateRequestToApiProfileUpdateRequest = (
     gender: profileUpdateRequest.gender ?? null,
     avatar: profileUpdateRequest.avatar?.file ?? null,
     phone: profileUpdateRequest.phone ?? null,
+    nif: profileUpdateRequest.nif ?? null,
+    nif_type: profileUpdateRequest.nifType ?? null,
     line1: apiAddress?.line1 ?? null,
     line2: apiAddress?.line2 ?? null,
     city: apiAddress?.city ?? null,
@@ -124,6 +142,8 @@ export const mapProfileToProfileUpdateRequest = (
   gender: profile.gender,
   avatar: undefined,
   phone: profile.phone,
+  nif: profile.nif,
+  nifType: profile.nifType,
   address: profile.address,
 })
 
@@ -139,6 +159,8 @@ export const mapApiProfileUpdateRequestToFormData = (
   formData.append('gender', data.gender ?? '')
   formData.append('avatar', data.avatar ?? '')
   formData.append('phone', data.phone ?? '')
+  formData.append('nif', data.nif ?? '')
+  formData.append('nif_type', data.nif_type ?? '')
   formData.append('line1', data.line1 ?? '')
   formData.append('line2', data.line2 ?? '')
   formData.append('city', data.city ?? '')

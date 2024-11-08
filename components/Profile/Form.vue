@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {
   Image,
+  NIF_TYPES,
+  NifType,
   Profile,
   ProfileUpdateRequest,
   mapProfileToProfileUpdateRequest,
@@ -96,6 +98,8 @@ const avatarChange = (newAvatar: Image) => {
 }
 
 const genderLabel = (gender: string) => t(`forms.${gender}`)
+
+const nifTypeLabel = (nifType: NifType) => t(`forms.${nifType}`)
 
 const handleSubmit = async () => {
   if (!form.value) return
@@ -216,6 +220,35 @@ watch(
           class="w-full"
           type="text"
           :disabled="!!loadingApi || !props.profile"
+        />
+      </FormLabel>
+      <FormLabel :label="t('forms.nif_type')" :error="errors?.nif_type?.[0]">
+        <Dropdown
+          v-model="form.nifType"
+          class="w-full"
+          :options="[
+            NIF_TYPES.dni,
+            NIF_TYPES.nif,
+            NIF_TYPES.nie,
+            NIF_TYPES.passport,
+            NIF_TYPES.cif,
+          ]"
+          :optionLabel="nifTypeLabel"
+          :disabled="!!loadingApi || !props.profile"
+        />
+      </FormLabel>
+      <FormLabel
+        :label="
+          form.nifType ? nifTypeLabel(form.nifType) : t('forms.select_nif_type')
+        "
+        :error="errors?.nif?.[0]"
+        :style="{ opacity: form.nifType ? 1 : 0.5 }"
+      >
+        <InputText
+          v-model="form.nif"
+          class="w-full"
+          type="text"
+          :disabled="!!loadingApi || !props.profile || !form.nifType"
         />
       </FormLabel>
     </EasyGrid>
