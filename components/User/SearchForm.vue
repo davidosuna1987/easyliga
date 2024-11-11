@@ -184,6 +184,7 @@ onBeforeMount(() => {
           <ProfileItem
             class="pointer-events-none"
             :profile="slotProps.option.profile"
+            :roles="slotProps.option.roles"
           />
         </template>
 

@@ -1,8 +1,10 @@
 import { ApiUser } from '@/types/api/user'
 import { Profile, Responsible, mapApiProfileToProfile } from '@/domain/profile'
+import { mapApiRoleToRole, Role } from '@/domain/role'
 
 export type UserRelations = {
   profile?: Profile
+  roles?: Role[]
 }
 
 export type User = {
@@ -25,9 +27,16 @@ export const mapApiUserToUser = (apiUser: ApiUser): User => ({
   id: apiUser.id,
   email: apiUser.email,
 
+  ...mapApiUserRelationsToUserRelations(apiUser),
+})
+
+export const mapApiUserRelationsToUserRelations = (
+  apiUser: ApiUser,
+): UserRelations => ({
   profile: apiUser.profile
     ? mapApiProfileToProfile(apiUser.profile)
     : undefined,
+  roles: apiUser.roles ? apiUser.roles.map(mapApiRoleToRole) : undefined,
 })
 
 export const mapApiUserToResponsible = (

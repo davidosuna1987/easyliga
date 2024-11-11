@@ -2,6 +2,7 @@
 import { getFullName } from '@/domain/player'
 import { Profile, AVATAR_STYLES } from '@/domain/profile'
 import { getInitials } from '@/domain/utils'
+import { Role } from '@/domain/role'
 
 const RemoveIconTypes = {
   trash: 'pepicons-pencil:trash-circle-filled',
@@ -14,6 +15,10 @@ const props = defineProps({
   profile: {
     type: Object as PropType<Profile>,
     required: true,
+  },
+  roles: {
+    type: Array as PropType<Role[]>,
+    required: false,
   },
   onRemove: {
     type: Function as PropType<(id: number) => void>,
@@ -93,6 +98,22 @@ const onRemoveTooltipText = computed(() =>
         shape="circle"
       />
       <span class="player-name">{{ getFullName(profile) }}</span>
+      <div v-if="roles" class="player-roles flex gap-1">
+        <Badge
+          v-for="role of roles"
+          class="[--badge-text-color:var(--text-color)] dark:[--badge-text-color:white]"
+          :value="role"
+          :style="{
+            background: 'transparent !important',
+            border: 'solid 1px var(--primary-color)',
+            fontWeight: 'normal',
+            height: '14px',
+            padding: '0px 5px',
+            lineHeight: 1.05,
+            color: 'var(--badge-text-color)',
+          }"
+        />
+      </div>
     </div>
     <div
       class="team-player-captain flex gap-2"

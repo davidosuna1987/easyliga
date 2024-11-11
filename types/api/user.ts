@@ -1,5 +1,5 @@
 import { ApiProfile } from '@/types/api/profile'
-import { Role } from '@/domain/role'
+import { ApiRole } from '@/types/api/role'
 import { ApiLicense } from '@/types/api/license'
 import { ApiClub } from '@/types/api/club'
 import { ApiFederation } from '@/types/api/federation'
@@ -9,6 +9,7 @@ import { LicensableModelType } from '@/domain/licensable'
 
 export type ApiUserRelations = {
   profile?: ApiProfile
+  roles?: ApiRole[]
   managed_federations?: ApiFederation[]
   managed_clubs?: ApiClub[]
   managed_sedes?: ApiSede[]
