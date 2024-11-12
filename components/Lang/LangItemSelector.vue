@@ -62,13 +62,17 @@ const handleClick = (code: LocaleCode) => {
   }
 }
 
-watch(selectedLocales, value => {
-  if (props.multiple) {
-    emit('selected:multiple', value)
-  } else {
-    emit('selected:single', value[0])
-  }
-})
+watch(
+  selectedLocales,
+  value => {
+    if (props.multiple) {
+      emit('selected:multiple', value)
+    } else {
+      emit('selected:single', value[0])
+    }
+  },
+  { deep: true, immediate: true },
+)
 
 watch(
   () => props.exclude,

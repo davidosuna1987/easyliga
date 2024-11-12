@@ -43,6 +43,16 @@ const removeErrors = () => {
     outputLocales: false,
   }
 }
+
+const setInputLocale = (locale: LocaleCode) => {
+  form.value.inputLocale = locale
+}
+
+const setOutputLocales = (locales: LocaleCode[]) => {
+  console.log({ locales })
+  form.value.outputLocales = locales
+}
+
 const submit = () => {
   setErrors()
 
@@ -76,14 +86,14 @@ const handleSubmit = async () => {
     @submit="submit"
   >
     <FormLabel class="mb-1" :label="t('translate.input_locale')" />
-    <LangItemSelector @selected:single="form.inputLocale = $event" />
+    <LangItemSelector @selected:single="setInputLocale" />
 
     <FormLabel class="mb-1" :label="t('translate.output_locales')" />
     <LangItemSelector
       :multiple="true"
       :exclude="[form.inputLocale]"
       showExcluded
-      @selected:multiple="form.outputLocales = $event"
+      @selected:multiple="setOutputLocales"
     />
 
     <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
