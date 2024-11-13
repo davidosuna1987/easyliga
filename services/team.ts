@@ -5,7 +5,11 @@ import {
   mapTeamFormRequestToApiTeamRequest,
   mapTeamPlayersFormRequestToApiTeamPlayersRequest,
 } from '@/domain/team'
-import { ApiPlayerRequest } from '@/types/api/player'
+import {
+  ApiPlayerRequest,
+  ApiPlayerStoreRequest,
+  ApiPlayerStoreResponse,
+} from '@/types/api/player'
 
 const PREFIX = 'teams'
 
@@ -60,9 +64,19 @@ export default class TeamService {
   }
 
   addPlayer(teamId: number, data: ApiPlayerRequest) {
-    return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}/players`, {
+    return useApi<ApiTeamResponse>(`${PREFIX}/${teamId}/players/add`, {
       method: 'POST',
       body: data,
     })
+  }
+
+  createPlayer(teamId: number, data: ApiPlayerStoreRequest) {
+    return useApi<ApiPlayerStoreResponse>(
+      `${PREFIX}/${teamId}/players/create`,
+      {
+        method: 'POST',
+        body: data,
+      },
+    )
   }
 }

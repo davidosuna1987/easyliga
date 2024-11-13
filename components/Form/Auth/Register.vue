@@ -42,7 +42,6 @@ const shirtNumberInputRef = ref<InviteShirtNumberInputRef>()
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 const invite = ref<Invite | null>(null)
-const showUnavailableShirtNumbersDialog = ref<boolean>(false)
 
 const formInvite = computed(
   (): ApiRegisterByInviteRequest => ({

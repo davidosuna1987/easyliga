@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { InvitedRole, InvitedToType } from '@/domain/invite'
-import { ApiErrorObject } from '@/types/errors'
-import { ApiInviteRequest } from '@/types/api/invite'
-import UserService from '@/services/user'
 
 const props = defineProps({
   visible: {
@@ -29,42 +26,13 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const toast = useEasyToast()
-const userService = new UserService()
 
 const showDialog = ref<boolean>(props.visible)
 const loadingApi = ref<boolean>(false)
-const errors = ref<ApiErrorObject | null>(null)
-const form = ref<ApiInviteRequest>({
-  email: '',
-  roles: [...props.roles],
-  invited_to_type: props.invitedToType ?? null,
-  invited_to_id: props.invitedToId ?? null,
-})
-
-const handleSubmit = async () => {
-  loadingApi.value = true
-  const { error } = await userService.invite(form.value)
-
-  if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-    errors.value = error.value.data?.errors
-  } else {
-    form.value.email = ''
-    toast.success(t('users.invited'))
-    emit('invited', true)
-  }
-  loadingApi.value = false
-}
 
 watch(
   () => props.visible,
   value => (showDialog.value = value),
-)
-
-watch(
-  () => props.roles,
-  value => (form.value.roles = value),
 )
 </script>
 
@@ -78,22 +46,17 @@ watch(
       <Heading tag="h6">{{ t('users.invite') }}</Heading>
     </template>
 
-    <p class="mt-3">{{ t('users.invite_dialog') }}</p>
-
-    <div class="mt-2 flex gap-2">
-      <Tag v-for="role in form.roles" :value="t(`roles.type.${role}`)" />
-    </div>
-
-    <form class="mt-6" @submit.prevent="handleSubmit">
-      <FormLabel :label="t('forms.email')" :error="errors?.email?.[0]" />
-      <InputText v-model="form.email" type="email" class="w-full" />
-    </form>
+    <UserInviteForm
+      :invitedToType="invitedToType"
+      :invitedToId="invitedToId"
+      :roles="roles"
+    />
 
     <template #stickyFooter>
       <FormFooterActions
         :submitLabel="t('forms.invite')"
         :disabled="loadingApi"
-        @form:submit="handleSubmit"
+        @form:submit="easyEmit('user-invite:submit')"
         @form:cancel="emit('hide', true)"
       />
     </template>

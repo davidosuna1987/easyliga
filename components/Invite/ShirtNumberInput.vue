@@ -30,7 +30,6 @@ const auth = useAuthStore()
 const toast = useEasyToast()
 
 const selectedShirtNumber = ref<number>()
-const showUnavailableShirtNumbersDialog = ref<boolean>(false)
 
 const showUnavailableShirtNumbers = computed(
   () => !!props.invite.unavailableShirtNumbers?.length && props.showUnavailable,
@@ -110,36 +109,11 @@ defineExpose({
       />
     </FormLabel>
 
-    <div v-if="showUnavailableShirtNumbers" class="flex justify-end mt-3">
-      <a
-        class="cursor-pointer"
-        @click="showUnavailableShirtNumbersDialog = true"
-      >
-        {{ t('shirts.show_unavailable') }}
-      </a>
-    </div>
-
-    <DialogBottom
+    <ShirtNumberUnavailableDialogTrigger
       v-if="showUnavailableShirtNumbers"
-      class="easy-unavailable-shirt-numbers-dialog-component"
-      :visible="showUnavailableShirtNumbersDialog"
-      :hasStickyFooter="false"
-      @hide="showUnavailableShirtNumbersDialog = false"
-    >
-      <template #header>
-        <Heading tag="h6">{{ t('shirts.unavailable') }}</Heading>
-      </template>
-
-      <div class="flex gap-3 justify-center flex-wrap mt-5">
-        <IconShirtNumber
-          v-for="shirtNumber in invite.unavailableShirtNumbers"
-          :shirtNumber="shirtNumber"
-          size="lg"
-          isIcon
-          rounded
-        />
-      </div>
-    </DialogBottom>
+      class="mt-3"
+      :unavailableShirtNumbers="invite.unavailableShirtNumbers"
+    />
   </aside>
 </template>
 

@@ -183,7 +183,7 @@ watch(
     </template>
 
     <p class="text-lg mb-3 mt-6">{{ t('forms.personal_data') }}</p>
-    <EasyGrid :breakpoints="{ md: 2 }" :gap="3">
+    <EasyGrid class="profile-form-grid" :breakpoints="{ md: 2 }" :gap="3">
       <FormLabel :label="t('forms.email')" :error="errors?.email?.[0]">
         <InputText v-model="form.email" class="w-full" type="email" />
       </FormLabel>
@@ -273,10 +273,19 @@ watch(
   </form>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .easy-profile-form-component {
+  container-name: grid;
+  container-type: inline-size;
+
   .easy-form-footer-actions-component {
     width: calc(100% + var(--easy-main-padding-tablet) * 2);
+  }
+}
+
+@container grid (max-width: 450px) {
+  .easy-grid-component {
+    grid-template-columns: 1fr !important;
   }
 }
 

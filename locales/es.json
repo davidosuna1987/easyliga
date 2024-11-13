@@ -146,7 +146,10 @@
     "options": "Opciones",
     "deny": "Denegar",
     "select": "Seleccionar",
-    "template": "Plantilla | Plantillas"
+    "template": "Plantilla | Plantillas",
+    "auto_generate_email": "Generar email automáticamente",
+    "auto_generated": "Generado automáticamente",
+    "generate_easyliga_email": "Generar email de Easy Liga"
   },
   "errors": {
     "whoops": "¡Whoops! Algo ha ido mal...",
@@ -210,6 +213,9 @@
       "replacementProfileId": "Debes asignar un jugador de reemplazo al parte de lesión",
       "description": "Debes añadir una descripción al parte de lesión",
       "description_min_length": "La descripción debe tener al menos {min} caracteres"
+    },
+    "players": {
+      "must_select_player": "Debes seleccionar un jugador"
     }
   },
   "auth": {
@@ -704,6 +710,8 @@
     "delete_alert": "¿Seguro que quieres eliminar el jugador?",
     "delete_alert_disclaimer": "Esta acción no se puede deshacer",
     "select": "Selecciona un jugador",
+    "invite": "Invitar jugador",
+    "invited": "El jugador ha sido invitado correctamente",
     "count": "{num} jugador | {num} jugadores",
     "shirt_number_taken": "El dorsal {shirtNumber} ya está asignado a otro jugador",
     "replace_player": "Sustituir a {name}",

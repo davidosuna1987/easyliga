@@ -7,17 +7,6 @@ import {
 } from '@/types/api/user'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiLicense } from '@/types/api/license'
-import { LicensableModelType } from '@/domain/licensable'
-
-export type ApiPlayer = ApiProfile & {
-  pivot: {
-    team_id: number
-    profile_id: number
-    shirt_number: number
-    captain: boolean
-    libero: boolean
-  }
-}
 
 export type Role =
   | 'admin'

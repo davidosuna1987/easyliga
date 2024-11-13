@@ -1,8 +1,13 @@
-import { ApiPlayer } from '@/types/api/auth'
+import { ApiPlayer } from '@/types/api/player'
 import { CallPlayerData } from '@/domain/call'
-import { ApiPlayerRequest } from '@/types/api/player'
+import { ApiPlayerRequest, ApiPlayerStoreRequest } from '@/types/api/player'
 import { Coach, TeamMember } from '@/domain/team'
-import { Profile, mapApiProfileToProfile } from '@/domain/profile'
+import {
+  Profile,
+  ProfileGender,
+  mapApiProfileToProfile,
+  mapDateToApiDate,
+} from '@/domain/profile'
 import { RotationPlayerStatus } from '@/domain/rotation'
 
 export const ADD_PLAYER_STEPS = {
@@ -32,6 +37,32 @@ export type UpdateClubTeamPlayer =
     }
   | undefined
 
+export type PlayerStoreRequestEmailRequired = {
+  email: string
+  allowEmptyEmail: false
+}
+
+export type PlayerStoreRequestEmailOptional = {
+  email: null
+  allowEmptyEmail: true
+}
+
+export type PlayerStoreRequestEmail =
+  | PlayerStoreRequestEmailRequired
+  | PlayerStoreRequestEmailOptional
+
+export type PlayerStoreRequest = {
+  allowEmptyEmail: boolean
+  email?: string
+  firstName: string
+  lastName: string
+  birthDate?: Date
+  gender?: ProfileGender
+  shirtNumber: number
+  captain: boolean
+  libero: boolean
+}
+
 export const mapProfileToPlayer = (profile: Profile): Player => ({
   profileId: profile.id,
   firstName: profile.firstName,
@@ -43,22 +74,29 @@ export const mapProfileToPlayer = (profile: Profile): Player => ({
   profile,
 })
 
+export const mapApiPlayerToPlayer = (
+  apiPlayer: ApiPlayer,
+  withProfile: boolean = false,
+): Player => ({
+  profileId: apiPlayer.id,
+  firstName: apiPlayer.first_name,
+  lastName: apiPlayer.last_name,
+  shirtNumber: apiPlayer.pivot.shirt_number,
+  avatar: apiPlayer.avatar ?? undefined,
+  captain: apiPlayer.pivot.captain,
+  libero: apiPlayer.pivot.libero,
+  profile: withProfile ? mapApiProfileToProfile(apiPlayer) : undefined,
+})
+
 export const mapApiPlayersToPlayers = (
   apiPlayers: ApiPlayer[] | undefined,
   withProfiles: boolean = false,
 ): Player[] => {
   if (!apiPlayers) return []
 
-  return apiPlayers.map(apiPlayer => ({
-    profileId: apiPlayer.id,
-    firstName: apiPlayer.first_name,
-    lastName: apiPlayer.last_name,
-    avatar: apiPlayer.avatar ?? undefined,
-    shirtNumber: apiPlayer.pivot.shirt_number,
-    captain: apiPlayer.pivot.captain,
-    libero: apiPlayer.pivot.libero,
-    profile: withProfiles ? mapApiProfileToProfile(apiPlayer) : undefined,
-  }))
+  return apiPlayers.map(apiPlayer =>
+    mapApiPlayerToPlayer(apiPlayer, withProfiles),
+  )
 }
 
 export const getFullName = (
@@ -90,4 +128,20 @@ export const mapPlayerToApiPlayerRequest = (
   shirt_number: player.shirtNumber,
   captain: player.captain,
   libero: player.libero,
+})
+
+export const mapPlayerStoreRequestToApiPlayerStoreRequest = (
+  request: PlayerStoreRequest,
+): ApiPlayerStoreRequest => ({
+  allow_empty_email: request.allowEmptyEmail,
+  email: request.email,
+  first_name: request.firstName,
+  last_name: request.lastName,
+  birth_date: request.birthDate
+    ? mapDateToApiDate(request.birthDate)
+    : undefined,
+  gender: request.gender,
+  shirt_number: request.shirtNumber,
+  captain: request.captain,
+  libero: request.libero,
 })

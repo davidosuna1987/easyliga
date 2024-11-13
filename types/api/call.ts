@@ -2,7 +2,7 @@ import { ApiUser } from '@/types/api/user'
 import { Player } from '@/domain/player'
 import { ApiTeam } from '@/types/api/team'
 import { ApiGame } from '@/types/api/game'
-import { ApiPlayer } from '@/types/api/auth'
+import { ApiPlayer } from '@/types/api/player'
 import { ApiRotation } from '@/types/api/rotation'
 
 export type ApiCallPlayersData = {

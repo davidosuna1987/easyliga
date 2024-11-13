@@ -1,14 +1,12 @@
 import { ApiUser } from '@/types/api/user'
 import { ApiClub } from '@/types/api/club'
 import { ApiSede } from '@/types/api/sede'
-import { ApiPlayer } from '@/types/api/auth'
 import { ApiCategory } from '@/types/api/category'
 import { ApiDivision } from '@/types/api/division'
-import { ApiPlayerRequest } from '@/types/api/player'
+import { ApiPlayer, ApiPlayerRequest } from '@/types/api/player'
 import { ShirtColor } from '@/domain/team'
 import { ApiLicense } from '@/types/api/license'
 import { ApiFederation } from '@/types/api/federation'
-import { Gender } from '@/domain/game'
 import { ApiGender } from './gender'
 
 export type ApiTeamRelations = {

@@ -115,7 +115,7 @@ export const mapProfileUpdateRequestToApiProfileUpdateRequest = (
     first_name: profileUpdateRequest.firstName,
     last_name: profileUpdateRequest.lastName,
     birth_date: profileUpdateRequest.birthDate
-      ? profileUpdateRequest.birthDate.toISOString().split('T')[0]
+      ? mapDateToApiDate(profileUpdateRequest.birthDate)
       : null,
     gender: profileUpdateRequest.gender ?? null,
     avatar: profileUpdateRequest.avatar?.file ?? null,
@@ -171,3 +171,6 @@ export const mapApiProfileUpdateRequestToFormData = (
 
   return formData
 }
+
+export const mapDateToApiDate = (date: Date): string =>
+  date.toISOString().split('T')[0]

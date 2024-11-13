@@ -8,7 +8,10 @@ import {
 } from '@/domain/team'
 import {
   Player,
+  PlayerStoreRequest,
   UpdateClubTeamPlayer,
+  mapApiPlayerToPlayer,
+  mapPlayerStoreRequestToApiPlayerStoreRequest,
   mapPlayerToApiPlayerRequest,
 } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
@@ -167,12 +170,15 @@ const removePlayer = async (profileId?: number) => {
   playerToRemove.value = undefined
 }
 
-const shirtNumberAlreadyTaken = (player: Player) => {
+const shirtNumberAlreadyTakenByPlayer = (player: Player) => {
   return form.value?.players?.find(
     p =>
       p.profileId !== player.profileId && p.shirtNumber === player.shirtNumber,
   )
 }
+
+const shirtNumberAlreadyTaken = (shirtNumber: number) =>
+  unavailableShirtNumbers.value.includes(shirtNumber)
 
 const setShirtNumberUpdatePlayer = (player: Player | TeamMember) => {
   shirtNumberUpdatePlayer.value = player
@@ -185,7 +191,7 @@ const changePlayerShirtNumber = (player?: Player) => {
   ) {
     shirtNumberUpdatePlayer.value = undefined
   } else {
-    if (shirtNumberAlreadyTaken(player)) {
+    if (shirtNumberAlreadyTakenByPlayer(player)) {
       toast.error(
         t('players.shirt_number_taken', {
           shirtNumber: player.shirtNumber,
@@ -278,6 +284,39 @@ const handleAddPlayer = async (player: Player) => {
     }
 
     form.value.players.push(player)
+    showPlayerSearchFormDialog.value = false
+
+    toast.success(t('players.added'))
+  }
+
+  loadingApi.value = false
+}
+
+const handleCreatePlayer = async (request: PlayerStoreRequest) => {
+  loadingApi.value = true
+
+  if (shirtNumberAlreadyTaken(request.shirtNumber)) {
+    toast.error(
+      t('players.shirt_number_taken', {
+        shirtNumber: request.shirtNumber,
+      }),
+    )
+    return
+  }
+
+  const { data, error } = await teamService.createPlayer(
+    Number(route.params.teamId),
+    mapPlayerStoreRequestToApiPlayerStoreRequest(request),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    if (!form.value.players) {
+      form.value.players = []
+    }
+
+    form.value.players.push(mapApiPlayerToPlayer(data.value.data.player))
     showPlayerSearchFormDialog.value = false
 
     toast.success(t('players.added'))
@@ -544,6 +583,7 @@ watch(
       :loading="loadingApi"
       @hide="showPlayerSearchFormDialog = false"
       @player:add="handleAddPlayer"
+      @player:create="handleCreatePlayer"
     />
 
     <AlertDialog
