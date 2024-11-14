@@ -39,6 +39,14 @@ const getLeague = async () => {
   showGenerateGamesDialogForm.value = false
 }
 
+const orderMatchdayGamesByBye = (games: Game[]) => {
+  return games.sort((a, b) => {
+    if (a.isBye) return 1
+    if (b.isBye) return -1
+    return 0
+  })
+}
+
 const handleOnRemoveTeam = async (team: Team) => {
   if (!league.value) return
 
@@ -130,7 +138,13 @@ onMounted(() => {
       <div class="flex flex-col sm:flex-row sm:gap-8">
         <div class="teams">
           <header class="flex justify-between items-center mb-4">
-            <Heading tag="h6">{{ t('teams.team', 2) }}</Heading>
+            <Heading class="flex items-center gap-2" tag="h6">
+              {{ t('teams.team', 2) }}
+              <Badge
+                class="bg-transparent [border:solid_1px_var(--primary-color)] [border-radius:50%_!important] w-6 h-6 [display:inline-flex_!important] items-center justify-center [padding:0_!important] font-normal text-[var(--text-color)]"
+                >{{ league.teams?.length }}</Badge
+              >
+            </Heading>
             <ListActionButton
               v-if="!league.matchdays?.length"
               :label="t('teams.add')"
@@ -163,7 +177,7 @@ onMounted(() => {
               </Heading>
               <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
                 <LeagueGameCard
-                  v-for="game in matchday.games"
+                  v-for="game in orderMatchdayGamesByBye(matchday.games)"
                   :key="game.id"
                   :game="game"
                   showActions

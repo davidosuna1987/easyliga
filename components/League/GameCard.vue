@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Game, hasDefaultReferee } from '@/domain/game'
+import { Game, getGameName, hasDefaultReferee } from '@/domain/game'
 import { formatDateTime } from '@/domain/utils'
 import { User } from '@/domain/user'
+import { TeamType } from '@/domain/team'
 
 const props = defineProps({
   game: {
@@ -43,25 +44,40 @@ const menuItems = ref([
   },
 ])
 
-const toggleMenu = (event: Event) => menu.value.toggle(event)
+const toggleMenu = (event: Event) => {
+  // this is because we just have the assign referee options
+  emit('referee:assign', props.game)
+  // if there will be more options, use the following line
+  // menu.value.toggle(event)
+}
 </script>
 
 <template>
   <div
     :class="['easy-league-game-card-component', { 'is-hoverable': hoverable }]"
   >
-    <div>
-      <p>{{ game.name }}</p>
-      <small class="opacity-60">
+    <div :class="['flex-1', { 'opacity-60': game.isBye }]">
+      <p v-if="game.isBye">{{ game.name }}</p>
+      <div v-else class="flex items-center">
+        <div class="flex-1 mr-2">
+          <p class="line-clamp-1">{{ getGameName(game, TeamType.local) }}</p>
+          <p class="line-clamp-1">
+            {{ getGameName(game, TeamType.visitor) }} asdfasdf asdfasdfas
+          </p>
+        </div>
+        <span class="font-bold tracking-tighter text-xl text-primary">VS</span>
+      </div>
+      <small v-if="!game.isBye" class="opacity-60">
         {{ formatDateTime(game.date) }}
       </small>
     </div>
 
     <div
+      v-if="showActions && !game.isBye"
       class="actions"
       aria-haspopup="true"
       aria-controls="overlay_menu"
-      @click="emit('referee:assign', props.game)"
+      @click="toggleMenu"
     >
       <div
         v-if="!game.refereeId || hasDefaultReferee(game)"

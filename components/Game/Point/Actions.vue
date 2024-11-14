@@ -41,8 +41,8 @@ const undoLastPoint = () => {
         @click="
           sumPoint(
             currentSet.localTeamSide === SetSide.LEFT
-              ? TeamType.LOCAL
-              : TeamType.VISITOR,
+              ? TeamType.local
+              : TeamType.visitor,
           )
         "
       />
@@ -63,8 +63,8 @@ const undoLastPoint = () => {
         @click="
           sumPoint(
             currentSet.localTeamSide === SetSide.LEFT
-              ? TeamType.VISITOR
-              : TeamType.LOCAL,
+              ? TeamType.visitor
+              : TeamType.local,
           )
         "
       />

@@ -576,19 +576,19 @@ const createFormPoint = (type: TeamType) => {
     serving_profile_id: null,
     scoring_profile_id: null,
     winner_team_id:
-      type === TeamType.LOCAL
+      type === TeamType.local
         ? gameInitialData.value.localTeam.id
         : gameInitialData.value.visitorTeam.id,
     loser_team_id:
-      type === TeamType.LOCAL
+      type === TeamType.local
         ? gameInitialData.value.visitorTeam.id
         : gameInitialData.value.localTeam.id,
     local_team_score:
-      type === TeamType.LOCAL
+      type === TeamType.local
         ? Number(lastPoint.value?.localTeamScore ?? 0) + 1
         : Number(lastPoint.value?.localTeamScore ?? 0),
     visitor_team_score:
-      type === TeamType.VISITOR
+      type === TeamType.visitor
         ? Number(lastPoint.value?.visitorTeamScore ?? 0) + 1
         : Number(lastPoint.value?.visitorTeamScore ?? 0),
     observations: null,

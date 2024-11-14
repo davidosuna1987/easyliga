@@ -84,11 +84,11 @@ const getGameCall = (
   const teamType =
     game.localTeam?.coachId === auth.user?.id
       ? opponent
-        ? TeamType.VISITOR
-        : TeamType.LOCAL
+        ? TeamType.visitor
+        : TeamType.local
       : opponent
-      ? TeamType.LOCAL
-      : TeamType.VISITOR
+      ? TeamType.local
+      : TeamType.visitor
 
   return game.calls?.find(call => call.teamId === game?.[`${teamType}TeamId`])
 }

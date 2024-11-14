@@ -58,8 +58,8 @@ export type Team = {
   TeamAppends
 
 export enum TeamType {
-  LOCAL = 'local',
-  VISITOR = 'visitor',
+  local = 'local',
+  visitor = 'visitor',
 }
 
 export enum TeamSideEnum {

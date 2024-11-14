@@ -393,8 +393,8 @@ onUnmounted(() => {
         :gameSignatures="gameSignatures"
         :teamType="
           leftSideTeam.id === game.localTeamId
-            ? TeamType.LOCAL
-            : TeamType.VISITOR
+            ? TeamType.local
+            : TeamType.visitor
         "
         :getPlayerInOutByPosition="getPlayerInOutByPosition"
         @call:unlocked="emit('call:unlocked')"
@@ -463,8 +463,8 @@ onUnmounted(() => {
         :gameSignatures="gameSignatures"
         :teamType="
           rightSideTeam.id === game.localTeamId
-            ? TeamType.LOCAL
-            : TeamType.VISITOR
+            ? TeamType.local
+            : TeamType.visitor
         "
         :getPlayerInOutByPosition="getPlayerInOutByPosition"
         @call:unlocked="emit('call:unlocked')"

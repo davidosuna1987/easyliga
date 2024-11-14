@@ -88,7 +88,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
             signature.teamId === teams.local.id,
         )
       "
-      @click="handleOpenSignatureDialog(gameSignatureType, TeamType.LOCAL)"
+      @click="handleOpenSignatureDialog(gameSignatureType, TeamType.local)"
     />
     <Button
       class="px-8"
@@ -123,7 +123,7 @@ const handleStoreSignature = async (signature: GameSignatureStoreRequest) => {
             signature.teamId === teams.visitor.id,
         )
       "
-      @click="handleOpenSignatureDialog(gameSignatureType, TeamType.VISITOR)"
+      @click="handleOpenSignatureDialog(gameSignatureType, TeamType.visitor)"
     />
     <SignatureDialog
       v-if="selectedSignatureType"

@@ -11,7 +11,7 @@ import {
   CurrentRotation,
   mapApiCurrentRotationToCurrentRotation,
 } from '@/domain/rotation'
-import { Team, mapApiTeamToTeam } from '@/domain/team'
+import { Team, TeamType, mapApiTeamToTeam } from '@/domain/team'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
 import { Club, mapApiClubToClub } from '@/domain/club'
@@ -156,6 +156,7 @@ export type Game = {
   end?: string
   status?: GameStatus
   observations?: string
+  isBye: boolean
 } & GameRelations &
   GameRelationsCount &
   GameCustomAppends
@@ -231,6 +232,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   end: apiGame.end ?? undefined,
   status: apiGame.status ?? undefined,
   observations: apiGame.observations ?? undefined,
+  isBye: apiGame.is_bye,
 
   ...mapApiGameRelationsToGameRelations(apiGame),
   ...mapApiGameRelationsCountToGameRelationsCount(apiGame),
@@ -449,4 +451,10 @@ export const isSameCoachForBothTeams = (
   }
 
   return game.localTeam.coachId === game.visitorTeam.coachId
+}
+
+export const getGameName = (game: Game, type: TeamType): string | undefined => {
+  const teams = game.name.split(/\s+vs\s+|\s+VS\s+/i)
+  if (teams.length < 2) return undefined
+  return type === 'local' ? teams[0] : teams[1]
 }

@@ -47,8 +47,8 @@ const actionButtonDisabled = computed(
 
 const teamType = computed<TeamType>(() =>
   props.game.localTeamId === props.call.teamId
-    ? TeamType.LOCAL
-    : TeamType.VISITOR,
+    ? TeamType.local
+    : TeamType.visitor,
 )
 
 const onActionButtonClick = () => {

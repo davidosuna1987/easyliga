@@ -72,6 +72,7 @@ export type ApiGame = {
   loser_team_id: number | null
   status: GameStatus | null
   observations: string | null
+  is_bye: boolean
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
