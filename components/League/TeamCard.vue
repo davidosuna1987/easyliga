@@ -55,7 +55,10 @@ const { t } = useI18n()
           <p>{{ team.name }}</p>
           <div
             v-if="team.category || team.gender"
-            :class="['flex gap-1', { 'flex-row-reverse': reverseIcons }]"
+            :class="[
+              'flex items-start gap-1',
+              { 'flex-row-reverse': reverseIcons },
+            ]"
           >
             <GenderIcon
               v-if="showIcons && showGender && team.gender"
