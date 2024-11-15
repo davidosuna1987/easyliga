@@ -48,6 +48,7 @@ const { t } = useI18n()
       { 'is-selected': selected },
       { 'is-hoverable': hoverable },
     ]"
+    :data-team-id="team.id"
   >
     <div class="flex justify-between items-center gap-2">
       <div class="flex-1">
