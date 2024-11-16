@@ -12,7 +12,7 @@
     "password_confirm": "Confirmar contrasenya",
     "submit": "Enviar",
     "personal_data": "Dades personals",
-    "name": "--",
+    "name": "Nom",
     "surnames": "Cognoms",
     "page_not_found": "Pàgina no trobada",
     "work_in_progress": "Pàgina en construcció",
@@ -26,8 +26,8 @@
     "company": "Nom de l'empresa",
     "work_center": "Centre de treball",
     "phone": "Telèfon",
-    "contact_preference": "--",
-    "schedule_preference": "--",
+    "contact_preference": "Vols que et truquem o prefereixes email?",
+    "schedule_preference": "Preferència horaria trucada",
     "write_extra": "Escriu-nos el que vulguis",
     "gender": "Sexe",
     "birthday": "Aniversaris",
@@ -247,7 +247,7 @@
       "leagues": { "label": "Llistat de lligues" },
       "clubs": { "label": "Llistat de clubs" }
     },
-    "club": { "label": "--", "list": { "label": "Llistat de clubs" } },
+    "club": { "label": "Club", "list": { "label": "Llistat de clubs" } },
     "referee": {
       "label": "Àrbitre",
       "calendar": "Calendari",
@@ -607,7 +607,8 @@
     "added": "L'equip ha estat afegit correctament",
     "not_allowed_to_edit": "No teniu permisos per editar l'equip {teamName}",
     "no_coached_teams": "No entrenes cap equip",
-    "coached": "Equips que entrenes"
+    "coached": "Equips que entrenes",
+    "rest": "Descansa"
   },
   "players": {
     "player": "Jugador | Jugadors",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Game, getGameName, hasDefaultReferee } from '@/domain/game'
+import { Game, getGameTeamName, hasDefaultReferee } from '@/domain/game'
 import { formatDateTime } from '@/domain/utils'
 import { User } from '@/domain/user'
 import { TeamType } from '@/domain/team'
@@ -57,15 +57,25 @@ const toggleMenu = (event: Event) => {
     :class="['easy-league-game-card-component', { 'is-hoverable': hoverable }]"
   >
     <div :class="['flex-1', { 'opacity-60': game.isBye }]">
-      <p v-if="game.isBye">{{ game.name }}</p>
-      <div v-else class="flex items-center">
+      <div class="flex items-center">
         <div class="flex-1 mr-2">
-          <p class="line-clamp-1">{{ getGameName(game, TeamType.local) }}</p>
           <p class="line-clamp-1">
-            {{ getGameName(game, TeamType.visitor) }} asdfasdf asdfasdfas
+            {{ getGameTeamName(game, TeamType.local) }}
+          </p>
+          <p class="line-clamp-1">
+            {{
+              game.isBye
+                ? t('teams.rest')
+                : getGameTeamName(game, TeamType.visitor)
+            }}
           </p>
         </div>
-        <span class="font-bold tracking-tighter text-xl text-primary">VS</span>
+        <span
+          v-if="!game.isBye"
+          class="font-bold tracking-tighter text-xl text-primary"
+        >
+          VS
+        </span>
       </div>
       <small v-if="!game.isBye" class="opacity-60">
         {{ formatDateTime(game.date) }}

@@ -607,7 +607,8 @@
     "added": "Taldea arrakastaz gehitu da",
     "not_allowed_to_edit": "Ez duzu {teamName} taldea editatzeko baimenik",
     "no_coached_teams": "Ez duzu inolako talderik entrenatzen",
-    "coached": "Entrenatzen dituzun taldeak"
+    "coached": "Entrenatzen dituzun taldeak",
+    "rest": "Atseden"
   },
   "players": {
     "player": "Jokalari | Jokalariak",

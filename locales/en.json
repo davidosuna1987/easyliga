@@ -601,7 +601,8 @@
     "added": "The team has been added successfully",
     "not_allowed_to_edit": "You do not have permissions to edit team {teamName}",
     "no_coached_teams": "You don't coach any team",
-    "coached": "Teams you train"
+    "coached": "Teams you train",
+    "rest": "Rest"
   },
   "players": {
     "player": "Player | Players",

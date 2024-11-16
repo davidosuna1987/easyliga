@@ -694,7 +694,8 @@
     "added": "El equipo ha sido añadido correctamente",
     "not_allowed_to_edit": "No tienes permisos para editar el equipo {teamName}",
     "no_coached_teams": "No entrenas a ningún equipo",
-    "coached": "Equipos que entrenas"
+    "coached": "Equipos que entrenas",
+    "rest": "Descansa"
   },
   "players": {
     "player": "Jugador | Jugadores",

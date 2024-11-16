@@ -20,6 +20,8 @@ import { TeamType } from '@/domain/team'
 import { ApiInjury } from '@/types/api/injury'
 import { SanctionSeverityKey } from '@/domain/sanction'
 
+export type ApiGameTeamNames = Record<TeamType, string | null>
+
 export type ApiGameRelations = {
   league?: ApiLeague
   division?: ApiDivision
@@ -47,8 +49,10 @@ export type ApiGameRelationsCount = {
 
 export type ApiGameCustomAppends = {
   name: string
+  team_names: ApiGameTeamNames
   duration: ApiDuration | null
   confirmed: boolean
+  is_bye: boolean
 }
 
 export type ApiGame = {
@@ -72,7 +76,6 @@ export type ApiGame = {
   loser_team_id: number | null
   status: GameStatus | null
   observations: string | null
-  is_bye: boolean
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null

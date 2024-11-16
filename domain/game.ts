@@ -4,6 +4,7 @@ import {
   ApiGameInitialDataResponse,
   ApiGameObservationsRequest,
   ApiGameReportSimple,
+  ApiGameTeamNames,
 } from '@/types/api/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, SetSide, mapApiSetToSet } from '@/domain/set'
@@ -82,6 +83,8 @@ export type Gender = {
   name: GenderType
 }
 
+export type GameTeamNames = Record<TeamType, string | undefined>
+
 export type GameRefereeAssignFormRef = {
   handleSubmit: () => void
   loadingApi: boolean
@@ -131,8 +134,10 @@ export type GameRelationsCount = {
 
 export type GameCustomAppends = {
   name: string
+  teamNames: GameTeamNames
   duration?: Duration
   confirmed: boolean
+  isBye: boolean
 }
 
 export type Game = {
@@ -156,7 +161,6 @@ export type Game = {
   end?: string
   status?: GameStatus
   observations?: string
-  isBye: boolean
 } & GameRelations &
   GameRelationsCount &
   GameCustomAppends
@@ -232,7 +236,6 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   end: apiGame.end ?? undefined,
   status: apiGame.status ?? undefined,
   observations: apiGame.observations ?? undefined,
-  isBye: apiGame.is_bye,
 
   ...mapApiGameRelationsToGameRelations(apiGame),
   ...mapApiGameRelationsCountToGameRelationsCount(apiGame),
@@ -290,8 +293,10 @@ export const mapApiGameCustomAppendsToGameCustomAppends = (
   apiGame: ApiGame,
 ): GameCustomAppends => ({
   name: apiGame.name,
+  teamNames: mapApiTeamNamesToTeamNames(apiGame.team_names),
   duration: mapApiDurationToDuration(apiGame.duration),
   confirmed: apiGame.confirmed,
+  isBye: apiGame.is_bye,
 })
 
 export const mapApiGameInitialDataToGameInitialData = (
@@ -428,6 +433,13 @@ export const mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest =
     }
   }
 
+export const mapApiTeamNamesToTeamNames = (
+  apiTeamNames: ApiGameTeamNames,
+): GameTeamNames => ({
+  [TeamType.local]: apiTeamNames.local ?? undefined,
+  [TeamType.visitor]: apiTeamNames.visitor ?? undefined,
+})
+
 export const hasDefaultReferee = (game: Game): boolean =>
   !game.refereeId || game.refereeId === 1
 
@@ -453,8 +465,17 @@ export const isSameCoachForBothTeams = (
   return game.localTeam.coachId === game.visitorTeam.coachId
 }
 
-export const getGameName = (game: Game, type: TeamType): string | undefined => {
-  const teams = game.name.split(/\s+vs\s+|\s+VS\s+/i)
-  if (teams.length < 2) return undefined
-  return type === 'local' ? teams[0] : teams[1]
+export const getGameTeamName = (
+  game: Game,
+  type: TeamType,
+): string | undefined => {
+  const byeTeamName = game.teamNames.local
+    ? game.teamNames.local
+    : game.teamNames.visitor
+
+  return game.isBye
+    ? type === TeamType.local
+      ? byeTeamName
+      : undefined
+    : game.teamNames[type]
 }
