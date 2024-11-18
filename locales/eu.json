@@ -149,7 +149,8 @@
     "template": "Txantiloia | Txantiloiak",
     "auto_generate_email": "Sortu posta elektronikoa automatikoki",
     "auto_generated": "Automatikoki sortutakoa",
-    "generate_easyliga_email": "Sortu Easy Liga posta elektronikoa"
+    "generate_easyliga_email": "Sortu Easy Liga posta elektronikoa",
+    "admin_options": "admin aukerak"
   },
   "errors": {
     "whoops": "Aupa! Zerbait gaizki joan da...",
@@ -488,8 +489,17 @@
     },
     "no_games_for_date": "Ez dago partidarik hautatutako datan",
     "unlock": "Desblokeatu partida",
+    "unlocked": "Partidua behar bezala desblokeatu da",
     "close": "Partidu estua",
-    "loading_data": "Partiduen datuak kargatzen"
+    "loading_data": "Partiduen datuak kargatzen",
+    "partials": {
+      "partial": "Partziala | Partzialak",
+      "assign": "Partzialak esleitu",
+      "assigned_manually_by": "Partida honen emaitza eskuz esleitu du {izena}-k eta baliteke puntuazio-orriak datu batzuk ez izatea",
+      "assigned_manually": "Partida honen emaitza eskuz esleitu da eta baliteke puntuazio-orriak datu batzuk ez izatea",
+      "assigned": "Partidaren emaitza partzialak behar bezala esleitu dira"
+    },
+    "result": "Emaitza | Emaitzak"
   },
   "federations": {
     "federation": "Federazioa | Federazioak",
@@ -1228,7 +1238,6 @@
       "year": "Aukeratu urte bat"
     }
   },
-  "game": { "unlocked": "Partidua behar bezala desblokeatu da" },
   "injuries": {
     "add": "Gehitu lesioa",
     "stored": "Lesio aldaketa behar bezala egin da",

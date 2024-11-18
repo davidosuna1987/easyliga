@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import GameService from '@/services/game'
 import {
   GameReportSimple,
   getSidedTeams,
@@ -10,7 +11,8 @@ import {
   getLocalVisitorTimeouts,
 } from '@/domain/game'
 import { Set } from '@/domain/set'
-import GameService from '@/services/game'
+import { MIN_CALL_PLAYERS } from '@/domain/call'
+import { getFullName } from '@/domain/player'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -21,27 +23,25 @@ const loadingApi = ref(true)
 const report = ref<GameReportSimple | null>(null)
 const firstSet = ref<Set>()
 
-const getReport = async () => {
-  loadingApi.value = true
-  const { data, error } = await gameService.reportSimple(
-    Number(route.params.gameId),
+const gameCallsHavePlayers = computed(() => {
+  if (!report.value) return false
+
+  return report.value.calls.every(
+    call => call.players?.length ?? 0 > MIN_CALL_PLAYERS,
   )
-  loadingApi.value = false
+})
 
-  if (error.value || !data.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-    return
-  }
+const gameObservationsWarning = computed(() => {
+  if (!report.value) return
 
-  report.value = mapApiGameReportSimpleToGameReportSimple(data.value.data)
-  firstSet.value = report.value.sets[0]
-
-  if (report.value.game.status !== 'finished') {
-    document
-      .querySelector('.easy-container.game-report')
-      ?.classList.remove('game-report')
-  }
-}
+  return report.value.game.resultsAssignedManuallyBy
+    ? report.value.game.resultAssignee?.profile
+      ? t('games.partials.assigned_manually_by', {
+          name: getFullName(report.value.game.resultAssignee.profile),
+        })
+      : t('games.partials.assigned_manually')
+    : undefined
+})
 
 const gameSidedTeams = computed((): GameSidedTeams | undefined => {
   if (!firstSet.value || !report.value) return
@@ -76,6 +76,28 @@ const gameLocalVisitorTimeouts = computed(
     )
   },
 )
+
+const getReport = async () => {
+  loadingApi.value = true
+  const { data, error } = await gameService.reportSimple(
+    Number(route.params.gameId),
+  )
+  loadingApi.value = false
+
+  if (error.value || !data.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    return
+  }
+
+  report.value = mapApiGameReportSimpleToGameReportSimple(data.value.data)
+  firstSet.value = report.value.sets[0]
+
+  if (report.value.game.status !== 'finished') {
+    document
+      .querySelector('.easy-container.game-report')
+      ?.classList.remove('game-report')
+  }
+}
 
 const print = () => {
   if (!report.value || report.value.game.status !== 'finished') return
@@ -139,10 +161,15 @@ onMounted(() => {
           />
 
           <main
-            class="report-main mt-3 grid grid-cols-1 xl:grid-cols-[1fr_1fr_300px_!important] gap-3 items-start"
+            :class="[
+              'report-main mt-3 grid grid-cols-1 gap-3 items-start',
+              gameCallsHavePlayers
+                ? 'xl:grid-cols-[1fr_1fr_300px_!important]'
+                : 'xl:grid-cols-[500px_1fr_!important]',
+            ]"
           >
             <GameReportSimpleCall
-              v-if="gameSidedTeams?.leftSideTeam"
+              v-if="gameSidedTeams?.leftSideTeam && gameCallsHavePlayers"
               :referee="report.referee"
               :calls="report.calls"
               :localTeam="report.localTeam"
@@ -162,7 +189,7 @@ onMounted(() => {
                 :sets="report.sets"
               />
               <GameReportSimpleSanction
-                v-if="gameSidedTeams"
+                v-if="gameSidedTeams && gameCallsHavePlayers"
                 :sets="report.sets"
                 :calls="report.calls"
                 :leftSideTeam="gameSidedTeams.leftSideTeam"
@@ -171,7 +198,11 @@ onMounted(() => {
             </div>
             <div class="flex flex-col gap-3">
               <GameReportSimpleSignatures
-                v-if="gameSidedTeams"
+                v-if="
+                  gameSidedTeams &&
+                  gameCallsHavePlayers &&
+                  !report.game.resultsAssignedManuallyBy
+                "
                 :referee="report.referee"
                 :localTeam="report.localTeam"
                 :visitorTeam="report.visitorTeam"
@@ -181,6 +212,7 @@ onMounted(() => {
               />
               <GameReportSimpleObservations
                 :observations="report.game.observations"
+                :warning="gameObservationsWarning"
               />
             </div>
           </main>

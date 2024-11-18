@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  warning: {
+    type: String,
+    required: false,
+  },
 })
 
 const { t } = useI18n()
@@ -17,7 +21,21 @@ const { t } = useI18n()
       <strong class="uppercase">{{ t('observations.observation', 2) }}</strong>
     </header>
     <main class="report-observations-main border-solid p-2 min-h-[110px]">
-      <p>{{ observations }}</p>
+      <p
+        v-if="warning"
+        class="text-sm mb-2 text-[var(--tertiary-color-darken)]"
+      >
+        {{ warning }}
+      </p>
+      <Textarea
+        :value="observations"
+        readonly
+        unstyled
+        autoResize
+        :style="{
+          resize: 'none',
+        }"
+      />
     </main>
   </article>
 </template>

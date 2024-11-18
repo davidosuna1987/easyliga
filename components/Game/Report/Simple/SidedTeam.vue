@@ -21,7 +21,7 @@ const props = defineProps({
 <template>
   <div
     :class="[
-      'flex items-center justify-between',
+      'flex items-center justify-between gap-2',
       direction === 'right' ? 'flex-row-reverse' : '',
     ]"
   >

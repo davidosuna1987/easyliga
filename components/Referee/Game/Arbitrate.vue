@@ -612,7 +612,7 @@ const startGame = async () => {
     toast.mapError(Object.values(error.value?.data?.errors), false)
     loadingApi.value = false
   } else {
-    toast.success(t('game.unlocked'))
+    toast.success(t('games.unlocked'))
     getGameInitialData()
   }
 }

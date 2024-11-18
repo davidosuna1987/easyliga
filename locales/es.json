@@ -149,7 +149,8 @@
     "template": "Plantilla | Plantillas",
     "auto_generate_email": "Generar email automáticamente",
     "auto_generated": "Generado automáticamente",
-    "generate_easyliga_email": "Generar email de Easy Liga"
+    "generate_easyliga_email": "Generar email de Easy Liga",
+    "admin_options": "Opciones de admin"
   },
   "errors": {
     "whoops": "¡Whoops! Algo ha ido mal...",
@@ -575,8 +576,17 @@
     },
     "no_games_for_date": "No hay ningún partido en la fecha seleccionada",
     "unlock": "Desbloquear partido",
+    "unlocked": "El partido se ha desbloqueado correctamente",
     "close": "Cerrar partido",
-    "loading_data": "Cargando datos del partido"
+    "loading_data": "Cargando datos del partido",
+    "partials": {
+      "partial": "Parcial | Parciales",
+      "assign": "Asignar parciales",
+      "assigned_manually_by": "El resultado de este partido ha sido asignado manualmente por {name} y es posible que el acta no disponga de algunos datos",
+      "assigned_manually": "El resultado de este partido ha sido asignado manualmente y es posible que el acta no disponga de algunos datos",
+      "assigned": "Los resultados parciales del partido se han asignado correctamente"
+    },
+    "result": "Resultado | Resultados"
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -1323,9 +1333,6 @@
       "month": "Selecciona un mes",
       "year": "Selecciona un año"
     }
-  },
-  "game": {
-    "unlocked": "El partido se ha desbloqueado correctamente"
   },
   "injuries": {
     "add": "Añadir lesión",

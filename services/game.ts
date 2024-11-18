@@ -7,6 +7,8 @@ import {
   ApiGameTeamIncompleteResponse,
   ApiGameReportSimpleResponse,
   ApiGameRequestChangeDateRequest,
+  ApiGamePartials,
+  ApiGamePartialsAssignRequest,
 } from '@/types/api/game'
 
 import {
@@ -52,6 +54,13 @@ export default class GameService {
     return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/add-referee`, {
       method: 'PUT',
       body: { referee_id: refereeId },
+    })
+  }
+
+  assignPartials(gameId: number, data: ApiGamePartialsAssignRequest) {
+    return useApi<ApiGameResponse>(`${PREFIX}/${gameId}/assign-partials`, {
+      method: 'PUT',
+      body: data,
     })
   }
 

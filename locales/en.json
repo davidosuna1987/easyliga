@@ -149,7 +149,8 @@
     "template": "Template | Templates",
     "auto_generate_email": "Generate email automatically",
     "auto_generated": "Automatically generated",
-    "generate_easyliga_email": "Generate Easy Liga email"
+    "generate_easyliga_email": "Generate Easy Liga email",
+    "admin_options": "admin options"
   },
   "errors": {
     "whoops": "Whoops! Something has gone wrong...",
@@ -482,8 +483,17 @@
     },
     "no_games_for_date": "There are no matches on the selected date",
     "unlock": "Unlock match",
+    "unlocked": "The match has been successfully unlocked",
     "close": "Close match",
-    "loading_data": "Loading match data"
+    "loading_data": "Loading match data",
+    "partials": {
+      "partial": "Partial | Partials",
+      "assign": "Assign partials",
+      "assigned_manually_by": "The result of this match has been assigned manually by {name} and it is possible that the report does not have some data",
+      "assigned_manually": "The result of this match has been assigned manually and it is possible that the report does not have some data",
+      "assigned": "Partial match results have been assigned correctly"
+    },
+    "result": "Result | Results"
   },
   "federations": {
     "federation": "Federation | Federations",
@@ -970,7 +980,7 @@
     "closed_game": "The match report {gameName} has been closed",
     "player_number": "No.",
     "result": {
-      "title": "Bottom line",
+      "title": "Final result",
       "timeouts": "\"T\"",
       "replacements": "Yes",
       "won_points": "W",
@@ -1218,7 +1228,6 @@
       "year": "Select a year"
     }
   },
-  "game": { "unlocked": "The match has been successfully unlocked" },
   "injuries": {
     "add": "Add injury",
     "stored": "The injury change has been made correctly",

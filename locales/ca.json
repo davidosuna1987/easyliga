@@ -149,7 +149,8 @@
     "template": "Plantilla | Plantilles",
     "auto_generate_email": "Generar correu electrònic automàticament",
     "auto_generated": "Generat automàticament",
-    "generate_easyliga_email": "Generar email d'Easy Liga"
+    "generate_easyliga_email": "Generar email d'Easy Liga",
+    "admin_options": "Opcions d'admin"
   },
   "errors": {
     "whoops": "Whoops! Alguna cosa ha anat malament...",
@@ -488,8 +489,17 @@
     },
     "no_games_for_date": "No hi ha cap partit a la data seleccionada",
     "unlock": "Desbloquejar partit",
+    "unlocked": "El partit s'ha desbloquejat correctament",
     "close": "Tancar partit",
-    "loading_data": "Carregant dades del partit"
+    "loading_data": "Carregant dades del partit",
+    "partials": {
+      "partial": "Parcial | Parcials",
+      "assign": "Assignar parcials",
+      "assigned_manually_by": "El resultat d'aquest partit ha estat assignat manualment per {name} i és possible que l'acta no tingui algunes dades",
+      "assigned_manually": "El resultat d‟aquest partit ha estat assignat manualment i és possible que l‟acta no disposi d‟algunes dades",
+      "assigned": "Els resultats parcials del partit han estat assignats correctament"
+    },
+    "result": "Resultat | Resultats"
   },
   "federations": {
     "federation": "Federació | Federacions",
@@ -1228,7 +1238,6 @@
       "year": "Selecciona un any"
     }
   },
-  "game": { "unlocked": "El partit s'ha desbloquejat correctament" },
   "injuries": {
     "add": "Afegir lesió",
     "stored": "El canvi per lesió s'ha fet correctament",

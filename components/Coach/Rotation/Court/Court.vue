@@ -1133,7 +1133,8 @@ const isPlayerInCurrentChanges = (player?: CallPlayerData): boolean => {
       pc =>
         pc.profileId === player?.profileId &&
         pc.inCourtProfileId !== pc.profileId,
-    ) ?? props.rotation?.injuries?.find(i => i.profileId === player?.profileId)
+    ) ||
+    !!props.rotation?.injuries?.find(i => i.profileId === player?.profileId)
   )
 }
 

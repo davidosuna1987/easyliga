@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { Game, getGameTeamName, hasDefaultReferee } from '@/domain/game'
-import { formatDateTime } from '@/domain/utils'
+import { useAuthStore } from '@/stores/useAuthStore'
+import { MenuItem } from 'primevue/menuitem'
 import { User } from '@/domain/user'
+import {
+  Game,
+  getGameTeamName,
+  hasDefaultReferee,
+  mapGameStatisticsToResultString,
+} from '@/domain/game'
 import { TeamType } from '@/domain/team'
+import { formatDateTime } from '@/domain/utils'
+import { getFullName } from '@/domain/player'
 
 const props = defineProps({
   game: {
@@ -17,17 +25,24 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  highlight: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits<{
+  (e: 'game:set-partials', value: Game): void
   (e: 'referee:assign', value: Game): void
   (e: 'referee:assigned', value: User): void
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
 
 const menu = ref()
-const menuItems = ref([
+
+const commonMenuItems = [
   {
     label: t('forms.options'),
     items: [
@@ -35,25 +50,56 @@ const menuItems = ref([
         label: hasDefaultReferee(props.game)
           ? t('referees.assign')
           : t('referees.change'),
-        icon: 'pi pi-plus',
+        badge: hasDefaultReferee(props.game) ? '!' : undefined,
         command: () => {
           emit('referee:assign', props.game)
         },
       },
     ],
   },
-])
+]
+
+const adminMenuItems = auth.isAdmin()
+  ? [
+      { separator: true },
+      {
+        label: t('forms.admin_options'),
+        items: [
+          {
+            label: t('games.partials.assign'),
+            command: () => {
+              emit('game:set-partials', props.game)
+            },
+          },
+        ],
+      },
+    ]
+  : []
+
+const menuItems = ref([...commonMenuItems, ...adminMenuItems])
+
+const isOnlyOneMenuItemAvailable =
+  !adminMenuItems.length && commonMenuItems.length === 1
+
+const uniqueCommonMenuItem =
+  isOnlyOneMenuItemAvailable && commonMenuItems[0].items?.length === 1
+    ? commonMenuItems[0].items[0]
+    : undefined
 
 const toggleMenu = (event: Event) => {
-  // this is because we just have the assign referee options
-  emit('referee:assign', props.game)
-  // if there will be more options, use the following line
-  // menu.value.toggle(event)
+  // // this is because we just have the assign referee options
+  // emit('referee:assign', props.game)
+  // // if there will be more options, use the following line
+  // // menu.value.toggle(event)
+  isOnlyOneMenuItemAvailable && uniqueCommonMenuItem
+    ? uniqueCommonMenuItem.command()
+    : menu.value.toggle(event)
 }
 </script>
 
 <template>
   <div
+    :data-game-id="game.id"
     :class="['easy-league-game-card-component', { 'is-hoverable': hoverable }]"
   >
     <div :class="['flex-1', { 'opacity-60': game.isBye }]">
@@ -77,9 +123,25 @@ const toggleMenu = (event: Event) => {
           VS
         </span>
       </div>
-      <small v-if="!game.isBye" class="opacity-60">
-        {{ formatDateTime(game.date) }}
-      </small>
+      <template v-if="!game.isBye">
+        <small class="opacity-60 block">
+          {{ formatDateTime(game.date) }}
+        </small>
+
+        <GameStatisticsLine
+          v-if="game.status === 'finished'"
+          :statistics="game.statistics"
+          :highlight="highlight"
+          size="0.8rem"
+        />
+        <template v-else>
+          <small v-if="game.referee" class="opacity-60 block">
+            {{
+              `${t('referees.referee')}: ${getFullName(game.referee.profile)}`
+            }}
+          </small>
+        </template>
+      </template>
     </div>
 
     <div
@@ -94,7 +156,32 @@ const toggleMenu = (event: Event) => {
         class="easy-badge-component"
       ></div>
       <EasyIcon class="gear" name="gear" size="1.5rem" />
-      <Menu ref="menu" id="overlay_menu" :model="menuItems" :popup="true" />
+      <Menu ref="menu" id="overlay_menu" :model="menuItems" :popup="true">
+        <template #item="{ item }">
+          <div
+            :class="[
+              {
+                'py-3 px-5 cursor-pointer flex items-center justify-between':
+                  item.command,
+              },
+            ]"
+          >
+            <span v-if="item.icon" :class="item.icon" />
+            <span class="ml-2">{{ item.label }}</span>
+            <span
+              v-if="item.shortcut"
+              class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+              >{{ item.shortcut }}</span
+            >
+            <div
+              v-if="item.badge"
+              class="bg-[var(--text-danger)] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full"
+            >
+              {{ item.badge }}
+            </div>
+          </div>
+        </template>
+      </Menu>
     </div>
   </div>
 </template>

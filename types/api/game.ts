@@ -22,6 +22,26 @@ import { SanctionSeverityKey } from '@/domain/sanction'
 
 export type ApiGameTeamNames = Record<TeamType, string | null>
 
+export type ApiGamePartial = {
+  set_number: 1 | 2 | 3 | 4 | 5
+  local_team_score: number
+  visitor_team_score: number
+}
+
+export type ApiGamePartials = ApiGamePartial[]
+
+export type ApiGameStatistics = {
+  winner_team_id: number | null
+  loser_team_id: number | null
+  winner_team_name: string | null
+  loser_team_name: string | null
+  local_team_sets_won: number
+  visitor_team_sets_won: number
+  local_team_points: number
+  visitor_team_points: number
+  partials: ApiGamePartials
+}
+
 export type ApiGameRelations = {
   league?: ApiLeague
   division?: ApiDivision
@@ -40,6 +60,7 @@ export type ApiGameRelations = {
   sanctions?: ApiSanction[]
   injuries?: ApiInjury[]
   signatures?: ApiGameSignature[]
+  result_assignee?: ApiUser
 }
 
 export type ApiGameRelationsCount = {
@@ -53,6 +74,7 @@ export type ApiGameCustomAppends = {
   duration: ApiDuration | null
   confirmed: boolean
   is_bye: boolean
+  statistics: ApiGameStatistics
 }
 
 export type ApiGame = {
@@ -76,6 +98,7 @@ export type ApiGame = {
   loser_team_id: number | null
   status: GameStatus | null
   observations: string | null
+  results_assigned_manually_by: number | null
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null
@@ -129,6 +152,10 @@ export type ApiGameObservationsRequest = {
 
 export type ApiGameRequestChangeDateRequest = {
   requested_date: string
+}
+
+export type ApiGamePartialsAssignRequest = {
+  partials: ApiGamePartials
 }
 
 export type ApiGameInitialDataResponse = {

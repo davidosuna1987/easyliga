@@ -16,6 +16,7 @@ const showGenerateGamesDialogForm = ref<boolean>(false)
 const showAddTeamDialogForm = ref<boolean>(false)
 const showRemoveTeamAlertDialog = ref<boolean>(false)
 const showRefereeSelectorDialogForm = ref<Game>()
+const showGameSetPartialsDialogForm = ref<Game>()
 const teamToRemove = ref<Team>()
 const loadingApi = ref<boolean>(true)
 
@@ -106,6 +107,11 @@ const handleRefereeAssigned = (referee: User) => {
   showRefereeSelectorDialogForm.value = undefined
 }
 
+const handlePartialsAssigned = () => {
+  showGameSetPartialsDialogForm.value = undefined
+  getLeague()
+}
+
 onMounted(() => {
   getLeague()
 })
@@ -182,6 +188,7 @@ onMounted(() => {
                   :game="game"
                   showActions
                   @referee:assign="showRefereeSelectorDialogForm = game"
+                  @game:set-partials="showGameSetPartialsDialogForm = game"
                 />
               </EasyGrid>
             </div>
@@ -215,6 +222,14 @@ onMounted(() => {
         :game="showRefereeSelectorDialogForm"
         @referee:assigned="handleRefereeAssigned"
         @hide="showRefereeSelectorDialogForm = undefined"
+      />
+
+      <GamePartialsAssignFormDialog
+        v-if="!!showGameSetPartialsDialogForm"
+        :visible="!!showGameSetPartialsDialogForm"
+        :game="showGameSetPartialsDialogForm"
+        @partials:assigned="handlePartialsAssigned"
+        @hide="showGameSetPartialsDialogForm = undefined"
       />
 
       <AlertDialog

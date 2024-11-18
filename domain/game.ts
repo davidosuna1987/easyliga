@@ -5,6 +5,9 @@ import {
   ApiGameObservationsRequest,
   ApiGameReportSimple,
   ApiGameTeamNames,
+  ApiGamePartials,
+  ApiGamePartialsAssignRequest,
+  ApiGameStatistics,
 } from '@/types/api/game'
 import { Call, mapApiCallToCall } from '@/domain/call'
 import { Set, SetSide, mapApiSetToSet } from '@/domain/set'
@@ -85,10 +88,36 @@ export type Gender = {
 
 export type GameTeamNames = Record<TeamType, string | undefined>
 
+export type GamePartial = {
+  setNumber: 1 | 2 | 3 | 4 | 5
+  localTeamScore: number | undefined
+  visitorTeamScore: number | undefined
+}
+
+export type GamePartials = GamePartial[]
+
+export type GameStatistics = {
+  winnerTeamId: number | null
+  loserTeamId: number | null
+  winnerTeamName: string | null
+  loserTeamName: string | null
+  localTeamSetsWon: number
+  visitorTeamSetsWon: number
+  localTeamPoints: number
+  visitorTeamPoints: number
+  partials: GamePartials
+}
+
 export type GameRefereeAssignFormRef = {
   handleSubmit: () => void
   loadingApi: boolean
   selectedReferee: User | undefined
+}
+
+export type GamePartialsAssignFormRef = {
+  handleSubmit: () => void
+  loadingApi: boolean
+  form: GamePartialsAssignRequest
 }
 
 export type GameInitialData = {
@@ -125,6 +154,7 @@ export type GameRelations = {
   sanctions?: Sanction[]
   injuries?: Injury[]
   signatures?: GameSignature[]
+  resultAssignee?: User
 }
 
 export type GameRelationsCount = {
@@ -138,6 +168,7 @@ export type GameCustomAppends = {
   duration?: Duration
   confirmed: boolean
   isBye: boolean
+  statistics: GameStatistics
 }
 
 export type Game = {
@@ -161,12 +192,17 @@ export type Game = {
   end?: string
   status?: GameStatus
   observations?: string
+  resultsAssignedManuallyBy?: number
 } & GameRelations &
   GameRelationsCount &
   GameCustomAppends
 
 export type GameObservationsRequest = {
   observations?: string
+}
+
+export type GamePartialsAssignRequest = {
+  partials: GamePartials
 }
 
 export type GameReportTeamType =
@@ -236,6 +272,7 @@ export const mapApiGameToGame = (apiGame: ApiGame): Game => ({
   end: apiGame.end ?? undefined,
   status: apiGame.status ?? undefined,
   observations: apiGame.observations ?? undefined,
+  resultsAssignedManuallyBy: apiGame.results_assigned_manually_by ?? undefined,
 
   ...mapApiGameRelationsToGameRelations(apiGame),
   ...mapApiGameRelationsCountToGameRelationsCount(apiGame),
@@ -280,6 +317,9 @@ export const mapApiGameRelationsToGameRelations = (
   signatures: apiGame.signatures
     ? apiGame.signatures.map(mapApiGameSignatureToGameSignature)
     : undefined,
+  resultAssignee: apiGame.result_assignee
+    ? mapApiUserToUser(apiGame.result_assignee)
+    : undefined,
 })
 
 export const mapApiGameRelationsCountToGameRelationsCount = (
@@ -297,6 +337,21 @@ export const mapApiGameCustomAppendsToGameCustomAppends = (
   duration: mapApiDurationToDuration(apiGame.duration),
   confirmed: apiGame.confirmed,
   isBye: apiGame.is_bye,
+  statistics: mapApiGameStatisticsToGameStatistics(apiGame.statistics),
+})
+
+export const mapApiGameStatisticsToGameStatistics = (
+  apiGameStatistics: ApiGameStatistics,
+): GameStatistics => ({
+  winnerTeamId: apiGameStatistics.winner_team_id ?? null,
+  loserTeamId: apiGameStatistics.loser_team_id ?? null,
+  winnerTeamName: apiGameStatistics.winner_team_name ?? null,
+  loserTeamName: apiGameStatistics.loser_team_name ?? null,
+  localTeamSetsWon: apiGameStatistics.local_team_sets_won,
+  visitorTeamSetsWon: apiGameStatistics.visitor_team_sets_won,
+  localTeamPoints: apiGameStatistics.local_team_points,
+  visitorTeamPoints: apiGameStatistics.visitor_team_points,
+  partials: mapApiGamePartialsToGamePartials(apiGameStatistics.partials),
 })
 
 export const mapApiGameInitialDataToGameInitialData = (
@@ -438,6 +493,86 @@ export const mapApiTeamNamesToTeamNames = (
 ): GameTeamNames => ({
   [TeamType.local]: apiTeamNames.local ?? undefined,
   [TeamType.visitor]: apiTeamNames.visitor ?? undefined,
+})
+
+export const mapGamePartialsToPartialsString = (
+  partials: GamePartials,
+  separator: string = ', ',
+): string =>
+  partials
+    .map(
+      partial =>
+        `${partial.localTeamScore ?? 0}:${partial.visitorTeamScore ?? 0}`,
+    )
+    .join(separator)
+
+export const mapGameStatisticsToResultString = (
+  statistics: GameStatistics,
+): string | undefined => {
+  if (statistics.winnerTeamId === null || statistics.loserTeamId === null) {
+    return
+  }
+
+  return `${statistics.localTeamSetsWon}:${
+    statistics.visitorTeamSetsWon
+  } (${mapGamePartialsToPartialsString(statistics.partials)})`
+}
+
+export const mapGameStatisticsToTeamTextColors = (
+  statistics: GameStatistics,
+  highlight: boolean = true,
+): Record<TeamType, string> => {
+  if (
+    !highlight ||
+    statistics.winnerTeamId === null ||
+    statistics.loserTeamId === null
+  ) {
+    return {
+      [TeamType.local]: 'text-[var(--text-color)]',
+      [TeamType.visitor]: 'text-[var(--text-color)]',
+    }
+  }
+
+  return {
+    [TeamType.local]:
+      statistics.localTeamSetsWon > statistics.visitorTeamSetsWon
+        ? 'text-[var(--highlight-color)]'
+        : 'text-[var(--text-color)]',
+    [TeamType.visitor]:
+      statistics.visitorTeamSetsWon > statistics.localTeamSetsWon
+        ? 'text-[var(--highlight-color)]'
+        : 'text-[var(--text-color)]',
+  }
+}
+
+export const mapApiGamePartialsToGamePartials = (
+  partials: ApiGamePartials,
+): GamePartials =>
+  partials.map(partial => ({
+    setNumber: partial.set_number as GamePartial['setNumber'],
+    localTeamScore: partial.local_team_score,
+    visitorTeamScore: partial.visitor_team_score,
+  }))
+
+export const mapGamePartialsToApiGamePartials = (
+  partials: GamePartials,
+): ApiGamePartials =>
+  partials
+    .filter(
+      partial =>
+        (partial.localTeamScore ?? 0) !== 0 ||
+        (partial.visitorTeamScore ?? 0) !== 0,
+    )
+    .map(partial => ({
+      set_number: partial.setNumber,
+      local_team_score: partial.localTeamScore ?? 0,
+      visitor_team_score: partial.visitorTeamScore ?? 0,
+    }))
+
+export const mapGamePartialsAssignRequestToApiGamePartialsAssignRequest = (
+  request: GamePartialsAssignRequest,
+): ApiGamePartialsAssignRequest => ({
+  partials: mapGamePartialsToApiGamePartials(request.partials),
 })
 
 export const hasDefaultReferee = (game: Game): boolean =>
