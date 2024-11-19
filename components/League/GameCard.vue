@@ -55,6 +55,12 @@ const commonMenuItems = [
           emit('referee:assign', props.game)
         },
       },
+      {
+        label: t('reports.show'),
+        command: () => {
+          navigateTo(`/game/${props.game.id}/report`)
+        },
+      },
     ],
   },
 ]
@@ -87,10 +93,6 @@ const uniqueCommonMenuItem =
     : undefined
 
 const toggleMenu = (event: Event) => {
-  // // this is because we just have the assign referee options
-  // emit('referee:assign', props.game)
-  // // if there will be more options, use the following line
-  // // menu.value.toggle(event)
   isOnlyOneMenuItemAvailable && uniqueCommonMenuItem
     ? uniqueCommonMenuItem.command()
     : menu.value.toggle(event)
@@ -135,11 +137,13 @@ const toggleMenu = (event: Event) => {
           size="0.8rem"
         />
         <template v-else>
-          <small v-if="game.referee" class="opacity-60 block">
-            {{
-              `${t('referees.referee')}: ${getFullName(game.referee.profile)}`
-            }}
-          </small>
+          <p class="line-clamp-1">
+            <small v-if="game.referee" class="opacity-60 block">
+              {{
+                `${t('referees.referee')}: ${getFullName(game.referee.profile)}`
+              }}
+            </small>
+          </p>
         </template>
       </template>
     </div>
