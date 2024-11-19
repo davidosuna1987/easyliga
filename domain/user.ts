@@ -5,6 +5,9 @@ import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { mapApiSedeToSede, Sede } from '@/domain/sede'
 import { License, mapApiLicenseToLicense } from '@/domain/license'
+import { ApiFederationRefereePivot } from '@/types/api/federation'
+
+export type UserPivot = ApiFederationRefereePivot
 
 export type UserRelations = {
   profile?: Profile
@@ -20,6 +23,7 @@ export type UserRelations = {
 export type User = {
   id: number
   email: string
+  pivot?: UserPivot
 } & UserRelations
 
 export type UserSearchFormInputRef = {
@@ -36,6 +40,7 @@ export type UserSearchFormRef = {
 export const mapApiUserToUser = (apiUser: ApiUser): User => ({
   id: apiUser.id,
   email: apiUser.email,
+  pivot: apiUser.pivot,
 
   ...mapApiUserRelationsToUserRelations(apiUser),
 })

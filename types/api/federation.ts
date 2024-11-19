@@ -7,6 +7,12 @@ import { ApiAddress } from '@/types/api/address'
 import { FederationScope } from '@/domain/federation'
 import { ApiLicense } from '@/types/api/license'
 
+export type ApiFederationRefereePivot = {
+  federation_id: number
+  referee_id: number
+  admin: boolean
+}
+
 export type ApiFederationRelations = {
   responsible?: ApiUser
   federation?: ApiFederation

@@ -21,7 +21,7 @@ const props = defineProps({
     required: false,
   },
   onRemove: {
-    type: Function as PropType<(id: number) => void>,
+    type: Function as PropType<(profileId: number) => void>,
     default: null,
   },
   removeIcon: {
@@ -52,6 +52,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  tag: {
+    type: String,
+    required: false,
+  },
+  clamp: {
+    type: Number,
+    default: 2,
+  },
 })
 
 const emit = defineEmits<{
@@ -60,11 +68,12 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const iconsGap = computed(() => {
-  let gap = 0
-  if (!!props.onRemove) gap++
-  if (!!props.editable) gap++
-  return gap
+const actionCols = computed(() => {
+  let cols = 0
+  if (!!props.onRemove) cols++
+  if (!!props.editable) cols++
+  if (!!props.tag) cols++
+  return cols
 })
 
 const onRemoveTooltipText = computed(() =>
@@ -78,6 +87,8 @@ const onRemoveTooltipText = computed(() =>
 
 <template>
   <div
+    :data-user-id="profile.userId"
+    :data-profile-id="profile.id"
     class="easy-profile-item easy-game-player-item"
     :class="{
       'is-selectable': selectable,
@@ -97,7 +108,9 @@ const onRemoveTooltipText = computed(() =>
         :image="profile.avatar"
         shape="circle"
       />
-      <span class="player-name">{{ getFullName(profile) }}</span>
+      <span :class="['player-name', `line-clamp-${clamp}`]">{{
+        getFullName(profile)
+      }}</span>
       <div v-if="roles" class="player-roles flex gap-1">
         <Badge
           v-for="role of roles"
@@ -117,8 +130,14 @@ const onRemoveTooltipText = computed(() =>
     </div>
     <div
       class="team-player-captain flex gap-2"
-      :class="[`grid-cols-${iconsGap}`]"
+      :class="[`[grid-template-columns:repeat(${actionCols},minmax(0,1fr))]`]"
     >
+      <Tag
+        v-if="tag"
+        :class="['py-0.5 px-2 self-center']"
+        :value="tag"
+        rounded
+      />
       <PlayerItemIcon
         v-if="editable"
         class="hover:text-[var(--primary-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"

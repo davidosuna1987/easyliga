@@ -246,7 +246,8 @@
       "label": "Federation",
       "list": { "label": "List of federations" },
       "leagues": { "label": "League List" },
-      "clubs": { "label": "List of clubs" }
+      "clubs": { "label": "List of clubs" },
+      "referees": { "label": "List of referees" }
     },
     "club": { "label": "Club", "list": { "label": "List of clubs" } },
     "referee": {
@@ -299,6 +300,9 @@
       "league": {
         "create": { "title": "Add league to federation" },
         "edit": { "title": "Edit league" }
+      },
+      "referees": {
+        "title": "Federation referees"
       }
     },
     "game": { "report": { "title": "Match minutes" } },
@@ -383,6 +387,19 @@
   },
   "referees": {
     "referee": "Referee | Referees",
+    "add": "Add referee",
+    "added": "The referee has been added correctly",
+    "create": "Create referee",
+    "created": "The referee has been created correctly",
+    "edit": "Edit referee",
+    "update": "Update referee",
+    "updated": "The referee has been successfully updated",
+    "delete": "Delete referee",
+    "deleted": "The referee has been successfully eliminated",
+    "delete_alert": "Are you sure you want to eliminate the referee?",
+    "delete_alert_disclaimer": "This action cannot be undone",
+    "select": "Select a referee",
+    "not_found": "No referees were found with that search criteria",
     "welcome": "Hello {name}! Is it game day?",
     "welcome_no_name": "Hello! Is it game day?",
     "license": "License | Licenses",
@@ -521,7 +538,8 @@
       "local": "Local"
     },
     "federation_clubs": "{name} Clubs",
-    "no_vinculated_clubs": "There are no clubs linked to the federation"
+    "no_vinculated_clubs": "There are no clubs linked to the federation",
+    "referee_list_empty": "There are no referees assigned to this federation"
   },
   "divisions": {
     "division": "Division | Divisions",

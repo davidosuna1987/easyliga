@@ -1,3 +1,4 @@
+import { UserPivot } from '@/domain/user'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiRole } from '@/types/api/role'
 import { ApiLicense } from '@/types/api/license'
@@ -22,6 +23,7 @@ export type ApiUser = {
   id: number
   email: string
   email_verified_at: string | null
+  pivot?: UserPivot
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null

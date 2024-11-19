@@ -1,4 +1,7 @@
-import { ApiFederation } from '@/types/api/federation'
+import {
+  ApiFederation,
+  ApiFederationRefereePivot,
+} from '@/types/api/federation'
 import { Address, mapApiAddressToAddress } from '@/domain/address'
 import { User, mapApiUserToUser } from '@/domain/user'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'

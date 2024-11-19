@@ -246,7 +246,8 @@
       "label": "Federació",
       "list": { "label": "Llistat de federacions" },
       "leagues": { "label": "Llistat de lligues" },
-      "clubs": { "label": "Llistat de clubs" }
+      "clubs": { "label": "Llistat de clubs" },
+      "referees": { "label": "Llistat d'àrbitres" }
     },
     "club": { "label": "Club", "list": { "label": "Llistat de clubs" } },
     "referee": {
@@ -303,6 +304,9 @@
       "league": {
         "create": { "title": "Afegir lliga a la federació" },
         "edit": { "title": "Editar lliga" }
+      },
+      "referees": {
+        "title": "Àrbitres de la federació"
       }
     },
     "game": { "report": { "title": "Acta del partit" } },
@@ -387,6 +391,19 @@
   },
   "referees": {
     "referee": "Àrbitre | Àrbitres",
+    "add": "Afegir àrbitre",
+    "added": "L'àrbitre ha estat afegit correctament",
+    "create": "Crear àrbitre",
+    "created": "L'àrbitre ha estat creat correctament",
+    "edit": "Editar àrbitre",
+    "update": "Actualitzar àrbitre",
+    "updated": "L'àrbitre ha estat actualitzat correctament",
+    "delete": "Eliminar àrbitre",
+    "deleted": "L'àrbitre ha estat eliminat correctament",
+    "delete_alert": "Esteu segur que voleu eliminar l'àrbitre?",
+    "delete_alert_disclaimer": "Aquesta acció no es pot desfer",
+    "select": "Selecciona un àrbitre",
+    "not_found": "No s'han trobat àrbitres amb aquest criteri de cerca",
     "welcome": "Hola {name}! És dia de partit?",
     "welcome_no_name": "Hola! És dia de partit?",
     "license": "Llicència | Llicències",
@@ -436,7 +453,7 @@
       "game": "Àrbitre del partit | Àrbitres del partit",
       "assign": "Assignar àrbitre del partit | Assignar àrbitres del partit",
       "assign_message": "Assigna un àrbitre per al partit {gameName} | Assigna els àrbitres pel partit {gameName}",
-      "assigned": "L‟àrbitre s‟ha assignat correctament | Els àrbitres s'han assignat correctament",
+      "assigned": "L'àrbitre s'ha assignat correctament | Els àrbitres s'han assignat correctament",
       "not_assigned": "Àrbitre no assignat | Àrbitres no assignats"
     },
     "select": "Selecciona un partit",
@@ -496,7 +513,7 @@
       "partial": "Parcial | Parcials",
       "assign": "Assignar parcials",
       "assigned_manually_by": "El resultat d'aquest partit ha estat assignat manualment per {name} i és possible que l'acta no tingui algunes dades",
-      "assigned_manually": "El resultat d‟aquest partit ha estat assignat manualment i és possible que l‟acta no disposi d‟algunes dades",
+      "assigned_manually": "El resultat d'aquest partit ha estat assignat manualment i és possible que l'acta no disposi d'algunes dades",
       "assigned": "Els resultats parcials del partit han estat assignats correctament"
     },
     "result": "Resultat | Resultats"
@@ -527,7 +544,8 @@
       "local": "Local"
     },
     "federation_clubs": "Clubs de {name}",
-    "no_vinculated_clubs": "No hi ha clubs vinculats a la federació"
+    "no_vinculated_clubs": "No hi ha clubs vinculats a la federació",
+    "referee_list_empty": "No hi ha àrbitres assignats a aquesta federació"
   },
   "divisions": {
     "division": "Divisió | Divisions",
@@ -1173,7 +1191,7 @@
         "federation": "Omple tots els camps per formar part de la federació.",
         "club": "Omple tots els camps per formar part del club.",
         "coach": "Ompliu tots els camps per formar part de l'equip.",
-        "referee": "Omple tots els camps per ser l‟àrbitre del partit.",
+        "referee": "Omple tots els camps per ser l'àrbitre del partit.",
         "player": "Ompliu tots els camps i seleccioneu un dorsal per formar part de l'equip."
       }
     },

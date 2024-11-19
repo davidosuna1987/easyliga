@@ -14,6 +14,10 @@ export default [
         label: 'navbar.federation.clubs.label',
         to: '/federation/clubs',
       },
+      {
+        label: 'navbar.federation.referees.label',
+        to: '/federation/referees',
+      },
     ],
   },
 ]

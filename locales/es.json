@@ -254,6 +254,9 @@
       },
       "clubs": {
         "label": "Listado de clubs"
+      },
+      "referees": {
+        "label": "Listado de árbitros"
       }
     },
     "club": {
@@ -366,6 +369,9 @@
         "edit": {
           "title": "Editar liga"
         }
+      },
+      "referees": {
+        "title": "Árbitros de la federación"
       }
     },
     "game": {
@@ -474,6 +480,19 @@
   },
   "referees": {
     "referee": "Árbitro | Árbitros",
+    "add": "Añadir árbitro",
+    "added": "El árbitro ha sido añadido correctamente",
+    "create": "Crear árbitro",
+    "created": "El árbitro ha sido creado correctamente",
+    "edit": "Editar árbitro",
+    "update": "Actualizar árbitro",
+    "updated": "El árbitro ha sido actualizado correctamente",
+    "delete": "Eliminar árbitro",
+    "deleted": "El árbitro ha sido eliminado correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar el árbitro?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer",
+    "select": "Selecciona un árbitro",
+    "not_found": "No se han encontrado árbitros con ese criterio de búsqueda",
     "welcome": "¡Hola {name}! ¿Es día de partido?",
     "welcome_no_name": "¡Hola! ¿Es día de partido?",
     "license": "Licencia | Licencias",
@@ -614,7 +633,8 @@
       "local": "Local"
     },
     "federation_clubs": "Clubs de {name}",
-    "no_vinculated_clubs": "No hay clubs vinculados a la federación"
+    "no_vinculated_clubs": "No hay clubs vinculados a la federación",
+    "referee_list_empty": "No hay árbitros asignados a esta federación"
   },
   "divisions": {
     "division": "División | Divisiones",

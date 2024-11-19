@@ -246,7 +246,8 @@
       "label": "Federazioa",
       "list": { "label": "Federazioen zerrenda" },
       "leagues": { "label": "Ligako Zerrenda" },
-      "clubs": { "label": "Kluben zerrenda" }
+      "clubs": { "label": "Kluben zerrenda" },
+      "referees": { "label": "Epaileen zerrenda" }
     },
     "club": { "label": "Kluba", "list": { "label": "Kluben zerrenda" } },
     "referee": {
@@ -303,6 +304,9 @@
       "league": {
         "create": { "title": "Gehitu liga federazioari" },
         "edit": { "title": "Editatu liga" }
+      },
+      "referees": {
+        "title": "Federazioko arbitroak"
       }
     },
     "game": { "report": { "title": "Partiduen minutuak" } },
@@ -387,6 +391,19 @@
   },
   "referees": {
     "referee": "Epailea | Epaileak",
+    "add": "Gehitu arbitroa",
+    "added": "Epailea behar bezala gehitu da",
+    "create": "Sortu arbitroa",
+    "created": "Arbitroa zuzen sortu da",
+    "edit": "Editatu arbitroa",
+    "update": "Eguneratu arbitroa",
+    "updated": "Epailea behar bezala eguneratu da",
+    "delete": "Ezabatu epailea",
+    "deleted": "Epailea arrakastaz kanporatua izan da",
+    "delete_alert": "Ziur al zaude epailea kendu nahi duzula?",
+    "delete_alert_disclaimer": "Ekintza hau ezin da desegin",
+    "select": "Hautatu arbitro bat",
+    "not_found": "Ez da arbitrorik aurkitu bilaketa-irizpide horrekin",
     "welcome": "Kaixo {name}! Partida eguna da?",
     "welcome_no_name": "Kaixo! Partida eguna da?",
     "license": "Lizentzia | Lizentziak",
@@ -527,7 +544,8 @@
       "local": "Tokikoa"
     },
     "federation_clubs": "{name} Klubak",
-    "no_vinculated_clubs": "Ez dago federazioarekin lotutako klubik"
+    "no_vinculated_clubs": "Ez dago federazioarekin lotutako klubik",
+    "referee_list_empty": "Ez dago federazio honetara esleitutako arbitrorik"
   },
   "divisions": {
     "division": "Zatiketa | Zatiketak",
