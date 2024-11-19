@@ -1,10 +1,20 @@
 import { ApiUser } from '@/types/api/user'
 import { Profile, Responsible, mapApiProfileToProfile } from '@/domain/profile'
 import { mapApiRoleToRole, Role } from '@/domain/role'
+import { Federation, mapApiFederationToFederation } from '@/domain/federation'
+import { Club, mapApiClubToClub } from '@/domain/club'
+import { mapApiSedeToSede, Sede } from '@/domain/sede'
+import { License, mapApiLicenseToLicense } from '@/domain/license'
 
 export type UserRelations = {
   profile?: Profile
   roles?: Role[]
+  refereeFederations?: Federation[]
+  adminRefereeFederations?: Federation[]
+  managedFederations?: Federation[]
+  managedClubs?: Club[]
+  managedSedes?: Sede[]
+  licenses?: License[]
 }
 
 export type User = {
@@ -37,6 +47,24 @@ export const mapApiUserRelationsToUserRelations = (
     ? mapApiProfileToProfile(apiUser.profile)
     : undefined,
   roles: apiUser.roles ? apiUser.roles.map(mapApiRoleToRole) : undefined,
+  refereeFederations: apiUser.referee_federations
+    ? apiUser.referee_federations.map(mapApiFederationToFederation)
+    : undefined,
+  adminRefereeFederations: apiUser.admin_referee_federations
+    ? apiUser.admin_referee_federations.map(mapApiFederationToFederation)
+    : undefined,
+  managedFederations: apiUser.managed_federations
+    ? apiUser.managed_federations.map(mapApiFederationToFederation)
+    : undefined,
+  managedClubs: apiUser.managed_clubs
+    ? apiUser.managed_clubs.map(mapApiClubToClub)
+    : undefined,
+  managedSedes: apiUser.managed_sedes
+    ? apiUser.managed_sedes.map(mapApiSedeToSede)
+    : undefined,
+  licenses: apiUser.licenses
+    ? apiUser.licenses.map(mapApiLicenseToLicense)
+    : undefined,
 })
 
 export const mapApiUserToResponsible = (

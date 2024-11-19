@@ -10,6 +10,8 @@ import { LicensableModelType } from '@/domain/licensable'
 export type ApiUserRelations = {
   profile?: ApiProfile
   roles?: ApiRole[]
+  referee_federations?: ApiFederation[]
+  admin_referee_federations?: ApiFederation[]
   managed_federations?: ApiFederation[]
   managed_clubs?: ApiClub[]
   managed_sedes?: ApiSede[]
