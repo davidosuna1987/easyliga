@@ -29,6 +29,8 @@ export type FederationRelations = {
   address?: Address
   licenses?: License[]
   referees?: User[]
+  adminReferees?: User[]
+  regularReferees?: User[]
 }
 
 export type FederationCountRelations = {
@@ -72,10 +74,16 @@ export const mapApiFederationToFederation = (
   responsibleId: apiFederation.responsible_id ?? undefined,
   addressId: apiFederation.address_id ?? undefined,
 
+  ...mapApiFederationRelationsToFederationRelations(apiFederation),
+  ...mapApiFederationRelationsCountToFederationCountRelations(apiFederation),
+})
+
+export const mapApiFederationRelationsToFederationRelations = (
+  apiFederation: ApiFederation,
+): FederationRelations => ({
   responsible: apiFederation.responsible
     ? mapApiUserToUser(apiFederation.responsible)
     : undefined,
-
   federation: apiFederation.federation
     ? mapApiFederationToFederation(apiFederation.federation)
     : undefined,
@@ -103,7 +111,17 @@ export const mapApiFederationToFederation = (
   referees: apiFederation.referees
     ? apiFederation.referees.map(mapApiUserToUser)
     : undefined,
+  adminReferees: apiFederation.admin_referees
+    ? apiFederation.admin_referees.map(mapApiUserToUser)
+    : undefined,
+  regularReferees: apiFederation.regular_referees
+    ? apiFederation.regular_referees.map(mapApiUserToUser)
+    : undefined,
+})
 
+export const mapApiFederationRelationsCountToFederationCountRelations = (
+  apiFederation: ApiFederation,
+): FederationCountRelations => ({
   federationsCount: apiFederation.federations_count ?? undefined,
   divisionsCount: apiFederation.divisions_count ?? undefined,
   leaguesCount: apiFederation.leagues_count ?? undefined,

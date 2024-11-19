@@ -18,6 +18,8 @@ export type ApiFederationRelations = {
   address?: ApiAddress
   licenses?: ApiLicense[]
   referees?: ApiUser[]
+  admin_referees?: ApiUser[]
+  regular_referees?: ApiUser[]
 }
 
 export type ApiFederationCountRelations = {
