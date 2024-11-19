@@ -146,6 +146,15 @@ onMounted(() => {
     <template v-else>
       <template v-if="report?.game.status === 'finished'">
         <div v-if="report" class="report-wrapper max-w-[1220px] mx-auto">
+          <Message
+            v-if="gameObservationsWarning"
+            class="no-print"
+            :closable="false"
+            type="info"
+          >
+            {{ gameObservationsWarning }}
+          </Message>
+
           <GameReportSimpleHeader
             v-if="gameSidedTeams"
             :game="report.game"
