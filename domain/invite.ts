@@ -16,7 +16,7 @@ export type InvitedToType = (typeof INVITED_TO_TYPES)[number]
 
 export type InvitedRole = Extract<
   Role,
-  'federation' | 'club' | 'coach' | 'referee' | 'player'
+  'federation' | 'club' | 'coach' | 'referee_admin' | 'referee' | 'player'
 >
 
 export const ROLE_TO_INVITED_TO_TYPE_MAPPER: Record<
@@ -26,6 +26,7 @@ export const ROLE_TO_INVITED_TO_TYPE_MAPPER: Record<
   federation: 'federation',
   club: 'club',
   coach: 'team',
+  referee_admin: 'federation',
   referee: 'game',
   player: 'team',
 } as const

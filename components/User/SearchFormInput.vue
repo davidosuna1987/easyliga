@@ -2,6 +2,7 @@
 import { User, UserSearchFormRef } from '@/domain/user'
 import { InvitedRole } from '@/domain/invite'
 import { GridBreakpoints, mapBreakpointsToClasses } from '@/domain/grid'
+import { IconNames } from '@/domain/icon'
 
 const props = defineProps({
   userOriginal: {
@@ -20,6 +21,10 @@ const props = defineProps({
     type: String as PropType<InvitedRole>,
     required: true,
   },
+  showInvite: {
+    type: Boolean,
+    default: true,
+  },
   label: {
     type: String,
     required: false,
@@ -31,6 +36,10 @@ const props = defineProps({
   editable: {
     type: Boolean,
     default: true,
+  },
+  clearable: {
+    type: Boolean,
+    default: false,
   },
   reduced: {
     type: Boolean,
@@ -156,17 +165,26 @@ defineExpose({
           :whereRole="whereRole"
           :showLabel="false"
           :invitedToId="invitedToId ?? undefined"
+          :showInvite="showInvite"
           full
           @selected="handleSelected"
           @invited="editingUser = false"
         />
       </template>
 
+      <template v-if="clearable">
+        <PlayerItemIcon
+          v-if="selectedUser"
+          class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
+          :name="IconNames.times"
+          @click.stop="clear"
+        />
+      </template>
       <Button
-        v-if="showEditButton"
-        :label="editingUser ? t('forms.cancel') : t('forms.edit')"
+        v-else-if="showEditButton"
+        :label="editingUser || clearable ? t('forms.cancel') : t('forms.edit')"
         class="action w-min"
-        @click.prevent="handleAction"
+        @click.prevent="() => (clearable ? clear() : handleAction())"
       />
     </div>
   </div>

@@ -1,4 +1,3 @@
-import { UserPivot } from '@/domain/user'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiRole } from '@/types/api/role'
 import { ApiLicense } from '@/types/api/license'
@@ -6,7 +5,34 @@ import { ApiClub } from '@/types/api/club'
 import { ApiFederation } from '@/types/api/federation'
 import { ApiSede } from '@/types/api/sede'
 import { ApiTeam } from '@/types/api/team'
+import { UserPivot } from '@/domain/user'
+import { Role } from '@/domain/role'
+import { ProfileGender } from '@/domain/profile'
 import { LicensableModelType } from '@/domain/licensable'
+
+export type ApiUserStoreRequestEmailRequired = {
+  email: string
+  allow_empty_email: false
+}
+
+export type ApiUserStoreRequestEmailOptional = {
+  email: null
+  allow_empty_email: true
+}
+
+export type ApiUserStoreRequestEmail =
+  | ApiUserStoreRequestEmailRequired
+  | ApiUserStoreRequestEmailOptional
+
+export type ApiUserStoreRequest = {
+  allow_empty_email: boolean
+  email?: string
+  first_name: string
+  last_name: string
+  birth_date?: string
+  gender?: ProfileGender
+  roles?: Role[]
+}
 
 export type ApiUserRelations = {
   profile?: ApiProfile

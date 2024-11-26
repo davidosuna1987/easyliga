@@ -4,19 +4,11 @@ import { ApiPlayerRequest, ApiPlayerStoreRequest } from '@/types/api/player'
 import { Coach, TeamMember } from '@/domain/team'
 import {
   Profile,
-  ProfileGender,
   mapApiProfileToProfile,
   mapDateToApiDate,
 } from '@/domain/profile'
 import { RotationPlayerStatus } from '@/domain/rotation'
-
-export const ADD_PLAYER_STEPS = {
-  search: 'search',
-  invite: 'invite',
-  create: 'create',
-} as const
-
-export type AddPlayerStep = keyof typeof ADD_PLAYER_STEPS
+import { UserStoreRequest } from '@/domain/user'
 
 export type Player = {
   profileId: number
@@ -37,27 +29,7 @@ export type UpdateClubTeamPlayer =
     }
   | undefined
 
-export type PlayerStoreRequestEmailRequired = {
-  email: string
-  allowEmptyEmail: false
-}
-
-export type PlayerStoreRequestEmailOptional = {
-  email: null
-  allowEmptyEmail: true
-}
-
-export type PlayerStoreRequestEmail =
-  | PlayerStoreRequestEmailRequired
-  | PlayerStoreRequestEmailOptional
-
-export type PlayerStoreRequest = {
-  allowEmptyEmail: boolean
-  email?: string
-  firstName: string
-  lastName: string
-  birthDate?: Date
-  gender?: ProfileGender
+export type PlayerStoreRequest = UserStoreRequest & {
   shirtNumber: number
   captain: boolean
   libero: boolean

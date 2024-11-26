@@ -1,9 +1,10 @@
 import {
   ApiFederation,
-  ApiFederationRefereePivot,
+  ApiFederationRefereeAddRequest,
+  ApiFederationRefereeStoreRequest,
 } from '@/types/api/federation'
 import { Address, mapApiAddressToAddress } from '@/domain/address'
-import { User, mapApiUserToUser } from '@/domain/user'
+import { User, UserStoreRequest, mapApiUserToUser } from '@/domain/user'
 import { Division, mapApiDivisionToDivision } from '@/domain/division'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { Sede, mapApiSedeToSede } from '@/domain/sede'
@@ -62,6 +63,17 @@ export type Federation = {
 } & FederationRelations &
   FederationCountRelations &
   FederationCustomAttributes
+
+export type FederationRefereeStoreRequest = UserStoreRequest & {
+  federationId: number
+  admin: boolean
+}
+
+export type FederationRefereeAddRequest = {
+  federationId: number
+  userId: number
+  admin: boolean
+}
 
 export const mapApiFederationToFederation = (
   apiFederation: ApiFederation,
@@ -130,6 +142,29 @@ export const mapApiFederationRelationsCountToFederationCountRelations = (
   leaguesCount: apiFederation.leagues_count ?? undefined,
   clubsCount: apiFederation.clubs_count ?? undefined,
   sedesCount: apiFederation.sedes_count ?? undefined,
+})
+
+export const mapFederationRefereeStoreRequestToApiFederationRefereeStoreRequest =
+  (
+    request: FederationRefereeStoreRequest,
+  ): ApiFederationRefereeStoreRequest => ({
+    federation_id: request.federationId,
+    allow_empty_email: request.allowEmptyEmail,
+    email: request.email,
+    first_name: request.firstName,
+    last_name: request.lastName,
+    birth_date: request.birthDate?.toISOString(),
+    gender: request.gender,
+    roles: request.roles,
+    admin: request.admin,
+  })
+
+export const mapFederationRefereeAddRequestToApiFederationRefereeAddRequest = (
+  request: FederationRefereeAddRequest,
+): ApiFederationRefereeAddRequest => ({
+  federation_id: request.federationId,
+  user_id: request.userId,
+  admin: request.admin,
 })
 
 export const flattenFederations = (federations: Federation[]): Federation[] => {

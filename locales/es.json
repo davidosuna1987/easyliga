@@ -270,6 +270,9 @@
       "calendar": "Calendario",
       "games": {
         "create": "Crear partido"
+      },
+      "admin": {
+        "referees": "Administrar árbitros"
       }
     },
     "coach": {
@@ -404,6 +407,9 @@
       "index": {
         "title": "Calendario de partidos"
       },
+      "admin": {
+        "referees": "Administrar árbitros"
+      },
       "game": {
         "create": {
           "title": "Crear partido"
@@ -471,6 +477,7 @@
       "staff": "Staff",
       "federation": "Responsable de Federación",
       "club": "Responsable de Club",
+      "referee_admin": "Árbitro administrador",
       "referee": "Árbitro",
       "coach": "Entrenador",
       "player": "Jugador",
@@ -479,7 +486,9 @@
     }
   },
   "referees": {
+    "admin": "Árbitro administrador | Árbitros administradores",
     "referee": "Árbitro | Árbitros",
+    "invite": "Invitar árbitro",
     "add": "Añadir árbitro",
     "added": "El árbitro ha sido añadido correctamente",
     "create": "Crear árbitro",
@@ -1281,16 +1290,17 @@
   "invites": {
     "invite": "Invitación | Invitaciones",
     "invited_to": {
-      "federation": "Has sido invitado a Easy Liga para ser responsable de la {invitedToName}.",
-      "club": "Has sido invitado a Easy Liga para ser responsable del club {invitedToName}.",
+      "federation": "Has sido invitado a Easy Liga para formar parte de la {invitedToName}.",
+      "club": "Has sido invitado a Easy Liga para formar parte del club {invitedToName}.",
       "team": "El equipo {invitedToName} quiere invitarte a formar parte de Easy Liga para que seas <strong>{roles}</strong>.",
-      "game": "Has sido invitado a Easy Liga para ser el árbitro del partido {invitedToName}.",
-      "fill": {
-        "federation": "Rellena todos los campos para formar parte de la federación.",
-        "club": "Rellena todos los campos para formar parte del club.",
-        "coach": "Rellena todos los campos para formar parte del equipo.",
-        "referee": "Rellena todos los campos para ser el árbitro del partido.",
-        "player": "Rellena todos los campos y selecciona un dorsal para formar parte del equipo."
+      "game": "Has sido invitado a formar parte de Easy Liga para arbitrar el partido {invitedToName}.",
+      "as": {
+        "federation": "Rellena todos los campos para ser <strong>responsable de la federación</strong>.",
+        "club": "Rellena todos los campos para ser <strong>responsable del club</strong>.",
+        "coach": "Rellena todos los campos para ser <strong>entrenador del equipo</strong>.",
+        "referee_admin": "Rellena todos los campos para ser <strong>árbitro administrador</strong>.",
+        "referee": "Rellena todos los campos para ser <strong>árbitro</strong>.",
+        "player": "Rellena todos los campos y selecciona un dorsal para ser <strong>jugador del equipo</strong>."
       }
     },
     "add_roles": "Añadir roles mediante invitación",

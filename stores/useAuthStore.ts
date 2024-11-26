@@ -22,7 +22,12 @@ import {
 import { ApiUser } from '@/types/api/user'
 import { Profile } from '@/domain/profile'
 import { mapApiProfileToProfile } from '@/domain/profile'
-import { Role } from '@/domain/role'
+import {
+  mapApiRoleToRoleModel,
+  Role,
+  ROLE_MAPPER,
+  RoleModel,
+} from '@/domain/role'
 import { ApiLicense } from '@/types/api/license'
 import { LicensableModelType } from '@/domain/licensable'
 import { ApiProfile } from '@/types/api/profile'
@@ -36,8 +41,10 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<ApiUser | null>(null)
   const profile = ref<Profile | null>(null)
   const profiles = ref<Profile[]>([])
+  const roleModels = ref<RoleModel[]>([])
   const roles = ref<Role[]>([])
   const licenses = ref<ApiLicense[]>([])
+  const refereeAdministratedFederationIds = ref<number[]>([])
   const token = ref<string | null>(null)
   const isLoggedIn = computed(() => !!user.value)
 
@@ -159,12 +166,41 @@ export const useAuthStore = defineStore('auth', () => {
       params,
     })
 
+  const hasRole = (searchedRole: Role) =>
+    /* searchedRole === ROLE_MAPPER.referee_admin
+      ? refereeAdministratedFederationIds.value.length > 0 &&
+        roles.value.includes(searchedRole)
+      :  */ roles.value.includes(searchedRole)
+
+  const hasAnyRole = (searchedRoles: Role[]) =>
+    roles.value.some(role => searchedRoles.includes(role))
+
+  const removeRefereeAdminRoleIfNoAdministratedFederations = () => {
+    if (
+      roles.value.includes(ROLE_MAPPER.referee_admin) &&
+      !refereeAdministratedFederationIds.value.length
+    ) {
+      roles.value = roles.value.filter(
+        role => role !== ROLE_MAPPER.referee_admin,
+      )
+      roleModels.value = roleModels.value.filter(
+        role => role.name !== ROLE_MAPPER.referee_admin,
+      )
+    }
+  }
+
   const refreshData = (data: ApiFreshData) => {
     user.value = data.user
     profile.value = mapApiProfileToProfile(data.profile)
     profiles.value = data.profiles.map(mapApiProfileToProfile)
-    roles.value = data.roles
+    roles.value = data.roles.map(mapApiRoleToRoleModel).map(r => r.name)
+    roleModels.value = data.roles.map(mapApiRoleToRoleModel)
+    refereeAdministratedFederationIds.value =
+      data.roles.find(role => role.name === ROLE_MAPPER.referee_admin)?.pivot
+        .meta?.administrated_federation_ids || []
     licenses.value = data.licenses
+
+    removeRefereeAdminRoleIfNoAdministratedFederations()
   }
 
   const refreshToken = (data: ApiLoginData) => {
@@ -185,7 +221,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const isAdmin = () => roles.value.includes('admin')
+  const isAdmin = () => roles.value.includes(ROLE_MAPPER.admin)
 
   const isStaff = () => roles.value.some(role => STAFF_ROLES.includes(role))
 
@@ -209,23 +245,21 @@ export const useAuthStore = defineStore('auth', () => {
     return hasAnyRole(searchedRoles)
   }
 
-  const hasRole = (searchedRole: Role) => roles.value.includes(searchedRole)
-
-  const hasAnyRole = (searchedRoles: Role[]) =>
-    roles.value.some(role => searchedRoles.includes(role))
-
   const loginRedirect = () => {
     const storedLoginRedirect = easyStorage.get('loginRedirect')
     if (storedLoginRedirect) {
       easyStorage.remove('loginRedirect')
-      return navigateTo(storedLoginRedirect)
+      navigateTo(storedLoginRedirect)
     } else {
       if (!isLoggedIn.value) return navigateTo('/login')
 
-      if (roles.value.includes('federation')) return navigateTo('/federation')
-      if (roles.value.includes('club')) return navigateTo('/club')
-      if (roles.value.includes('referee')) return navigateTo('/referee')
-      if (roles.value.includes('coach')) return navigateTo('/coach')
+      if (hasRole(ROLE_MAPPER.admin)) return navigateTo('/')
+      if (hasRole(ROLE_MAPPER.referee)) return navigateTo('/referee')
+      if (hasRole(ROLE_MAPPER.coach)) return navigateTo('/coach')
+      if (hasRole(ROLE_MAPPER.club)) return navigateTo('/club')
+      if (hasRole(ROLE_MAPPER.federation)) return navigateTo('/federation')
+      if (hasRole(ROLE_MAPPER.referee_admin))
+        return navigateTo('/referee/admin')
 
       return navigateTo('/')
     }
@@ -235,7 +269,9 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     profile.value = null
     profiles.value = []
+    roleModels.value = []
     roles.value = []
+    refereeAdministratedFederationIds.value = []
     token.value = null
   }
 
@@ -243,7 +279,9 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     profile,
     profiles,
+    roleModels,
     roles,
+    refereeAdministratedFederationIds,
     licenses,
     token,
     isLoggedIn,

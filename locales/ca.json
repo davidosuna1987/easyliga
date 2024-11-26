@@ -253,7 +253,8 @@
     "referee": {
       "label": "Àrbitre",
       "calendar": "Calendari",
-      "games": { "create": "Crear partit" }
+      "games": { "create": "Crear partit" },
+      "admin": { "referees": "Administrar àrbitres" }
     },
     "coach": {
       "label": "Entrenador",
@@ -321,6 +322,7 @@
     },
     "referee": {
       "index": { "title": "Calendari de partits" },
+      "admin": { "referees": "Administrar àrbitres" },
       "game": {
         "create": { "title": "Crear partit" },
         "arbitrare": { "title": "Arbitrar partit" },
@@ -382,6 +384,7 @@
       "staff": "Staff",
       "federation": "Responsable de Federació",
       "club": "Responsable de Club",
+      "referee_admin": "Àrbitre administrador",
       "referee": "Àrbitre",
       "coach": "Entrenador",
       "player": "Jugador",
@@ -390,7 +393,9 @@
     }
   },
   "referees": {
+    "admin": "Àrbitre administrador | Àrbitres administradors",
     "referee": "Àrbitre | Àrbitres",
+    "invite": "Convidar àrbitre",
     "add": "Afegir àrbitre",
     "added": "L'àrbitre ha estat afegit correctament",
     "create": "Crear àrbitre",
@@ -1183,16 +1188,17 @@
   "invites": {
     "invite": "Invitació | Invitacions",
     "invited_to": {
-      "federation": "Has estat convidat a Easy Lliga per ser responsable de la {invitedToName}.",
-      "club": "Has estat convidat a Easy Lliga per ser responsable del club {invitedToName}.",
-      "team": "L'equip {invitedToName} vol convidar-vos a formar part d'Easy Lliga perquè siguis <strong>{roles}</strong>.",
-      "game": "Has estat convidat a Easy Liga per ser l'àrbitre del partit {invitedToName}.",
-      "fill": {
-        "federation": "Omple tots els camps per formar part de la federació.",
-        "club": "Omple tots els camps per formar part del club.",
-        "coach": "Ompliu tots els camps per formar part de l'equip.",
-        "referee": "Omple tots els camps per ser l'àrbitre del partit.",
-        "player": "Ompliu tots els camps i seleccioneu un dorsal per formar part de l'equip."
+      "federation": "Has estat convidat a Easy Lliga per formar part de la {invitedToName}.",
+      "club": "Has estat convidat a Easy Lliga per formar part del club {invitedToName}.",
+      "team": "L'equip {invitedToName} vol convidar-vos a formar part de l'Easy Lliga perquè siguis <strong>{rols}</strong>.",
+      "game": "Has estat convidat a formar part d'Easy Liga per arbitrar el partit {invitedToName}.",
+      "as": {
+        "federation": "Omple tots els camps per ser responsable de la federació.",
+        "club": "Omple tots els camps per ser responsable del club.",
+        "coach": "Omple tots els camps per ser entrenador de l'equip.",
+        "referee_admin": "Omple tots els camps per ser àrbitre administrador.",
+        "referee": "Omple tots els camps per ser àrbitre.",
+        "player": "Ompliu tots els camps i seleccioneu un dorsal per ser jugador de l'equip."
       }
     },
     "add_roles": "Afegir rols mitjançant invitació",

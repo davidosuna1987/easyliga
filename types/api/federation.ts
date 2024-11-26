@@ -1,5 +1,5 @@
 import { ApiLeague } from '@/types/api/league'
-import { ApiUser } from '@/types/api/user'
+import { ApiUser, ApiUserStoreRequest } from '@/types/api/user'
 import { ApiDivision } from '@/types/api/division'
 import { ApiClub } from '@/types/api/club'
 import { ApiSede } from '@/types/api/sede'
@@ -8,6 +8,7 @@ import { FederationScope } from '@/domain/federation'
 import { ApiLicense } from '@/types/api/license'
 
 export type ApiFederationRefereePivot = {
+  type: 'API_FEDERATION_REFEREE_PIVOT'
   federation_id: number
   referee_id: number
   admin: boolean
@@ -68,6 +69,17 @@ export type ApiFederationFormRequest = {
   address: ApiAddress
 }
 
+export type ApiFederationRefereeStoreRequest = ApiUserStoreRequest & {
+  federation_id: number
+  admin: boolean
+}
+
+export type ApiFederationRefereeAddRequest = {
+  federation_id: number
+  user_id: number
+  admin: boolean
+}
+
 export type ApiFederationResponse = {
   success: true
   data: {
@@ -80,6 +92,15 @@ export type ApiFederationsResponse = {
   success: true
   data: {
     federations: ApiFederation[]
+  }
+  errors: null
+}
+
+export type ApiFederationRefereeResponse = {
+  success: true
+  data: {
+    federation: ApiFederation
+    referee: ApiUser
   }
   errors: null
 }

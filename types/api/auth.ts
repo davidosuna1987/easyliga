@@ -7,16 +7,7 @@ import {
 } from '@/types/api/user'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiLicense } from '@/types/api/license'
-
-export type Role =
-  | 'admin'
-  | 'staff'
-  | 'federation'
-  | 'club'
-  | 'referee'
-  | 'coach'
-  | 'player'
-  | 'user'
+import { ApiRole } from '@/types/api/role'
 
 export type ApiLoginRequest = {
   email: string
@@ -68,7 +59,7 @@ export type ApiFreshData = {
   user: ApiUser
   profile: ApiProfile
   profiles: ApiProfile[]
-  roles: Role[]
+  roles: ApiRole[]
   licenses: ApiLicense[]
 }
 

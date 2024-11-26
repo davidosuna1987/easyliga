@@ -5,47 +5,37 @@ import {
   Federation,
   mapApiFederationToFederation,
   flattenFederations,
+  mapFederationRefereeStoreRequestToApiFederationRefereeStoreRequest,
+  FederationRefereeStoreRequest,
+  mapFederationRefereeAddRequestToApiFederationRefereeAddRequest,
+  FederationRefereeAddRequest,
 } from '@/domain/federation'
-import { User } from '@/domain/user'
-import { getFullName } from '@/domain/player'
+
+const props = defineProps({
+  isRefereeAdmin: {
+    type: Boolean,
+    required: false,
+  },
+})
 
 const { t } = useI18n()
 const auth = useAuthStore()
+const toast = useEasyToast()
 const federationService = new FederationService()
 
 const groupedReferees = ref<Federation[]>()
+const showRefereeFormDialog = ref<Federation>()
+const removeRefereeForm = ref<{ federationId: number; userId: number }>()
 const loadingApi = ref<boolean>(false)
-
-// const flattenFederations = (federations: Federation[]): Federation[] => {
-//   const watcher = new Set<number>()
-
-//   const recurse = (feds: Federation[]): Federation[] => {
-//     return feds.flatMap(fed => {
-//       const { federations, ...rest } = fed
-
-//       const federationId = rest.id
-//       if (watcher.has(federationId)) return []
-//       watcher.add(federationId)
-
-//       const flattenedFederation: Federation = {
-//         ...rest,
-//       }
-
-//       const nestedFederations = federations ? recurse(federations) : []
-
-//       return [flattenedFederation, ...nestedFederations]
-//     })
-//   }
-
-//   return recurse(federations)
-// }
 
 const getReferees = async () => {
   if (!auth.user) return
 
   loadingApi.value = true
   const { data } = await federationService.fetch({
-    where: `responsible_id:${auth.user.id}`,
+    where: props.isRefereeAdmin
+      ? `id:in:${auth.refereeAdministratedFederationIds}`
+      : `responsible_id:${auth.user.id}`,
     with: 'referees.profile,federations.referees.profile',
   })
 
@@ -58,28 +48,76 @@ const getReferees = async () => {
   loadingApi.value = false
 }
 
-const handleAddReferee = (federation: Federation) => {
-  // navigateTo(`/federation/${federation.id}/referee/create`)
+const handleShowRefereeFormDialog = (federation: Federation) => {
+  showRefereeFormDialog.value = federation
 }
 
-const goToReferee = (referee: User) => {
-  // navigateTo(`/referee/${referee.id}`)
+const handleAddReferee = async (request: FederationRefereeAddRequest) => {
+  loadingApi.value = true
+  const { data, error } = await federationService.addReferee(
+    mapFederationRefereeAddRequestToApiFederationRefereeAddRequest(request),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+  } else if (data.value) {
+    toast.success(t('referees.added'))
+    showRefereeFormDialog.value = undefined
+    getReferees()
+  }
+
+  loadingApi.value = false
 }
 
-const goToEditReferee = (referee: User) => {
-  // navigateTo(`/federation/${referee.federationId}/referee/${referee.id}/edit`)
+const handleCreateReferee = async (request: FederationRefereeStoreRequest) => {
+  loadingApi.value = true
+
+  const { data, error } = await federationService.createReferee(
+    mapFederationRefereeStoreRequestToApiFederationRefereeStoreRequest(request),
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+  } else if (data.value) {
+    toast.success(t('referees.added'))
+    showRefereeFormDialog.value = undefined
+    getReferees()
+  }
 }
 
-const setRefereeToRemove = (federationId: number, profileId: number) => {
-  const federation = groupedReferees.value?.find(fed => fed.id === federationId)
-
+const setRefereeToRemove = (federation: Federation, profileId: number) => {
   const referee = federation?.referees?.find(
     ref => ref.profile?.id === profileId,
   )
 
   if (!federation || !referee) return
 
-  console.log({ federation, referee })
+  removeRefereeForm.value = {
+    federationId: federation.id,
+    userId: referee.id,
+  }
+}
+
+const handleRemoveReferee = async () => {
+  if (!removeRefereeForm.value) return
+
+  loadingApi.value = true
+
+  const { data, error } = await federationService.removeReferee(
+    removeRefereeForm.value.federationId,
+    removeRefereeForm.value.userId,
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+    loadingApi.value = false
+  } else if (data.value) {
+    toast.success(t('referees.deleted'))
+    removeRefereeForm.value = undefined
+    getReferees()
+  }
 }
 
 onMounted(getReferees)
@@ -96,7 +134,7 @@ onMounted(getReferees)
             <ListActionButton
               class="mt-1"
               :label="t('referees.add')"
-              :onClick="() => handleAddReferee(federation)"
+              :onClick="() => handleShowRefereeFormDialog(federation)"
             />
           </header>
 
@@ -110,11 +148,14 @@ onMounted(getReferees)
               <ProfileItem
                 v-if="referee.profile"
                 :profile="referee.profile"
-                :onRemove="() => {}"
+                :onRemove="
+                  auth.user?.id === referee.profile.id
+                    ? undefined
+                    : profileId => setRefereeToRemove(federation, profileId)
+                "
                 :removeTooltip="t('referees.delete')"
                 :tag="referee.pivot?.admin ? 'admin' : undefined"
               />
-              <!-- :onRemove="profileId => setRefereeToRemove(federation.id, profileId)" -->
             </template>
           </EasyGrid>
 
@@ -127,11 +168,31 @@ onMounted(getReferees)
         {{ t('federations.no_managed') }}
       </p>
     </template>
+
+    <RefereeSearchFormDialog
+      v-if="showRefereeFormDialog"
+      :visible="!!showRefereeFormDialog"
+      :federation="showRefereeFormDialog"
+      @referee:add="handleAddReferee"
+      @referee:create="handleCreateReferee"
+      @hide="showRefereeFormDialog = undefined"
+    />
+
+    <AlertDialog
+      :visible="!!removeRefereeForm"
+      :title="t('referees.delete')"
+      :message="t('referees.delete_alert')"
+      :acceptLabel="t('forms.delete')"
+      severity="danger"
+      :disabled="loadingApi"
+      @accepted="handleRemoveReferee"
+      @hide="removeRefereeForm = undefined"
+    />
   </div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'RefereeList',
+  name: 'FederationRefereeList',
 }
 </script>

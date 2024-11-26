@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
 import { ApiAddRolesRequest } from '@/types/api/invite'
-import { Invite, mapApiInviteToInvite, invitedAsPlayer } from '@/domain/invite'
-import { Role } from '@/domain/role'
+import {
+  Invite,
+  mapApiInviteToInvite,
+  invitedAsPlayer,
+  invitedAsRole,
+} from '@/domain/invite'
+import { Role, ROLE_MAPPER } from '@/domain/role'
 import InviteService from '@/services/invite'
 import { ApiErrorObject } from '@/types/errors'
 import { InviteShirtNumberInputRef } from '@/domain/invite'
@@ -40,6 +45,10 @@ const loadingLabel = computed(() =>
 
 const isInvitedAsPlayer = computed(() =>
   invite.value ? invitedAsPlayer(invite.value) : false,
+)
+
+const isInvitedAsRefereeAdmin = computed(() =>
+  invite.value ? invitedAsRole(invite.value, ROLE_MAPPER.referee_admin) : false,
 )
 
 const getInvite = async () => {
@@ -90,7 +99,7 @@ const handleAddRoles = async () => {
   if (error.value) {
     toast.mapError(
       Object.values(error.value?.data?.errors),
-      !isInvitedAsPlayer.value,
+      !isInvitedAsPlayer.value && !isInvitedAsRefereeAdmin.value,
     )
 
     if (isInvitedAsPlayer.value) {

@@ -1,10 +1,6 @@
 <script setup lang="ts">
-import {
-  ADD_PLAYER_STEPS,
-  AddPlayerStep,
-  Player,
-  PlayerStoreRequest,
-} from '@/domain/player'
+import { Player, PlayerStoreRequest } from '@/domain/player'
+import { ADD_USER_STEPS, AddUserStep } from '@/domain/user'
 import { Team } from '@/domain/team'
 import { ROLE_TO_INVITED_TO_TYPE_MAPPER } from '@/domain/invite'
 import { ROLE_MAPPER } from '@/domain/role'
@@ -42,15 +38,15 @@ const playerStoreRequest = ref<PlayerStoreRequest>()
 const showDialog = ref<boolean>(!!props.visible)
 const isLoading = ref<boolean>(props.loading)
 
-const step = ref<AddPlayerStep>(ADD_PLAYER_STEPS.search)
+const step = ref<AddUserStep>(ADD_USER_STEPS.search)
 
 const submitLabel = computed(() => {
   switch (step.value) {
-    case ADD_PLAYER_STEPS.search:
+    case ADD_USER_STEPS.search:
       return t('players.add')
-    case ADD_PLAYER_STEPS.invite:
+    case ADD_USER_STEPS.invite:
       return t('players.invite')
-    case ADD_PLAYER_STEPS.create:
+    case ADD_USER_STEPS.create:
       return t('players.create')
   }
 })
@@ -66,15 +62,15 @@ const submitDisabled = computed(() => {
 
 const tabItems = computed(() => [
   {
-    key: ADD_PLAYER_STEPS.search,
+    key: ADD_USER_STEPS.search,
     label: t('forms.search'),
   },
   {
-    key: ADD_PLAYER_STEPS.invite,
+    key: ADD_USER_STEPS.invite,
     label: t('forms.invite'),
   },
   {
-    key: ADD_PLAYER_STEPS.create,
+    key: ADD_USER_STEPS.create,
     label: t('forms.create'),
   },
 ])
@@ -84,22 +80,19 @@ const handleSelected = (player: Player) => {
 }
 
 const handleUserInvited = () => {
-  step.value = ADD_PLAYER_STEPS.search
+  step.value = ADD_USER_STEPS.search
   emit('hide', true)
 }
 
 const handleSubmitClick = () => {
   switch (step.value) {
-    case ADD_PLAYER_STEPS.search:
-      console.log('add player')
+    case ADD_USER_STEPS.search:
       handleAddPlayer()
       break
-    case ADD_PLAYER_STEPS.invite:
-      console.log('invite player')
+    case ADD_USER_STEPS.invite:
       easyEmit('user-invite:submit')
       break
-    case ADD_PLAYER_STEPS.create:
-      console.log('create player')
+    case ADD_USER_STEPS.create:
       handleCreatePlayer()
       break
   }
@@ -134,7 +127,7 @@ const handleCreatePlayer = () => {
 }
 
 const handleTabChanged = (key: string) => {
-  step.value = key as AddPlayerStep
+  step.value = key as AddUserStep
 }
 
 watch(
@@ -165,7 +158,7 @@ onMounted(() => {
 
     <div class="mt-5">
       <PlayerSearchForm
-        v-if="step === ADD_PLAYER_STEPS.search"
+        v-if="step === ADD_USER_STEPS.search"
         :team="team"
         :unavailableShirtNumbers="unavailableShirtNumbers"
         full
@@ -174,14 +167,14 @@ onMounted(() => {
       />
 
       <UserInviteForm
-        v-else-if="step === ADD_PLAYER_STEPS.invite"
+        v-else-if="step === ADD_USER_STEPS.invite"
         :invitedToType="ROLE_TO_INVITED_TO_TYPE_MAPPER[ROLE_MAPPER.player]"
         :invitedToId="team.id"
         :roles="[ROLE_MAPPER.player]"
         @invited="handleUserInvited"
       />
 
-      <div v-else-if="step === ADD_PLAYER_STEPS.create">
+      <div v-else-if="step === ADD_USER_STEPS.create">
         <PlayerForm
           :unavailableShirtNumbers="unavailableShirtNumbers"
           @form:change="playerStoreRequest = $event"

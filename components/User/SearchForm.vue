@@ -24,6 +24,10 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  showInvite: {
+    type: Boolean,
+    default: true,
+  },
   full: {
     type: Boolean,
     default: false,
@@ -199,7 +203,7 @@ onBeforeMount(() => {
                   : t('users.not_found')
               }}
             </p>
-            <div class="m-3 flex flex-col gap-3 items-center">
+            <div v-if="showInvite" class="m-3 flex flex-col gap-3 items-center">
               <p>{{ t('users.invite_long') }}</p>
               <Button
                 class="mt-5"

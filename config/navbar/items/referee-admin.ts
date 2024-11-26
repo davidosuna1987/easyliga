@@ -1,6 +1,6 @@
 export default [
   {
     label: 'navbar.referee.label',
-    to: '/referee',
+    to: '/referee/admin',
   },
 ]

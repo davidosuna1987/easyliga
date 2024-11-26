@@ -74,7 +74,7 @@ export type ApiGameCustomAppends = {
   duration: ApiDuration | null
   confirmed: boolean
   is_bye: boolean
-  statistics: ApiGameStatistics
+  statistics: ApiGameStatistics | null
 }
 
 export type ApiGame = {

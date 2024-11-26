@@ -1,37 +1,73 @@
 <script setup lang="ts">
-import { PlayerStoreRequest } from '@/domain/player'
+import {
+  USER_DEFAULT_ROLE,
+  USER_FORM_FIELDS,
+  UserFormField,
+  UserStoreRequest,
+} from '@/domain/user'
 import { PROFILE_GENDER_TYPES } from '@/domain/profile'
 import { ApiErrorObject } from '@/types/errors'
+import { Role, ROLES } from '@/domain/role'
 
 const props = defineProps({
-  unavailableShirtNumbers: {
-    type: Array as PropType<number[]>,
+  assignRoles: {
+    type: Boolean,
+    default: false,
+  },
+  roles: {
+    type: Array as PropType<Role[]>,
+    default: [USER_DEFAULT_ROLE],
+  },
+  exclude: {
+    type: Array as PropType<UserFormField[]>,
     default: [],
   },
 })
 
 const emit = defineEmits<{
-  (e: 'form:change', value: PlayerStoreRequest): void
+  (e: 'form:change', value: UserStoreRequest): void
 }>()
 
 const { t } = useI18n()
 
-const form = ref<PlayerStoreRequest>({
-  allowEmptyEmail: true,
+const isExcludedField = (field: UserFormField) => props.exclude.includes(field)
+
+const form = ref<UserStoreRequest>({
+  allowEmptyEmail: isExcludedField('allowEmptyEmail') ? false : true,
   email: '',
   firstName: '',
   lastName: '',
   birthDate: undefined,
   gender: undefined,
-  shirtNumber: 0,
-  captain: false,
-  libero: false,
+  roles: [...new Set([...props.roles, USER_DEFAULT_ROLE])],
 })
 
 const errors = ref<ApiErrorObject>()
 const loadingApi = ref<Boolean>(false)
 
+const selectableRoles = computed(() => (props.roles ? props.roles : ROLES))
+const selectedRoles = computed(() => form.value.roles ?? [])
+
 const genderLabel = (gender: string) => t(`forms.${gender}`)
+
+const toggleRole = (role: Role) => {
+  if (props.roles.length || !props.assignRoles) return
+  if (role === USER_DEFAULT_ROLE && form.value.roles?.includes(role)) return
+
+  if (form.value.roles?.includes(role)) {
+    form.value.roles = form.value.roles?.filter(r => r !== role)
+  } else {
+    form.value.roles?.push(role)
+  }
+}
+
+watch(
+  () => props.roles,
+  () => {
+    form.value.roles = [...new Set([...props.roles, USER_DEFAULT_ROLE])]
+  },
+  { deep: true },
+)
 
 watch(
   () => form.value,
@@ -43,9 +79,12 @@ watch(
 </script>
 
 <template>
-  <form class="easy-player-form-component">
+  <form class="easy-user-form-component">
     <EasyGrid class="profile-form-grid" :gap="3">
-      <div class="flex items-center cursor-pointer">
+      <div
+        v-if="!isExcludedField(USER_FORM_FIELDS.allowEmptyEmail)"
+        class="flex items-center cursor-pointer"
+      >
         <Checkbox
           v-model="form.allowEmptyEmail"
           inputId="allowEmptyEmail"
@@ -83,6 +122,7 @@ watch(
         <InputText v-model="form.lastName" class="w-full" type="text" />
       </FormLabel>
       <FormLabel
+        v-if="!isExcludedField(USER_FORM_FIELDS.birthDate)"
         :label="t('forms.birth_date')"
         :error="errors?.birthDate?.[0]"
         required
@@ -90,6 +130,7 @@ watch(
         <Calendar v-model="form.birthDate" class="w-full" :touchUI="true" />
       </FormLabel>
       <FormLabel
+        v-if="!isExcludedField(USER_FORM_FIELDS.gender)"
         :label="t('forms.gender')"
         :error="errors?.gender?.[0]"
         required
@@ -107,29 +148,37 @@ watch(
         />
       </FormLabel>
       <FormLabel
-        :label="t('shirts.number_select')"
-        :error="errors?.shirt_number?.[0]"
+        v-if="
+          props.assignRoles &&
+          selectableRoles.length &&
+          !isExcludedField(USER_FORM_FIELDS.roles)
+        "
+        class="gap-2"
+        :label="t('roles.role', 2)"
+        :error="errors?.roles?.[0]"
+        inline
         required
       >
-        <InputNumber
-          v-model="form.shirtNumber"
-          showButtons
-          buttonLayout="horizontal"
-          :min="1"
-          :max="999"
+        <Tag
+          v-for="role in selectableRoles"
+          :class="[
+            'border border-solid border-[var(--primary-color)]',
+            assignRoles ? 'cursor-pointer' : 'pointer-events-none',
+            selectedRoles.includes(role)
+              ? undefined
+              : 'text-[var(--primary-color)] bg-transparent',
+          ]"
+          :key="role"
+          :value="t(`roles.type.${role}`)"
+          @click.prevent="toggleRole(role)"
         />
       </FormLabel>
     </EasyGrid>
-
-    <ShirtNumberUnavailableDialogTrigger
-      class="mt-3"
-      :unavailableShirtNumbers="unavailableShirtNumbers"
-    />
   </form>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'PlayerForm',
+  name: 'UserForm',
 }
 </script>

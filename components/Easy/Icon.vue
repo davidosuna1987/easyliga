@@ -19,6 +19,14 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  tooltip: {
+    type: String,
+    required: false,
+  },
+  tooltipPosition: {
+    type: String as PropType<'top' | 'right' | 'bottom' | 'left'>,
+    default: 'top',
+  },
 })
 
 const buttonSize = computed(() => {
@@ -45,6 +53,10 @@ const buttonSize = computed(() => {
       `bg-${button} w-[${buttonSize}] h-[${buttonSize}]`,
       { 'rounded-full': props.rounded },
     ]"
+    v-tooltip="{
+      value: tooltip,
+      position: tooltipPosition,
+    }"
   >
     <Icon :name="IconNames[name]" :size="size" />
   </div>

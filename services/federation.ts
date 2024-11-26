@@ -1,7 +1,10 @@
 import {
   ApiFederationFormRequest,
+  ApiFederationRefereeAddRequest,
+  ApiFederationRefereeStoreRequest,
   ApiFederationResponse,
   ApiFederationsResponse,
+  ApiFederationRefereeResponse,
 } from '@/types/api/federation'
 import { FederationScope } from '@/domain/federation'
 import { ApiUsersResponse } from 'types/api/user'
@@ -53,6 +56,35 @@ export default class FederationService {
       `${PREFIX}/${federationId}/referees/fetch`,
       {
         params,
+      },
+    )
+  }
+
+  addReferee(data: ApiFederationRefereeAddRequest) {
+    return useApi<ApiFederationRefereeResponse>(
+      `${PREFIX}/${data.federation_id}/referees/add`,
+      {
+        method: 'POST',
+        body: data,
+      },
+    )
+  }
+
+  createReferee(data: ApiFederationRefereeStoreRequest) {
+    return useApi<ApiFederationRefereeResponse>(
+      `${PREFIX}/${data.federation_id}/referees/create`,
+      {
+        method: 'POST',
+        body: data,
+      },
+    )
+  }
+
+  removeReferee(federationId: number, userId: number) {
+    return useApi<ApiFederationRefereeResponse>(
+      `${PREFIX}/${federationId}/referees/${userId}/remove`,
+      {
+        method: 'DELETE',
       },
     )
   }

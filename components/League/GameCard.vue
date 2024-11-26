@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/useAuthStore'
-import { MenuItem } from 'primevue/menuitem'
 import { User } from '@/domain/user'
-import {
-  Game,
-  getGameTeamName,
-  hasDefaultReferee,
-  mapGameStatisticsToResultString,
-} from '@/domain/game'
+import { Game, getGameTeamName, hasDefaultReferee } from '@/domain/game'
 import { TeamType } from '@/domain/team'
 import { formatDateTime } from '@/domain/utils'
 import { getFullName } from '@/domain/player'
@@ -131,7 +125,7 @@ const toggleMenu = (event: Event) => {
         </small>
 
         <GameStatisticsLine
-          v-if="game.status === 'finished'"
+          v-if="game.status === 'finished' && game.statistics"
           :statistics="game.statistics"
           :highlight="highlight"
           size="0.8rem"

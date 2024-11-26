@@ -6140,7 +6140,7 @@
   color: var(--primary-color-medium-text);
 }
 .p-tieredmenu .p-menuitem-separator {
-  border-top: 1px solid #ededed;
+  border-top: 1px solid var(--text-color);
   margin: 0.25rem 0;
 }
 .p-tieredmenu .p-submenu-icon {

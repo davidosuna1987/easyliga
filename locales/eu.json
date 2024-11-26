@@ -253,7 +253,8 @@
     "referee": {
       "label": "Epailea",
       "calendar": "Egutegia",
-      "games": { "create": "Sortu partida" }
+      "games": { "create": "Sortu partida" },
+      "admin": { "referees": "Kudeatu arbitroak" }
     },
     "coach": {
       "label": "Entrenatzailea",
@@ -321,6 +322,7 @@
     },
     "referee": {
       "index": { "title": "Partiduen egutegia" },
+      "admin": { "referees": "Kudeatu arbitroak" },
       "game": {
         "create": { "title": "Sortu partida" },
         "arbitrare": { "title": "Epailearen partida" },
@@ -382,7 +384,8 @@
       "staff": "Langileak",
       "federation": "Federazioko zuzendaria",
       "club": "Klubaren zuzendaria",
-      "referee": "Epailea",
+      "referee_admin": "Administratzaile arbitroa",
+      "referee": "Arbitroa",
       "coach": "Entrenatzailea",
       "player": "Jokalari",
       "user": "Erabiltzailea",
@@ -390,7 +393,9 @@
     }
   },
   "referees": {
+    "admin": "Administratzaile arbitroa | Administratzaile arbitroak",
     "referee": "Epailea | Epaileak",
+    "invite": "Gonbidatu arbitroa",
     "add": "Gehitu arbitroa",
     "added": "Epailea behar bezala gehitu da",
     "create": "Sortu arbitroa",
@@ -1183,16 +1188,17 @@
   "invites": {
     "invite": "Gonbidapena | Gonbidapenak",
     "invited_to": {
-      "federation": "Easy League-ra gonbidatu zaituzte {invitedToName}ren arduradun izateko.",
-      "club": "Easy Ligara gonbidatu zaituzte {invitedToName} klubaren arduradun izateko.",
-      "team": "{invitedToName} taldeak Easy League-n parte hartzera gonbidatu nahi zaitu, <strong>{roles}</strong> izan zaitezen.",
-      "game": "Easy Ligara gonbidatu zaituzte {invitedToName} partidako epaile izateko.",
-      "fill": {
-        "federation": "Federazioan sartzeko eremu guztiak bete.",
-        "club": "Bete eremu guztiak klubean sartzeko.",
-        "coach": "Taldeko parte izateko eremu guztiak bete.",
-        "referee": "Bete eremu guztiak partidako epaile izateko.",
-        "player": "Bete eremu guztiak eta hautatu taldean sartzeko zenbaki bat."
+      "federation": "Easy Liga-ra gonbidatu zaituzte {invitedToName} taldean parte hartzera.",
+      "club": "Easy Liga-ra gonbidatu zaituzte {invitedToName} klubeko kide izateko.",
+      "team": "{invitedToName} taldeak Easy Ligako parte hartzera gonbidatu nahi zaitu, <strong>{rolak}</strong> izan zaitezen.",
+      "game": "{invitedToName} partida epaitzeko Easy Liga sartzera gonbidatu zaituzte.",
+      "as": {
+        "federation": "Federazioaren arduraduna izateko eremu guztiak bete.",
+        "club": "Bete eremu guztiak klubaren arduradun izateko.",
+        "coach": "Taldeko entrenatzaile izateko eremu guztiak bete.",
+        "referee_admin": "Bete eremu guztiak administratzaile arbitro izateko.",
+        "referee": "Bete eremu guztiak arbitro izateko.",
+        "player": "Bete eremu guztiak eta hautatu talde-jokalari izateko zenbaki bat."
       }
     },
     "add_roles": "Gehitu rolak gonbidapen bidez",

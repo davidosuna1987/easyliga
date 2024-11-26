@@ -90,8 +90,8 @@ const changePlayerShirtNumber = (player?: Player) => {
       <PlayerItem
         :player="selectedPlayer"
         :selectable="false"
-        remove-icon="times"
-        :remove-player="handleRemoveProfile"
+        removeIcon="times"
+        :removePlayer="handleRemoveProfile"
         :setCaptain="setCaptain"
         :setLibero="setLibero"
         :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"

@@ -128,9 +128,10 @@ onMounted(() => {
             })
           "
         ></p>
-        <p class="mt-3">
-          {{ t(`invites.invited_to.fill.${invite.roles[0]}`) }}
-        </p>
+        <p
+          class="mt-3"
+          v-html="t(`invites.invited_to.as.${invite.roles[0]}`)"
+        ></p>
       </Message>
     </template>
 

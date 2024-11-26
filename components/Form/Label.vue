@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  inline: {
+    type: Boolean,
+    default: false,
+  },
   required: {
     type: Boolean,
     default: false,
@@ -31,7 +35,11 @@ const props = defineProps({
       <span v-if="required">*</span>
       <small v-if="error" class="text-red-400 ml-2">{{ error }}</small>
     </div>
-    <slot />
+
+    <div v-if="inline" class="flex flex-wrap gap-2">
+      <slot />
+    </div>
+    <slot v-else />
   </label>
 </template>
 

@@ -150,7 +150,7 @@ const onRemoveTooltipText = computed(() =>
       />
       <PlayerItemIcon
         v-if="!!onRemove"
-        class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125"
+        class="hover:text-[var(--danger-color)] opacity-40 hover:opacity-100 cursor-pointer scale-125 flex-shrink-0"
         :name="RemoveIconTypes[removeIcon]"
         v-tooltip.top="{
           value: onRemoveTooltipText,

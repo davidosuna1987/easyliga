@@ -1,11 +1,62 @@
-import { ApiUser } from '@/types/api/user'
-import { Profile, Responsible, mapApiProfileToProfile } from '@/domain/profile'
-import { mapApiRoleToRole, Role } from '@/domain/role'
+import { ApiUser, ApiUserStoreRequest } from '@/types/api/user'
+import {
+  Profile,
+  ProfileGender,
+  Responsible,
+  mapApiProfileToProfile,
+} from '@/domain/profile'
+import { mapApiRoleToRole, Role, ROLE_MAPPER } from '@/domain/role'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { mapApiSedeToSede, Sede } from '@/domain/sede'
 import { License, mapApiLicenseToLicense } from '@/domain/license'
 import { ApiFederationRefereePivot } from '@/types/api/federation'
+
+export const USER_DEFAULT_ROLE: Role = ROLE_MAPPER.player
+
+export const USER_FORM_FIELDS = {
+  allowEmptyEmail: 'allowEmptyEmail',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  birthDate: 'birthDate',
+  gender: 'gender',
+  roles: 'roles',
+} as const
+
+export type UserFormField = keyof typeof USER_FORM_FIELDS
+
+export const ADD_USER_STEPS = {
+  search: 'search',
+  invite: 'invite',
+  create: 'create',
+} as const
+
+export type AddUserStep = keyof typeof ADD_USER_STEPS
+
+export type UserStoreRequestEmailRequired = {
+  email: string
+  allowEmptyEmail: false
+}
+
+export type UserStoreRequestEmailOptional = {
+  email: null
+  allowEmptyEmail: true
+}
+
+export type UserStoreRequestEmail =
+  | UserStoreRequestEmailRequired
+  | UserStoreRequestEmailOptional
+
+export type UserStoreRequest = {
+  allowEmptyEmail: boolean
+  email?: string
+  firstName: string
+  lastName: string
+  birthDate?: Date
+  gender?: ProfileGender
+  roles?: Role[]
+}
 
 export type UserPivot = ApiFederationRefereePivot
 
@@ -86,3 +137,25 @@ export const mapApiUserToResponsible = (
     avatar: apiUser.profile.avatar || undefined,
   }
 }
+
+export const mapUserStoreRequestToApiUserStoreRequest = (
+  request: UserStoreRequest,
+): ApiUserStoreRequest => ({
+  allow_empty_email: request.allowEmptyEmail,
+  email: request.email,
+  first_name: request.firstName,
+  last_name: request.lastName,
+  birth_date: request.birthDate?.toISOString(),
+  gender: request.gender,
+  roles: request.roles,
+})
+
+export const mapUserToApiUserRequest = (user: User): ApiUserStoreRequest => ({
+  allow_empty_email: false,
+  email: user.email,
+  first_name: user.profile?.firstName || '',
+  last_name: user.profile?.lastName || '',
+  birth_date: user.profile?.birthDate,
+  gender: user.profile?.gender,
+  roles: user.roles || [],
+})

@@ -97,10 +97,10 @@ export type GamePartial = {
 export type GamePartials = GamePartial[]
 
 export type GameStatistics = {
-  winnerTeamId: number | null
-  loserTeamId: number | null
-  winnerTeamName: string | null
-  loserTeamName: string | null
+  winnerTeamId?: number
+  loserTeamId?: number
+  winnerTeamName?: string
+  loserTeamName?: string
   localTeamSetsWon: number
   visitorTeamSetsWon: number
   localTeamPoints: number
@@ -168,7 +168,7 @@ export type GameCustomAppends = {
   duration?: Duration
   confirmed: boolean
   isBye: boolean
-  statistics: GameStatistics
+  statistics?: GameStatistics
 }
 
 export type Game = {
@@ -341,18 +341,22 @@ export const mapApiGameCustomAppendsToGameCustomAppends = (
 })
 
 export const mapApiGameStatisticsToGameStatistics = (
-  apiGameStatistics: ApiGameStatistics,
-): GameStatistics => ({
-  winnerTeamId: apiGameStatistics.winner_team_id ?? null,
-  loserTeamId: apiGameStatistics.loser_team_id ?? null,
-  winnerTeamName: apiGameStatistics.winner_team_name ?? null,
-  loserTeamName: apiGameStatistics.loser_team_name ?? null,
-  localTeamSetsWon: apiGameStatistics.local_team_sets_won,
-  visitorTeamSetsWon: apiGameStatistics.visitor_team_sets_won,
-  localTeamPoints: apiGameStatistics.local_team_points,
-  visitorTeamPoints: apiGameStatistics.visitor_team_points,
-  partials: mapApiGamePartialsToGamePartials(apiGameStatistics.partials),
-})
+  apiGameStatistics: ApiGameStatistics | null,
+): GameStatistics | undefined => {
+  return apiGameStatistics
+    ? {
+        winnerTeamId: apiGameStatistics.winner_team_id ?? undefined,
+        loserTeamId: apiGameStatistics.loser_team_id ?? undefined,
+        winnerTeamName: apiGameStatistics.winner_team_name ?? undefined,
+        loserTeamName: apiGameStatistics.loser_team_name ?? undefined,
+        localTeamSetsWon: apiGameStatistics.local_team_sets_won,
+        visitorTeamSetsWon: apiGameStatistics.visitor_team_sets_won,
+        localTeamPoints: apiGameStatistics.local_team_points,
+        visitorTeamPoints: apiGameStatistics.visitor_team_points,
+        partials: mapApiGamePartialsToGamePartials(apiGameStatistics.partials),
+      }
+    : undefined
+}
 
 export const mapApiGameInitialDataToGameInitialData = (
   apiGameInitialData: ApiGameInitialDataResponse,

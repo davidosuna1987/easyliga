@@ -253,7 +253,8 @@
     "referee": {
       "label": "Referee",
       "calendar": "Calendar",
-      "games": { "create": "Create match" }
+      "games": { "create": "Create match" },
+      "admin": { "referees": "Manage referees" }
     },
     "coach": { "label": "Coach", "calendar": "Calendar", "teams": "Teams" }
   },
@@ -317,6 +318,7 @@
     },
     "referee": {
       "index": { "title": "Match schedule" },
+      "admin": { "referees": "Administrate referees" },
       "game": {
         "create": { "title": "Create match" },
         "arbitrare": { "title": "Referee match" },
@@ -378,6 +380,7 @@
       "staff": "Staff",
       "federation": "Federation Manager",
       "club": "Club Manager",
+      "referee_admin": "Administrator referee",
       "referee": "Referee",
       "coach": "Coach",
       "player": "Player",
@@ -386,7 +389,9 @@
     }
   },
   "referees": {
+    "admin": "Admin referee | Administrator referees",
     "referee": "Referee | Referees",
+    "invite": "Invite referee",
     "add": "Add referee",
     "added": "The referee has been added correctly",
     "create": "Create referee",
@@ -1173,16 +1178,17 @@
   "invites": {
     "invite": "Invitation | Invitations",
     "invited_to": {
-      "federation": "You have been invited to Easy League to be responsible for the {invitedToName}.",
-      "club": "You have been invited to Easy Liga to be responsible for the club {invitedToName}.",
-      "team": "The {invitedToName} team wants to invite you to be part of Easy League so that you can be <strong>{roles}</strong>.",
-      "game": "You have been invited to Easy Liga to be the referee of the match {invitedToName}.",
-      "fill": {
-        "federation": "Fill in all the fields to join the federation.",
-        "club": "Fill in all the fields to join the club.",
-        "coach": "Fill out all the fields to be part of the team.",
-        "referee": "Fill in all the fields to be the referee of the match.",
-        "player": "Fill in all the fields and select a number to be part of the team."
+      "federation": "You have been invited to Easy Liga to be part of the {invitedToName}.",
+      "club": "You have been invited to Easy Liga to be part of the {invitedToName} club.",
+      "team": "The {invitedToName} team wants to invite you to be part of Easy Liga so that you can be <strong>{roles}</strong>.",
+      "game": "You have been invited to join Easy Liga to referee the match {invitedToName}.",
+      "as": {
+        "federation": "Fill in all the fields to be responsible for the federation.",
+        "club": "Fill in all the fields to be responsible for the club.",
+        "coach": "Fill out all the fields to be the team's coach.",
+        "referee_admin": "Fill in all the fields to be an administrator referee.",
+        "referee": "Fill in all the fields to be a referee.",
+        "player": "Fill in all the fields and select a number to be a team player."
       }
     },
     "add_roles": "Add roles by invitation",
