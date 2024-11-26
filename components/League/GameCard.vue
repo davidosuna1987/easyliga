@@ -34,6 +34,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const auth = useAuthStore()
 
+const EXCLAMATION = '!'
 const menu = ref()
 
 const commonMenuItems = [
@@ -44,7 +45,7 @@ const commonMenuItems = [
         label: hasDefaultReferee(props.game)
           ? t('referees.assign')
           : t('referees.change'),
-        badge: hasDefaultReferee(props.game) ? '!' : undefined,
+        badge: hasDefaultReferee(props.game) ? EXCLAMATION : undefined,
         command: () => {
           emit('referee:assign', props.game)
         },

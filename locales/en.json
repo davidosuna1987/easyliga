@@ -217,6 +217,9 @@
     },
     "players": {
       "must_select_player": "You must select a player"
+    },
+    "referees": {
+      "must_select_referee": "You must select a referee"
     }
   },
   "auth": {
@@ -238,91 +241,188 @@
     "register_by_invite": "Register with invitation",
     "invite_code": "invitation code"
   },
-  "footer": { "copyright": "All rights reserved ®" },
+  "footer": {
+    "copyright": "All rights reserved ®"
+  },
   "navbar": {
     "home": "Start",
     "panel": "Panel",
     "federation": {
       "label": "Federation",
-      "list": { "label": "List of federations" },
-      "leagues": { "label": "League List" },
-      "clubs": { "label": "List of clubs" },
-      "referees": { "label": "List of referees" }
+      "list": {
+        "label": "List of federations"
+      },
+      "leagues": {
+        "label": "League List"
+      },
+      "clubs": {
+        "label": "List of clubs"
+      },
+      "referees": {
+        "label": "List of referees"
+      }
     },
-    "club": { "label": "Club", "list": { "label": "List of clubs" } },
+    "club": {
+      "label": "Club",
+      "list": {
+        "label": "List of clubs"
+      }
+    },
     "referee": {
       "label": "Referee",
       "calendar": "Calendar",
-      "games": { "create": "Create match" },
-      "admin": { "referees": "Manage referees" }
+      "games": {
+        "create": "Create match"
+      },
+      "admin": {
+        "referees": "Manage referees"
+      }
     },
-    "coach": { "label": "Coach", "calendar": "Calendar", "teams": "Teams" }
+    "coach": {
+      "label": "Coach",
+      "calendar": "Calendar",
+      "teams": "Teams"
+    }
   },
   "pages": {
     "auth": {
-      "reset": { "title": "Reset password" },
-      "verify": { "title": "Verify email" },
-      "forgot": { "title": "Have you forgotten your password?" },
-      "login": { "title": "Login" },
-      "register": { "title": "Sign up" }
+      "reset": {
+        "title": "Reset password"
+      },
+      "verify": {
+        "title": "Verify email"
+      },
+      "forgot": {
+        "title": "Have you forgotten your password?"
+      },
+      "login": {
+        "title": "Login"
+      },
+      "register": {
+        "title": "Sign up"
+      }
     },
     "index": {
       "title": "Welcome to Easy Liga!",
       "welcome": "Welcome to Easy Liga!"
     },
     "club": {
-      "index": { "title": "Clubs you manage" },
-      "edit": { "title": "Edit club" },
+      "index": {
+        "title": "Clubs you manage"
+      },
+      "edit": {
+        "title": "Edit club"
+      },
       "team": {
-        "create": { "title": "Add team to club" },
-        "edit": { "title": "Edit team" }
+        "create": {
+          "title": "Add team to club"
+        },
+        "edit": {
+          "title": "Edit team"
+        }
       }
     },
     "coach": {
-      "index": { "title": "Match schedule" },
-      "teams": { "title": "Teams you train" },
+      "index": {
+        "title": "Match schedule"
+      },
+      "teams": {
+        "title": "Teams you train"
+      },
       "game": {
-        "edit": { "title": "Edit match" },
-        "call": { "rotation": { "title": "Party rotations" } },
-        "team": {
-          "call": { "title": "Party call" },
+        "edit": {
+          "title": "Edit match"
+        },
+        "call": {
           "rotation": {
-            "player-change": { "title": "Change players in the rotation" }
+            "title": "Party rotations"
+          }
+        },
+        "team": {
+          "call": {
+            "title": "Party call"
+          },
+          "rotation": {
+            "player-change": {
+              "title": "Change players in the rotation"
+            }
           }
         }
       }
     },
     "federation": {
-      "index": { "title": "Federations you manage" },
-      "edit": { "title": "Edit federation" },
-      "clubs": { "title": "Federation clubs" },
-      "leagues": { "title": "Federation Leagues" },
-      "club": { "create": { "title": "Add club to the federation" } },
+      "index": {
+        "title": "Federations you manage"
+      },
+      "edit": {
+        "title": "Edit federation"
+      },
+      "clubs": {
+        "title": "Federation clubs"
+      },
+      "leagues": {
+        "title": "Federation Leagues"
+      },
+      "club": {
+        "create": {
+          "title": "Add club to the federation"
+        }
+      },
       "league": {
-        "create": { "title": "Add league to federation" },
-        "edit": { "title": "Edit league" }
+        "create": {
+          "title": "Add league to federation"
+        },
+        "edit": {
+          "title": "Edit league"
+        }
       },
       "referees": {
         "title": "Federation referees"
       }
     },
-    "game": { "report": { "title": "Match minutes" } },
-    "invite": {
-      "register": { "title": "Register with invitation" },
-      "add-roles": { "title": "Add roles with invitation" }
+    "game": {
+      "report": {
+        "title": "Match minutes"
+      }
     },
-    "league": { "index": { "title": "League information" } },
+    "invite": {
+      "register": {
+        "title": "Register with invitation"
+      },
+      "add-roles": {
+        "title": "Add roles with invitation"
+      }
+    },
+    "league": {
+      "index": {
+        "title": "League information"
+      }
+    },
     "profile": {
-      "index": { "title": "My user profile" },
-      "licenses": { "title": "My licenses" }
+      "index": {
+        "title": "My user profile"
+      },
+      "licenses": {
+        "title": "My licenses"
+      }
     },
     "referee": {
-      "index": { "title": "Match schedule" },
-      "admin": { "referees": "Administrate referees" },
+      "index": {
+        "title": "Match schedule"
+      },
+      "admin": {
+        "referees": "Administrate referees"
+      },
       "game": {
-        "create": { "title": "Create match" },
-        "arbitrare": { "title": "Referee match" },
-        "report": { "title": "Match minutes" }
+        "create": {
+          "title": "Create match"
+        },
+        "arbitrare": {
+          "title": "Referee match"
+        },
+        "report": {
+          "title": "Match minutes"
+        }
       }
     }
   },
@@ -428,7 +528,9 @@
       "search": {
         "team": "Find coach for the team | Find coaches for the team"
       },
-      "new": { "team": "New coach for the team | New coaches for the team" },
+      "new": {
+        "team": "New coach for the team | New coaches for the team"
+      },
       "not_found": "No coach assigned"
     },
     "delete": "Delete coach",
@@ -1021,7 +1123,12 @@
       "point": "Punishment",
       "set": "Expulsion",
       "game": "Disqualification",
-      "short": { "warning": "W", "point": "Q", "set": "d", "game": "AND" }
+      "short": {
+        "warning": "W",
+        "point": "Q",
+        "set": "d",
+        "game": "AND"
+      }
     },
     "not_available_until_game_finishes": "The minutes will be available once the match has finished"
   },
@@ -1055,7 +1162,11 @@
     "current_set_team_incomplete": "If you apply this sanction, team {name} will lose the set due to incomplete lineup."
   },
   "game_signatures": {
-    "type": { "referee": "Referee", "coach": "Coach", "captain": "Captain" },
+    "type": {
+      "referee": "Referee",
+      "coach": "Coach",
+      "captain": "Captain"
+    },
     "alt_text": {
       "referee": "Signature of the match referee",
       "coach": "Signature of the coach of {teamName}",
@@ -1126,7 +1237,11 @@
     "hours": "time | hours",
     "minutes": "minute | minutes",
     "seconds": "second | seconds",
-    "short": { "hours": "h", "minutes": "m", "seconds": "yes" }
+    "short": {
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "yes"
+    }
   },
   "shirt_colors": {
     "select": "Select a color",

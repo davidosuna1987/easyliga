@@ -217,6 +217,9 @@
     },
     "players": {
       "must_select_player": "Debes seleccionar un jugador"
+    },
+    "referees": {
+      "must_select_referee": "Debes seleccionar un árbitro"
     }
   },
   "auth": {

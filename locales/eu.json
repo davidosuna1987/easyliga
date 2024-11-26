@@ -217,6 +217,9 @@
     },
     "players": {
       "must_select_player": "Jokalari bat hautatu behar duzu"
+    },
+    "referees": {
+      "must_select_referee": "Epaile bat aukeratu behar duzu"
     }
   },
   "auth": {
@@ -238,23 +241,42 @@
     "register_by_invite": "Eman izena gonbidapenarekin",
     "invite_code": "gonbidapen kodea"
   },
-  "footer": { "copyright": "Eskubide guztiak erreserbatuta ®" },
+  "footer": {
+    "copyright": "Eskubide guztiak erreserbatuta ®"
+  },
   "navbar": {
     "home": "Hasi",
     "panel": "Panela",
     "federation": {
       "label": "Federazioa",
-      "list": { "label": "Federazioen zerrenda" },
-      "leagues": { "label": "Ligako Zerrenda" },
-      "clubs": { "label": "Kluben zerrenda" },
-      "referees": { "label": "Epaileen zerrenda" }
+      "list": {
+        "label": "Federazioen zerrenda"
+      },
+      "leagues": {
+        "label": "Ligako Zerrenda"
+      },
+      "clubs": {
+        "label": "Kluben zerrenda"
+      },
+      "referees": {
+        "label": "Epaileen zerrenda"
+      }
     },
-    "club": { "label": "Kluba", "list": { "label": "Kluben zerrenda" } },
+    "club": {
+      "label": "Kluba",
+      "list": {
+        "label": "Kluben zerrenda"
+      }
+    },
     "referee": {
       "label": "Epailea",
       "calendar": "Egutegia",
-      "games": { "create": "Sortu partida" },
-      "admin": { "referees": "Kudeatu arbitroak" }
+      "games": {
+        "create": "Sortu partida"
+      },
+      "admin": {
+        "referees": "Kudeatu arbitroak"
+      }
     },
     "coach": {
       "label": "Entrenatzailea",
@@ -264,69 +286,143 @@
   },
   "pages": {
     "auth": {
-      "reset": { "title": "Berrezarri pasahitza" },
-      "verify": { "title": "Egiaztatu posta elektronikoa" },
-      "forgot": { "title": "Pasahitza ahaztu al duzu?" },
-      "login": { "title": "Saioa hasi" },
-      "register": { "title": "Izena eman" }
+      "reset": {
+        "title": "Berrezarri pasahitza"
+      },
+      "verify": {
+        "title": "Egiaztatu posta elektronikoa"
+      },
+      "forgot": {
+        "title": "Pasahitza ahaztu al duzu?"
+      },
+      "login": {
+        "title": "Saioa hasi"
+      },
+      "register": {
+        "title": "Izena eman"
+      }
     },
     "index": {
       "title": "Ongi etorri Easy Liga-ra!",
       "welcome": "Ongi etorri Easy Liga-ra!"
     },
     "club": {
-      "index": { "title": "Kudeatzen dituzun klubak" },
-      "edit": { "title": "Editatu kluba" },
+      "index": {
+        "title": "Kudeatzen dituzun klubak"
+      },
+      "edit": {
+        "title": "Editatu kluba"
+      },
       "team": {
-        "create": { "title": "Gehitu taldea klubera" },
-        "edit": { "title": "Editatu taldea" }
+        "create": {
+          "title": "Gehitu taldea klubera"
+        },
+        "edit": {
+          "title": "Editatu taldea"
+        }
       }
     },
     "coach": {
-      "index": { "title": "Partiduen egutegia" },
-      "teams": { "title": "Entrenatzen dituzun taldeak" },
+      "index": {
+        "title": "Partiduen egutegia"
+      },
+      "teams": {
+        "title": "Entrenatzen dituzun taldeak"
+      },
       "game": {
-        "edit": { "title": "Editatu partida" },
-        "call": { "rotation": { "title": "Alderdien txandaketak" } },
-        "team": {
-          "call": { "title": "Festa deia" },
+        "edit": {
+          "title": "Editatu partida"
+        },
+        "call": {
           "rotation": {
-            "player-change": { "title": "Errotazioan jokalariak aldatu" }
+            "title": "Alderdien txandaketak"
+          }
+        },
+        "team": {
+          "call": {
+            "title": "Festa deia"
+          },
+          "rotation": {
+            "player-change": {
+              "title": "Errotazioan jokalariak aldatu"
+            }
           }
         }
       }
     },
     "federation": {
-      "index": { "title": "Kudeatzen dituzun federazioak" },
-      "edit": { "title": "Editatu federazioa" },
-      "clubs": { "title": "Federazio klubak" },
-      "leagues": { "title": "Federazio Ligak" },
-      "club": { "create": { "title": "Gehitu kluba federazioan" } },
+      "index": {
+        "title": "Kudeatzen dituzun federazioak"
+      },
+      "edit": {
+        "title": "Editatu federazioa"
+      },
+      "clubs": {
+        "title": "Federazio klubak"
+      },
+      "leagues": {
+        "title": "Federazio Ligak"
+      },
+      "club": {
+        "create": {
+          "title": "Gehitu kluba federazioan"
+        }
+      },
       "league": {
-        "create": { "title": "Gehitu liga federazioari" },
-        "edit": { "title": "Editatu liga" }
+        "create": {
+          "title": "Gehitu liga federazioari"
+        },
+        "edit": {
+          "title": "Editatu liga"
+        }
       },
       "referees": {
         "title": "Federazioko arbitroak"
       }
     },
-    "game": { "report": { "title": "Partiduen minutuak" } },
-    "invite": {
-      "register": { "title": "Eman izena gonbidapenarekin" },
-      "add-roles": { "title": "Gehitu rolak gonbidapenarekin" }
+    "game": {
+      "report": {
+        "title": "Partiduen minutuak"
+      }
     },
-    "league": { "index": { "title": "Ligako informazioa" } },
+    "invite": {
+      "register": {
+        "title": "Eman izena gonbidapenarekin"
+      },
+      "add-roles": {
+        "title": "Gehitu rolak gonbidapenarekin"
+      }
+    },
+    "league": {
+      "index": {
+        "title": "Ligako informazioa"
+      }
+    },
     "profile": {
-      "index": { "title": "Nire erabiltzaile profila" },
-      "licenses": { "title": "Nire lizentziak" }
+      "index": {
+        "title": "Nire erabiltzaile profila"
+      },
+      "licenses": {
+        "title": "Nire lizentziak"
+      }
     },
     "referee": {
-      "index": { "title": "Partiduen egutegia" },
-      "admin": { "referees": "Kudeatu arbitroak" },
+      "index": {
+        "title": "Partiduen egutegia"
+      },
+      "admin": {
+        "referees": "Kudeatu arbitroak"
+      },
       "game": {
-        "create": { "title": "Sortu partida" },
-        "arbitrare": { "title": "Epailearen partida" },
-        "report": { "title": "Partiduen minutuak" }
+        "create": {
+          "title": "Sortu partida"
+        },
+        "arbitrare": {
+          "title": "Epailearen partida"
+        },
+        "report": {
+          "title": "Partiduen minutuak"
+        }
       }
     }
   },
@@ -1027,7 +1123,12 @@
       "point": "Zigorra",
       "set": "Kanporatzea",
       "game": "Deskalifikazioa",
-      "short": { "warning": "W", "point": "G", "set": "d", "game": "ETA" }
+      "short": {
+        "warning": "W",
+        "point": "G",
+        "set": "d",
+        "game": "ETA"
+      }
     },
     "not_available_until_game_finishes": "Partida amaitutakoan aktak eskuragarri egongo dira"
   },
@@ -1136,7 +1237,11 @@
     "hours": "denbora | orduak",
     "minutes": "minutu | minutuak",
     "seconds": "bigarrena | segundoak",
-    "short": { "hours": "h", "minutes": "m", "seconds": "bai" }
+    "short": {
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "bai"
+    }
   },
   "shirt_colors": {
     "select": "Hautatu kolore bat",

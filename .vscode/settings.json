@@ -1,5 +1,8 @@
 {
   "i18n-ally.localesPaths": ["locales"],
   "i18n-ally.keystyle": "nested",
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "i18n-ally.extract.ignoredByFiles": {
+    "components/League/GameCard.vue": ["!"]
+  }
 }

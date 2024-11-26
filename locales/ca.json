@@ -217,6 +217,9 @@
     },
     "players": {
       "must_select_player": "Has de seleccionar un jugador"
+    },
+    "referees": {
+      "must_select_referee": "Has de seleccionar un àrbitre"
     }
   },
   "auth": {
@@ -238,23 +241,42 @@
     "register_by_invite": "Registrar-me amb invitació",
     "invite_code": "Codi d'invitació"
   },
-  "footer": { "copyright": "Tots els drets reservats ®" },
+  "footer": {
+    "copyright": "Tots els drets reservats ®"
+  },
   "navbar": {
     "home": "Inici",
     "panel": "Panell",
     "federation": {
       "label": "Federació",
-      "list": { "label": "Llistat de federacions" },
-      "leagues": { "label": "Llistat de lligues" },
-      "clubs": { "label": "Llistat de clubs" },
-      "referees": { "label": "Llistat d'àrbitres" }
+      "list": {
+        "label": "Llistat de federacions"
+      },
+      "leagues": {
+        "label": "Llistat de lligues"
+      },
+      "clubs": {
+        "label": "Llistat de clubs"
+      },
+      "referees": {
+        "label": "Llistat d'àrbitres"
+      }
     },
-    "club": { "label": "Club", "list": { "label": "Llistat de clubs" } },
+    "club": {
+      "label": "Club",
+      "list": {
+        "label": "Llistat de clubs"
+      }
+    },
     "referee": {
       "label": "Àrbitre",
       "calendar": "Calendari",
-      "games": { "create": "Crear partit" },
-      "admin": { "referees": "Administrar àrbitres" }
+      "games": {
+        "create": "Crear partit"
+      },
+      "admin": {
+        "referees": "Administrar àrbitres"
+      }
     },
     "coach": {
       "label": "Entrenador",
@@ -264,69 +286,143 @@
   },
   "pages": {
     "auth": {
-      "reset": { "title": "Restablir contrasenya" },
-      "verify": { "title": "Verificar email" },
-      "forgot": { "title": "Heu oblidat la vostra contrasenya?" },
-      "login": { "title": "Iniciar sessió" },
-      "register": { "title": "Registra't" }
+      "reset": {
+        "title": "Restablir contrasenya"
+      },
+      "verify": {
+        "title": "Verificar email"
+      },
+      "forgot": {
+        "title": "Heu oblidat la vostra contrasenya?"
+      },
+      "login": {
+        "title": "Iniciar sessió"
+      },
+      "register": {
+        "title": "Registra't"
+      }
     },
     "index": {
       "title": "Benvingut a Easy Lliga!",
       "welcome": "Benvingut a Easy Lliga!"
     },
     "club": {
-      "index": { "title": "Clubs que gestiones" },
-      "edit": { "title": "Editar club" },
+      "index": {
+        "title": "Clubs que gestiones"
+      },
+      "edit": {
+        "title": "Editar club"
+      },
       "team": {
-        "create": { "title": "Afegir equip al club" },
-        "edit": { "title": "Editar equip" }
+        "create": {
+          "title": "Afegir equip al club"
+        },
+        "edit": {
+          "title": "Editar equip"
+        }
       }
     },
     "coach": {
-      "index": { "title": "Calendari de partits" },
-      "teams": { "title": "Equips que entrenes" },
+      "index": {
+        "title": "Calendari de partits"
+      },
+      "teams": {
+        "title": "Equips que entrenes"
+      },
       "game": {
-        "edit": { "title": "Editar partit" },
-        "call": { "rotation": { "title": "Rotacions del partit" } },
-        "team": {
-          "call": { "title": "Convocatòria del partit" },
+        "edit": {
+          "title": "Editar partit"
+        },
+        "call": {
           "rotation": {
-            "player-change": { "title": "Canviar jugadors a la rotació" }
+            "title": "Rotacions del partit"
+          }
+        },
+        "team": {
+          "call": {
+            "title": "Convocatòria del partit"
+          },
+          "rotation": {
+            "player-change": {
+              "title": "Canviar jugadors a la rotació"
+            }
           }
         }
       }
     },
     "federation": {
-      "index": { "title": "Federacions que gestiones" },
-      "edit": { "title": "Editar federació" },
-      "clubs": { "title": "Clubs de la federació" },
-      "leagues": { "title": "Lligues de la federació" },
-      "club": { "create": { "title": "Afegir club a la federació" } },
+      "index": {
+        "title": "Federacions que gestiones"
+      },
+      "edit": {
+        "title": "Editar federació"
+      },
+      "clubs": {
+        "title": "Clubs de la federació"
+      },
+      "leagues": {
+        "title": "Lligues de la federació"
+      },
+      "club": {
+        "create": {
+          "title": "Afegir club a la federació"
+        }
+      },
       "league": {
-        "create": { "title": "Afegir lliga a la federació" },
-        "edit": { "title": "Editar lliga" }
+        "create": {
+          "title": "Afegir lliga a la federació"
+        },
+        "edit": {
+          "title": "Editar lliga"
+        }
       },
       "referees": {
         "title": "Àrbitres de la federació"
       }
     },
-    "game": { "report": { "title": "Acta del partit" } },
-    "invite": {
-      "register": { "title": "Registra't amb invitació" },
-      "add-roles": { "title": "Afegir rols amb invitació" }
+    "game": {
+      "report": {
+        "title": "Acta del partit"
+      }
     },
-    "league": { "index": { "title": "Informació de la lliga" } },
+    "invite": {
+      "register": {
+        "title": "Registra't amb invitació"
+      },
+      "add-roles": {
+        "title": "Afegir rols amb invitació"
+      }
+    },
+    "league": {
+      "index": {
+        "title": "Informació de la lliga"
+      }
+    },
     "profile": {
-      "index": { "title": "El meu perfil d'usuari" },
-      "licenses": { "title": "Les meves llicències" }
+      "index": {
+        "title": "El meu perfil d'usuari"
+      },
+      "licenses": {
+        "title": "Les meves llicències"
+      }
     },
     "referee": {
-      "index": { "title": "Calendari de partits" },
-      "admin": { "referees": "Administrar àrbitres" },
+      "index": {
+        "title": "Calendari de partits"
+      },
+      "admin": {
+        "referees": "Administrar àrbitres"
+      },
       "game": {
-        "create": { "title": "Crear partit" },
-        "arbitrare": { "title": "Arbitrar partit" },
-        "report": { "title": "Acta del partit" }
+        "create": {
+          "title": "Crear partit"
+        },
+        "arbitrare": {
+          "title": "Arbitrar partit"
+        },
+        "report": {
+          "title": "Acta del partit"
+        }
       }
     }
   },
@@ -1027,7 +1123,12 @@
       "point": "Càstig",
       "set": "Expulsió",
       "game": "Desqualificació",
-      "short": { "warning": "W", "point": "P", "set": "D", "game": "E" }
+      "short": {
+        "warning": "W",
+        "point": "P",
+        "set": "D",
+        "game": "E"
+      }
     },
     "not_available_until_game_finishes": "L'acta estarà disponible un cop finalitzat el partit"
   },
@@ -1136,7 +1237,11 @@
     "hours": "hora | hores",
     "minutes": "minut | minuts",
     "seconds": "segon | segons",
-    "short": { "hours": "h", "minutes": "m", "seconds": "s" }
+    "short": {
+      "hours": "h",
+      "minutes": "m",
+      "seconds": "s"
+    }
   },
   "shirt_colors": {
     "select": "Seleccioneu un color",
