@@ -15,6 +15,7 @@ import {
 } from '@/types/api/league'
 import { ApiGame } from '@/types/api/game'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
+import { ApiLeagueShowGame } from 'types/api/league-show'
 
 export type LeagueRelations = {
   federation?: Federation

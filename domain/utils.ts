@@ -19,10 +19,10 @@ export const DurationScopes = {
   seconds: 'seconds',
 } as const
 
-export type DurationScope = (typeof DurationScopes)[keyof typeof DurationScopes]
+export type DurationScope = keyof typeof DurationScopes
 
 export const mapApiDurationToDuration = (
-  apiDuration: ApiDuration | null,
+  apiDuration?: ApiDuration | null,
 ): Duration | undefined => (apiDuration ? { ...apiDuration } : undefined)
 
 export const formatDate = (

@@ -2,10 +2,11 @@
 import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
 import { IconNames } from '@/domain/icon'
+import { LeagueShowTeam } from '@/domain/league-show'
 
 const props = defineProps({
   team: {
-    type: Object as PropType<Team>,
+    type: Object as PropType<Team | LeagueShowTeam>,
     required: true,
   },
   showGender: {

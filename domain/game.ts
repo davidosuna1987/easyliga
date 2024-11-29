@@ -35,14 +35,17 @@ import moment from 'moment'
 import { Duration, mapApiDurationToDuration } from '@/domain/utils'
 import { IconName } from '@/domain/icon'
 import { Injury, mapApiInjuryToInjury } from '@/domain/injury'
+import { LeagueShowGame } from '@/domain/league-show'
 
 export const SETS_TO_WIN = 3
 export const GAME_OBSERVATIONS_DELAY = 10
 
 export const CATEGORY_MAPPER = {
-  masculine: 'masculine',
-  femenine: 'femenine',
-  mixed: 'mixed',
+  infant: 'infant',
+  cadet: 'cadet',
+  youth: 'youth',
+  senior: 'senior',
+  veteran: 'veteran',
 } as const
 
 export type CategoryType = keyof typeof CATEGORY_MAPPER
@@ -579,7 +582,7 @@ export const mapGamePartialsAssignRequestToApiGamePartialsAssignRequest = (
   partials: mapGamePartialsToApiGamePartials(request.partials),
 })
 
-export const hasDefaultReferee = (game: Game): boolean =>
+export const hasDefaultReferee = (game: Game | LeagueShowGame): boolean =>
   !game.refereeId || game.refereeId === 1
 
 export const isSameCoachForBothTeams = (
@@ -605,7 +608,7 @@ export const isSameCoachForBothTeams = (
 }
 
 export const getGameTeamName = (
-  game: Game,
+  game: Game | LeagueShowGame,
   type: TeamType,
 ): string | undefined => {
   const byeTeamName = game.teamNames.local
@@ -618,3 +621,7 @@ export const getGameTeamName = (
       : undefined
     : game.teamNames[type]
 }
+
+export const getGameNameFromGameTeamNames = (
+  teamNames: Game['teamNames'],
+): string => `${teamNames.local} vs ${teamNames.visitor}`

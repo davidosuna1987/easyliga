@@ -1,46 +1,195 @@
 <script setup lang="ts">
 import LeagueService from '@/services/league'
-import { League, mapApiLeagueToLeague } from '@/domain/league'
-import { Game } from '@/domain/game'
-import { Team } from '@/domain/team'
+// import {
+//   League,
+//   mapApiLeagueToLeague,
+// } from '@/domain/league'
+import {
+  LeagueShow,
+  LeagueShowGame,
+  LeagueShowTeam,
+  mapApiLeagueShowGamesToApiLeagueShowGameMatchdays,
+  mapApiLeagueShowGameToLeagueShowGame,
+  mapApiLeagueShowToLeagueShow,
+} from '@/domain/league-show'
+// import { Game } from '@/domain/game'
+// import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
-import { User } from 'domain/user'
+import { User } from '@/domain/user'
 
 const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 const leagueService = new LeagueService()
 
-const league = ref<League>()
+// const league = ref<League>()
+const league = ref<LeagueShow>()
 const showGenerateGamesDialogForm = ref<boolean>(false)
 const showAddTeamDialogForm = ref<boolean>(false)
 const showRemoveTeamAlertDialog = ref<boolean>(false)
-const showRefereeSelectorDialogForm = ref<Game>()
-const showGameSetPartialsDialogForm = ref<Game>()
-const teamToRemove = ref<Team>()
+const showRefereeSelectorDialogForm = ref<LeagueShowGame>()
+const showGameSetPartialsDialogForm = ref<LeagueShowGame>()
+const teamToRemove = ref<LeagueShowTeam>()
 const loadingApi = ref<boolean>(true)
+const loadingMatchdays = ref<boolean>(false)
+const loadingGame = ref<boolean>(false)
+const apiError = ref<string>()
+
+const orderedMatchdays = computed(() => {
+  return league.value?.matchdays?.sort(
+    (a, b) => (a.matchday ?? 0) - (b.matchday ?? 0),
+  )
+})
+
+const showMatchdays = computed(
+  () =>
+    league.value?.matchdays?.length === league.value?.matchdaysCount &&
+    !showLoadingMatchdays.value,
+)
+
+const showLoadingMatchdays = computed(
+  () => loadingMatchdays.value || loadingGame.value,
+)
 
 const getLeague = async () => {
   loadingApi.value = true
 
-  const { data, error } = await leagueService.get(
+  // const { data, error } = await leagueService.get(
+  //   Number(route.params.leagueId),
+  //   {
+  //     with: 'federation,division,games.referee.profile,teams.federation,teams.gender,teams.category,category,gender',
+  //   },
+  // )
+
+  const { data, error } = await leagueService.show(
     Number(route.params.leagueId),
-    {
-      with: 'federation,division,games.referee.profile,teams.federation,teams.gender,teams.category,category,gender',
-    },
   )
 
-  if (error.value) {
-    toast.mapError(Object.values(error.value?.data?.errors), false)
-  } else if (data.value) {
-    league.value = mapApiLeagueToLeague(data.value.data.league)
+  try {
+    if (error.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+    } else if (data.value) {
+      // league.value = mapApiLeagueToLeague(data.value.data.league)
+      league.value = mapApiLeagueShowToLeagueShow(data.value.data.league)
+    }
+  } catch (e) {
+    apiError.value = t('errors.whoops')
+  } finally {
+    loadingApi.value = false
+    showGenerateGamesDialogForm.value = false
+    getAllLeagueMatchdayGames(5)
   }
-
-  loadingApi.value = false
-  showGenerateGamesDialogForm.value = false
 }
 
-const orderMatchdayGamesByBye = (games: Game[]) => {
+const getAllLeagueMatchdayGames = async (range?: number) => {
+  if (!league.value?.matchdaysCount) return
+
+  loadingMatchdays.value = true
+
+  let promises: Promise<void>[] = []
+
+  if (range) {
+    const ranges = Array.from(
+      { length: Math.ceil(league.value.matchdaysCount / range) },
+      (_, i) => {
+        const start = i * 5 + 1 // Inicio del rango
+        const end = Math.min(start + 4, league.value?.matchdaysCount ?? 0) // Fin del rango (máximo matchdaysCount)
+        return `${start}:${end}`
+      },
+    )
+    promises = ranges.map(range => getLeagueMatchdayGamesByMatchday(range))
+  } else {
+    promises = Array.from(
+      { length: league.value.matchdaysCount },
+      (_, matchday) => getLeagueMatchdayGamesByMatchday(matchday + 1),
+    )
+  }
+
+  await Promise.all(promises)
+
+  loadingMatchdays.value = false
+}
+
+const getLeagueMatchdayGamesByMatchday = async (matchday: string | number) => {
+  if (!league.value) return
+
+  if (!league.value.matchdays) league.value.matchdays = []
+
+  loadingGame.value = true
+
+  const { data, error } = await leagueService.showMatchdayGames(
+    Number(route.params.leagueId),
+    matchday,
+  )
+
+  try {
+    if (error.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+    } else if (data.value) {
+      // const leagueShowGames = data.value.data.games.map(
+      //   mapApiLeagueShowGameToLeagueShowGame,
+      // )
+      // league.value.matchdays?.push({
+      //   matchday,
+      //   games: leagueShowGames,
+      // })
+      const matchdays = mapApiLeagueShowGamesToApiLeagueShowGameMatchdays(
+        data.value.data.games,
+      )
+      league.value.matchdays = league.value.matchdays?.concat(matchdays)
+    }
+  } catch (e) {
+    apiError.value = t('errors.whoops')
+  } finally {
+    loadingGame.value = false
+    showGenerateGamesDialogForm.value = false
+  }
+}
+
+const getLeagueGame = async (gameId: number) => {
+  if (!league.value) return
+
+  if (!league.value.matchdays) league.value.matchdays = []
+
+  loadingGame.value = true
+
+  const { data, error } = await leagueService.showGame(
+    Number(route.params.leagueId),
+    gameId,
+  )
+
+  try {
+    if (error.value) {
+      toast.mapError(Object.values(error.value?.data?.errors), false)
+    } else if (data.value) {
+      const leagueShowGame = mapApiLeagueShowGameToLeagueShowGame(
+        data.value.data.game,
+      )
+      const matchday = league.value.matchdays?.find(
+        m => m.matchday === leagueShowGame.matchday,
+      )
+
+      if (matchday) {
+        const gameIndex = matchday.games.findIndex(
+          g => g.id === leagueShowGame.id,
+        )
+
+        if (gameIndex !== -1) {
+          matchday.games[gameIndex] = leagueShowGame
+        } else {
+          matchday.games.push(leagueShowGame)
+        }
+      }
+    }
+  } catch (e) {
+    apiError.value = t('errors.whoops')
+  } finally {
+    loadingGame.value = false
+    showGenerateGamesDialogForm.value = false
+  }
+}
+
+const orderMatchdayGamesByBye = (games: LeagueShowGame[]) => {
   return games.sort((a, b) => {
     if (a.isBye) return 1
     if (b.isBye) return -1
@@ -48,7 +197,7 @@ const orderMatchdayGamesByBye = (games: Game[]) => {
   })
 }
 
-const handleOnRemoveTeam = async (team: Team) => {
+const handleOnRemoveTeam = async (team: LeagueShowTeam) => {
   if (!league.value) return
 
   loadingApi.value = true
@@ -89,27 +238,32 @@ const handleShowAddTeamDialog = () => {
   showAddTeamDialogForm.value = true
 }
 
-const handleShowRemoveTeamAlertDialog = (team: Team) => {
+const handleShowRemoveTeamAlertDialog = (team: LeagueShowTeam) => {
   showRemoveTeamAlertDialog.value = true
   teamToRemove.value = team
 }
 
-const handleTeamAdded = (team: Team) => {
+const handleTeamAdded = (team: LeagueShowTeam) => {
   league.value?.teams?.push(team)
   showAddTeamDialogForm.value = false
 }
 
 const handleRefereeAssigned = (referee: User) => {
-  if (referee.id !== showRefereeSelectorDialogForm.value?.refereeId) {
-    getLeague()
+  if (!showRefereeSelectorDialogForm.value) return
+
+  if (referee.id !== showRefereeSelectorDialogForm.value.refereeId) {
+    // getLeague()
+    getLeagueGame(showRefereeSelectorDialogForm.value.id)
   }
 
   showRefereeSelectorDialogForm.value = undefined
 }
 
 const handlePartialsAssigned = () => {
+  if (!showGameSetPartialsDialogForm.value) return
+  // getLeague()
+  getLeagueGame(showGameSetPartialsDialogForm.value.id)
   showGameSetPartialsDialogForm.value = undefined
-  getLeague()
 }
 
 onMounted(() => {
@@ -152,7 +306,7 @@ onMounted(() => {
               >
             </Heading>
             <ListActionButton
-              v-if="!league.matchdays?.length"
+              v-if="!showMatchdays"
               :label="t('teams.add')"
               :onClick="handleShowAddTeamDialog"
             />
@@ -163,7 +317,7 @@ onMounted(() => {
               :team="team"
               :showCategory="team.category?.id !== league.category?.id"
               :onRemove="
-                league.matchdays?.length
+                showMatchdays
                   ? undefined
                   : () => handleShowRemoveTeamAlertDialog(team)
               "
@@ -172,40 +326,47 @@ onMounted(() => {
           </EasyGrid>
         </div>
 
-        <EasyGrid v-if="league.matchdays?.length" class="matchdays" :gap="3">
-          <template
-            v-for="matchday in league.matchdays"
-            :key="matchday.matchday"
-          >
-            <div v-if="matchday.matchday">
-              <Heading tag="h6" class="mb-2">
-                {{ t('games.matchdays.num', { num: matchday.matchday }) }}
-              </Heading>
-              <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
-                <LeagueGameCard
-                  v-for="game in orderMatchdayGamesByBye(matchday.games)"
-                  :key="game.id"
-                  :game="game"
-                  showActions
-                  @referee:assign="showRefereeSelectorDialogForm = game"
-                  @game:set-partials="showGameSetPartialsDialogForm = game"
-                />
-              </EasyGrid>
-            </div>
-          </template>
-        </EasyGrid>
+        <LoadingLabel
+          v-if="showLoadingMatchdays"
+          :label="t('games.loading')"
+          class="justify-center flex-1 self-start"
+        />
+        <template v-else>
+          <EasyGrid v-if="showMatchdays" class="matchdays relative" :gap="3">
+            <template
+              v-for="matchday in orderedMatchdays"
+              :key="matchday.matchday"
+            >
+              <div v-if="matchday.matchday">
+                <Heading tag="h6" class="mb-2">
+                  {{ t('games.matchdays.num', { num: matchday.matchday }) }}
+                </Heading>
+                <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
+                  <LeagueGameCard
+                    v-for="game in orderMatchdayGamesByBye(matchday.games)"
+                    :key="game.id"
+                    :game="game"
+                    showActions
+                    @referee:assign="showRefereeSelectorDialogForm = game"
+                    @game:set-partials="showGameSetPartialsDialogForm = game"
+                  />
+                </EasyGrid>
+              </div>
+            </template>
+          </EasyGrid>
 
-        <div
-          v-else
-          class="matchdays is-sticky-action is-sticky-action__sm flex flex-col items-center gap-3"
-        >
-          <p>{{ t('games.matchdays.not_generated') }}</p>
-          <Button
-            :label="t('games.matchdays.generate')"
-            size="small"
-            @click.prevent="handleGenerateGamesDialogShow"
-          />
-        </div>
+          <div
+            v-else
+            class="matchdays relative is-sticky-action is-sticky-action__sm flex flex-col items-center gap-3"
+          >
+            <p>{{ t('games.matchdays.not_generated') }}</p>
+            <Button
+              :label="t('games.matchdays.generate')"
+              size="small"
+              @click.prevent="handleGenerateGamesDialogShow"
+            />
+          </div>
+        </template>
       </div>
 
       <LeagueTeamAddDialogForm
@@ -251,6 +412,17 @@ onMounted(() => {
       :league="league"
       @hide="handleGenerateGamesDialogHide"
       @matchdays:generated="getLeague"
+    />
+
+    <AlertDialog
+      v-if="!!apiError"
+      :visible="!!apiError"
+      :message="apiError"
+      severity="danger"
+      :acceptLabel="t('forms.accept')"
+      hideCancel
+      @accepted="apiError = undefined"
+      @hide="apiError = undefined"
     />
   </div>
 </template>

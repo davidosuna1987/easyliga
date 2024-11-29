@@ -6,12 +6,33 @@ import {
   ApiLeagueTeamFormResponse,
   ApiLeagueAddTeamFormRequest,
 } from '@/types/api/league'
+import {
+  ApiLeagueShowGameResponse,
+  ApiLeagueShowMatchdayGamesResponse,
+  ApiLeagueShowResponse,
+} from '@/types/api/league-show'
 
 const PREFIX = 'leagues'
 
 export default class LeaguesService {
   get(leagueId: number, params?: Record<string, string>) {
     return useApi<ApiLeagueResponse>(`${PREFIX}/${leagueId}`, { params })
+  }
+
+  show(leagueId: number) {
+    return useApi<ApiLeagueShowResponse>(`${PREFIX}/${leagueId}/show`)
+  }
+
+  showMatchdayGames(leagueId: number, matchday: string | number) {
+    return useApi<ApiLeagueShowMatchdayGamesResponse>(
+      `${PREFIX}/${leagueId}/show/matchday/${matchday}/games`,
+    )
+  }
+
+  showGame(leagueId: number, gameId: number) {
+    return useApi<ApiLeagueShowGameResponse>(
+      `${PREFIX}/${leagueId}/show/games/${gameId}`,
+    )
   }
 
   store(data: ApiLeagueFormRequest) {

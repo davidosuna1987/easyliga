@@ -9,6 +9,7 @@ import {
 } from '@/domain/profile'
 import { RotationPlayerStatus } from '@/domain/rotation'
 import { UserStoreRequest } from '@/domain/user'
+import { LeagueShowGameRefereeProfile } from '@/domain/league-show'
 
 export type Player = {
   profileId: number
@@ -72,7 +73,13 @@ export const mapApiPlayersToPlayers = (
 }
 
 export const getFullName = (
-  profile?: Profile | Player | CallPlayerData | TeamMember | Coach,
+  profile?:
+    | Profile
+    | LeagueShowGameRefereeProfile
+    | Player
+    | CallPlayerData
+    | TeamMember
+    | Coach,
 ): string | undefined => {
   if (!profile) return undefined
   const { firstName, lastName } = profile

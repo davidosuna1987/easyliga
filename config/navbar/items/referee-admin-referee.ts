@@ -10,7 +10,12 @@ export default [
         separator: true,
       },
       {
-        label: 'navbar.referee.admin.referees',
+        label: 'navbar.federation.leagues.label',
+        to: '/referee/admin/leagues',
+      },
+      {
+        // label: 'navbar.referee.admin.referees',
+        label: 'navbar.federation.referees.label',
         to: '/referee/admin/referees',
       },
     ],

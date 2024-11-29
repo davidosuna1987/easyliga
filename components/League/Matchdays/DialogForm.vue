@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { League } from '@/domain/league'
+import { LeagueShow } from '@/domain/league-show'
 
 const props = defineProps({
   visible: {
@@ -7,7 +8,7 @@ const props = defineProps({
     required: false,
   },
   league: {
-    type: Object as PropType<League>,
+    type: Object as PropType<League | LeagueShow>,
     required: true,
   },
 })

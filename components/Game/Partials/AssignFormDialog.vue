@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Game, GamePartialsAssignFormRef } from '@/domain/game'
-import { User } from '@/domain/user'
+import { LeagueShowGame } from '@/domain/league-show'
 
 const props = defineProps({
   visible: {
@@ -8,7 +8,7 @@ const props = defineProps({
     default: false,
   },
   game: {
-    type: Object as PropType<Game>,
+    type: Object as PropType<Game | LeagueShowGame>,
     required: true,
   },
 })

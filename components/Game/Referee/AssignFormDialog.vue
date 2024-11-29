@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import { Game, GameRefereeAssignFormRef } from '@/domain/game'
+import {
+  GameRefereeAssignFormRef,
+  getGameNameFromGameTeamNames,
+} from '@/domain/game'
 import { User } from '@/domain/user'
+import { LeagueShowGame } from 'domain/league-show'
 
 const props = defineProps({
   visible: {
@@ -8,7 +12,7 @@ const props = defineProps({
     default: false,
   },
   game: {
-    type: Object as PropType<Game>,
+    type: Object as PropType<LeagueShowGame>,
     required: true,
   },
 })
@@ -54,7 +58,9 @@ watch(
     @hide="emit('hide', true)"
   >
     <template #header>
-      <Heading tag="h5">{{ game.name }}</Heading>
+      <Heading tag="h5">{{
+        getGameNameFromGameTeamNames(game.teamNames)
+      }}</Heading>
     </template>
 
     <GameRefereeAssignForm

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { League, LeagueTeamAddFormRef } from '@/domain/league'
 import { Team } from '@/domain/team'
+import { LeagueShow, LeagueShowTeam } from '@/domain/league-show'
 
 const props = defineProps({
   visible: {
@@ -8,18 +9,18 @@ const props = defineProps({
     default: false,
   },
   league: {
-    type: Object as PropType<League>,
+    type: Object as PropType<LeagueShow>,
     required: true,
   },
   selectedTeams: {
-    type: Array as PropType<Team[]>,
+    type: Array as PropType<LeagueShowTeam[]>,
     default: [],
   },
 })
 
 const emit = defineEmits<{
   (e: 'hide', value: boolean): void
-  (e: 'team:added', value: Team): void
+  (e: 'team:added', value: LeagueShowTeam): void
 }>()
 
 const { t } = useI18n()
@@ -32,7 +33,7 @@ const handleFormSubmit = () => {
   leagueTeamAddFormRef.value?.handleSubmit()
 }
 
-const handleTeamAdded = (team: Team) => {
+const handleTeamAdded = (team: LeagueShowTeam) => {
   formLoading.value = false
   emit('team:added', team)
 }

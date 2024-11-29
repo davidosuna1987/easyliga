@@ -42,9 +42,25 @@ const authUserCanUpdateLeague = (league: League) => {
 
   if (auth.hasAnyRole(['admin', 'staff'])) return true
 
+  const federationIds = [
+    league.federationId,
+    league.federation?.federations?.map(f => f.id),
+  ].flat()
+
+  console.log({
+    c1: league.federation?.responsibleId === auth.user.id,
+    c2: league.federation?.federation?.responsibleId === auth.user.id,
+    c3: federationIds.some(id =>
+      auth.refereeAdministratedFederationIds.includes(id ?? 0),
+    ),
+  })
+
   return (
     league.federation?.responsibleId === auth.user.id ||
-    league.federation?.federation?.responsibleId === auth.user.id
+    league.federation?.federation?.responsibleId === auth.user.id ||
+    federationIds.some(id =>
+      auth.refereeAdministratedFederationIds.includes(id ?? 0),
+    )
   )
 }
 

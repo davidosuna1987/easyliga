@@ -1,15 +1,16 @@
 <script setup lang="ts">
+import LeagueService from '@/services/league'
 import {
   League,
   CreateMatchdaysGamesRequest,
   mapCreateMatchdaysGamesRequestToApiCreateMatchdaysGamesRequest,
 } from '@/domain/league'
+import { LeagueShow } from '@/domain/league-show'
 import { ApiErrorObject } from '@/types/errors'
-import LeagueService from '@/services/league'
 
 const props = defineProps({
   league: {
-    type: Object as PropType<League>,
+    type: Object as PropType<League | LeagueShow>,
     required: true,
   },
 })

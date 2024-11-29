@@ -5,14 +5,15 @@ import { Team } from '@/domain/team'
 import { getListTagColor } from '@/domain/list'
 import { ApiErrorObject } from '@/types/errors'
 import { ApiLeagueAddTeamFormRequest } from '@/types/api/league'
+import { LeagueShow, LeagueShowTeam } from '@/domain/league-show'
 
 const props = defineProps({
   league: {
-    type: Object as PropType<League>,
+    type: Object as PropType<LeagueShow>,
     required: true,
   },
   selectedTeams: {
-    type: Array as PropType<Team[]>,
+    type: Array as PropType<LeagueShowTeam[]>,
     default: [],
   },
   dialog: {
@@ -24,14 +25,14 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'hide', value: boolean): void
   (e: 'loading', value: boolean): void
-  (e: 'team:added', value: Team): void
+  (e: 'team:added', value: LeagueShowTeam): void
 }>()
 
 const { t } = useI18n()
 const toast = useEasyToast()
 const leagueService = new LeagueService()
 
-const selectedTeam = ref<Team>()
+const selectedTeam = ref<LeagueShowTeam>()
 const showAlertDialog = ref<boolean>(false)
 const loadingApi = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
@@ -91,7 +92,7 @@ const handleAdd = async () => {
   }
 }
 
-const handleTeamSelected = (team: Team) => {
+const handleTeamSelected = (team: LeagueShowTeam) => {
   selectedTeam.value = team
   form.value.team_id = team.id
 }

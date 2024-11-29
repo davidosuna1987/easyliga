@@ -10,7 +10,7 @@ export type ListColor =
   | 'warning'
   | 'info'
 
-export const getListTagColor = (type?: GenderType | undefined): ListColor => {
+export const getListTagColor = (type?: GenderType): ListColor => {
   switch (type) {
     case 'masculine':
       return 'blue'

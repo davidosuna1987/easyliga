@@ -5,6 +5,13 @@ import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { League } from '@/domain/league'
 import { getListTagColor } from '@/domain/list'
 
+const props = defineProps({
+  isRefereeAdmin: {
+    type: Boolean,
+    required: false,
+  },
+})
+
 const { t } = useI18n()
 const auth = useAuthStore()
 const federationService = new FederationService()
@@ -44,7 +51,9 @@ const getLeagues = async () => {
 
   loadingApi.value = true
   const { data } = await federationService.fetch({
-    where: `responsible_id:${auth.user.id}`,
+    where: props.isRefereeAdmin
+      ? `id:in:${auth.refereeAdministratedFederationIds}`
+      : `responsible_id:${auth.user.id}`,
     with: 'leagues.teams,leagues.category,leagues.gender,federations.leagues.teams,federations.leagues.category,federations.leagues.gender',
   })
 
@@ -58,14 +67,18 @@ const getLeagues = async () => {
 }
 
 const handleAddLeague = (federation: Federation) => {
+  if (props.isRefereeAdmin) return
   navigateTo(`/federation/${federation.id}/league/create`)
 }
 
 const goToLeague = (league: League) => {
-  navigateTo(`/league/${league.id}`)
+  props.isRefereeAdmin
+    ? navigateTo(`/referee/admin/league/${league.id}`)
+    : navigateTo(`/league/${league.id}`)
 }
 
 const goToEditLeague = (league: League) => {
+  if (props.isRefereeAdmin) return
   navigateTo(`/federation/${league.federationId}/league/${league.id}/edit`)
 }
 
@@ -81,6 +94,7 @@ onMounted(getLeagues)
           <header class="header grid grid-cols-[1fr_auto] items-start mb-1">
             <Heading tag="h6">{{ federation.name }}</Heading>
             <ListActionButton
+              v-if="!props.isRefereeAdmin"
               class="mt-1"
               :label="t('leagues.add')"
               :onClick="() => handleAddLeague(federation)"
@@ -119,6 +133,7 @@ onMounted(getLeagues)
                   :onClick="() => goToLeague(league)"
                 />
                 <ListActionButton
+                  v-if="!props.isRefereeAdmin"
                   :label="t('forms.edit')"
                   icon="edit"
                   iconSize="1.1rem"

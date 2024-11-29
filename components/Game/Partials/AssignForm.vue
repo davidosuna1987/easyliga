@@ -7,10 +7,11 @@ import {
   mapGamePartialsAssignRequestToApiGamePartialsAssignRequest,
 } from '@/domain/game'
 import { TeamType } from '@/domain/team'
+import { LeagueShowGame } from '@/domain/league-show'
 
 const props = defineProps({
   game: {
-    type: Object as PropType<Game>,
+    type: Object as PropType<Game | LeagueShowGame>,
     required: true,
   },
 })
@@ -28,7 +29,7 @@ const toast = useEasyToast()
 const DEFAULT_PARTIALS_FORM: GamePartials = Array.from(
   { length: 5 },
   (_, i) => {
-    const existingPartial = props.game.statistics.partials?.[i]
+    const existingPartial = props.game.statistics?.partials?.[i]
     return {
       setNumber: (i + 1) as GamePartials[number]['setNumber'],
       localTeamScore: existingPartial?.localTeamScore || undefined,

@@ -3,14 +3,15 @@ import TeamService from '@/services/team'
 import { SEARCH_MIN_LENGTH } from '@/domain/utils'
 import { Team, mapApiTeamToTeam } from '@/domain/team'
 import { AutoCompleteItemSelectEvent } from 'primevue/autocomplete'
+import { LeagueShowTeam } from '@/domain/league-show'
 
 const props = defineProps({
   team: {
-    type: Object as PropType<Team>,
+    type: Object as PropType<LeagueShowTeam>,
     required: false,
   },
   selectedTeams: {
-    type: Array as PropType<Team[]>,
+    type: Array as PropType<LeagueShowTeam[]>,
     default: [],
   },
   with: {
@@ -40,7 +41,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'team:selected', value: Team): void
+  (e: 'team:selected', value: LeagueShowTeam): void
 }>()
 
 const { t } = useI18n()
@@ -48,7 +49,7 @@ const toast = useEasyToast()
 const teamService = new TeamService()
 
 const search = ref<string>('')
-const selectedTeam = ref<Team | undefined>(props.team)
+const selectedTeam = ref<LeagueShowTeam | undefined>(props.team)
 const matchTeams = ref<Team[]>()
 const loadingApi = ref<boolean>(false)
 

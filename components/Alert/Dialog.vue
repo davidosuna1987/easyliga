@@ -34,6 +34,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideCancel: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -72,6 +76,7 @@ watch(
         :submitSeverity="severity"
         :submitLabel="acceptLabelText"
         :cancelLabel="cancelLabelText"
+        :hideCancel="hideCancel"
         :disabled="props.disabled"
         :loading="props.loading"
         @form:submit="emit('accepted', true)"

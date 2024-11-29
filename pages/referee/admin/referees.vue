@@ -4,7 +4,8 @@ definePageMeta({
   roles: ['referee_admin'],
 })
 
-useEasyHead('pages.referee.admin.referees')
+// useEasyHead('pages.referee.admin.referees')
+useEasyHead('pages.federation.referees.title')
 </script>
 
 <template>

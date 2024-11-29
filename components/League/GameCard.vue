@@ -5,10 +5,11 @@ import { Game, getGameTeamName, hasDefaultReferee } from '@/domain/game'
 import { TeamType } from '@/domain/team'
 import { formatDateTime } from '@/domain/utils'
 import { getFullName } from '@/domain/player'
+import { LeagueShowGame } from '@/domain/league-show'
 
 const props = defineProps({
   game: {
-    type: Object as PropType<Game>,
+    type: Object as PropType<Game | LeagueShowGame>,
     required: true,
   },
   hoverable: {
@@ -23,11 +24,15 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  isLeagueShowGame: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'game:set-partials', value: Game): void
-  (e: 'referee:assign', value: Game): void
+  (e: 'game:set-partials', value: Game | LeagueShowGame): void
+  (e: 'referee:assign', value: Game | LeagueShowGame): void
   (e: 'referee:assigned', value: User): void
 }>()
 

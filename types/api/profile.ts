@@ -10,6 +10,10 @@ export type ProfileRelations = {
   licenses?: ApiLicense[]
 }
 
+export type ApiProfileAppends = {
+  full_name: string
+}
+
 export type ApiProfile = {
   id: number
   user_id: number

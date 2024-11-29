@@ -43,6 +43,10 @@ export type ProfileRelations = {
   address?: Address
 }
 
+export type ProfileAppends = {
+  fullName: string
+}
+
 export type Profile = {
   id: number
   userId: number

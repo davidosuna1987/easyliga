@@ -3,10 +3,11 @@ import { Game, hasDefaultReferee } from '@/domain/game'
 import { User, UserSearchFormInputRef } from '@/domain/user'
 import { ROLE_MAPPER } from '@/domain/role'
 import GameService from '@/services/game'
+import { LeagueShowGame } from '@/domain/league-show'
 
 const props = defineProps({
   game: {
-    type: Object as PropType<Game>,
+    type: Object as PropType<Game | LeagueShowGame>,
     required: true,
   },
 })

@@ -28,14 +28,6 @@ export default function useMenuItems() {
     ? refereeAdminItems
     : refereeItemsConfig
 
-  console.log({
-    showRefereeMenu,
-    isReferee,
-    isRefereeAdmin,
-    isRefereeAdminReferee,
-    refereeItems,
-  })
-
   if (auth.hasRole(ROLE_MAPPER.federation)) {
     items.value = [...items.value, federationItems].flat()
   }
