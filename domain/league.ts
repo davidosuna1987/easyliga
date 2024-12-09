@@ -11,11 +11,11 @@ import { Team, mapApiTeamToTeam } from '@/domain/team'
 import {
   ApiCreateMatchdaysGamesRequest,
   ApiLeague,
+  ApiLeagueClassificationTeam,
   ApiLeagueFormRequest,
 } from '@/types/api/league'
 import { ApiGame } from '@/types/api/game'
 import { Federation, mapApiFederationToFederation } from '@/domain/federation'
-import { ApiLeagueShowGame } from 'types/api/league-show'
 
 export type LeagueRelations = {
   federation?: Federation
@@ -39,10 +39,26 @@ export type Matchday = {
   games: Game[]
 }
 
+export type LeagueClassificationTeam = {
+  teamId: number
+  teamName: string
+  gamesCount: number
+  gamesWon: number
+  gamesLost: number
+  setsWon: number
+  setsLost: number
+  pointsInFavor: number
+  pointsAgainst: number
+  points: number
+}
+
+export type LeagueClassification = LeagueClassificationTeam[]
+
 export type LeagueCustomAppends = {
   matchdays?: Matchday[]
   fullName?: string
   nameLong: string
+  classification?: LeagueClassification
 }
 
 export type LeagueCountRelations = {
@@ -98,6 +114,21 @@ export const mapApiGamesToMatchdays = (
   return matchdays
 }
 
+export const mapApiLeagueClassificationTeamToLeagueClassificationTeam = (
+  apiLeagueClassificationTeam: ApiLeagueClassificationTeam,
+): LeagueClassificationTeam => ({
+  teamId: apiLeagueClassificationTeam.team_id,
+  teamName: apiLeagueClassificationTeam.team_name,
+  gamesCount: apiLeagueClassificationTeam.games_count,
+  gamesWon: apiLeagueClassificationTeam.games_won,
+  gamesLost: apiLeagueClassificationTeam.games_lost,
+  setsWon: apiLeagueClassificationTeam.sets_won,
+  setsLost: apiLeagueClassificationTeam.sets_lost,
+  pointsInFavor: apiLeagueClassificationTeam.points_in_favor,
+  pointsAgainst: apiLeagueClassificationTeam.points_against,
+  points: apiLeagueClassificationTeam.points,
+})
+
 export const mapApiLeagueToLeague = (apiLeague: ApiLeague): League => ({
   id: apiLeague.id,
   federationId: apiLeague.federation_id ?? undefined,
@@ -146,8 +177,13 @@ export const mapApiLeagueCustomAppendsToLeagueCustomAppends = (
   matchdays: apiLeague.games
     ? mapApiGamesToMatchdays(apiLeague.games)
     : undefined,
-  fullName: apiLeague.full_name,
+  fullName: apiLeague.full_name ?? undefined,
   nameLong: apiLeague.name_long,
+  classification: apiLeague.classification
+    ? apiLeague.classification.map(
+        mapApiLeagueClassificationTeamToLeagueClassificationTeam,
+      )
+    : undefined,
 })
 
 export const mapCreateMatchdaysGamesRequestToApiCreateMatchdaysGamesRequest = (

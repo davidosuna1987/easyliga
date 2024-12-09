@@ -31,6 +31,7 @@ export type ApiGamePartial = {
 export type ApiGamePartials = ApiGamePartial[]
 
 export type ApiGameStatistics = {
+  game_id: number
   winner_team_id: number | null
   loser_team_id: number | null
   winner_team_name: string | null
@@ -39,6 +40,8 @@ export type ApiGameStatistics = {
   visitor_team_sets_won: number
   local_team_points: number
   visitor_team_points: number
+  local_team_game_points: number | null
+  visitor_team_game_points: number | null
   partials: ApiGamePartials
 }
 

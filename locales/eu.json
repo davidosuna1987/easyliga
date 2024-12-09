@@ -617,7 +617,19 @@
       "assigned_manually": "Partida honen emaitza eskuz esleitu da eta baliteke puntuazio-orriak datu batzuk ez izatea",
       "assigned": "Partidaren emaitza partzialak behar bezala esleitu dira"
     },
-    "result": "Emaitza | Emaitzak"
+    "result": "Emaitza | Emaitzak",
+    "played": {
+      "long": "Jokatutako partidak",
+      "short": "JP"
+    },
+    "won": {
+      "long": "Partidak irabazi",
+      "short": "PI"
+    },
+    "lost": {
+      "long": "Galdutako partidak",
+      "short": "GP"
+    }
   },
   "federations": {
     "federation": "Federazioa | Federazioak",
@@ -686,7 +698,8 @@
       "invalid_team_relations_message": "Ziur taldea liga honetara gehitu nahi duzula?",
       "invalid_team_relations_alert": "Honako harreman hauek ez datoz bat liga eta taldearen artean:"
     },
-    "remove_team_alert": "Ziur {teamName} taldea ligatik kendu nahi duzula?"
+    "remove_team_alert": "Ziur {teamName} taldea ligatik kendu nahi duzula?",
+    "classification": "Sailkapena"
   },
   "teams": {
     "team": "Taldea | Taldeak",
@@ -948,7 +961,15 @@
     "select_left_side_team": "Aukeratu ezkerreko aldean jokatuko duen taldea",
     "select_right_side_team": "Aukeratu eskuineko aldean jokatuko duen taldea",
     "select_first_serve_team": "Hautatu lehen zerbitzatuko duen taldea",
-    "close": "Itxi multzoa"
+    "close": "Itxi multzoa",
+    "in_favor": {
+      "long": "Aldeko multzoak",
+      "short": "AM"
+    },
+    "against": {
+      "long": "Kontra ezartzen du",
+      "short": "KE"
+    }
   },
   "points": {
     "point": "Puntua | Puntuak",
@@ -959,7 +980,15 @@
     "sum": "Gehitu puntua",
     "undo": "Desegin puntua",
     "deleted": "Puntua behar bezala kendu da",
-    "undo_countdown": "Azken puntua desegiteko geratzen den denbora: {seconds} segundo"
+    "undo_countdown": "Azken puntua desegiteko geratzen den denbora: {seconds} segundo",
+    "in_favor": {
+      "long": "Aldeko puntuak",
+      "short": "AP"
+    },
+    "against": {
+      "long": "Aurkako puntuak",
+      "short": "AP"
+    }
   },
   "addresses": {
     "address": "Helbidea | Norabideak",

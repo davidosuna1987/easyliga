@@ -617,7 +617,19 @@
       "assigned_manually": "The result of this match has been assigned manually and it is possible that the report does not have some data",
       "assigned": "Partial match results have been assigned correctly"
     },
-    "result": "Result | Results"
+    "result": "Result | Results",
+    "played": {
+      "long": "Played matches",
+      "short": "PM"
+    },
+    "won": {
+      "long": "Won matches",
+      "short": "WM"
+    },
+    "lost": {
+      "long": "Lost Matches",
+      "short": "LM"
+    }
   },
   "federations": {
     "federation": "Federation | Federations",
@@ -686,7 +698,8 @@
       "invalid_team_relations_message": "Are you sure you want to add the team to this league?",
       "invalid_team_relations_alert": "The following relationships do not match between the league and the team:"
     },
-    "remove_team_alert": "Are you sure you want to eliminate team {teamName} from the league?"
+    "remove_team_alert": "Are you sure you want to eliminate team {teamName} from the league?",
+    "classification": "Classification"
   },
   "teams": {
     "team": "Team | Teams",
@@ -948,7 +961,15 @@
     "select_left_side_team": "Select the team that will play on the left side",
     "select_right_side_team": "Select the team that will play on the right side",
     "select_first_serve_team": "Select the team that will serve first",
-    "close": "Close set"
+    "close": "Close set",
+    "in_favor": {
+      "long": "Sets in favor",
+      "short": "SF"
+    },
+    "against": {
+      "long": "Sets against",
+      "short": "SA"
+    }
   },
   "points": {
     "point": "Point | Points",
@@ -959,7 +980,15 @@
     "sum": "Add point",
     "undo": "Undo point",
     "deleted": "The point has been removed successfully",
-    "undo_countdown": "Time left to undo last point: {seconds} seconds"
+    "undo_countdown": "Time left to undo last point: {seconds} seconds",
+    "in_favor": {
+      "long": "Points in favor",
+      "short": "PF"
+    },
+    "against": {
+      "long": "Points against",
+      "short": "PA"
+    }
   },
   "addresses": {
     "address": "Address | Directions",

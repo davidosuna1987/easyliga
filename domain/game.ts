@@ -100,6 +100,7 @@ export type GamePartial = {
 export type GamePartials = GamePartial[]
 
 export type GameStatistics = {
+  gameId: number
   winnerTeamId?: number
   loserTeamId?: number
   winnerTeamName?: string
@@ -108,6 +109,8 @@ export type GameStatistics = {
   visitorTeamSetsWon: number
   localTeamPoints: number
   visitorTeamPoints: number
+  localTeamGamePoints?: number
+  visitorTeamGamePoints?: number
   partials: GamePartials
 }
 
@@ -348,6 +351,7 @@ export const mapApiGameStatisticsToGameStatistics = (
 ): GameStatistics | undefined => {
   return apiGameStatistics
     ? {
+        gameId: apiGameStatistics.game_id,
         winnerTeamId: apiGameStatistics.winner_team_id ?? undefined,
         loserTeamId: apiGameStatistics.loser_team_id ?? undefined,
         winnerTeamName: apiGameStatistics.winner_team_name ?? undefined,
@@ -356,6 +360,10 @@ export const mapApiGameStatisticsToGameStatistics = (
         visitorTeamSetsWon: apiGameStatistics.visitor_team_sets_won,
         localTeamPoints: apiGameStatistics.local_team_points,
         visitorTeamPoints: apiGameStatistics.visitor_team_points,
+        localTeamGamePoints:
+          apiGameStatistics.local_team_game_points ?? undefined,
+        visitorTeamGamePoints:
+          apiGameStatistics.visitor_team_game_points ?? undefined,
         partials: mapApiGamePartialsToGamePartials(apiGameStatistics.partials),
       }
     : undefined

@@ -8,6 +8,8 @@ import Button from 'primevue/button'
 import Calendar from 'primevue/calendar'
 import Checkbox from 'primevue/checkbox'
 import Chips from 'primevue/chips'
+import Column from 'primevue/column'
+import DataTable from 'primevue/datatable'
 import Dialog from 'primevue/dialog'
 import Dropdown from 'primevue/dropdown'
 import Editor from 'primevue/editor'
@@ -52,6 +54,8 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('Calendar', Calendar)
   nuxtApp.vueApp.component('Checkbox', Checkbox)
   nuxtApp.vueApp.component('Chips', Chips)
+  nuxtApp.vueApp.component('Column', Column)
+  nuxtApp.vueApp.component('DataTable', DataTable)
   nuxtApp.vueApp.component('Dialog', Dialog)
   nuxtApp.vueApp.component('Dropdown', Dropdown)
   nuxtApp.vueApp.component('Editor', Editor)

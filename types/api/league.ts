@@ -19,9 +19,25 @@ export type ApiLeagueCountRelations = {
   games_count?: number
 }
 
+export type ApiLeagueClassificationTeam = {
+  team_id: number
+  team_name: string
+  games_count: number
+  games_won: number
+  games_lost: number
+  sets_won: number
+  sets_lost: number
+  points_in_favor: number
+  points_against: number
+  points: number
+}
+
+export type ApiLeagueClassification = ApiLeagueClassificationTeam[]
+
 export type ApiLeagueCustomAppends = {
-  full_name?: string
+  full_name?: string | null
   name_long: string
+  classification?: ApiLeagueClassification | null
 }
 
 export type ApiLeague = {

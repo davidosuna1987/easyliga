@@ -1,5 +1,5 @@
 import { ApiGame } from '@/types/api/game'
-import { ApiLeague } from '@/types/api/league'
+import { ApiLeague, ApiLeagueClassification } from '@/types/api/league'
 import { ApiProfile, ApiProfileAppends } from '@/types/api/profile'
 import { ApiTeam } from '@/types/api/team'
 import { LeagueShowModelIdName } from '@/domain/league-show'
@@ -68,6 +68,7 @@ export type ApiLeagueShow = {
   matchdays_count: number
   teams: ApiLeagueShowTeam[]
   games?: ApiLeagueShowGame[]
+  classification?: ApiLeagueClassification
 }
 
 export type ApiLeagueShowResponse = {

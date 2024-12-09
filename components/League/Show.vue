@@ -30,6 +30,7 @@ const showRemoveTeamAlertDialog = ref<boolean>(false)
 const showRefereeSelectorDialogForm = ref<LeagueShowGame>()
 const showGameSetPartialsDialogForm = ref<LeagueShowGame>()
 const teamToRemove = ref<LeagueShowTeam>()
+const filter = ref<'classification' | 'matchdays'>('classification')
 const loadingApi = ref<boolean>(true)
 const loadingMatchdays = ref<boolean>(false)
 const loadingGame = ref<boolean>(false)
@@ -266,6 +267,16 @@ const handlePartialsAssigned = () => {
   showGameSetPartialsDialogForm.value = undefined
 }
 
+const getTeamPosition = (teamId: number) => {
+  if (!league.value?.classification) return
+
+  const position = league.value.classification.findIndex(
+    c => c.teamId === teamId,
+  )
+
+  return position !== -1 ? position + 1 : '-'
+}
+
 onMounted(() => {
   getLeague()
 })
@@ -332,29 +343,185 @@ onMounted(() => {
           class="justify-center flex-1 self-start"
         />
         <template v-else>
-          <EasyGrid v-if="showMatchdays" class="matchdays relative" :gap="3">
-            <template
-              v-for="matchday in orderedMatchdays"
-              :key="matchday.matchday"
-            >
-              <div v-if="matchday.matchday">
-                <Heading tag="h6" class="mb-2">
-                  {{ t('games.matchdays.num', { num: matchday.matchday }) }}
-                </Heading>
-                <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
-                  <LeagueGameCard
-                    v-for="game in orderMatchdayGamesByBye(matchday.games)"
-                    :key="game.id"
-                    :game="game"
-                    showActions
-                    @referee:assign="showRefereeSelectorDialogForm = game"
-                    @game:set-partials="showGameSetPartialsDialogForm = game"
-                  />
-                </EasyGrid>
-              </div>
-            </template>
-          </EasyGrid>
+          <div v-if="showMatchdays" class="league-content">
+            <div class="flex justify-center gap-3 mt-5 mb-3 md:mt-0">
+              <Button
+                :label="t('leagues.classification')"
+                :outlined="filter !== 'classification'"
+                size="small"
+                @click.prevent="filter = 'classification'"
+              />
+              <Button
+                :label="t('games.matchdays.label')"
+                :outlined="filter !== 'matchdays'"
+                size="small"
+                @click.prevent="filter = 'matchdays'"
+              />
+            </div>
 
+            <div v-if="filter === 'classification'" class="table w-full">
+              <div class="hidden md:table-row font-bold">
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  #
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1"
+                >
+                  {{ t('teams.team') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('games.played.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('games.won.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('games.lost.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('sets.in_favor.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('sets.against.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('points.in_favor.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('points.against.short') }}
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  {{ t('points.point', 2) }}
+                </div>
+              </div>
+
+              <div
+                v-for="row in league.classification"
+                :key="row.teamId"
+                class="table-row"
+              >
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">#</span>
+                  <span>{{ getTeamPosition(row.teamId) }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('teams.team') }}
+                  </span>
+                  <span>{{ row.teamName }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('games.played.short') }}
+                  </span>
+                  <span>{{ row.gamesCount }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('games.won.short') }}
+                  </span>
+                  <span>{{ row.gamesWon }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('games.lost.short') }}
+                  </span>
+                  <span>{{ row.gamesLost }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('sets.in_favor.short') }}
+                  </span>
+                  <span>{{ row.setsWon }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('sets.against.short') }}
+                  </span>
+                  <span>{{ row.setsLost }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('points.in_favor.short') }}
+                  </span>
+                  <span>{{ row.pointsInFavor }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('points.against.short') }}
+                  </span>
+                  <span>{{ row.pointsAgainst }}</span>
+                </div>
+                <div
+                  class="flex justify-between md:table-cell md:border-solid border-0 md:border-b border-[var(--text-color)] md:border-[var(--input-border-color)] pt-2 pb-5 md:pb-2 px-1 text-center mb-3 md:mb-0 font-bold text-primary"
+                >
+                  <span class="font-bold mr-1 md:hidden">
+                    {{ t('points.point', 2) }}
+                  </span>
+                  <span>{{ row.points }}</span>
+                </div>
+              </div>
+            </div>
+
+            <EasyGrid v-if="filter === 'matchdays'" class="relative" :gap="3">
+              <template
+                v-for="matchday in orderedMatchdays"
+                :key="matchday.matchday"
+              >
+                <div v-if="matchday.matchday">
+                  <Heading tag="h6" class="mb-2">
+                    {{ t('games.matchdays.num', { num: matchday.matchday }) }}
+                  </Heading>
+                  <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
+                    <LeagueGameCard
+                      v-for="game in orderMatchdayGamesByBye(matchday.games)"
+                      :key="game.id"
+                      :game="game"
+                      showActions
+                      @referee:assign="showRefereeSelectorDialogForm = game"
+                      @game:set-partials="showGameSetPartialsDialogForm = game"
+                    />
+                  </EasyGrid>
+                </div>
+              </template>
+            </EasyGrid>
+          </div>
           <div
             v-else
             class="matchdays relative is-sticky-action is-sticky-action__sm flex flex-col items-center gap-3"
@@ -434,7 +601,7 @@ onMounted(() => {
   width: 100%;
 }
 
-.matchdays {
+.league-content {
   flex: 1;
 }
 

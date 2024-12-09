@@ -12,7 +12,13 @@ import {
   CategoryType,
   GenderType,
 } from '@/domain/game'
-import { League, MATCHDAY_TYPES, MatchdayType } from '@/domain/league'
+import {
+  League,
+  LeagueClassification,
+  mapApiLeagueClassificationTeamToLeagueClassificationTeam,
+  MATCHDAY_TYPES,
+  MatchdayType,
+} from '@/domain/league'
 import { Profile, ProfileAppends } from '@/domain/profile'
 import { Team } from '@/domain/team'
 import { mapApiUserToUser, User } from '@/domain/user'
@@ -88,6 +94,7 @@ export type LeagueShow = {
   matchdaysCount: number
   teams: LeagueShowTeam[]
   games?: LeagueShowGame[]
+  classification?: LeagueClassification
   matchdays?: LeagueShowGameMatchday[]
 }
 
@@ -108,6 +115,11 @@ export const mapApiLeagueShowToLeagueShow = (
   teams: apiLeagueShow.teams.map(mapApiLeagueShowTeamToLeagueShowTeam),
   games: apiLeagueShow.games
     ? apiLeagueShow.games.map(mapApiLeagueShowGameToLeagueShowGame)
+    : undefined,
+  classification: apiLeagueShow.classification
+    ? apiLeagueShow.classification.map(
+        mapApiLeagueClassificationTeamToLeagueClassificationTeam,
+      )
     : undefined,
   matchdays: apiLeagueShow.games
     ? mapApiLeagueShowGamesToApiLeagueShowGameMatchdays(apiLeagueShow.games)

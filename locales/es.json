@@ -617,7 +617,19 @@
       "assigned_manually": "El resultado de este partido ha sido asignado manualmente y es posible que el acta no disponga de algunos datos",
       "assigned": "Los resultados parciales del partido se han asignado correctamente"
     },
-    "result": "Resultado | Resultados"
+    "result": "Resultado | Resultados",
+    "played": {
+      "long": "Partidos jugados",
+      "short": "PJ"
+    },
+    "won": {
+      "long": "Partidos ganados",
+      "short": "PG"
+    },
+    "lost": {
+      "long": "Partidos perdidos",
+      "short": "PP"
+    }
   },
   "federations": {
     "federation": "Federación | Federaciones",
@@ -686,7 +698,8 @@
       "invalid_team_relations_message": "¿Seguro que quieres añadir el equipo a esta liga?",
       "invalid_team_relations_alert": "Las siguientes realaciones no coinciden entre la liga y el equipo:"
     },
-    "remove_team_alert": "¿Seguro que quieres eliminar al equipo {teamName} de la liga?"
+    "remove_team_alert": "¿Seguro que quieres eliminar al equipo {teamName} de la liga?",
+    "classification": "Clasificación"
   },
   "teams": {
     "team": "Equipo | Equipos",
@@ -948,7 +961,15 @@
     "select_left_side_team": "Selecciona el equipo que jugará en el lado izquierdo",
     "select_right_side_team": "Selecciona el equipo que jugará en el lado derecho",
     "select_first_serve_team": "Selecciona el equipo que sacará primero",
-    "close": "Cerrar set"
+    "close": "Cerrar set",
+    "in_favor": {
+      "long": "Sets a favor",
+      "short": "SF"
+    },
+    "against": {
+      "long": "Sets en contra",
+      "short": "SC"
+    }
   },
   "points": {
     "point": "Punto | Puntos",
@@ -959,7 +980,15 @@
     "sum": "Sumar punto",
     "undo": "Deshacer punto",
     "deleted": "El punto ha sido eliminado correctamente",
-    "undo_countdown": "Tiempo restante para deshacer el último punto: {seconds} segundos"
+    "undo_countdown": "Tiempo restante para deshacer el último punto: {seconds} segundos",
+    "in_favor": {
+      "long": "Puntos a favor",
+      "short": "PF"
+    },
+    "against": {
+      "long": "Puntos en contra",
+      "short": "PC"
+    }
   },
   "addresses": {
     "address": "Dirección | Direcciones",

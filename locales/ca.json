@@ -617,7 +617,19 @@
       "assigned_manually": "El resultat d'aquest partit ha estat assignat manualment i és possible que l'acta no disposi d'algunes dades",
       "assigned": "Els resultats parcials del partit han estat assignats correctament"
     },
-    "result": "Resultat | Resultats"
+    "result": "Resultat | Resultats",
+    "played": {
+      "long": "Partits jugats",
+      "short": "PJ"
+    },
+    "won": {
+      "long": "Partits guanyats",
+      "short": "PG"
+    },
+    "lost": {
+      "long": "Partits perduts",
+      "short": "PP"
+    }
   },
   "federations": {
     "federation": "Federació | Federacions",
@@ -686,7 +698,8 @@
       "invalid_team_relations_message": "¿ Segur que vols afegir lequip a aquesta lliga?",
       "invalid_team_relations_alert": "Les realitzacions següents no coincideixen entre la lliga i l'equip:"
     },
-    "remove_team_alert": "Esteu segur que voleu suprimir l'equip {teamName} de la lliga?"
+    "remove_team_alert": "Esteu segur que voleu suprimir l'equip {teamName} de la lliga?",
+    "classification": "Classificació"
   },
   "teams": {
     "team": "Equip | Equips",
@@ -948,7 +961,15 @@
     "select_left_side_team": "Selecciona l'equip que jugarà a la banda esquerra",
     "select_right_side_team": "Selecciona l'equip que jugarà al costat dret",
     "select_first_serve_team": "Selecciona l'equip que traurà primer",
-    "close": "Tancar set"
+    "close": "Tancar set",
+    "in_favor": {
+      "long": "Sets a favor",
+      "short": "SF"
+    },
+    "against": {
+      "long": "Sets en contra",
+      "short": "SC"
+    }
   },
   "points": {
     "point": "Punt | Punts",
@@ -959,7 +980,15 @@
     "sum": "Sumar punt",
     "undo": "Desfer punt",
     "deleted": "El punt ha estat eliminat correctament",
-    "undo_countdown": "Temps restant per desfer el darrer punt: {seconds} segons"
+    "undo_countdown": "Temps restant per desfer el darrer punt: {seconds} segons",
+    "in_favor": {
+      "long": "Punts a favor",
+      "short": "PF"
+    },
+    "against": {
+      "long": "Punts en contra",
+      "short": "PC"
+    }
   },
   "addresses": {
     "address": "Adreça | Adreces",
