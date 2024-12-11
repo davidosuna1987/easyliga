@@ -267,16 +267,6 @@ const handlePartialsAssigned = () => {
   showGameSetPartialsDialogForm.value = undefined
 }
 
-const getTeamPosition = (teamId: number) => {
-  if (!league.value?.classification) return
-
-  const position = league.value.classification.findIndex(
-    c => c.teamId === teamId,
-  )
-
-  return position !== -1 ? position + 1 : '-'
-}
-
 onMounted(() => {
   getLeague()
 })
@@ -359,145 +349,10 @@ onMounted(() => {
               />
             </div>
 
-            <div v-if="filter === 'classification'" class="table w-full">
-              <div class="hidden md:table-row font-bold">
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  #
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1"
-                >
-                  {{ t('teams.team') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('games.played.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('games.won.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('games.lost.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('sets.in_favor.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('sets.against.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('points.in_favor.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('points.against.short') }}
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  {{ t('points.point', 2) }}
-                </div>
-              </div>
-
-              <div
-                v-for="row in league.classification"
-                :key="row.teamId"
-                class="table-row"
-              >
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">#</span>
-                  <span>{{ getTeamPosition(row.teamId) }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('teams.team') }}
-                  </span>
-                  <span>{{ row.teamName }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('games.played.short') }}
-                  </span>
-                  <span>{{ row.gamesCount }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('games.won.short') }}
-                  </span>
-                  <span>{{ row.gamesWon }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('games.lost.short') }}
-                  </span>
-                  <span>{{ row.gamesLost }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('sets.in_favor.short') }}
-                  </span>
-                  <span>{{ row.setsWon }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('sets.against.short') }}
-                  </span>
-                  <span>{{ row.setsLost }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('points.in_favor.short') }}
-                  </span>
-                  <span>{{ row.pointsInFavor }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell border-solid border-0 border-b border-[var(--input-border-color)] py-2 px-1 text-center"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('points.against.short') }}
-                  </span>
-                  <span>{{ row.pointsAgainst }}</span>
-                </div>
-                <div
-                  class="flex justify-between md:table-cell md:border-solid border-0 md:border-b border-[var(--text-color)] md:border-[var(--input-border-color)] pt-2 pb-5 md:pb-2 px-1 text-center mb-3 md:mb-0 font-bold text-primary"
-                >
-                  <span class="font-bold mr-1 md:hidden">
-                    {{ t('points.point', 2) }}
-                  </span>
-                  <span>{{ row.points }}</span>
-                </div>
-              </div>
-            </div>
+            <LeagueClassificationTable
+              v-if="filter === 'classification'"
+              :classification="league.classification || []"
+            />
 
             <EasyGrid v-if="filter === 'matchdays'" class="relative" :gap="3">
               <template
