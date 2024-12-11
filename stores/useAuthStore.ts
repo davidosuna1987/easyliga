@@ -253,7 +253,7 @@ export const useAuthStore = defineStore('auth', () => {
     } else {
       if (!isLoggedIn.value) return navigateTo('/login')
 
-      if (hasRole(ROLE_MAPPER.admin)) return navigateTo('/')
+      if (hasRole(ROLE_MAPPER.admin)) return navigateTo('/admin')
       if (hasRole(ROLE_MAPPER.referee)) return navigateTo('/referee')
       if (hasRole(ROLE_MAPPER.coach)) return navigateTo('/coach')
       if (hasRole(ROLE_MAPPER.club)) return navigateTo('/club')

@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 import { MenuItem } from 'primevue/menuitem'
 
 import guestItems from '@/config/navbar/items/guest'
+import adminItems from '@/config/navbar/items/admin'
 import federationItems from '@/config/navbar/items/federation'
 import clubItems from '@/config/navbar/items/club'
 import refereeItemsConfig from '@/config/navbar/items/referee'
@@ -27,6 +28,10 @@ export default function useMenuItems() {
     : isRefereeAdmin
     ? refereeAdminItems
     : refereeItemsConfig
+
+  if (auth.hasRole(ROLE_MAPPER.admin)) {
+    items.value = [...items.value, adminItems].flat()
+  }
 
   if (auth.hasRole(ROLE_MAPPER.federation)) {
     items.value = [...items.value, federationItems].flat()
