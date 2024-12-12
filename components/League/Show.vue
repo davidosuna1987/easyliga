@@ -342,11 +342,11 @@ onMounted(() => {
             </div>
 
             <LeagueClassificationTable
-              v-if="filter === 'classification'"
+              v-show="filter === 'classification'"
               :classification="league.classification || []"
             />
 
-            <EasyGrid v-if="filter === 'matchdays'" class="relative" :gap="3">
+            <EasyGrid v-show="filter === 'matchdays'" class="relative" :gap="3">
               <template
                 v-for="matchday in orderedMatchdays"
                 :key="matchday.matchday"

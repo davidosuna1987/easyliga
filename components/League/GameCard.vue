@@ -120,7 +120,7 @@ const toggleMenu = (event: Event) => {
         </div>
         <span
           v-if="!game.isBye"
-          class="font-bold tracking-tighter text-xl text-primary"
+          class="font-bold tracking-tight text-xl text-primary"
         >
           VS
         </span>

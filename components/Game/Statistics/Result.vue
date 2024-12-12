@@ -17,6 +17,10 @@ const props = defineProps({
     type: String,
     default: '1rem',
   },
+  monospace: {
+    type: Boolean,
+    default: true,
+  },
 })
 const teamTextColors = mapGameStatisticsToTeamTextColors(
   props.statistics,
@@ -28,7 +32,10 @@ const visitorTeamColor = teamTextColors.visitor
 
 <template>
   <div
-    class="easy-game-statistics-result-component"
+    :class="[
+      'easy-game-statistics-result-component',
+      { 'font-mono': monospace },
+    ]"
     :style="{ fontSize: size }"
   >
     <span v-if="highlight" :class="[localTeamColor]">
