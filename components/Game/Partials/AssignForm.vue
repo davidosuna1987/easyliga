@@ -32,8 +32,8 @@ const DEFAULT_PARTIALS_FORM: GamePartials = Array.from(
     const existingPartial = props.game.statistics?.partials?.[i]
     return {
       setNumber: (i + 1) as GamePartials[number]['setNumber'],
-      localTeamScore: existingPartial?.localTeamScore || undefined,
-      visitorTeamScore: existingPartial?.visitorTeamScore || undefined,
+      localTeamScore: existingPartial?.localTeamScore,
+      visitorTeamScore: existingPartial?.visitorTeamScore,
     }
   },
 )
