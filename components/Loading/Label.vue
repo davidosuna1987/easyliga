@@ -8,6 +8,10 @@ const props = defineProps({
     type: String,
     default: '1rem',
   },
+  center: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const borderWidth = computed(() => `${Math.ceil(parseFloat(props.size))}px`)
@@ -21,7 +25,12 @@ const styles = computed(() => ({
 </script>
 
 <template>
-  <div class="easy-loading-label-component flex items-center">
+  <div
+    :class="[
+      'easy-loading-label-component flex items-center',
+      { 'justify-center': center },
+    ]"
+  >
     <FormSpinner :size="size" :borderWidth="borderWidth" />
     <span class="label" :style="styles.label">{{ label }}</span>
   </div>

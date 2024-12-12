@@ -126,25 +126,37 @@ const toggleMenu = (event: Event) => {
         </span>
       </div>
       <template v-if="!game.isBye">
-        <small class="opacity-60 block">
-          {{ formatDateTime(game.date) }}
-        </small>
-
-        <GameStatisticsLine
-          v-if="game.status === 'finished' && game.statistics"
-          :statistics="game.statistics"
-          :highlight="highlight"
-          size="0.8rem"
-        />
-        <template v-else>
-          <p class="line-clamp-1">
-            <small v-if="game.referee" class="opacity-60 block">
-              {{
-                `${t('referees.referee')}: ${getFullName(game.referee.profile)}`
-              }}
+        <div class="flex items-end justify-between">
+          <div class="grid">
+            <small class="opacity-60 block">
+              {{ formatDateTime(game.date) }}
             </small>
-          </p>
-        </template>
+
+            <GameStatisticsLine
+              v-if="game.status === 'finished' && game.statistics"
+              :statistics="game.statistics"
+              :highlight="highlight"
+              hideResult
+            />
+            <template v-else>
+              <p class="line-clamp-1">
+                <small v-if="game.referee" class="opacity-60 block">
+                  {{
+                    `${t('referees.referee')}: ${getFullName(
+                      game.referee.profile,
+                    )}`
+                  }}
+                </small>
+              </p>
+            </template>
+          </div>
+          <GameStatisticsResult
+            v-if="game.status === 'finished' && game.statistics"
+            :statistics="game.statistics"
+            :highlight="highlight"
+            size="1.1rem"
+          />
+        </div>
       </template>
     </div>
 

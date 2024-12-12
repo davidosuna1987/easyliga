@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import {
-  GameStatistics,
-  mapGamePartialsToPartialsString,
-  mapGameStatisticsToTeamTextColors,
-} from '@/domain/game'
+import { GameStatistics } from '@/domain/game'
 
 const props = defineProps({
   statistics: {
     type: Object as PropType<GameStatistics>,
     required: true,
-  },
-  size: {
-    type: String,
-    default: '1rem',
   },
   highlight: {
     type: Boolean,
@@ -22,37 +14,25 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  hideResult: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const teamTextColors = mapGameStatisticsToTeamTextColors(
-  props.statistics,
-  props.highlight,
-)
-const localTeamColor = teamTextColors.local
-const visitorTeamColor = teamTextColors.visitor
+const size = '0.8rem'
 </script>
 
 <template>
-  <div
-    class="easy-game-statistics-line-component flex gap-1"
-    :style="{ fontSize: size }"
-  >
+  <div class="easy-game-statistics-line-component flex gap-1">
     <span v-if="prefix" class="prefix">{{ prefix }}</span>
-
-    <div class="sets">
-      <strong v-if="highlight" :class="[localTeamColor]">
-        {{ statistics.localTeamSetsWon }}
-      </strong>
-      <span v-else>{{ statistics.localTeamSetsWon }}</span>
-      <span>:</span>
-      <span :class="[visitorTeamColor]">
-        {{ statistics.visitorTeamSetsWon }}
-      </span>
-    </div>
-
-    <div class="partials">
-      ({{ mapGamePartialsToPartialsString(statistics.partials) }})
-    </div>
+    <GameStatisticsResult
+      v-if="!hideResult"
+      :statistics="statistics"
+      :highlight="highlight"
+      :size="size"
+    />
+    <GameStatisticsPartials :partials="statistics.partials" :size="size" />
   </div>
 </template>
 

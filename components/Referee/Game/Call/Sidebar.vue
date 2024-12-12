@@ -146,8 +146,6 @@ const injuredPlayers = computed((): CallPlayerData[] => {
       .filter(playerChange => playerChange.injured)
       .map(playerChange => playerChange.injuredProfileId) ?? []
 
-  console.log({ injuriesPlayerIds, playerChangesInjuredPlayerIds })
-
   const injuredProfileIds = [
     ...injuriesPlayerIds,
     ...playerChangesInjuredPlayerIds,

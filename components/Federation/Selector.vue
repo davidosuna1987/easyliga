@@ -11,6 +11,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  withCount: {
+    type: String,
+    default: '',
+  },
   loading: {
     type: Boolean,
     default: false,
@@ -19,10 +23,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hiddenFederationIds: {
+    type: Array as PropType<number[]>,
+    default: [],
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'federation:selected', value: Federation): void
+  (e: 'federation:selected', value: Federation | undefined): void
   (e: 'federations:fetch', value: Federation[]): void
 }>()
 
@@ -35,15 +43,26 @@ const loadingApi = ref<boolean>(false)
 
 const selectableFederations = ref<Federation[]>(props.federations ?? [])
 
-const options = computed(
-  (): Federation[] => props.federations ?? selectableFederations.value,
-)
+const options = computed((): Federation[] => {
+  const federations = props.federations ?? selectableFederations.value
+
+  federations.forEach(federation => {
+    federation.federations =
+      federation.federations?.filter(
+        federation => !props.hiddenFederationIds.includes(federation.id),
+      ) ?? undefined
+  })
+  return federations.filter(
+    federation => !props.hiddenFederationIds.includes(federation.id),
+  )
+})
 
 const getFederations = async () => {
   loadingApi.value = true
-  const { data } = await federationStore.fetch(
-    props.with ? { with: props.with } : {},
-  )
+  const { data } = await federationStore.fetch({
+    ...(props.with && { with: props.with }),
+    ...(props.withCount && { with_count: props.withCount }),
+  })
   selectableFederations.value = federationStore.groupedFederations.map(
     mapApiFederationToFederation,
   )
@@ -53,12 +72,44 @@ const getFederations = async () => {
     data.value?.data.federations,
   )
 
-  emit(
-    'federations:fetch',
-    data.value?.data.federations.map(mapApiFederationToFederation) ?? [],
-  )
+  const federations =
+    data.value?.data.federations.map(mapApiFederationToFederation) ?? []
+
+  emit('federations:fetch', federations)
+
+  setSelectedFederationIfOnlyOneSelectable()
+
   loadingApi.value = false
 }
+
+const setSelectedFederationIfOnlyOneSelectable = () => {
+  if (
+    options.value.length === 1 &&
+    options.value[0].federations &&
+    options.value[0].federations.length === 1
+  ) {
+    setSelectedFederation(options.value[0].federations[0])
+  }
+}
+
+const setSelectedFederation = (federation?: Federation) => {
+  selectedFederation.value = federation
+  emit('federation:selected', selectedFederation.value)
+}
+
+watch(
+  () => props.hiddenFederationIds,
+  value => {
+    if (
+      selectedFederation.value &&
+      value.includes(selectedFederation.value.id)
+    ) {
+      setSelectedFederation()
+    }
+
+    setSelectedFederationIfOnlyOneSelectable()
+  },
+)
 
 onMounted(() => {
   if (!props.federations) {
@@ -80,7 +131,7 @@ onMounted(() => {
     optionGroupLabel="name"
     scrollHeight="210px"
     :placeholder="t('federations.select')"
-    @update:modelValue="emit('federation:selected', $event)"
+    @update:modelValue="setSelectedFederation"
   />
 </template>
 

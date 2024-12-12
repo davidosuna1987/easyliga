@@ -245,8 +245,9 @@
     "copyright": "Eskubide guztiak erreserbatuta ®"
   },
   "navbar": {
-    "home": "Hasi",
     "panel": "Panela",
+    "home": "Hasi",
+    "classification": "Sailkapena",
     "federation": {
       "label": "Federazioa",
       "list": {
@@ -675,6 +676,10 @@
   },
   "leagues": {
     "league": "Liga | Tiranteak",
+    "search": "Bilatu liga | Bilatu ligak",
+    "loading": "Liga kargatzen | Ligak kargatzen",
+    "last_matchday": "Azken eguna",
+    "next_matchday": "Hurrengo egunean",
     "create": "Sortu liga",
     "created": "Liga arrakastaz sortu da",
     "edit": "Editatu liga",
@@ -750,7 +755,8 @@
     "not_allowed_to_edit": "Ez duzu {teamName} taldea editatzeko baimenik",
     "no_coached_teams": "Ez duzu inolako talderik entrenatzen",
     "coached": "Entrenatzen dituzun taldeak",
-    "rest": "Atseden"
+    "rest": "Atseden",
+    "position": "Posizioa"
   },
   "players": {
     "player": "Jokalari | Jokalariak",

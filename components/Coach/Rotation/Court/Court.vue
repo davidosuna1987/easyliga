@@ -833,11 +833,7 @@ const addInjury = (replacementPlayer: CallPlayerData) => {
   const { playerIn, playerOut } = getPlayerInOutByPosition(
     playerChangeToUndoPosition.value ?? 0,
   )
-  console.log({
-    playerIn,
-    playerOut,
-    playerInShirtNumber: replacementPlayer.shirtNumber,
-  })
+
   injuryFormRequestInjury.value = {
     playerRotationId:
       rotationPlayerToReplace.value?.id ?? playerChangeToUndo.value?.id ?? 0,
@@ -945,7 +941,6 @@ const undoPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const undoSecondPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
-  console.log('undoSecondPlayerChange')
   playerChanges.value.map(pc => {
     if (pc.profileId === playerChange.profileId) {
       pc.inCourtProfileId = pc.replacementProfileId
@@ -958,7 +953,6 @@ const undoSecondPlayerChange = (playerChange: RotationPlayerChangeRequest) => {
 }
 
 const removePlayerChange = (playerChange: RotationPlayerChangeRequest) => {
-  console.log('removePlayerChange')
   if (equalObjects(playerChangeToUndo.value, initialPlayerChangeToUndo.value)) {
     playerChanges.value = playerChanges.value.filter(
       pc => pc.profileId !== playerChange.profileId,

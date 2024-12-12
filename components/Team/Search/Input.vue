@@ -72,7 +72,7 @@ const searchTeams = async () => {
 
   const { data, error } = await teamService.fetch({
     scope: `name:${search.value}`,
-    ...(props.with ? { with: props.with.join(',') } : {}),
+    ...(props.with && { with: props.with.join(',') }),
   })
 
   if (error.value) {

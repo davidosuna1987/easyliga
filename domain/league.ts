@@ -24,6 +24,8 @@ export type LeagueRelations = {
   gender?: Gender
   teams?: Team[]
   games?: Game[]
+  lastMatchdayGames?: Game[]
+  nextMatchdayGames?: Game[]
 }
 
 export const MATCHDAY_TYPES = {
@@ -162,6 +164,12 @@ export const mapApiLeagueRelationsToLeagueRelations = (
     ? apiLeague.teams.map(team => mapApiTeamToTeam(team))
     : undefined,
   games: apiLeague.games ? apiLeague.games.map(mapApiGameToGame) : undefined,
+  lastMatchdayGames: apiLeague.last_matchday_games
+    ? apiLeague.last_matchday_games.map(mapApiGameToGame)
+    : undefined,
+  nextMatchdayGames: apiLeague.next_matchday_games
+    ? apiLeague.next_matchday_games.map(mapApiGameToGame)
+    : undefined,
 })
 
 export const mapApiLeagueCountRelationsToLeagueCountRelations = (

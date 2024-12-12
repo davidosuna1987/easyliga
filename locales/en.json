@@ -245,8 +245,9 @@
     "copyright": "All rights reserved ®"
   },
   "navbar": {
-    "home": "Start",
     "panel": "Panel",
+    "home": "Start",
+    "classification": "Classification",
     "federation": {
       "label": "Federation",
       "list": {
@@ -675,6 +676,10 @@
   },
   "leagues": {
     "league": "League | Suspenders",
+    "search": "Search league | Search leagues",
+    "loading": "Loading league | Loading leagues",
+    "last_matchday": "Last day",
+    "next_matchday": "Next day",
     "create": "Create league",
     "created": "The league has been created successfully",
     "edit": "Edit league",
@@ -750,7 +755,8 @@
     "not_allowed_to_edit": "You do not have permissions to edit team {teamName}",
     "no_coached_teams": "You don't coach any team",
     "coached": "Teams you train",
-    "rest": "Rest"
+    "rest": "Rest",
+    "position": "Position"
   },
   "players": {
     "player": "Player | Players",

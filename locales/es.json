@@ -245,8 +245,9 @@
     "copyright": "Todos los derechos reservados ®"
   },
   "navbar": {
-    "home": "Inicio",
     "panel": "Panel",
+    "home": "Inicio",
+    "classification": "Clasificación",
     "federation": {
       "label": "Federación",
       "list": {
@@ -675,6 +676,10 @@
   },
   "leagues": {
     "league": "Liga | Ligas",
+    "search": "Buscar liga | Buscar ligas",
+    "loading": "Cargando liga | Cargando ligas",
+    "last_matchday": "Última jornada",
+    "next_matchday": "Próxima jornada",
     "create": "Crear liga",
     "created": "La liga ha sido creada correctamente",
     "edit": "Editar liga",
@@ -732,6 +737,7 @@
     "shirt_color": "Color de la camiseta",
     "color": "Color de {teamName}",
     "add": "Añadir equipo",
+    "position": "Posición",
     "lower_category_teams_with_players": {
       "label": "Jugadores de categorías inferiores",
       "show": "Mostrar jugadores de categorías inferiores",

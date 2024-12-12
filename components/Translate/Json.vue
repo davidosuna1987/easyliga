@@ -48,10 +48,8 @@ const setInputLocale = (locale: LocaleCode) => {
   form.value.inputLocale = locale
 }
 
-const setOutputLocales = (locales: LocaleCode[]) => {
-  console.log({ locales })
-  form.value.outputLocales = locales
-}
+const setOutputLocales = (locales: LocaleCode[]) =>
+  (form.value.outputLocales = locales)
 
 const submit = () => {
   setErrors()

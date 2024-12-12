@@ -167,6 +167,29 @@ export const mapFederationRefereeAddRequestToApiFederationRefereeAddRequest = (
   admin: request.admin,
 })
 
+export const groupFederationsById = (
+  federations: Federation[],
+): Federation[] => {
+  return federations.reduce<Federation[]>((acc, obj) => {
+    const parent = acc.find(item => item.id === obj.federationId)
+
+    if (parent) {
+      if (!parent.federations) {
+        parent.federations = []
+      }
+
+      parent.federations.push(obj)
+    } else {
+      acc.push({
+        ...obj,
+        federations: [],
+      })
+    }
+
+    return acc
+  }, [])
+}
+
 export const flattenFederations = (federations: Federation[]): Federation[] => {
   const recurse = (feds: Federation[], hierarchy: number): Federation[] => {
     return feds.flatMap(fed => {

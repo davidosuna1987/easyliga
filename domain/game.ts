@@ -551,11 +551,11 @@ export const mapGameStatisticsToTeamTextColors = (
   return {
     [TeamType.local]:
       statistics.localTeamSetsWon > statistics.visitorTeamSetsWon
-        ? 'text-[var(--highlight-color)]'
+        ? 'text-[var(--highlight-color)] font-bold'
         : 'text-[var(--text-color)]',
     [TeamType.visitor]:
       statistics.visitorTeamSetsWon > statistics.localTeamSetsWon
-        ? 'text-[var(--highlight-color)]'
+        ? 'text-[var(--highlight-color)] font-bold'
         : 'text-[var(--text-color)]',
   }
 }

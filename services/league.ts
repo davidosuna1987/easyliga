@@ -5,6 +5,7 @@ import {
   ApiLeagueResponse,
   ApiLeagueTeamFormResponse,
   ApiLeagueAddTeamFormRequest,
+  ApiLeaguesResponse,
 } from '@/types/api/league'
 import {
   ApiLeagueShowGameResponse,
@@ -14,7 +15,11 @@ import {
 
 const PREFIX = 'leagues'
 
-export default class LeaguesService {
+export default class LeagueService {
+  fetch(params?: Record<string, string>) {
+    return useApi<ApiLeaguesResponse>(`${PREFIX}/fetch`, { params })
+  }
+
   get(leagueId: number, params?: Record<string, string>) {
     return useApi<ApiLeagueResponse>(`${PREFIX}/${leagueId}`, { params })
   }

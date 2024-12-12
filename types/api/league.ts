@@ -12,6 +12,8 @@ export type ApiLeagueRelatioins = {
   gender?: ApiGender
   teams?: ApiTeam[]
   games?: ApiGame[]
+  last_matchday_games?: ApiGame[]
+  next_matchday_games?: ApiGame[]
 }
 
 export type ApiLeagueCountRelations = {

@@ -245,8 +245,9 @@
     "copyright": "Tots els drets reservats ®"
   },
   "navbar": {
-    "home": "Inici",
     "panel": "Panell",
+    "home": "Inici",
+    "classification": "Clasificació",
     "federation": {
       "label": "Federació",
       "list": {
@@ -675,6 +676,10 @@
   },
   "leagues": {
     "league": "Lliga | Lligues",
+    "search": "Buscar lliga |",
+    "loading": "Carregant lliga |",
+    "last_matchday": "Última jornada",
+    "next_matchday": "Propera jornada",
     "create": "Crear lliga",
     "created": "La lliga ha estat creada correctament",
     "edit": "Editar lliga",
@@ -750,7 +755,8 @@
     "not_allowed_to_edit": "No teniu permisos per editar l'equip {teamName}",
     "no_coached_teams": "No entrenes cap equip",
     "coached": "Equips que entrenes",
-    "rest": "Descansa"
+    "rest": "Descansa",
+    "position": "Posició"
   },
   "players": {
     "player": "Jugador | Jugadors",

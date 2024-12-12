@@ -11,10 +11,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  hiddenGenderIds: {
+    type: Array as PropType<number[]>,
+    default: [],
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'gender:selected', value: Gender): void
+  (e: 'gender:selected', value: Gender | undefined): void
+  (e: 'gender:fetch', value: Gender[]): void
 }>()
 
 const { t } = useI18n()
@@ -24,19 +33,39 @@ const genderStore = useGenderStore()
 const selectedGender = ref<Gender>()
 const loadingApi = ref<boolean>(false)
 
-const genders = ref<Gender[]>(props.genders ?? [])
-const options = computed((): Gender[] => props.genders ?? genders.value)
+const selectableGenders = ref<Gender[]>(props.genders ?? [])
+
+const options = computed((): Gender[] => {
+  const genders = props.genders ?? selectableGenders.value
+  return genders.filter(gender => !props.hiddenGenderIds.includes(gender.id))
+})
 
 const getGenders = async () => {
   loadingApi.value = true
   const { data } = await genderStore.fetch()
   easyStorage.set('genders.genders', data.value?.data.genders ?? [])
-  genders.value = data.value?.data.genders.map(mapApiGenderToGender) ?? []
+  selectableGenders.value =
+    data.value?.data.genders.map(mapApiGenderToGender) ?? []
+  emit('gender:fetch', selectableGenders.value)
   loadingApi.value = false
 }
 
+const setSelectedGender = (gender?: Gender) => {
+  selectedGender.value = gender
+  emit('gender:selected', selectedGender.value)
+}
+
+watch(
+  () => props.hiddenGenderIds,
+  value => {
+    if (selectedGender.value && value.includes(selectedGender.value.id)) {
+      setSelectedGender()
+    }
+  },
+)
+
 onMounted(() => {
-  if (!genders.value.length) {
+  if (!selectableGenders.value.length) {
     getGenders()
   }
 })
@@ -46,12 +75,13 @@ onMounted(() => {
   <Dropdown
     class="easy-genders-selector-component"
     v-model="selectedGender"
+    :disabled="props.disabled"
     :loading="props.loading || loadingApi"
     :options="options"
     :optionLabel="gender => t(`genders.${gender.name}`)"
     scrollHeight="210px"
     :placeholder="t('genders.select')"
-    @update:modelValue="emit('gender:selected', $event)"
+    @update:modelValue="setSelectedGender"
   />
 </template>
 

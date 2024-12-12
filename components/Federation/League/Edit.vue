@@ -47,14 +47,6 @@ const authUserCanUpdateLeague = (league: League) => {
     league.federation?.federations?.map(f => f.id),
   ].flat()
 
-  console.log({
-    c1: league.federation?.responsibleId === auth.user.id,
-    c2: league.federation?.federation?.responsibleId === auth.user.id,
-    c3: federationIds.some(id =>
-      auth.refereeAdministratedFederationIds.includes(id ?? 0),
-    ),
-  })
-
   return (
     league.federation?.responsibleId === auth.user.id ||
     league.federation?.federation?.responsibleId === auth.user.id ||

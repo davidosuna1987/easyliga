@@ -19,7 +19,7 @@ onMounted(() => redirectIfNotAdmin())
 
 <template>
   <NuxtLayout name="default">
-    <div v-if="showPage" class="easy-index-page">
+    <div v-if="showPage" class="easy-web-landing-page">
       <template v-if="auth.isAdmin()">
         <Heading class="mb-5" tag="h3" position="center">
           {{ t('pages.index.welcome') }}

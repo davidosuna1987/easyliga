@@ -190,14 +190,6 @@ const getLeagueGame = async (gameId: number) => {
   }
 }
 
-const orderMatchdayGamesByBye = (games: LeagueShowGame[]) => {
-  return games.sort((a, b) => {
-    if (a.isBye) return 1
-    if (b.isBye) return -1
-    return 0
-  })
-}
-
 const handleOnRemoveTeam = async (team: LeagueShowTeam) => {
   if (!league.value) return
 
@@ -359,21 +351,16 @@ onMounted(() => {
                 v-for="matchday in orderedMatchdays"
                 :key="matchday.matchday"
               >
-                <div v-if="matchday.matchday">
-                  <Heading tag="h6" class="mb-2">
-                    {{ t('games.matchdays.num', { num: matchday.matchday }) }}
-                  </Heading>
-                  <EasyGrid :breakpoints="{ md: 2, lg: 3, xl: 4 }" :gap="3">
-                    <LeagueGameCard
-                      v-for="game in orderMatchdayGamesByBye(matchday.games)"
-                      :key="game.id"
-                      :game="game"
-                      showActions
-                      @referee:assign="showRefereeSelectorDialogForm = game"
-                      @game:set-partials="showGameSetPartialsDialogForm = game"
-                    />
-                  </EasyGrid>
-                </div>
+                <LeagueMatchday
+                  :matchday="matchday"
+                  showActions
+                  @referee:assign="
+                    showRefereeSelectorDialogForm = $event as LeagueShowGame
+                  "
+                  @game:set-partials="
+                    showGameSetPartialsDialogForm = $event as LeagueShowGame
+                  "
+                />
               </template>
             </EasyGrid>
           </div>
