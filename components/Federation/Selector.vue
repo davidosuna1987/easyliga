@@ -115,6 +115,8 @@ onMounted(() => {
   if (!props.federations) {
     getFederations()
   }
+
+  setSelectedFederationIfOnlyOneSelectable()
 })
 </script>
 

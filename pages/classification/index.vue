@@ -11,7 +11,7 @@ const { t } = useI18n()
         {{ t('Clasificación') }}
       </Heading>
 
-      <WebClassification />
+      <WebClassification class="pb-10" />
     </div>
   </NuxtLayout>
 </template>
