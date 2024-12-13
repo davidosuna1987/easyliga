@@ -281,24 +281,7 @@ onMounted(() => {
     <Loading v-if="loadingApi" />
 
     <template v-else-if="league">
-      <header class="mb-8">
-        <Heading position="center">{{ league.name }}</Heading>
-        <Heading tag="h6" class="mb-5" position="center">
-          {{ league.federation?.name }}
-        </Heading>
-        <div class="flex justify-center gap-5 relative bottom-2">
-          <ListTag
-            :label="`${t(`categories.${league.category?.name}`)}`"
-            color="primary"
-            size="large"
-          />
-          <ListTag
-            :label="`${t(`genders.${league.gender?.name}`)}`"
-            :color="getListTagColor(league.gender?.name)"
-            size="large"
-          />
-        </div>
-      </header>
+      <LeagueTitle :league="league" class="mb-8" />
 
       <div class="flex flex-col sm:flex-row sm:gap-8">
         <div class="teams">
