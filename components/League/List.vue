@@ -74,7 +74,7 @@ const handleAddLeague = (federation: Federation) => {
 const goToLeague = (league: League) => {
   props.isRefereeAdmin
     ? navigateTo(`/referee/admin/league/${league.id}`)
-    : navigateTo(`/league/${league.id}`)
+    : navigateTo(`/federation/${league.federationId}/league/${league.id}`)
 }
 
 const goToEditLeague = (league: League) => {

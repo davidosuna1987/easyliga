@@ -17,10 +17,25 @@ import {
 import { getListTagColor } from '@/domain/list'
 import { User } from '@/domain/user'
 
+const props = defineProps({
+  leagueId: {
+    type: Number,
+    required: false,
+  },
+  showActions: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const { t } = useI18n()
 const route = useRoute()
 const toast = useEasyToast()
 const leagueService = new LeagueService()
+
+const requestedLeagueId = ref<number | undefined>(
+  Number(route.params.leagueId) || props.leagueId,
+)
 
 // const league = ref<League>()
 const league = ref<LeagueShow>()
@@ -53,18 +68,18 @@ const showLoadingMatchdays = computed(
 )
 
 const getLeague = async () => {
+  if (!requestedLeagueId.value) return
+
   loadingApi.value = true
 
   // const { data, error } = await leagueService.get(
-  //   Number(route.params.leagueId),
+  //   requestedLeagueId.value,
   //   {
   //     with: 'federation,division,games.referee.profile,teams.federation,teams.gender,teams.category,category,gender',
   //   },
   // )
 
-  const { data, error } = await leagueService.show(
-    Number(route.params.leagueId),
-  )
+  const { data, error } = await leagueService.show(requestedLeagueId.value)
 
   try {
     if (error.value) {
@@ -119,7 +134,7 @@ const getLeagueMatchdayGamesByMatchday = async (matchday: string | number) => {
   loadingGame.value = true
 
   const { data, error } = await leagueService.showMatchdayGames(
-    Number(route.params.leagueId),
+    league.value.id,
     matchday,
   )
 
@@ -154,10 +169,7 @@ const getLeagueGame = async (gameId: number) => {
 
   loadingGame.value = true
 
-  const { data, error } = await leagueService.showGame(
-    Number(route.params.leagueId),
-    gameId,
-  )
+  const { data, error } = await leagueService.showGame(league.value.id, gameId)
 
   try {
     if (error.value) {
@@ -353,7 +365,7 @@ onMounted(() => {
               >
                 <LeagueMatchday
                   :matchday="matchday"
-                  showActions
+                  :showActions="showActions"
                   @referee:assign="
                     showRefereeSelectorDialogForm = $event as LeagueShowGame
                   "

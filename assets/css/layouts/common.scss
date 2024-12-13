@@ -5,32 +5,33 @@
   margin-top: var(--container-margin-top);
   margin-inline: auto;
   margin-bottom: calc(var(--footer-height) - var(--app-margin));
+  padding: var(--easy-main-padding);
   display: grid;
+  background: var(--background-color);
   border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
   z-index: 1;
 
   .easy-container {
     @extend %container;
     height: 100%;
-    padding: var(--easy-main-padding);
-    background: var(--background-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+
+    &.is-reduced {
+      max-width: var(--main-max-width-reduced);
+      margin-inline: auto;
+    }
   }
 
   @media (min-width: $media-md) {
-    .easy-container {
-      padding-inline: var(--easy-main-padding-tablet);
+    padding-inline: var(--easy-main-padding-tablet);
 
-      &.referee-arbitrate {
-        padding-top: 0;
-      }
+    &.referee-arbitrate {
+      padding-top: 0;
     }
   }
 
   @media (min-width: $media-sidebars) {
-    .easy-container,
-    .easy-container.referee-arbitrate {
+    &.referee-arbitrate {
       padding: var(--easy-main-padding-tablet);
     }
   }

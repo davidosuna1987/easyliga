@@ -47,7 +47,8 @@ const props = defineProps({
         ]"
         @click="$emit('shirtColorDialog:open', rightSideTeam)"
       ></span>
-      <span>{{ rightSideTeam.name }}</span>
+      <span>{{ rightSideTeam.name }}&lrm;</span>
+      <!-- &lrm; is added to prevent dots going to the start of the name https://stackoverflow.com/a/42551367/5543416 -->
     </div>
   </div>
 </template>

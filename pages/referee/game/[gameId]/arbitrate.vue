@@ -2,7 +2,7 @@
 definePageMeta({
   middleware: ['role'],
   roles: ['admin', 'referee'],
-  containerClass: 'referee-arbitrate',
+  mainClass: 'referee-arbitrate',
 })
 
 useEasyHead('pages.referee.game.arbitrate.title')

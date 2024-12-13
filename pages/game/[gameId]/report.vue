@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
-  // middleware: ['role'],
-  // roles: ['federation', 'club', 'referee', 'trainee'],
-  containerClass: 'game-report',
+  mainClass: 'game-report',
 })
 
 useEasyHead('pages.game.report.title')

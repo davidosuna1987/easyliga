@@ -94,7 +94,7 @@ const getReport = async () => {
 
   if (report.value.game.status !== 'finished') {
     document
-      .querySelector('.easy-container.game-report')
+      .querySelector('.easy-main.game-report')
       ?.classList.remove('game-report')
   }
 }
