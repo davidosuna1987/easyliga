@@ -9,6 +9,13 @@ import {
 import { Category, Gender } from '@/domain/game'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
 
+const props = defineProps({
+  isHeroSection: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const emit = defineEmits<{
   (e: 'league:selected', value: League | undefined): void
 }>()
@@ -198,9 +205,14 @@ onMounted(getFederations)
 </script>
 
 <template>
-  <div class="easy-web-league-selector-component">
+  <div
+    :class="[
+      'easy-web-league-selector-component relative z-10',
+      { 'is-hero-section': props.isHeroSection },
+    ]"
+  >
     <LoadingLabel v-if="false" :label="t('leagues.loading')" center />
-    <EasyGrid v-else :cols="12" :gap="3">
+    <EasyGrid v-else :cols="6" :gap="3">
       <FederationSelector
         v-show="showFederationSelector"
         :federations="dropdownFederations"
@@ -231,7 +243,10 @@ onMounted(getFederations)
         @update:modelValue="setSelectedLeague"
       />
     </EasyGrid>
-    <p v-if="selectInputMessage" class="mt-5">{{ selectInputMessage }}</p>
+
+    <p v-if="selectInputMessage" :class="['select-input-message mt-5']">
+      {{ selectInputMessage }}
+    </p>
   </div>
 </template>
 
@@ -239,59 +254,62 @@ onMounted(getFederations)
 @import '@/assets/css/common/breakpoints.scss';
 
 .easy-web-league-selector-component {
+  width: 90%;
   max-width: 850px;
   margin-inline: auto;
+
+  &.is-hero-section {
+    .select-input-message {
+      position: absolute;
+      top: 100%;
+    }
+  }
 }
 
 .easy-federations-selector-component {
-  grid-column: 1 / 13;
+  grid-column: 1 / 7;
+  min-width: none;
 }
 .easy-categories-selector-component {
-  grid-column: 1 / 13;
+  grid-column: 1 / 7;
+  min-width: none;
 }
 .easy-genders-selector-component {
-  grid-column: 1 / 13;
+  grid-column: 1 / 7;
+  min-width: none;
 }
 .easy-league-selector-component {
-  grid-column: 1 / 13;
+  grid-column: 1 / 7;
+  min-width: none;
 }
 
 @media (min-width: $media-xs) {
   .easy-federations-selector-component {
-    grid-column: 1 / 13;
-  }
-  .easy-categories-selector-component {
     grid-column: 1 / 7;
   }
+  .easy-categories-selector-component {
+    grid-column: 1 / 4;
+  }
   .easy-genders-selector-component {
-    grid-column: 7 / 13;
+    grid-column: 4 / 7;
   }
   .easy-league-selector-component {
-    grid-column: 1 / 13;
-  }
-}
-
-@media (min-width: $media-sm) {
-  .easy-categories-selector-component,
-  .easy-genders-selector-component {
-    min-width: 280px;
+    grid-column: 1 / 7;
   }
 }
 
 @media (min-width: $media-ml) {
   .easy-federations-selector-component {
-    grid-column: 1/ 5;
+    grid-column: 1/ 3;
   }
   .easy-categories-selector-component {
-    grid-column: 5 / 9;
-    min-width: none;
+    grid-column: 3 / 5;
   }
   .easy-genders-selector-component {
-    grid-column: 9 / 13;
-    min-width: none;
+    grid-column: 5 / 7;
   }
   .easy-league-selector-component {
-    grid-column: 1 / 13;
+    grid-column: 1 / 7;
   }
 }
 </style>

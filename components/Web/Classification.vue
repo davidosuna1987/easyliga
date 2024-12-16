@@ -2,27 +2,33 @@
 import LeagueService from '@/services/league'
 import { League, mapApiLeagueToLeague } from '@/domain/league'
 
+const props = defineProps({
+  selectedLeague: {
+    type: Object as PropType<League>,
+    required: false,
+    default: undefined,
+  },
+})
+
 const { t } = useI18n()
 
 const leagueService = new LeagueService()
 
-const selectedLeague = ref<League>()
-
 const loadingApi = ref<boolean>(false)
 
 const selectedLeagueLastMatchday = computed(() => {
-  if (!selectedLeague.value?.lastMatchdayGames) return
+  if (!props.selectedLeague?.lastMatchdayGames) return
   return {
-    matchday: selectedLeague.value.lastMatchdayGames[0].matchday,
-    games: selectedLeague.value.lastMatchdayGames,
+    matchday: props.selectedLeague.lastMatchdayGames[0].matchday,
+    games: props.selectedLeague.lastMatchdayGames,
   }
 })
 
 const selectedLeagueNextMatchday = computed(() => {
-  if (!selectedLeague.value?.nextMatchdayGames) return
+  if (!props.selectedLeague?.nextMatchdayGames) return
   return {
-    matchday: selectedLeague.value.nextMatchdayGames[0].matchday,
-    games: selectedLeague.value.nextMatchdayGames,
+    matchday: props.selectedLeague.nextMatchdayGames[0].matchday,
+    games: props.selectedLeague.nextMatchdayGames,
   }
 })
 
@@ -41,40 +47,32 @@ const nextMatchdayHeader = computed(
 )
 
 const getLeagueClassification = async () => {
-  if (!selectedLeague.value || selectedLeague.value.classification) return
+  if (!props.selectedLeague || props.selectedLeague.classification) return
 
   loadingApi.value = true
 
-  const { data } = await leagueService.get(selectedLeague.value.id, {
+  const { data } = await leagueService.get(props.selectedLeague.id, {
     with: 'category,gender,lastMatchdayGames,nextMatchdayGames',
     set_appends: 'classification',
   })
 
   if (data.value) {
     const league = mapApiLeagueToLeague(data.value.data.league)
-    selectedLeague.value.gender = league.gender
-    selectedLeague.value.category = league.category
-    selectedLeague.value.classification = league.classification
-    selectedLeague.value.lastMatchdayGames = league.lastMatchdayGames
-    selectedLeague.value.nextMatchdayGames = league.nextMatchdayGames
+    props.selectedLeague.gender = league.gender
+    props.selectedLeague.category = league.category
+    props.selectedLeague.classification = league.classification
+    props.selectedLeague.lastMatchdayGames = league.lastMatchdayGames
+    props.selectedLeague.nextMatchdayGames = league.nextMatchdayGames
   }
 
   loadingApi.value = false
 }
 
-const setSelectedLeague = (league?: League) => {
-  selectedLeague.value = league
-
-  if (league) {
-    getLeagueClassification()
-  }
-}
+watch(() => props.selectedLeague, getLeagueClassification, { immediate: true })
 </script>
 
 <template>
   <EasyGrid :gap="8" class="easy-web-classification-component">
-    <WebLeagueSelector @league:selected="setSelectedLeague" />
-
     <LoadingLabel v-if="loadingApi" :label="t('leagues.loading')" center />
     <template v-else-if="selectedLeague">
       <LeagueTitle :league="selectedLeague" />
