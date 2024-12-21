@@ -72,7 +72,7 @@ watch(() => props.selectedLeague, getLeagueClassification, { immediate: true })
 </script>
 
 <template>
-  <EasyGrid :gap="8" class="easy-web-classification-component">
+  <EasyGrid :gap="8" class="easy-web-classification-content-component">
     <LoadingLabel v-if="loadingApi" :label="t('leagues.loading')" center />
     <template v-else-if="selectedLeague">
       <LeagueTitle :league="selectedLeague" />
@@ -86,20 +86,20 @@ watch(() => props.selectedLeague, getLeagueClassification, { immediate: true })
         :matchday="selectedLeagueNextMatchday"
         :header="nextMatchdayHeader"
       />
-      <template v-if="selectedLeague?.classification">
+      <section v-if="selectedLeague?.classification">
         <Heading tag="h6" class="mb-2">
           {{ `${t('leagues.classification')} ${selectedLeague.nameLong}` }}
         </Heading>
         <LeagueClassificationTable
           :classification="selectedLeague.classification"
         />
-      </template>
+      </section>
     </template>
   </EasyGrid>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'WebClassification',
+  name: 'WebClassificationContent',
 }
 </script>

@@ -157,6 +157,38 @@ export const equalObjects = <T extends Record<string, any>>(
   return true
 }
 
+export const formatMoney = (
+  amount: number,
+  currency: string = 'EUR',
+  removeZeros: boolean = false,
+  emptyDefault: string | undefined,
+) => {
+  if (amount <= 0 && emptyDefault) return emptyDefault
+
+  let formatConfig: Intl.NumberFormatOptions = {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2,
+    currencyDisplay: 'symbol',
+  }
+
+  let formatted = new Intl.NumberFormat('es-ES', formatConfig).format(amount)
+  if (removeZeros) formatted = formatted.replace('.00', '')
+  formatted = formatted.replace('US$', '$ ')
+  return formatted
+}
+
+export const formatNumber = (
+  amount: number,
+  removeZeros: boolean = false,
+  emptyDefault?: string,
+) => {
+  if (amount <= 0 && emptyDefault) return emptyDefault
+
+  const money = formatMoney(amount, 'EUR', removeZeros, emptyDefault)
+  return money.slice(2)
+}
+
 export const $ = (selector: string): HTMLElement | null =>
   document.querySelector(selector)
 

@@ -85,16 +85,20 @@ onMounted(getAuthuserClubWithSedesAndTeams)
             <EasyGrid v-if="sedeContainsTeams(sede)" class="sede mt-3">
               <Heading tag="h6">{{ sede.name }}</Heading>
               <div v-for="team in sede.teams" class="team p-3 rounded-lg">
-                <div class="team-info flex items-center gap-2">
+                <div
+                  class="team-info flex items-start md:items-center gap-2 justify-between md:justify-start mb-1 md:mb-0"
+                >
                   <p>{{ team.name }}</p>
-                  <ListTag
-                    :label="`${t(`categories.${team.category?.name}`)}`"
-                    color="primary"
-                  />
-                  <ListTag
-                    :label="`${t(`genders.${team.gender?.name}`)}`"
-                    :color="getListTagColor(team.gender?.name)"
-                  />
+                  <div class="team-info-tags flex items-center gap-2">
+                    <ListTag
+                      :label="`${t(`categories.${team.category?.name}`)}`"
+                      color="primary"
+                    />
+                    <ListTag
+                      :label="`${t(`genders.${team.gender?.name}`)}`"
+                      :color="getListTagColor(team.gender?.name)"
+                    />
+                  </div>
                 </div>
                 <div
                   class="team-actions flex items-center justify-between sm:justify-end"

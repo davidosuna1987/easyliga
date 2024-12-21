@@ -4,33 +4,29 @@ import { League } from '@/domain/league'
 definePageMeta({
   title: 'pages.classification.title',
   description: 'pages.classification.description',
-  heroSize: 400,
+  heroSize: 500,
+  mainClass: 'guest-page',
 })
 
-useEasyHead('pages.classification.title')
+useEasyHead('pages.classification.title', {
+  htmlAttrs: {
+    class: 'guest-page',
+  },
+})
 
 const selectedLeague = ref<League>()
 
-const { t } = useI18n()
+const setSelectedLeague = (league?: League) => {
+  selectedLeague.value = league
+}
 </script>
 
 <template>
   <NuxtLayout name="default">
     <template #hero>
-      <EasyAnimatedBackground :size="400" isHeroSection>
-        <Heading class="mb-5" tag="h3" position="center">
-          {{ t('Clasificación') }}
-        </Heading>
-
-        <WebLeagueSelector
-          @league:selected="selectedLeague = $event"
-          isHeroSection
-        />
-      </EasyAnimatedBackground>
+      <WebClassificationHero @league:selected="setSelectedLeague" />
     </template>
 
-    <div class="easy-web-classification-page">
-      <WebClassification class="pb-10" :selectedLeague="selectedLeague" />
-    </div>
+    <WebClassificationContent class="pb-10" :selectedLeague="selectedLeague" />
   </NuxtLayout>
 </template>

@@ -150,7 +150,23 @@
     "auto_generate_email": "Generar correu electrònic automàticament",
     "auto_generated": "Generat automàticament",
     "generate_easyliga_email": "Generar email d'Easy Liga",
-    "admin_options": "Opcions d'admin"
+    "admin_options": "Opcions d'admin",
+    "month": "Mes | \nMesos",
+    "second": "Segon | \nSegons",
+    "minute": "Minut | \nMinuts",
+    "hour": "Hora | \nHores",
+    "day": "Dia | \nDies",
+    "week": "Setmana | \nSetmanes",
+    "year": "Any | \nAnys",
+    "from": "Des de",
+    "until": "Fins",
+    "at": "a les",
+    "in": "a",
+    "on": "a",
+    "by": "per",
+    "for": "per",
+    "with": "amb",
+    "without": "sense"
   },
   "errors": {
     "whoops": "Whoops! Alguna cosa ha anat malament...",
@@ -425,6 +441,36 @@
           "title": "Acta del partit"
         }
       }
+    }
+  },
+  "features": {
+    "reports": {
+      "title": "Actes digitals",
+      "description": "Simplifica la creació i la gestió d'actes de partit amb precisió i rapidesa. Obtingueu reportis professionals, digitalitzeu els vostres processos i porteu el control de cada trobada sense esforç."
+    },
+    "calls": {
+      "title": "Convocatòries i rotacions",
+      "description": "Optimitza les convocatòries i gestiona les rotacions del teu equip en sincronització amb àrbitres i responsables. Estalvia temps i assegura una coordinació impecable a cada partit."
+    },
+    "branding": {
+      "title": "Imatge de marca",
+      "description": "Reforça la identitat visual del teu club o lliga amb eines personalitzables. Projecta una imatge professional i atractiva que destaqui a qualsevol plataforma i atregui nous seguidors."
+    },
+    "calendar": {
+      "title": "Gestió de calendari",
+      "description": "Organitza partits, esdeveniments i horaris en un calendari visual i intuïtiu. Evita solapaments, millora la planificació i garanteix una experiència sense contratemps per a tots els participants."
+    },
+    "classification": {
+      "title": "Classificació en temps real",
+      "description": "Consulteu taules de posicions, estadístiques i resultats actualitzats a l'instant. Mantingues informats jugadors i aficionats amb una plataforma transparent i dinàmica."
+    },
+    "club": {
+      "title": "Gestió de club",
+      "description": "Administra jugadors, llicències i equips des d'un sol lloc. Centralitza tota la informació, agilitza processos interns i porta la gestió del teu club al nivell següent."
+    },
+    "image": {
+      "title": "Imatge",
+      "description": "Imatge"
     }
   },
   "users": {

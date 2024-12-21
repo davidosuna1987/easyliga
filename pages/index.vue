@@ -1,30 +1,25 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/useAuthStore'
+definePageMeta({
+  title: 'Easy Liga',
+  description:
+    'La solución integral para clubes, entrenadores y árbitros de voleibol. Simplifica la gestión, optimiza el rendimiento.',
+  heroSize: 500,
+  mainClass: 'guest-page',
+})
 
-useEasyHead('pages.index.title')
-
-const auth = useAuthStore()
-const { t } = useI18n()
-
-const showPage = computed(() => auth.isLoggedIn && auth.isAdmin())
-
-const redirectIfNotAdmin = () => {
-  if (!showPage.value) {
-    auth.loginRedirect()
-  }
-}
-
-onMounted(() => redirectIfNotAdmin())
+useEasyHead('pages.landing.title', {
+  htmlAttrs: {
+    class: 'guest-page',
+  },
+})
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div v-if="showPage" class="easy-web-landing-page">
-      <template v-if="auth.isAdmin()">
-        <Heading class="mb-5" tag="h3" position="center">
-          {{ t('pages.index.welcome') }}
-        </Heading>
-      </template>
-    </div>
+    <template #hero>
+      <WebLandingHero :size="500" />
+    </template>
+
+    <WebLanding />
   </NuxtLayout>
 </template>

@@ -6,7 +6,19 @@ const props = defineProps({
   },
   imageUrl: {
     type: String,
-    default: 'var(--background-image)',
+    required: false,
+  },
+  backgroundSize: {
+    type: String,
+    default: '200%',
+  },
+  hasOpacity: {
+    type: Boolean,
+    default: true,
+  },
+  interactive: {
+    type: Boolean,
+    default: true,
   },
   isHeroSection: {
     type: Boolean,
@@ -22,16 +34,19 @@ const componentStyles = computed(() => ({
   zIndex: -1,
   width: '100%',
   // width: '110%',
+  borderTopLeftRadius: props.isHeroSection ? 'var(--border-radius)' : 0,
+  borderTopRightRadius: props.isHeroSection ? 'var(--border-radius)' : 0,
 }))
 
 const wrapperStyles = {
   height: `${props.size}px`,
   // height: `calc(${props.size}px + 10%)`,
-  backgroundImage: props.imageUrl,
+  backgroundImage: `url(${props.imageUrl ?? '/images/background.svg'})`,
+  backgroundSize: props.backgroundSize,
 }
 
 const handleMouseMove = (event: MouseEvent | TouchEvent) => {
-  if (!wrapperRef.value) return
+  if (!props.interactive || !wrapperRef.value) return
 
   const { clientX, clientY } = 'touches' in event ? event.touches[0] : event
   const width = window.innerWidth / 5
@@ -68,7 +83,7 @@ onUnmounted(() => {
   >
     <div
       id="animated-background-content"
-      class="wrapper"
+      :class="['wrapper', { 'has-opacity': props.hasOpacity }]"
       ref="wrapperRef"
       :style="wrapperStyles"
     >
@@ -84,7 +99,7 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .easy-animated-background-component {
   overflow: hidden;
 
@@ -95,13 +110,12 @@ onUnmounted(() => {
     position: relative;
     width: 100%;
 
-    background-size: 200%;
     background-repeat: no-repeat;
     background-position: top var(--background-position-x) right
       var(--background-position-y);
     transition: background-position 50ms, transform 50ms, translate 50ms;
 
-    &::before {
+    &.has-opacity::before {
       content: '';
       position: absolute;
       top: 0;

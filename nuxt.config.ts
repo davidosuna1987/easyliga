@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   ssr: false,
   spaLoadingTemplate: false,
-  devtools: true,
+  devtools: false,
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/i18n',

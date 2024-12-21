@@ -342,7 +342,7 @@ onMounted(() => redirectIfSanctionedMembersToChange())
 
 <template>
   <div class="easy-coach-games-component">
-    <div v-for="(game, index) in games" class="game">
+    <div v-for="(game, index) in games" class="game" :data-game-id="game.id">
       <header class="name text-center">{{ game.name }}</header>
       <GameStatus :status="game.status" :start="game.date" />
 

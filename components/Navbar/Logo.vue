@@ -1,12 +1,15 @@
+<script setup lang="ts">
+const logoPath = useEasyLogo()
+</script>
+
 <template>
   <NuxtLink class="easy-navbar-logo-component" to="/">
     <NuxtImg
       class="easy-navbar__logo"
-      src="/logos/easyliga.svg"
+      :src="logoPath"
       quality="100"
-      width="38"
-      height="38"
       fit="contain"
+      :style="{ height: '38px' }"
     />
   </NuxtLink>
 </template>

@@ -36,10 +36,10 @@ const emit = defineEmits<{
   (e: 'hide', value: boolean): void
 }>()
 
-const { t, locale } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
-const colorMode = useColorMode()
+const { t, locale } = useI18n()
+const { isLightMode } = useTheme()
 
 const gameService = new GameService()
 
@@ -232,7 +232,7 @@ const handleHide = () =>
     <div v-if="inlineButton" class="flex gap-2">
       <Button
         v-if="showApproveButton"
-        :severity="colorMode.value === 'light' ? 'primary' : 'success'"
+        :severity="isLightMode ? 'primary' : 'success'"
         outlined
         :label="t('games.date_request.approve')"
         :disabled="loadingApi"

@@ -6,7 +6,7 @@ definePageMeta({
   roles: ['admin'],
 })
 
-useEasyHead('pages.index.title')
+useEasyHead('Admin')
 
 const auth = useAuthStore()
 const { t } = useI18n()

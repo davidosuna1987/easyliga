@@ -25,7 +25,7 @@ const emit = defineEmits<{
 const { t, locale } = useI18n()
 const auth = useAuthStore()
 const toast = useEasyToast()
-const colorMode = useColorMode()
+const { isLightMode } = useTheme()
 
 const gameService = new GameService()
 
@@ -60,7 +60,7 @@ const approveRequestedDate = async () => {
     <Button
       v-if="showApproveButton"
       class="action"
-      :severity="colorMode.value === 'light' ? 'primary' : 'success'"
+      :severity="isLightMode ? 'primary' : 'success'"
       outlined
       :label="t('games.date_request.approve')"
       :disabled="loadingApi"

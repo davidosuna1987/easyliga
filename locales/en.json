@@ -150,7 +150,23 @@
     "auto_generate_email": "Generate email automatically",
     "auto_generated": "Automatically generated",
     "generate_easyliga_email": "Generate Easy Liga email",
-    "admin_options": "admin options"
+    "admin_options": "admin options",
+    "month": "Month | \nMonths",
+    "second": "Second | \nSeconds",
+    "minute": "Minute | \nMinutes",
+    "hour": "Time | \nHours",
+    "day": "Day | \nDays",
+    "week": "Week | \nWeeks",
+    "year": "Year | \nYears",
+    "from": "From",
+    "until": "Until",
+    "at": "at",
+    "in": "in",
+    "on": "in",
+    "by": "by",
+    "for": "for",
+    "with": "with",
+    "without": "without"
   },
   "errors": {
     "whoops": "Whoops! Something has gone wrong...",
@@ -425,6 +441,36 @@
           "title": "Match minutes"
         }
       }
+    }
+  },
+  "features": {
+    "reports": {
+      "title": "Digital minutes",
+      "description": "Simplifies the creation and management of match minutes with precision and speed. Get professional reports, digitize your processes and take control of each meeting effortlessly."
+    },
+    "calls": {
+      "title": "Calls and rotations",
+      "description": "Optimize your calls and manage your team rotations in synchronization with referees and managers. Save time and ensure impeccable coordination in each match."
+    },
+    "branding": {
+      "title": "brand image",
+      "description": "Reinforce the visual identity of your club or league with customizable tools. Project a professional and attractive image that stands out on any platform and attracts new followers."
+    },
+    "calendar": {
+      "title": "Calendar management",
+      "description": "Organize matches, events and schedules in a visual and intuitive calendar. Avoid overlaps, improve planning, and ensure a smooth experience for all participants."
+    },
+    "classification": {
+      "title": "Real-time classification",
+      "description": "See instantly updated leaderboards, statistics and results. Keep players and fans informed with a transparent and dynamic platform."
+    },
+    "club": {
+      "title": "club management",
+      "description": "Manage players, licenses and teams from one place. Centralize all information, streamline internal processes and take your club management to the next level."
+    },
+    "image": {
+      "title": "Image",
+      "description": "Image"
     }
   },
   "users": {

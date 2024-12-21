@@ -48,9 +48,7 @@ onMounted(getCoachedTeams)
       <Loading v-else />
     </template>
     <template v-else>
-      <Heading tag="h3" class="mb-5">
-        {{ t('teams.coached') }}
-      </Heading>
+      <Heading tag="h3" class="mb-5">{{ t('teams.coached') }}</Heading>
 
       <EasyGrid v-if="teams?.length">
         <div
@@ -58,16 +56,20 @@ onMounted(getCoachedTeams)
           :key="team.id"
           class="team p-3 rounded-lg sm:flex sm:justify-between hover:bg-[rgba(var(--primary-color-rgb),0.1)]"
         >
-          <div class="team-info flex items-center gap-2">
+          <div
+            class="team-info flex items-start md:items-center gap-2 justify-between md:justify-start mb-1 md:mb-0"
+          >
             <p>{{ team.name }}</p>
-            <ListTag
-              :label="`${t(`categories.${team.category?.name}`)}`"
-              color="primary"
-            />
-            <ListTag
-              :label="`${t(`genders.${team.gender?.name}`)}`"
-              :color="getListTagColor(team.gender?.name)"
-            />
+            <div class="team-info-tags flex items-center gap-2">
+              <ListTag
+                :label="`${t(`categories.${team.category?.name}`)}`"
+                color="primary"
+              />
+              <ListTag
+                :label="`${t(`genders.${team.gender?.name}`)}`"
+                :color="getListTagColor(team.gender?.name)"
+              />
+            </div>
           </div>
           <div
             class="team-actions flex items-center justify-between sm:justify-end"

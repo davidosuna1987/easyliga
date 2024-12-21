@@ -13,7 +13,14 @@
 }
 .p-disabled,
 .p-component:disabled {
-  opacity: 0.6;
+  &.p-disabled {
+    opacity: 1;
+
+    .p-placeholder,
+    .p-dropdown-trigger {
+      opacity: 0.5;
+    }
+  }
 }
 .p-error {
   color: #fb9393;

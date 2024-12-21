@@ -1,11 +1,13 @@
 <template>
-  <div :class="['default-layout', $route.meta.layoutClass]">
-    <NuxtLoadingIndicator />
+  <div :class="['easy-layout default-layout', $route.meta.layoutClass]">
     <NavbarApp />
 
-    <main :class="['easy-main', $route.meta.mainClass]">
-      <slot name="hero" />
-      <section
+    <EasyLayoutMain>
+      <div v-if="$slots.hero" class="easy-hero relative z-10">
+        <slot name="hero" />
+      </div>
+
+      <div
         :class="[
           'easy-container',
           $route.meta.containerClass,
@@ -13,13 +15,13 @@
         ]"
         :style="{
           ...(!!$route.meta.heroSize && {
-            marginTop: `${Number($route.meta.heroSize)}px`,
+            paddingBlockStart: `calc(${Number($route.meta.heroSize)}px + 2rem)`,
           }),
         }"
       >
         <slot />
-      </section>
-    </main>
+      </div>
+    </EasyLayoutMain>
 
     <Footer />
   </div>

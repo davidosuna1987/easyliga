@@ -24,7 +24,6 @@ watch(() => props.type, setSeslectedType, { immediate: true })
 </script>
 
 <template>
-  <pre>{{ selectedType }}</pre>
   <Dropdown
     class="easy-license-type-selector-component"
     v-model="selectedType"

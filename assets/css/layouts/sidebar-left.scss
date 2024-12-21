@@ -15,7 +15,8 @@
     color: var(--primary-color-text);
     padding: var(--easy-main-padding);
     border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    // box-shadow: var(--box-shadow);
+    border-inline-end: solid 1px var(--input-border-color);
     width: var(--layout-sidebar-width);
     position: absolute;
     z-index: 20;
@@ -76,7 +77,8 @@
     .easy-main {
       display: grid;
       grid-template-columns: var(--layout-sidebar-width) 1fr;
-      gap: var(--app-margin);
+      gap: 4rem;
+      padding: 0 4rem 0 0;
     }
 
     .easy-sidebar {
@@ -84,6 +86,7 @@
       transform: none;
       overflow: auto;
       padding: var(--easy-main-padding-tablet);
+      border-radius: 0;
     }
 
     .easy-sidebar-toggle {

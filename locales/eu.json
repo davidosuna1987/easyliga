@@ -150,7 +150,23 @@
     "auto_generate_email": "Sortu posta elektronikoa automatikoki",
     "auto_generated": "Automatikoki sortutakoa",
     "generate_easyliga_email": "Sortu Easy Liga posta elektronikoa",
-    "admin_options": "admin aukerak"
+    "admin_options": "admin aukerak",
+    "month": "Hilabetea | \nHilabeteak",
+    "second": "Bigarrena | \nSegundoak",
+    "minute": "Minutu | \nMinutuak",
+    "hour": "Denbora | \nOrduak",
+    "day": "Eguna | \nEgunak",
+    "week": "Astea | \nAsteak",
+    "year": "Urtea | \nUrteak",
+    "from": "Bertatik",
+    "until": "Arte",
+    "at": "etan",
+    "in": "urtean",
+    "on": "urtean",
+    "by": "arabera",
+    "for": "rentzat",
+    "with": "rekin",
+    "without": "gabe"
   },
   "errors": {
     "whoops": "Aupa! Zerbait gaizki joan da...",
@@ -425,6 +441,36 @@
           "title": "Partiduen minutuak"
         }
       }
+    }
+  },
+  "features": {
+    "reports": {
+      "title": "Minutu digitalak",
+      "description": "Partiduen minutuen sorrera eta kudeaketa zehaztasun eta abiaduraz errazten du. Lortu txosten profesionalak, digitalizatu zure prozesuak eta hartu bilera bakoitzaren kontrola esfortzurik gabe."
+    },
+    "calls": {
+      "title": "Deiak eta errotazioak",
+      "description": "Optimizatu zure deiak eta kudeatu zure taldearen txandak arbitroekin eta kudeatzaileekin sinkronizatuta. Aurreztu denbora eta ziurtatu partida bakoitzean koordinazio ezin hobea."
+    },
+    "branding": {
+      "title": "marka irudia",
+      "description": "Indartu zure klubaren edo ligaren identitate bisuala tresna pertsonalizagarriekin. Edozein plataformatan nabarmentzen den eta jarraitzaile berriak erakartzen dituen irudi profesional eta erakargarria proiektatu."
+    },
+    "calendar": {
+      "title": "Egutegiaren kudeaketa",
+      "description": "Antolatu partidak, ekitaldiak eta ordutegiak egutegi bisual eta intuitibo batean. Saihestu gainjartzeak, hobetu plangintza eta bermatu parte-hartzaile guztien esperientzia leuna."
+    },
+    "classification": {
+      "title": "Denbora errealeko sailkapena",
+      "description": "Ikusi berehala eguneratutako sailkapenak, estatistikak eta emaitzak. Mantendu jokalariak eta zaleak informatuta plataforma garden eta dinamiko batekin."
+    },
+    "club": {
+      "title": "klubaren kudeaketa",
+      "description": "Kudeatu jokalariak, lizentziak eta taldeak leku bakarretik. Zentralizatu informazio guztia, erraztu barne-prozesuak eta eraman zure klubaren kudeaketa hurrengo mailara."
+    },
+    "image": {
+      "title": "Irudia",
+      "description": "Irudia"
     }
   },
   "users": {

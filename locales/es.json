@@ -118,6 +118,22 @@
     "token": "Token",
     "date": "Fecha",
     "time": "Hora",
+    "second": "Segundo | Segundos",
+    "minute": "Minuto | Minutos",
+    "hour": "Hora | Horas",
+    "day": "Día | Días",
+    "week": "Semana | Semanas",
+    "month": "Mes | Meses",
+    "year": "Año | Años",
+    "from": "Desde",
+    "until": "Hasta",
+    "at": "a las",
+    "in": "en",
+    "on": "en",
+    "by": "por",
+    "for": "para",
+    "with": "con",
+    "without": "sin",
     "place": "Lugar",
     "sign": "Firmar",
     "search": "Buscar",
@@ -307,6 +323,30 @@
       "title": "¡Bienvenid{'@'} a Easy Liga!",
       "welcome": "¡Bienvenid{'@'} a Easy Liga!"
     },
+    "landing": {
+      "title": "Easy Liga - Simplifica la gestión. Optimiza el rendimiento.",
+      "description": "Gestiona tus equipos, partidos y jugadores de voleibol de forma sencilla y eficaz. Crea actas digitales, convocatorias y rotaciones, y lleva el control de tus competiciones en tiempo real.",
+      "description_2": "Todo lo que necesitas para gestionar tu liga. Crea actas de forma rápida y sencilla, lleva el control de tus jugadores, equipos, ligas, y mucho más.",
+      "hero": {
+        "title": "Simplifica la gestión.",
+        "subtitle": "Optimiza el rendimiento.",
+        "text": "La solución integral para clubes, entrenadores y árbitros de voleibol.",
+        "button": "Solicita información"
+      },
+      "details": {
+        "title": "El poder en la palma de tu mano",
+        "text_1": {
+          "part_1": "Rellenar las",
+          "highlight": "tediosas actas",
+          "part_2": "de manera manual es cosa del pasado."
+        },
+        "text_2": {
+          "part_1": "Ahora puedes añadir puntos, sanciones y tiempos muertos",
+          "highlight": "al toque",
+          "part_2": ", y el acta se generará automáticamente al finalizar el partido."
+        }
+      }
+    },
     "club": {
       "index": {
         "title": "Clubs que gestionas"
@@ -425,6 +465,49 @@
           "title": "Acta del partido"
         }
       }
+    }
+  },
+  "pricing_plan": {
+    "title": "Planes de precios",
+    "subtitle": "Elige el plan perfecto para tu club dependiendo del número de equipos que quieras gestionar",
+    "temporality": {
+      "month": "Mensual",
+      "year": "Anual"
+    },
+    "conditions": {
+      "title": "Condiciones",
+      "subtitle": "en nuestras tarifas"
+    },
+    "card_more_info_list_html": "<p class='mb-3'>Estas tarifas no incluyen el IVA (21%)</p><p class='mb-3'>En todos los planes dispones de un mes para añadir equipos al club de forma gratuita.</p><p class='mb-3'>A posterior añadir un equipo llevará un coste único de 10€ / equipo IVA incluido.</p><p class='my-5'>En la web de Easy Liga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) se realiza gestión de sus pedidos o suscripciones a través la pasarela de pagos STRIPE, aplicando los protocolos de seguridad.</p><div class='my-5'><p class='mb-1'>Para cualquier consulta o aclaración sobre su pedido o suscripción puede ponerse en contacto con nuestro servicio de atención al cliente:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
+  },
+  "features": {
+    "reports": {
+      "title": "Actas digitales",
+      "description": "Simplifica la creación y gestión de actas de partido con precisión y rapidez. Obtén reportes profesionales, digitaliza tus procesos y lleva el control de cada encuentro sin esfuerzo."
+    },
+    "calls": {
+      "title": "Convocatorias y rotaciones",
+      "description": "Optimiza tus convocatorias y gestiona las rotaciones de tu equipo en sincronización con árbitros y responsables. Ahorra tiempo y asegura una coordinación impecable en cada partido."
+    },
+    "branding": {
+      "title": "Imagen de marca",
+      "description": "Refuerza la identidad visual de tu club o liga con herramientas personalizables. Proyecta una imagen profesional y atractiva que destaque en cualquier plataforma y atraiga a nuevos seguidores."
+    },
+    "calendar": {
+      "title": "Gestión de calendario",
+      "description": "Organiza partidos, eventos y horarios en un calendario visual e intuitivo. Evita solapamientos, mejora la planificación y garantiza una experiencia sin contratiempos para todos los participantes."
+    },
+    "classification": {
+      "title": "Clasificación en tiempo real",
+      "description": "Consulta tablas de posiciones, estadísticas y resultados actualizados al instante. Mantén informados a jugadores y aficionados con una plataforma transparente y dinámica."
+    },
+    "club": {
+      "title": "Gestión de club",
+      "description": "Administra jugadores, licencias y equipos desde un solo lugar. Centraliza toda la información, agiliza procesos internos y lleva la gestión de tu club al siguiente nivel."
+    },
+    "image": {
+      "title": "Imagen",
+      "description": "Imagen"
     }
   },
   "users": {

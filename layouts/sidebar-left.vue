@@ -9,14 +9,14 @@ const toggleClass = ref<string>('closed')
 
 <template>
   <div
-    class="sidebar-left-layout"
-    :class="[`sidebar-${toggleClass}`, $route.meta.layoutClass]"
+    :class="[
+      `easy-layout sidebar-left-layout sidebar-${toggleClass}`,
+      $route.meta.layoutClass,
+    ]"
   >
-    <NuxtLoadingIndicator />
-    <NavbarAuth v-if="authuser" />
-    <NavbarGuest v-else />
+    <NavbarApp />
 
-    <main class="easy-main" :class="$route.meta.mainClass">
+    <EasyLayoutMain>
       <aside class="easy-sidebar easy-sidebar-left">
         <a
           role="button"
@@ -37,10 +37,10 @@ const toggleClass = ref<string>('closed')
         <slot name="sidebar" />
       </aside>
 
-      <section class="easy-container" :class="$route.meta.containerClass">
+      <div :class="['easy-container', $route.meta.containerClass]">
         <slot />
-      </section>
-    </main>
+      </div>
+    </EasyLayoutMain>
 
     <Footer />
   </div>
