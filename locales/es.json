@@ -345,6 +345,11 @@
           "highlight": "al toque",
           "part_2": ", y el acta se generará automáticamente al finalizar el partido."
         }
+      },
+      "ready": {
+        "title": "¿Preparado para comenzar?",
+        "subtitle_1": "Si todavía tienes dudas o necesitas más información, no dudes en contactar con nosotros.",
+        "subtitle_2": "¡Estaremos encantados de ayudarte!"
       }
     },
     "club": {

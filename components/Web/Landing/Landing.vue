@@ -8,6 +8,10 @@
     <section class="landing-pricing mt-20">
       <WebPricingPlans />
     </section>
+
+    <section class="landing-ready full-section bg-[#1f2937] -mb-8 md:-mb-16">
+      <WebLandingSectionReady />
+    </section>
   </div>
 </template>
 

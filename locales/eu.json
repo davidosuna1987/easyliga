@@ -323,6 +323,35 @@
       "title": "Ongi etorri Easy Liga-ra!",
       "welcome": "Ongi etorri Easy Liga-ra!"
     },
+    "landing": {
+      "title": "Liga Erraza - Kudeaketa errazten du. Optimizatu errendimendua.",
+      "description": "Kudeatu zure boleibol taldeak, partidak eta jokalariak modu erraz eta eraginkorrean. Sortu minutu digitalak, deiak eta txandaketak, eta egin jarraipena zure lehiaketen jarraipena denbora errealean.",
+      "description_2": "Zure liga kudeatzeko behar duzun guztia. Sortu minutuak azkar eta erraz, egin jarraipena zure jokalari, talde, liga eta askoz gehiago.",
+      "hero": {
+        "title": "Kudeaketa errazten du.",
+        "subtitle": "Optimizatu errendimendua.",
+        "text": "Boleibol klub, entrenatzaile eta arbitroentzako irtenbide integrala.",
+        "button": "Informazioa eskatu"
+      },
+      "details": {
+        "title": "Boterea zure esku ahurrean",
+        "text_1": {
+          "part_1": "Bete",
+          "highlight": "minutu neketsuak",
+          "part_2": "Eskuz iraganeko kontua da."
+        },
+        "text_2": {
+          "part_1": "Orain puntuak, zigorrak eta denbora-muga gehi ditzakezu",
+          "highlight": "ukitzean",
+          "part_2": ", eta partidaren amaieran markagailua automatikoki sortuko da."
+        }
+      },
+      "ready": {
+        "title": "Hasteko prest?",
+        "subtitle_1": "Oraindik galderarik baduzu edo informazio gehiago behar baduzu, ez izan zalantzarik eta jar zaitez gurekin harremanetan.",
+        "subtitle_2": "Pozik lagunduko dizugu!"
+      }
+    },
     "club": {
       "index": {
         "title": "Kudeatzen dituzun klubak"
@@ -442,6 +471,21 @@
         }
       }
     }
+  },
+  "pricing_plans": {
+    "title": "Prezioen planak",
+    "subtitle": "Aukeratu zure kluberako plan ezin hobea kudeatu nahi duzun talde kopuruaren arabera",
+    "select": "Hautatu plan bat",
+    "temporality": {
+      "month": "Hilerokoa",
+      "year": "Urtekoa",
+      "select": "Hautatu denbora-tarte bat"
+    },
+    "conditions": {
+      "title": "Baldintzak",
+      "subtitle": "gure tarifetan"
+    },
+    "card_more_info_list_html": "<p class='mb-3'>Tasa hauek ez dute BEZa (% 21) barne</p><p class='mb-3'>Plan guztietan hilabete bat duzu klubean taldeak doan gehitzeko. </p><p class='mb-3'>Gailu bat geroago gehitzeak 10 €ko kostu bakarra ekarriko du ekipoaren BEZa barne.</p><p class='my-5'>Webgunean Liga Erraza (<a class='text-primary') href='https://easyliga.com'>https://easyliga.com</a>) zure eskaerak edo harpidetzak STRIPE ordainketa-pasabidearen bidez kudeatzen dira, segurtasun-protokoloak aplikatuz.</p> <div class='my -5'><p class='mb-1'>Zure eskaerari edo harpidetzari buruzko edozein zalantza edo argipenetarako, gure bezeroarentzako zerbitzuarekin harremanetan jar zaitezke:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
   },
   "features": {
     "reports": {

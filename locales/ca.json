@@ -323,6 +323,35 @@
       "title": "Benvingut a Easy Lliga!",
       "welcome": "Benvingut a Easy Lliga!"
     },
+    "landing": {
+      "title": "Easy Liga - Simplifica la gestió. Optimitza el rendiment.",
+      "description": "Gestiona els teus equips, partits i jugadors de voleibol de manera senzilla i eficaç. Crea actes digitals, convocatòries i rotacions, i porta el control de les competicions en temps real.",
+      "description_2": "Tot el que necessites per gestionar la teva lliga. Crea actes de forma ràpida i senzilla, porta el control dels teus jugadors, equips, lligues i molt més.",
+      "hero": {
+        "title": "Simplifica la gestió.",
+        "subtitle": "Optimitza el rendiment.",
+        "text": "La solució integral per a clubs, entrenadors i àrbitres de voleibol.",
+        "button": "Demana informació"
+      },
+      "details": {
+        "title": "El poder al palmell de la mà",
+        "text_1": {
+          "part_1": "Omplir les",
+          "highlight": "tedioses actes",
+          "part_2": "de manera manual és cosa del passat."
+        },
+        "text_2": {
+          "part_1": "Ara hi pots afegir punts, sancions i temps morts",
+          "highlight": "al toc",
+          "part_2": ", i l'acta es generarà automàticament en finalitzar el partit."
+        }
+      },
+      "ready": {
+        "title": "Preparat per començar?",
+        "subtitle_1": "Si encara tens dubtes o necessites més informació, no dubtis a contactar amb nosaltres.",
+        "subtitle_2": "Estarem encantats d'ajudar-te!"
+      }
+    },
     "club": {
       "index": {
         "title": "Clubs que gestiones"
@@ -442,6 +471,21 @@
         }
       }
     }
+  },
+  "pricing_plans": {
+    "title": "Plans de preus",
+    "subtitle": "Tria el pla perfecte per al teu club depenent del nombre d'equips que vulguis gestionar",
+    "select": "Selecciona un pla",
+    "temporality": {
+      "month": "Mensual",
+      "year": "Anual",
+      "select": "Selecciona una temporabilitat"
+    },
+    "conditions": {
+      "title": "Condicions",
+      "subtitle": "a les nostres tarifes"
+    },
+    "card_more_info_list_html": "<p class='mb-3'>Aquestes tarifes no inclouen l'IVA (21%)</p><p class='mb-3'>A tots els plans disposes d'un mes per afegir equips al club de forma gratuïta .</p><p class='mb-3'>A posterior afegir un equip portarà un cost únic de 10€ / equip IVA inclòs.</p><p class='my-5'>Al web de Easy Lliga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) es realitza gestió de les comandes o subscripcions a través de la passarel·la de pagaments STRIPE, aplicant els protocols de seguretat.</p><div class='my-5'><p class='mb-1'>Per a qualsevol consulta o aclariment sobre la vostra comanda o subscripció podeu posar-vos en contacte amb el nostre servei d'atenció al client:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'} gmail.com</a></p></div>"
   },
   "features": {
     "reports": {

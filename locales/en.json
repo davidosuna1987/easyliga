@@ -323,6 +323,35 @@
       "title": "Welcome to Easy Liga!",
       "welcome": "Welcome to Easy Liga!"
     },
+    "landing": {
+      "title": "Easy Liga - Simplifies management. Optimize performance.",
+      "description": "Manage your volleyball teams, matches and players in a simple and effective way. Create digital minutes, calls and rotations, and keep track of your competitions in real time.",
+      "description_2": "Everything you need to manage your league. Create minutes quickly and easily, keep track of your players, teams, leagues, and much more.",
+      "hero": {
+        "title": "Simplifies management.",
+        "subtitle": "Optimize performance.",
+        "text": "The comprehensive solution for volleyball clubs, coaches and referees.",
+        "button": "Request information"
+      },
+      "details": {
+        "title": "The power in the palm of your hand",
+        "text_1": {
+          "part_1": "Fill out the",
+          "highlight": "tedious minutes",
+          "part_2": "Manually is a thing of the past."
+        },
+        "text_2": {
+          "part_1": "Now you can add points, penalties and timeouts",
+          "highlight": "at the touch",
+          "part_2": ", and the scoresheet will be generated automatically at the end of the match."
+        }
+      },
+      "ready": {
+        "title": "Ready to get started?",
+        "subtitle_1": "If you still have questions or need more information, do not hesitate to contact us.",
+        "subtitle_2": "We will be happy to help you!"
+      }
+    },
     "club": {
       "index": {
         "title": "Clubs you manage"
@@ -442,6 +471,21 @@
         }
       }
     }
+  },
+  "pricing_plans": {
+    "title": "Pricing plans",
+    "subtitle": "Choose the perfect plan for your club depending on the number of teams you want to manage",
+    "select": "Select a plan",
+    "temporality": {
+      "month": "Monthly",
+      "year": "Annual",
+      "select": "Select a time frame"
+    },
+    "conditions": {
+      "title": "Conditions",
+      "subtitle": "in our rates"
+    },
+    "card_more_info_list_html": "<p class='mb-3'>These rates do not include VAT (21%)</p><p class='mb-3'>In all plans you have one month to add teams to the club for free .</p><p class='mb-3'>Adding a device later will incur a one-time cost of €10/equipment VAT included.</p><p class='my-5'>On the website. Easy Liga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) your orders or subscriptions are managed through the STRIPE payment gateway, applying security protocols.</p> <div class='my-5'><p class='mb-1'>For any questions or clarifications about your order or subscription, you can contact our customer service:</p><p>< a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
   },
   "features": {
     "reports": {
