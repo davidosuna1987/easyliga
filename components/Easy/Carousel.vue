@@ -16,7 +16,7 @@ const instance = getCurrentInstance()
 
 const activeIndex = ref<number>(props.activeIndex)
 const slides = ref<VNode[]>([])
-const maxCardHeight = ref<number>(0)
+const containerHeight = ref<number>(0)
 
 const prevIndex = computed(() =>
   activeIndex.value === 0 ? slides.value.length - 1 : activeIndex.value - 1,
@@ -54,8 +54,8 @@ const init = async () => {
 const setCarouselHeight = () => {
   setTimeout(() => {
     document.querySelectorAll('.easy-carousel-slide > *').forEach(slide => {
-      if (maxCardHeight.value < slide.clientHeight) {
-        maxCardHeight.value = slide.clientHeight
+      if (containerHeight.value < slide.clientHeight + 20) {
+        containerHeight.value = slide.clientHeight + 20
       }
     })
   }, 0)
@@ -72,8 +72,8 @@ const setCarouselSlides = () => {
     slides.value = nodes as VNode[]
   }
 
-  setCarouselHeight()
   slideTo(activeIndex.value)
+  setCarouselHeight()
 }
 
 watch(
@@ -95,17 +95,18 @@ watchEffect(() => {
 <template>
   <div
     class="easy-carousel-component"
-    :style="{ height: `${maxCardHeight}px` }"
+    :style="{ height: `${containerHeight}px` }"
   >
     <div
       v-for="(slide, index) in slides"
       :key="index"
       :class="['easy-carousel-slide', slideClass(index)]"
       :data-index="index"
+      :style="{ minHeight: `${containerHeight}px` }"
       @click.prevent="slideTo(index)"
     >
       <slot :name="`slide-${index}`" />
-      <component :is="slide" :style="{ height: `${maxCardHeight}px` }" />
+      <component :is="slide" />
     </div>
 
     <EasyCarouselNavigation
@@ -136,7 +137,6 @@ watchEffect(() => {
     user-select: none;
     left: 50%;
     width: calc(100% - 8rem);
-    overflow: hidden;
 
     &.is-active {
       position: absolute;
@@ -151,6 +151,17 @@ watchEffect(() => {
       display: inline-block;
       opacity: 0.6;
       z-index: 1;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(var(--background-color-rgb), 0.5);
+        z-index: 1;
+      }
     }
 
     &.is-prev {

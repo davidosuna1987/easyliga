@@ -17,22 +17,7 @@ const toast = useEasyToast()
 
 const email = ref<string>()
 
-// const handleSubmit = async () => {
-//   loadingApi.value = true
-
-//   const { data, error } = await emailService.custom(form.value)
-
-//   if (error.value) {
-//     toast.mapError(Object.values(error.value?.data?.errors), false)
-//   } else if (data.value) {
-//     toast.success(t('emails.submitted'))
-//     clearDestinatary()
-//   }
-
-//   loadingApi.value = false
-// }
-
-const submit = () => {
+const handleSubmit = () => {
   let valid: string | undefined = email.value
 
   if (props.showInput) {
@@ -55,7 +40,7 @@ const submit = () => {
 
 <template>
   <form
-    @submit.prevent="submit"
+    @submit.prevent="handleSubmit"
     class="easy-info-request-reduced-form-component flex justify-center space-x-3 mt-8"
   >
     <InputText
