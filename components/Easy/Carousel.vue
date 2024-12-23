@@ -16,7 +16,7 @@ const instance = getCurrentInstance()
 
 const activeIndex = ref<number>(props.activeIndex)
 const slides = ref<VNode[]>([])
-const containerHeight = ref<number>(0)
+const maxCardHeight = ref<number>(0)
 
 const prevIndex = computed(() =>
   activeIndex.value === 0 ? slides.value.length - 1 : activeIndex.value - 1,
@@ -54,8 +54,8 @@ const init = async () => {
 const setCarouselHeight = () => {
   setTimeout(() => {
     document.querySelectorAll('.easy-carousel-slide > *').forEach(slide => {
-      if (containerHeight.value < slide.clientHeight) {
-        containerHeight.value = slide.clientHeight
+      if (maxCardHeight.value < slide.clientHeight) {
+        maxCardHeight.value = slide.clientHeight
       }
     })
   }, 0)
@@ -72,8 +72,8 @@ const setCarouselSlides = () => {
     slides.value = nodes as VNode[]
   }
 
-  slideTo(activeIndex.value)
   setCarouselHeight()
+  slideTo(activeIndex.value)
 }
 
 watch(
@@ -95,18 +95,17 @@ watchEffect(() => {
 <template>
   <div
     class="easy-carousel-component"
-    :style="{ height: `${containerHeight}px` }"
+    :style="{ height: `${maxCardHeight}px` }"
   >
     <div
       v-for="(slide, index) in slides"
       :key="index"
       :class="['easy-carousel-slide', slideClass(index)]"
       :data-index="index"
-      :style="{ minHeight: `${containerHeight}px` }"
       @click.prevent="slideTo(index)"
     >
       <slot :name="`slide-${index}`" />
-      <component :is="slide" />
+      <component :is="slide" :style="{ height: `${maxCardHeight}px` }" />
     </div>
 
     <EasyCarouselNavigation

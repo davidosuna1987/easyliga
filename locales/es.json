@@ -467,18 +467,36 @@
       }
     }
   },
-  "pricing_plan": {
+  "pricing_plans": {
     "title": "Planes de precios",
     "subtitle": "Elige el plan perfecto para tu club dependiendo del número de equipos que quieras gestionar",
+    "select": "Selecciona un plan",
     "temporality": {
       "month": "Mensual",
-      "year": "Anual"
+      "year": "Anual",
+      "select": "Selecciona una temporabilidad"
     },
     "conditions": {
       "title": "Condiciones",
       "subtitle": "en nuestras tarifas"
     },
     "card_more_info_list_html": "<p class='mb-3'>Estas tarifas no incluyen el IVA (21%)</p><p class='mb-3'>En todos los planes dispones de un mes para añadir equipos al club de forma gratuita.</p><p class='mb-3'>A posterior añadir un equipo llevará un coste único de 10€ / equipo IVA incluido.</p><p class='my-5'>En la web de Easy Liga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) se realiza gestión de sus pedidos o suscripciones a través la pasarela de pagos STRIPE, aplicando los protocolos de seguridad.</p><div class='my-5'><p class='mb-1'>Para cualquier consulta o aclaración sobre su pedido o suscripción puede ponerse en contacto con nuestro servicio de atención al cliente:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
+  },
+  "info_requests": {
+    "info_request": "Solicitud de información | Solicitudes de información",
+    "request": "Solicitar información",
+    "search": "Buscar solicitud de información | Buscar solicitudes de información",
+    "submit": "Enviar solicitud",
+    "submitted": "La solicitud de información ha sido enviada correctamente",
+    "create": "Crear solicitud de información",
+    "created": "La solicitud de información ha sido creada correctamente",
+    "edit": "Editar solicitud de información",
+    "update": "Actualizar solicitud de información",
+    "updated": "La solicitud de información ha sido actualizada correctamente",
+    "delete": "Eliminar solicitud de información",
+    "deleted": "La solicitud de información ha sido eliminada correctamente",
+    "delete_alert": "¿Seguro que quieres eliminar la solicitud de información?",
+    "delete_alert_disclaimer": "Esta acción no se puede deshacer"
   },
   "features": {
     "reports": {

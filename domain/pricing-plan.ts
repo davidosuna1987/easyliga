@@ -1,10 +1,16 @@
-export type PricingPlanTemporality = 'month' | 'year'
+export const PRICING_PLAN_TEMPORALITY_MAP = {
+  month: 'month',
+  year: 'year',
+} as const
+
+export type PricingPlanTemporality = keyof typeof PRICING_PLAN_TEMPORALITY_MAP
 
 export type PricingPlanPricing = {
   [key in PricingPlanTemporality]: number
 }
 
 export type PricingPlan = {
+  id: string
   title: string
   description: string
   pricing: PricingPlanPricing
@@ -14,6 +20,7 @@ export type PricingPlan = {
 
 export const pricingPlans: PricingPlan[] = [
   {
+    id: 'basic',
     title: 'Basic',
     description:
       'Ideal para clubs pequeños que quieren organizar su equipo, jugadores y resultados sin complicaciones.',
@@ -29,6 +36,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
   },
   {
+    id: 'standard',
     title: 'Standard',
     description:
       'Perfecto para clubs en crecimiento que necesitan clasificaciones automáticas, estadísticas y reportes detallados.',
@@ -45,6 +53,7 @@ export const pricingPlans: PricingPlan[] = [
     highlighted: true,
   },
   {
+    id: 'premium',
     title: 'Premium',
     description:
       'La solución definitiva para grandes clubes: notificaciones avanzadas, estadísticas y mucho más.',

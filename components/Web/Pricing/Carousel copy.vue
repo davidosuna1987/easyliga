@@ -79,7 +79,7 @@ onBeforeUpdate(() => {
         :class="{ 'p-button-text': interval === 'year' }"
         @click.prevent="setInterval('month')"
       >
-        {{ t('pricing_plan.temporality.month') }}
+        {{ t('pricing_plans.temporality.month') }}
       </Button>
       <span class="ml-3 is-muted"></span>
       <Button
@@ -87,7 +87,7 @@ onBeforeUpdate(() => {
         :class="{ 'p-button-text': interval === 'month' }"
         @click.prevent="setInterval('year')"
       >
-        {{ t('pricing_plan.temporality.year') }}
+        {{ t('pricing_plans.temporality.year') }}
       </Button>
     </div>
 
@@ -136,14 +136,14 @@ onBeforeUpdate(() => {
     >
       <template #header>
         <header class="be-support__header text-center w-full">
-          <h3>{{ t('pricing_plan.conditions.title') }}</h3>
-          <p>{{ t('pricing_plan.conditions.subtitle') }}</p>
+          <h3>{{ t('pricing_plans.conditions.title') }}</h3>
+          <p>{{ t('pricing_plans.conditions.subtitle') }}</p>
         </header>
       </template>
 
       <div
         class="mt-5 mb-5 px-5"
-        v-html="t('pricing_plan.card_more_info_list_html')"
+        v-html="t('pricing_plans.card_more_info_list_html')"
       ></div>
       <footer class="text-center mt-10">
         <Button

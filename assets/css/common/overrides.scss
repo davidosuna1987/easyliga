@@ -194,11 +194,7 @@ a:-webkit-any-link {
         }
 
         &.p-disabled {
-          opacity: 1;
-
-          .p-placeholder {
-            opacity: 0.6;
-          }
+          opacity: 0.6;
         }
       }
     }

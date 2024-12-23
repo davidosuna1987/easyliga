@@ -11,10 +11,10 @@ const { t } = useI18n()
       <EasyMask class="hidden sm:block" :mask="3" />
       <div class="heading">
         <WebHeroTitle class="mb-5" tag="h2">
-          {{ t('pricing_plan.title') }}
+          {{ t('pricing_plans.title') }}
         </WebHeroTitle>
         <WebHeroTitle class="subtitle" tag="h3">
-          {{ t('pricing_plan.subtitle') }}
+          {{ t('pricing_plans.subtitle') }}
         </WebHeroTitle>
       </div>
     </header>

@@ -189,6 +189,9 @@ export const formatNumber = (
   return money.slice(2)
 }
 
+export const isValidEmail = (email: string): boolean =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
 export const $ = (selector: string): HTMLElement | null =>
   document.querySelector(selector)
 

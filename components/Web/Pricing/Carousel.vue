@@ -40,7 +40,7 @@ onMounted(() => {
         :class="{ 'p-button-text': interval === 'year' }"
         @click.prevent="setInterval('month')"
       >
-        {{ t('pricing_plan.temporality.month') }}
+        {{ t('pricing_plans.temporality.month') }}
       </Button>
       <span class="ml-3 is-muted"></span>
       <Button
@@ -48,7 +48,7 @@ onMounted(() => {
         :class="{ 'p-button-text': interval === 'month' }"
         @click.prevent="setInterval('year')"
       >
-        {{ t('pricing_plan.temporality.year') }}
+        {{ t('pricing_plans.temporality.year') }}
       </Button>
     </div>
 

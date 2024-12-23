@@ -13,7 +13,13 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const email = ref('')
+const email = ref<string>()
+const showInfoRequestFormDialog = ref<boolean>(false)
+
+const setEmailValid = (newEmail?: string) => {
+  showInfoRequestFormDialog.value = !!newEmail
+  email.value = newEmail
+}
 </script>
 
 <template>
@@ -36,15 +42,13 @@ const email = ref('')
     >
       {{ t('pages.landing.hero.text') }}
     </p>
-    <div class="flex justify-center space-x-3 mt-8">
-      <InputText
-        v-model="email"
-        type="email"
-        placeholder="Tu correo electrónico"
-        class="px-4 py-3 border rounded-lg w-64"
-      />
-      <Button>{{ t('pages.landing.hero.button') }}</Button>
-    </div>
+
+    <InfoRequestReducedForm @email:valid="setEmailValid" />
+    <InfoRequestStoreFormDialog
+      :visible="showInfoRequestFormDialog"
+      :email="email"
+      @hide="setEmailValid"
+    />
   </EasyAnimatedBackground>
 </template>
 

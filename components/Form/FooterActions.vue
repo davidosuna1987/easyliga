@@ -27,6 +27,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showSubmitLoading: {
+    type: Boolean,
+    default: true,
+  },
+  showCancelLoading: {
+    type: Boolean,
+    default: true,
+  },
   hideSubmit: {
     type: Boolean,
     default: false,
@@ -100,7 +108,7 @@ const cancelLabelText = computed(() => props.cancelLabel ?? t('forms.cancel'))
       :severity="cancelSeverity"
       :size="size"
       :disabled="disabled"
-      :loading="loading"
+      :loading="showCancelLoading && loading"
       :outlined="!cancelSeverity"
       @click="emit('form:cancel', true)"
     />

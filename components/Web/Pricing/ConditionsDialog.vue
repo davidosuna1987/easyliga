@@ -32,14 +32,14 @@ watch(
   >
     <template #header>
       <header class="be-support__header text-center w-full">
-        <h3>{{ t('pricing_plan.conditions.title') }}</h3>
-        <p>{{ t('pricing_plan.conditions.subtitle') }}</p>
+        <h3>{{ t('pricing_plans.conditions.title') }}</h3>
+        <p>{{ t('pricing_plans.conditions.subtitle') }}</p>
       </header>
     </template>
 
     <div
       class="mt-5 mb-5 px-5"
-      v-html="t('pricing_plan.card_more_info_list_html')"
+      v-html="t('pricing_plans.card_more_info_list_html')"
     ></div>
 
     <footer class="text-center mt-10">

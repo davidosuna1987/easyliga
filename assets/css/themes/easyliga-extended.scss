@@ -13,14 +13,7 @@
 }
 .p-disabled,
 .p-component:disabled {
-  &.p-disabled {
-    opacity: 1;
-
-    .p-placeholder,
-    .p-dropdown-trigger {
-      opacity: 0.5;
-    }
-  }
+  opacity: 0.6;
 }
 .p-error {
   color: #fb9393;
@@ -756,6 +749,15 @@
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 6px;
+}
+.p-dropdown:disabled,
+.p-dropdown.p-disabled {
+  opacity: 1;
+
+  .p-placeholder,
+  .p-dropdown-trigger {
+    opacity: 0.6;
+  }
 }
 .p-dropdown:not(.p-disabled):hover {
   border-color: var(--primary-color);

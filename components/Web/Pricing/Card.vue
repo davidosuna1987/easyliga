@@ -76,7 +76,7 @@ const { t } = useI18n()
       class="place-self-end text-gray-500 dark:text-gray-600 -mt-3"
       @click="emit('moreInfo')"
     >
-      {{ t('pricing_plan.conditions.title') }}
+      {{ t('pricing_plans.conditions.title') }}
     </a>
   </article>
 </template>
