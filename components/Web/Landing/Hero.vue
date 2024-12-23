@@ -14,11 +14,17 @@ const props = defineProps({
 const { t } = useI18n()
 
 const email = ref<string>()
+const showEmailInput = ref<boolean>(false)
 const showInfoRequestFormDialog = ref<boolean>(false)
 
 const setEmailValid = (newEmail?: string) => {
-  showInfoRequestFormDialog.value = !!newEmail
+  showInfoRequestFormDialog.value = showEmailInput.value ? !!newEmail : true
   email.value = newEmail
+}
+
+const handleDialogHide = () => {
+  showInfoRequestFormDialog.value = false
+  email.value = undefined
 }
 </script>
 
@@ -43,11 +49,14 @@ const setEmailValid = (newEmail?: string) => {
       {{ t('pages.landing.hero.text') }}
     </p>
 
-    <InfoRequestReducedForm @email:valid="setEmailValid" />
+    <InfoRequestReducedForm
+      @email:valid="setEmailValid"
+      :showInput="showEmailInput"
+    />
     <InfoRequestStoreFormDialog
       :visible="showInfoRequestFormDialog"
       :email="email"
-      @hide="setEmailValid"
+      @hide="handleDialogHide"
     />
   </EasyAnimatedBackground>
 </template>

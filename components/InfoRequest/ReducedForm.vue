@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { isValidEmail, $ } from '@/domain/utils'
 
+const props = defineProps({
+  showInput: {
+    type: Boolean,
+    default: true,
+  },
+})
+
 const emit = defineEmits<{
   (e: 'email:valid', value: string | undefined): void
 }>()
@@ -26,21 +33,23 @@ const email = ref<string>()
 // }
 
 const submit = () => {
-  if (!email.value) {
-    toast.error('Debes ingresar tu correo electrónico')
-    $('#info-request-reduced-form-id')?.focus()
-    emit('email:valid', undefined)
-    return
+  let valid: string | undefined = email.value
+
+  if (props.showInput) {
+    if (!email.value) {
+      toast.error('Debes ingresar tu correo electrónico')
+      $('#info-request-reduced-form-id')?.focus()
+      valid = undefined
+    }
+
+    if (email.value && !isValidEmail(email.value)) {
+      toast.error('Debes ingresar un correo electrónico válido')
+      $('#info-request-reduced-form-id')?.focus()
+      valid = undefined
+    }
   }
 
-  if (!isValidEmail(email.value)) {
-    toast.error('Debes ingresar un correo electrónico válido')
-    $('#info-request-reduced-form-id')?.focus()
-    emit('email:valid', undefined)
-    return
-  }
-
-  emit('email:valid', email.value)
+  emit('email:valid', valid)
 }
 </script>
 
@@ -50,6 +59,7 @@ const submit = () => {
     class="easy-info-request-reduced-form-component flex justify-center space-x-3 mt-8"
   >
     <InputText
+      v-if="showInput"
       v-model="email"
       id="info-request-reduced-form-id"
       class="px-4 py-3 border rounded-lg w-64"
