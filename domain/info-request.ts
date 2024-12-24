@@ -5,6 +5,8 @@ import {
 } from 'types/api/info-request'
 import { PricingPlanTemporality } from './pricing-plan'
 
+export const INFO_REQUEST_MESSAGE_MAX_WIDTH = 1000
+
 export const DEFAULT_INFO_REQUEST_FORM: InfoRequestStoreRequest = {
   email: '',
   name: undefined,

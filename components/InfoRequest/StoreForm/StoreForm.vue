@@ -2,6 +2,7 @@
 import InfoRequestService from '@/services/info-request'
 import {
   DEFAULT_INFO_REQUEST_FORM,
+  INFO_REQUEST_MESSAGE_MAX_WIDTH,
   InfoRequestStoreRequest,
 } from '@/domain/info-request'
 import { PricingPlan, PricingPlanTemporality } from '@/domain/pricing-plan'
@@ -141,11 +142,9 @@ defineExpose({
       </FormLabel>
 
       <FormLabel :label="t('forms.message')">
-        <Textarea
-          class="w-full"
+        <EasyTextarea
           v-model="form.message"
-          :rows="5"
-          autoResize
+          :maxLength="INFO_REQUEST_MESSAGE_MAX_WIDTH"
           :readonly="readonly"
           :disabled="loadingApi"
         />
