@@ -1,34 +1,62 @@
 <script setup lang="ts">
-import { pricingPlans, PricingPlanTemporality } from '@/domain/pricing-plan'
+import { usePricingPlanStore } from '@/stores/usePricingPlanStore'
+import {
+  PricingPlan,
+  PricingPlanTemporality,
+  pricingPlansSkeleton,
+} from '@/domain/pricing-plan'
 
 const { t } = useI18n()
 const emit = defineEmits()
 
+const { pricingPlans, fetchPricingPlans } = usePricingPlanStore()
+
+const selectablePricingPlans = ref<PricingPlan[]>(
+  pricingPlans.length ? pricingPlans : pricingPlansSkeleton,
+)
 const interval = ref<PricingPlanTemporality>('month')
 const activeIndex = ref<number>(0)
 const moreInfoModalVisible = ref<boolean>(false)
+const loadingApi = ref<boolean>(false)
 
 const selectedPlan = computed(() => {
-  return pricingPlans[activeIndex.value]
+  return selectablePricingPlans.value[activeIndex.value]
 })
 
 const setInterval = (newInterval: PricingPlanTemporality) => {
   interval.value = newInterval
 }
 
-watch(selectedPlan, value => {
-  emit('selected', value)
-})
+const setSelectablePricingPlans = async () => {
+  setHiglightedActiveIndex()
+
+  if (!pricingPlans.length) {
+    loadingApi.value = true
+    const plansFromStore = await fetchPricingPlans()
+    selectablePricingPlans.value = [...(plansFromStore.data.value ?? [])]
+    loadingApi.value = false
+  } else {
+    selectablePricingPlans.value = [...pricingPlans]
+  }
+
+  setHiglightedActiveIndex()
+}
 
 const setHiglightedActiveIndex = () => {
-  const highlightedIndex = pricingPlans.findIndex(plan => plan.highlighted)
+  const highlightedIndex = selectablePricingPlans.value.findIndex(
+    plan => plan.highlighted,
+  )
   if (highlightedIndex !== -1) {
     activeIndex.value = highlightedIndex
   }
 }
 
+watch(selectedPlan, value => {
+  emit('selected', value)
+})
+
 onMounted(() => {
-  setHiglightedActiveIndex()
+  setSelectablePricingPlans()
 })
 </script>
 
@@ -54,14 +82,10 @@ onMounted(() => {
 
     <EasyCarousel :activeIndex="activeIndex">
       <WebPricingCard
-        v-for="(plan, index) in pricingPlans"
-        :key="index"
-        :title="plan.title"
-        :description="plan.description"
-        :price="plan.pricing[interval]"
+        v-for="pricingPlan in selectablePricingPlans"
+        :key="`${pricingPlan.id}-${interval}`"
+        :pricingPlan="pricingPlan"
         :temporality="interval"
-        :features="plan.features"
-        :highlighted="plan.highlighted"
         @moreInfo="moreInfoModalVisible = true"
       />
     </EasyCarousel>

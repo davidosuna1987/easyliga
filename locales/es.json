@@ -476,6 +476,49 @@
     "title": "Planes de precios",
     "subtitle": "Elige el plan perfecto para tu club dependiendo del número de equipos que quieras gestionar",
     "select": "Selecciona un plan",
+    "request": "Solicitar registro",
+    "basic": {
+      "title": "Básico",
+      "description": "Ideal para clubs pequeños que quieren organizar su equipo, jugadores y resultados sin complicaciones.",
+      "features": {
+        "0": "Añade 1 equipo",
+        "1": "Imagen de Easy Liga",
+        "2": "Actas digitales",
+        "3": "Convocatorias y rotaciones",
+        "4": "Gestión de calendario",
+        "5": "Clasificación en tiempo real",
+        "6": "Gestión de club",
+        "7": "Gestión de jugadores"
+      }
+    },
+    "standard": {
+      "title": "Estándar",
+      "description": "Perfecto para clubs en crecimiento que necesitan clasificaciones automáticas, estadísticas y reportes detallados.",
+      "features": {
+        "0": "Añade hasta 5 equipos",
+        "1": "Imagen de marca",
+        "2": "Actas digitales",
+        "3": "Convocatorias y rotaciones",
+        "4": "Gestión de calendario",
+        "5": "Clasificación en tiempo real",
+        "6": "Gestión de club",
+        "7": "Gestión de jugadores"
+      }
+    },
+    "premium": {
+      "title": "Premium",
+      "description": "La solución definitiva para grandes clubes: notificaciones avanzadas, estadísticas y mucho más.",
+      "features": {
+        "0": "Añade equipos ilimitados",
+        "1": "Imagen de marca",
+        "2": "Actas digitales",
+        "3": "Convocatorias y rotaciones",
+        "4": "Gestión de calendario",
+        "5": "Clasificación en tiempo real",
+        "6": "Gestión de club",
+        "7": "Gestión de jugadores"
+      }
+    },
     "temporality": {
       "month": "Mensual",
       "year": "Anual",

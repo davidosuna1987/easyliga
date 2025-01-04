@@ -476,6 +476,49 @@
     "title": "Plans de preus",
     "subtitle": "Tria el pla perfecte per al teu club depenent del nombre d'equips que vulguis gestionar",
     "select": "Selecciona un pla",
+    "request": "Sol·licitar registre",
+    "basic": {
+      "title": "Bàsic",
+      "description": "Ideal per a clubs petits que volen organitzar el vostre equip, jugadors i resultats sense complicacions.",
+      "features": [
+        "Afegeix 1 equip",
+        "Imatge d'Easy Liga",
+        "Actes digitals",
+        "Convocatòries i rotacions",
+        "Gestió de calendari",
+        "Classificació en temps real",
+        "Gestió de club",
+        "Gestió de jugadors"
+      ]
+    },
+    "standard": {
+      "title": "Estàndard",
+      "description": "Perfecte per a clubs en creixement que necessiten classificacions automàtiques, estadístiques i reports detallats.",
+      "features": [
+        "Afegeix fins a 5 equips",
+        "Imatge de marca",
+        "Actes digitals",
+        "Convocatòries i rotacions",
+        "Gestió de calendari",
+        "Classificació en temps real",
+        "Gestió de club",
+        "Gestió de jugadors"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "description": "La solució definitiva per a grans clubs: notificacions avançades, estadístiques i molt més.",
+      "features": [
+        "Afegeix equips il·limitats",
+        "Imatge de marca",
+        "Actes digitals",
+        "Convocatòries i rotacions",
+        "Gestió de calendari",
+        "Classificació en temps real",
+        "Gestió de club",
+        "Gestió de jugadors"
+      ]
+    },
     "temporality": {
       "month": "Mensual",
       "year": "Anual",

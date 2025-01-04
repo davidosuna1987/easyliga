@@ -476,6 +476,49 @@
     "title": "Prezioen planak",
     "subtitle": "Aukeratu zure kluberako plan ezin hobea kudeatu nahi duzun talde kopuruaren arabera",
     "select": "Hautatu plan bat",
+    "request": "Izena ematea eskatu",
+    "basic": {
+      "title": "Ezinbestekoa",
+      "description": "Bere taldea, jokalariak eta emaitzak konplikaziorik gabe antolatu nahi dituzten klub txikientzat aproposa.",
+      "features": [
+        "Gehitu talde bat",
+        "Liga Erraza Irudia",
+        "Minutu digitalak",
+        "Deiak eta errotazioak",
+        "Egutegiaren kudeaketa",
+        "Denbora errealeko sailkapena",
+        "klubaren kudeaketa",
+        "Jokalarien kudeaketa"
+      ]
+    },
+    "standard": {
+      "title": "Estandarra",
+      "description": "Sailkapen automatikoak, estatistikak eta txosten zehatzak behar dituzten hazten ari diren klubentzat ezin hobea.",
+      "features": [
+        "Gehitu gehienez 5 talde",
+        "marka irudia",
+        "Minutu digitalak",
+        "Deiak eta errotazioak",
+        "Egutegiaren kudeaketa",
+        "Denbora errealeko sailkapena",
+        "klubaren kudeaketa",
+        "Jokalarien kudeaketa"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "description": "Klub handientzako behin betiko irtenbidea: jakinarazpen aurreratuak, estatistikak eta askoz gehiago.",
+      "features": [
+        "Gehitu talde mugagabeak",
+        "marka irudia",
+        "Minutu digitalak",
+        "Deiak eta errotazioak",
+        "Egutegiaren kudeaketa",
+        "Denbora errealeko sailkapena",
+        "klubaren kudeaketa",
+        "Jokalarien kudeaketa"
+      ]
+    },
     "temporality": {
       "month": "Hilerokoa",
       "year": "Urtekoa",

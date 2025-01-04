@@ -10,6 +10,10 @@ import { Federation, mapApiFederationToFederation } from '@/domain/federation'
 import { Club, mapApiClubToClub } from '@/domain/club'
 import { mapApiSedeToSede, Sede } from '@/domain/sede'
 import { License, mapApiLicenseToLicense } from '@/domain/license'
+import {
+  BillingAddress,
+  mapApiBillingAddressToBillingAddress,
+} from '@/domain/billing_address'
 import { ApiFederationRefereePivot } from '@/types/api/federation'
 
 export const USER_DEFAULT_ROLE: Role = ROLE_MAPPER.player
@@ -34,6 +38,37 @@ export const ADD_USER_STEPS = {
 
 export type AddUserStep = keyof typeof ADD_USER_STEPS
 
+export type UserPivot = ApiFederationRefereePivot
+
+export type UserRelations = {
+  profile?: Profile
+  roles?: Role[]
+  refereeFederations?: Federation[]
+  adminRefereeFederations?: Federation[]
+  managedFederations?: Federation[]
+  managedClubs?: Club[]
+  managedSedes?: Sede[]
+  licenses?: License[]
+  billingAddress?: BillingAddress
+}
+
+export type User = {
+  id: number
+  email: string
+  pivot?: UserPivot
+} & UserRelations
+
+export type UserSearchFormInputRef = {
+  editingUser: boolean
+  userChanged: boolean
+  stopEditing: () => void
+  clear: () => void
+}
+
+export type UserSearchFormRef = {
+  clear: () => void
+}
+
 export type UserStoreRequestEmailRequired = {
   email: string
   allowEmptyEmail: false
@@ -56,36 +91,6 @@ export type UserStoreRequest = {
   birthDate?: Date
   gender?: ProfileGender
   roles?: Role[]
-}
-
-export type UserPivot = ApiFederationRefereePivot
-
-export type UserRelations = {
-  profile?: Profile
-  roles?: Role[]
-  refereeFederations?: Federation[]
-  adminRefereeFederations?: Federation[]
-  managedFederations?: Federation[]
-  managedClubs?: Club[]
-  managedSedes?: Sede[]
-  licenses?: License[]
-}
-
-export type User = {
-  id: number
-  email: string
-  pivot?: UserPivot
-} & UserRelations
-
-export type UserSearchFormInputRef = {
-  editingUser: boolean
-  userChanged: boolean
-  stopEditing: () => void
-  clear: () => void
-}
-
-export type UserSearchFormRef = {
-  clear: () => void
 }
 
 export const mapApiUserToUser = (apiUser: ApiUser): User => ({
@@ -120,6 +125,9 @@ export const mapApiUserRelationsToUserRelations = (
     : undefined,
   licenses: apiUser.licenses
     ? apiUser.licenses.map(mapApiLicenseToLicense)
+    : undefined,
+  billingAddress: apiUser.billing_address
+    ? mapApiBillingAddressToBillingAddress(apiUser.billing_address)
     : undefined,
 })
 

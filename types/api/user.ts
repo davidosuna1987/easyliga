@@ -5,6 +5,7 @@ import { ApiClub } from '@/types/api/club'
 import { ApiFederation } from '@/types/api/federation'
 import { ApiSede } from '@/types/api/sede'
 import { ApiTeam } from '@/types/api/team'
+import { ApiBillingAddress } from '@/types/api/billing_address'
 import { UserPivot } from '@/domain/user'
 import { Role } from '@/domain/role'
 import { ProfileGender } from '@/domain/profile'
@@ -43,6 +44,7 @@ export type ApiUserRelations = {
   managed_clubs?: ApiClub[]
   managed_sedes?: ApiSede[]
   licenses?: ApiLicense[]
+  billing_address?: ApiBillingAddress
 }
 
 export type ApiUser = {
@@ -86,6 +88,14 @@ export type ApiUsersResponse = {
   success: true
   data: {
     users: ApiUser[]
+  }
+  errors: null
+}
+
+export type ApiUserBillingPortalResponse = {
+  success: true
+  data: {
+    url: string
   }
   errors: null
 }

@@ -22,6 +22,7 @@ export type ApiInfoRequestStoreRequest = {
   pricing_plan: string | null
   temporality: PricingPlanTemporality | null
   message: string | null
+  info_only: boolean
 }
 
 export type ApiInfoRequestUpdateRequest = ApiInfoRequestStoreRequest & {

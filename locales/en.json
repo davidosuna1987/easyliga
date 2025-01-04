@@ -476,6 +476,49 @@
     "title": "Pricing plans",
     "subtitle": "Choose the perfect plan for your club depending on the number of teams you want to manage",
     "select": "Select a plan",
+    "request": "Request registration",
+    "basic": {
+      "title": "Essential",
+      "description": "Ideal for small clubs that want to organize their team, players and results without complications.",
+      "features": [
+        "Add 1 team",
+        "Easy Liga Image",
+        "Digital minutes",
+        "Calls and rotations",
+        "Calendar management",
+        "Real-time classification",
+        "club management",
+        "Player management"
+      ]
+    },
+    "standard": {
+      "title": "Standard",
+      "description": "Perfect for growing clubs that need automatic rankings, statistics and detailed reports.",
+      "features": [
+        "Add up to 5 teams",
+        "brand image",
+        "Digital minutes",
+        "Calls and rotations",
+        "Calendar management",
+        "Real-time classification",
+        "club management",
+        "Player management"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "description": "The definitive solution for big clubs: advanced notifications, statistics and much more.",
+      "features": [
+        "Add unlimited teams",
+        "brand image",
+        "Digital minutes",
+        "Calls and rotations",
+        "Calendar management",
+        "Real-time classification",
+        "club management",
+        "Player management"
+      ]
+    },
     "temporality": {
       "month": "Monthly",
       "year": "Annual",

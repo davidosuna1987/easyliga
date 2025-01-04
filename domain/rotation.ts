@@ -273,23 +273,20 @@ export const mapRotationUpdateRequestPlayerToApiRotationUpdateRequestPlayer = (
 
 export const mapApiRotationToRotation = (
   apiRotation: ApiRotation,
-): Rotation => {
-  console.log({ apiRotation })
-  return {
-    id: apiRotation.id,
-    callId: apiRotation.call_id,
-    setId: apiRotation.set_id,
-    inCourtCaptainProfileId: apiRotation.in_court_captain_profile_id,
-    requestedInCourtCaptainProfileId:
-      apiRotation.requested_in_court_captain_profile_id ?? undefined,
-    playerChangesCount: apiRotation.player_changes_count,
-    number: apiRotation.number,
-    locked: apiRotation.locked,
-    currentChangeWindow: apiRotation.current_change_window,
+): Rotation => ({
+  id: apiRotation.id,
+  callId: apiRotation.call_id,
+  setId: apiRotation.set_id,
+  inCourtCaptainProfileId: apiRotation.in_court_captain_profile_id,
+  requestedInCourtCaptainProfileId:
+    apiRotation.requested_in_court_captain_profile_id ?? undefined,
+  playerChangesCount: apiRotation.player_changes_count,
+  number: apiRotation.number,
+  locked: apiRotation.locked,
+  currentChangeWindow: apiRotation.current_change_window,
 
-    ...mapApiRotationRelationsToRotationRelations(apiRotation),
-  }
-}
+  ...mapApiRotationRelationsToRotationRelations(apiRotation),
+})
 
 export const mapApiRotationRelationsToRotationRelations = (
   apiRotation: ApiRotation,

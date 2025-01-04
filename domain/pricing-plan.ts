@@ -18,7 +18,7 @@ export type PricingPlan = {
   highlighted?: boolean
 }
 
-export const pricingPlans: PricingPlan[] = [
+export const pricingPlansSkeleton: PricingPlan[] = [
   {
     id: 'basic',
     title: 'Basic',
@@ -41,7 +41,7 @@ export const pricingPlans: PricingPlan[] = [
     description:
       'Perfecto para clubs en crecimiento que necesitan clasificaciones automáticas, estadísticas y reportes detallados.',
     pricing: {
-      month: 9.99,
+      month: 29.99,
       year: 99.9,
     },
     features: [

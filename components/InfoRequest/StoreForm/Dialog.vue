@@ -3,6 +3,7 @@ import {
   InfoRequestFormRef,
   InfoRequestStoreRequest,
 } from '@/domain/info-request'
+import { PricingPlan, PricingPlanTemporality } from '@/domain/pricing-plan'
 
 const props = defineProps({
   visible: {
@@ -12,6 +13,18 @@ const props = defineProps({
   email: {
     type: String,
     required: false,
+  },
+  pricingPlan: {
+    type: Object as PropType<PricingPlan>,
+    required: false,
+  },
+  temporality: {
+    type: String as PropType<PricingPlanTemporality>,
+    required: false,
+  },
+  infoOnly: {
+    type: Boolean,
+    default: true,
   },
   readonly: {
     type: Boolean,
@@ -61,6 +74,9 @@ onMounted(() => {
       ref="infoRequestFormRef"
       class="mt-6"
       :email="email"
+      :pricingPlan="pricingPlan"
+      :temporality="temporality"
+      :infoOnly="props.infoOnly"
       :readonly="readonly"
       @success="emit('hide')"
       @loading="loadingApi = $event"

@@ -14,6 +14,7 @@ export const DEFAULT_INFO_REQUEST_FORM: InfoRequestStoreRequest = {
   pricingPlan: undefined,
   temporality: undefined,
   message: undefined,
+  infoOnly: true,
 }
 
 export const INFO_REQUEST_STATUS_MAP = {
@@ -43,6 +44,7 @@ export type InfoRequestStoreRequest = {
   pricingPlan?: string
   temporality?: PricingPlanTemporality
   message?: string
+  infoOnly: boolean
 }
 
 export type InfoRequestUpdateRequest = InfoRequestStoreRequest & {
@@ -78,6 +80,7 @@ export const mapInfoRequestStoreRequestToApiInfoRequestStoreRequest = (
   pricing_plan: infoRequest.pricingPlan ?? null,
   temporality: infoRequest.temporality ?? null,
   message: infoRequest.message ?? null,
+  info_only: infoRequest.infoOnly,
 })
 
 export const mapInfoRequestUpdateRequestToApiInfoRequestUpdateRequest = (
@@ -89,5 +92,6 @@ export const mapInfoRequestUpdateRequestToApiInfoRequestUpdateRequest = (
   pricing_plan: infoRequest.pricingPlan ?? null,
   temporality: infoRequest.temporality ?? null,
   message: infoRequest.message ?? null,
+  info_only: infoRequest.infoOnly,
   status: infoRequest.status,
 })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import InfoRequestService from '@/services/info-request'
+import { useAuthStore } from '@/stores/useAuthStore'
 import {
   DEFAULT_INFO_REQUEST_FORM,
   INFO_REQUEST_MESSAGE_MAX_WIDTH,
@@ -13,6 +14,18 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  pricingPlan: {
+    type: Object as PropType<PricingPlan>,
+    required: false,
+  },
+  temporality: {
+    type: String as PropType<PricingPlanTemporality>,
+    required: false,
+  },
+  infoOnly: {
+    type: Boolean,
+    default: true,
+  },
   readonly: {
     type: Boolean,
     default: false,
@@ -25,6 +38,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const auth = useAuthStore()
 const toast = useEasyToast()
 
 const infoRequestService = new InfoRequestService()
@@ -62,7 +76,7 @@ const handleSubmit = async () => {
 }
 
 const setSelectedPricingPlan = (pricingPlan?: PricingPlan) => {
-  form.value.pricingPlan = pricingPlan?.id
+  form.value.pricingPlan = pricingPlan?.title
 }
 
 const setSelectedTemporality = (temporality?: PricingPlanTemporality) => {
@@ -76,12 +90,36 @@ watch(
   },
 )
 
+watch(
+  () => props.pricingPlan,
+  value => {
+    setSelectedPricingPlan(value)
+  },
+)
+
+watch(
+  () => props.temporality,
+  value => {
+    setSelectedTemporality(value)
+  },
+)
+
+watch(
+  () => props.infoOnly,
+  value => {
+    form.value.infoOnly = value
+  },
+)
+
 watch(loadingApi, value => {
   emit('loading', value)
 })
 
 onMounted(() => {
   form.value.email = props.email ?? ''
+  form.value.infoOnly = props.infoOnly
+  setSelectedPricingPlan(props.pricingPlan)
+  setSelectedTemporality(props.temporality)
 })
 
 defineExpose({
@@ -102,8 +140,8 @@ defineExpose({
           v-model="form.email"
           id="info-request-store-form-id"
           class="w-full"
-          :readonly="readonly"
-          :disabled="loadingApi"
+          :readonly="readonly || auth.isLoggedIn"
+          :disabled="loadingApi || auth.isLoggedIn"
         />
       </FormLabel>
 
@@ -127,6 +165,7 @@ defineExpose({
 
       <FormLabel :label="t('pricing_plans.select')">
         <WebPricingSelector
+          :selectedTitle="form.pricingPlan"
           :readonly="readonly"
           :disabled="loadingApi"
           @pricingPlan:selected="setSelectedPricingPlan"
@@ -135,6 +174,7 @@ defineExpose({
 
       <FormLabel :label="t('pricing_plans.temporality.select')">
         <WebPricingTemporalitySelector
+          :selected="form.temporality"
           :readonly="readonly"
           :disabled="loadingApi"
           @temporality:selected="setSelectedTemporality"

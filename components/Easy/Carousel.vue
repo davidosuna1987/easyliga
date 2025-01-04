@@ -54,8 +54,8 @@ const init = async () => {
 const setCarouselHeight = () => {
   setTimeout(() => {
     document.querySelectorAll('.easy-carousel-slide > *').forEach(slide => {
-      if (containerHeight.value < slide.clientHeight + 20) {
-        containerHeight.value = slide.clientHeight + 20
+      if (containerHeight.value < slide.clientHeight) {
+        containerHeight.value = slide.clientHeight
       }
     })
   }, 0)
@@ -83,12 +83,12 @@ watch(
   },
 )
 
-onMounted(() => {
-  init()
-})
-
 watchEffect(() => {
   setCarouselSlides()
+})
+
+onMounted(() => {
+  init()
 })
 </script>
 
@@ -130,7 +130,7 @@ watchEffect(() => {
   .easy-carousel-slide {
     position: absolute;
     background-color: var(--background-color);
-    display: inline-block;
+    display: inline-flex;
     transition: all 250ms ease-in-out;
     cursor: pointer;
     max-width: 425px;
@@ -148,7 +148,6 @@ watchEffect(() => {
     &.is-prev,
     &.is-next {
       position: absolute;
-      display: inline-block;
       opacity: 0.6;
       z-index: 1;
 

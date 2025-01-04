@@ -1,31 +1,15 @@
 <script setup lang="ts">
-import { PricingPlanTemporality } from 'domain/pricing-plan'
+import { PricingPlan, PricingPlanTemporality } from 'domain/pricing-plan'
 import { formatMoney } from '@/domain/utils'
 
 const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  price: {
-    type: Number,
+  pricingPlan: {
+    type: Object as PropType<PricingPlan>,
     required: true,
   },
   temporality: {
     type: String as PropType<PricingPlanTemporality>,
-    default: 'year',
-  },
-  features: {
-    type: Array as PropType<string[]>,
     required: true,
-  },
-  highlighted: {
-    type: Boolean,
-    default: false,
   },
 })
 
@@ -34,6 +18,26 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const { title, pricing, highlighted } = props.pricingPlan
+
+const pricingPlanTranslation = (key: string) => {
+  return t(`pricing_plans.${title.toLocaleLowerCase()}.${key}`)
+}
+
+const pricingPlanFeatures = () => {
+  return Array.from({ length: 8 }, (_, i) =>
+    pricingPlanTranslation(`features.${i}`),
+  ).filter(feature => feature !== '')
+}
+
+const handleRequestInfo = () => {
+  easyEmit('info-request:dialog:show', {
+    pricingPlan: props.pricingPlan,
+    temporality: props.temporality,
+    infoOnly: false,
+  })
+}
 </script>
 
 <template>
@@ -46,14 +50,18 @@ const { t } = useI18n()
       left="-18%"
       class="mx-auto"
     >
-      <header class="font-medium text-center text-3xl">{{ title }}</header>
+      <header class="font-medium text-center text-3xl">
+        {{ pricingPlanTranslation('title') }}
+      </header>
     </EasyTextHighlight>
-    <header v-else class="font-medium text-center text-3xl">{{ title }}</header>
-    <p class="leading-6">{{ description }}</p>
+    <header v-else class="font-medium text-center text-3xl">
+      {{ pricingPlanTranslation('title') }}
+    </header>
+    <p class="leading-6">{{ pricingPlanTranslation('description') }}</p>
 
     <div class="flex items-center gap-2">
       <span class="font-bold text-2xl">
-        {{ formatMoney(price, 'EUR', true, undefined) }}
+        {{ formatMoney(pricing[temporality], 'EUR', true, undefined) }}
       </span>
       <span>/</span>
       <span class="font-medium">
@@ -62,7 +70,10 @@ const { t } = useI18n()
     </div>
 
     <ul class="list-none flex flex-col gap-4 flex-1">
-      <li v-for="feature in features" class="flex items-center gap-2">
+      <li
+        v-for="feature in pricingPlanFeatures()"
+        class="flex items-center gap-2"
+      >
         <EasyIcon name="checkCircle" class="text-primary" />
         <span class="leading-6">
           {{ feature }}
@@ -70,7 +81,11 @@ const { t } = useI18n()
       </li>
     </ul>
 
-    <Button label="Buy Now" :outlined="!highlighted" />
+    <Button
+      :label="t('pricing_plans.request')"
+      :outlined="!highlighted"
+      @click.prevent="handleRequestInfo"
+    />
 
     <a
       class="place-self-end text-gray-500 dark:text-gray-600 -mt-3"

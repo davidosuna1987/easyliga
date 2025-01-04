@@ -1,12 +1,5 @@
 import mitt from 'mitt'
-import { TeamSide } from '@/domain/team'
-
-type EasyEvents = {
-  'game-call-sidebar:open': TeamSide
-  'game-call-sidebar:close': TeamSide
-  'user-invite:loading': boolean
-  'user-invite:submit': void
-}
+import { EasyEvents } from '@/domain/event'
 
 const emitter = mitt<EasyEvents>()
 

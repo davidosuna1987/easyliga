@@ -19,7 +19,7 @@ import {
   ApiManagedModelMappedResponse,
   ApiFreshResponse,
 } from '@/types/api/auth'
-import { ApiUser } from '@/types/api/user'
+import { ApiUser, ApiUserBillingPortalResponse } from '@/types/api/user'
 import { Profile } from '@/domain/profile'
 import { mapApiProfileToProfile } from '@/domain/profile'
 import {
@@ -32,6 +32,10 @@ import { ApiLicense } from '@/types/api/license'
 import { LicensableModelType } from '@/domain/licensable'
 import { ApiProfile } from '@/types/api/profile'
 import { ApiTeamsResponse } from '@/types/api/team'
+import {
+  ApiAddressFormRequest,
+  ApiBillingAddressResponse,
+} from '@/types/api/billing_address'
 
 export const useAuthStore = defineStore('auth', () => {
   const easyStorage = useEasyStorage()
@@ -265,6 +269,31 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const getBillingPortalUrl = async () => {
+    const response = await useApi<ApiUserBillingPortalResponse>(
+      `auth/billing-portal-url`,
+    )
+
+    return response.data.value?.data?.url
+  }
+
+  const getBillingAddress = async () => {
+    const response = await useApi<ApiBillingAddressResponse>(
+      `auth/billing-address`,
+    )
+
+    return response.data.value?.data?.billing_address
+  }
+
+  const setBillingAddress = async (data: ApiAddressFormRequest) => {
+    const response = await useApi<ApiLoginResponse>('auth/billing-address', {
+      method: 'POST',
+      body: data,
+    })
+
+    return response
+  }
+
   const setInitialState = () => {
     user.value = null
     profile.value = null
@@ -313,6 +342,9 @@ export const useAuthStore = defineStore('auth', () => {
     hasRole,
     hasAnyRole,
     loginRedirect,
+    getBillingPortalUrl,
+    getBillingAddress,
+    setBillingAddress,
     setInitialState,
   }
 })

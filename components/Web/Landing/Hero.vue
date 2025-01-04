@@ -18,12 +18,14 @@ const showEmailInput = ref<boolean>(false)
 const showInfoRequestFormDialog = ref<boolean>(false)
 
 const setEmailValid = (newEmail?: string) => {
-  showInfoRequestFormDialog.value = showEmailInput.value ? !!newEmail : true
+  if (!showEmailInput.value || !!newEmail) {
+    easyEmit('info-request:dialog:show', { email: newEmail })
+  }
   email.value = newEmail
 }
 
 const handleDialogHide = () => {
-  showInfoRequestFormDialog.value = false
+  easyEmit('info-request:dialog:hide')
   email.value = undefined
 }
 </script>
@@ -53,6 +55,7 @@ const handleDialogHide = () => {
       @email:valid="setEmailValid"
       :showInput="showEmailInput"
     />
+
     <InfoRequestStoreFormDialog
       :visible="showInfoRequestFormDialog"
       :email="email"
