@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 definePageMeta({
   middleware: ['role'],
   roles: ['admin'],
+  layoutClass: 'admin-page',
 })
 
 useEasyHead('Admin')
@@ -13,7 +14,11 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <NuxtLayout name="default">
+  <NuxtLayout name="sidebar-left">
+    <template #sidebar>
+      <AdminSidebar />
+    </template>
+
     <div class="easy-admin-index-page">
       <template v-if="auth.isAdmin()">
         <Heading class="mb-5" tag="h3" position="center">
