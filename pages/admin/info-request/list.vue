@@ -14,13 +14,15 @@ const { t } = useI18n()
 
 <template>
   <NuxtLayout name="admin">
+    <template #sidebar>
+      <AdminSidebar />
+    </template>
+
     <div class="easy-admin-index-page">
       <template v-if="auth.isAdmin()">
         <Heading class="mb-5" tag="h3" position="center">
-          {{ t('pages.index.welcome') }}
+          {{ t('info_requests.info_request', 2) }}
         </Heading>
-
-        <AdminDashboard />
       </template>
     </div>
   </NuxtLayout>
