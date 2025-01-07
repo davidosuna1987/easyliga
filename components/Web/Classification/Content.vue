@@ -17,7 +17,7 @@ const leagueService = new LeagueService()
 const loadingApi = ref<boolean>(false)
 
 const selectedLeagueLastMatchday = computed(() => {
-  if (!props.selectedLeague?.lastMatchdayGames) return
+  if (!props.selectedLeague?.lastMatchdayGames?.length) return
   return {
     matchday: props.selectedLeague.lastMatchdayGames[0].matchday,
     games: props.selectedLeague.lastMatchdayGames,
