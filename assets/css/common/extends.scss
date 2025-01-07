@@ -1,8 +1,9 @@
 %container {
+  position: relative;
   width: 100%;
   max-width: var(--container-max-width);
   margin: auto;
-  position: relative;
+  overflow-x: hidden;
 }
 
 %main-height {
