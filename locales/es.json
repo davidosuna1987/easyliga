@@ -166,7 +166,8 @@
     "auto_generate_email": "Generar email automáticamente",
     "auto_generated": "Generado automáticamente",
     "generate_easyliga_email": "Generar email de Easy Liga",
-    "admin_options": "Opciones de admin"
+    "admin_options": "Opciones de admin",
+    "reply": "Responder"
   },
   "errors": {
     "whoops": "¡Whoops! Algo ha ido mal...",
@@ -473,6 +474,9 @@
     }
   },
   "pricing_plans": {
+    "pricing_plan": "Plan de precios | Planes de precios",
+    "plan": "Plan | Planes",
+    "interest": "Interés",
     "title": "Planes de precios",
     "subtitle": "Elige el plan perfecto para tu club dependiendo del número de equipos que quieras gestionar",
     "select": "Selecciona un plan",
@@ -532,6 +536,8 @@
   },
   "info_requests": {
     "info_request": "Solicitud de información | Solicitudes de información",
+    "register_request": "Solicitud de registro | Solicitudes de registro",
+    "no_message": "{name} no ha dejado ningún mensaje",
     "request": "Solicitar información",
     "search": "Buscar solicitud de información | Buscar solicitudes de información",
     "submit": "Enviar solicitud",
@@ -1175,7 +1181,8 @@
     "loading": "Cargando clubs...",
     "no_managed": "No gestionas ningún club",
     "list": "Listado de clubs",
-    "add": "Añadir club"
+    "add": "Añadir club",
+    "not_allowed_to_manage": "No tienes permisos para gestionar este club"
   },
   "responsibles": {
     "responsible": "Responsable | Responsables",
@@ -1496,7 +1503,8 @@
     "loading": "Cargando invitación",
     "show_unavailable_shirt_numbers": "Si tienes dudas sobre los dorsales disponibles puedes hacer click en el enlace de debajo del selector y verás los dorsales que ya están en posesión de algún otro jugador.",
     "added_roles": "El rol {roles} se ha añadido correctamente | Los roles {roles} se han añadido correctamente",
-    "accept": "Aceptar invitación"
+    "accept": "Aceptar invitación",
+    "create_before_invite": "Para invitar a un usuario a ser {role} primero tienes que crear el {model}"
   },
   "dates": {
     "weekdays": {

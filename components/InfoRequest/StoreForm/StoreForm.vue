@@ -14,6 +14,14 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  name: {
+    type: String,
+    required: false,
+  },
+  phone: {
+    type: String,
+    required: false,
+  },
   pricingPlan: {
     type: Object as PropType<PricingPlan>,
     required: false,
@@ -91,6 +99,20 @@ watch(
 )
 
 watch(
+  () => props.name,
+  value => {
+    form.value.name = value ?? ''
+  },
+)
+
+watch(
+  () => props.phone,
+  value => {
+    form.value.phone = value ?? ''
+  },
+)
+
+watch(
   () => props.pricingPlan,
   value => {
     setSelectedPricingPlan(value)
@@ -117,6 +139,8 @@ watch(loadingApi, value => {
 
 onMounted(() => {
   form.value.email = props.email ?? ''
+  form.value.name = props.name ?? ''
+  form.value.phone = props.phone ?? ''
   form.value.infoOnly = props.infoOnly
   setSelectedPricingPlan(props.pricingPlan)
   setSelectedTemporality(props.temporality)
@@ -149,8 +173,8 @@ defineExpose({
         <InputText
           v-model="form.name"
           class="w-full"
-          :readonly="readonly"
-          :disabled="loadingApi"
+          :readonly="readonly || auth.isLoggedIn"
+          :disabled="loadingApi || auth.isLoggedIn"
         />
       </FormLabel>
 
@@ -158,8 +182,8 @@ defineExpose({
         <InputText
           v-model="form.phone"
           class="w-full"
-          :readonly="readonly"
-          :disabled="loadingApi"
+          :readonly="readonly || !!auth.profile?.phone"
+          :disabled="loadingApi || !!auth.profile?.phone"
         />
       </FormLabel>
 

@@ -166,7 +166,8 @@
     "by": "per",
     "for": "per",
     "with": "amb",
-    "without": "sense"
+    "without": "sense",
+    "reply": "Respondre"
   },
   "errors": {
     "whoops": "Whoops! Alguna cosa ha anat malament...",
@@ -528,7 +529,10 @@
       "title": "Condicions",
       "subtitle": "a les nostres tarifes"
     },
-    "card_more_info_list_html": "<p class='mb-3'>Aquestes tarifes no inclouen l'IVA (21%)</p><p class='mb-3'>A tots els plans disposes d'un mes per afegir equips al club de forma gratuïta .</p><p class='mb-3'>A posterior afegir un equip portarà un cost únic de 10€ / equip IVA inclòs.</p><p class='my-5'>Al web de Easy Lliga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) es realitza gestió de les comandes o subscripcions a través de la passarel·la de pagaments STRIPE, aplicant els protocols de seguretat.</p><div class='my-5'><p class='mb-1'>Per a qualsevol consulta o aclariment sobre la vostra comanda o subscripció podeu posar-vos en contacte amb el nostre servei d'atenció al client:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'} gmail.com</a></p></div>"
+    "card_more_info_list_html": "<p class='mb-3'>Aquestes tarifes no inclouen l'IVA (21%)</p><p class='mb-3'>A tots els plans disposes d'un mes per afegir equips al club de forma gratuïta .</p><p class='mb-3'>A posterior afegir un equip portarà un cost únic de 10€ / equip IVA inclòs.</p><p class='my-5'>Al web de Easy Lliga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) es realitza gestió de les comandes o subscripcions a través de la passarel·la de pagaments STRIPE, aplicant els protocols de seguretat.</p><div class='my-5'><p class='mb-1'>Per a qualsevol consulta o aclariment sobre la vostra comanda o subscripció podeu posar-vos en contacte amb el nostre servei d'atenció al client:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'} gmail.com</a></p></div>",
+    "plan": "Pla | \nPlans",
+    "pricing_plan": "Pla de preus | \nPlans de preus",
+    "interest": "Interès"
   },
   "features": {
     "reports": {
@@ -1159,7 +1163,8 @@
     "loading": "Carregant clubs...",
     "no_managed": "No gestiones cap club",
     "list": "Llistat de clubs",
-    "add": "Afegir club"
+    "add": "Afegir club",
+    "not_allowed_to_manage": "No tens permisos per gestionar aquest club"
   },
   "responsibles": {
     "responsible": "Responsable | Responsables",
@@ -1605,5 +1610,9 @@
     "json_required": "Heu d'introduir un objecte JSON per traduir",
     "translate": "Traduir",
     "translation": "Traducció"
+  },
+  "info_requests": {
+    "register_request": "Sol·licitud de registre | \nSol·licituds de registre",
+    "no_message": "{name} no ha deixat cap missatge"
   }
 }

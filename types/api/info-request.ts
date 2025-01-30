@@ -10,6 +10,7 @@ export type ApiInfoRequest = {
   temporality: PricingPlanTemporality | null
   message: string | null
   status: InfoRequestStatus
+  info_only: boolean
   created_at: string | null
   updated_at: string | null
   deleted_at: string | null

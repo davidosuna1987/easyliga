@@ -35,7 +35,9 @@
   --pink-color-dark: #df1e65;
   --pink-color-light: #ffc1f3;
   --blue-color: #3b82f6;
+  --info-color: var(--blue-color);
   --yellow-color: #eab308;
+  --warning-color: var(--yellow-color);
   --danger-color: #fc3c2e;
   --text-danger: #fc3c2e;
   --text-danger-rgb: 252, 60, 46;
@@ -60,6 +62,7 @@
   --hero-green-light: #038883;
   --hero-green-lightest: #7fd7d5;
   --hero-green-dark: #044d4c;
+  --purple-color: #4f46e5;
   --hero-purple: #8177bf;
   --hero-purple-light: #d0d1ea;
   --hero-blue: #028dc6;

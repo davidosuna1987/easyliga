@@ -150,7 +150,7 @@
     "auto_generate_email": "Generate email automatically",
     "auto_generated": "Automatically generated",
     "generate_easyliga_email": "Generate Easy Liga email",
-    "admin_options": "admin options",
+    "admin_options": "Admin options",
     "month": "Month | \nMonths",
     "second": "Second | \nSeconds",
     "minute": "Minute | \nMinutes",
@@ -166,7 +166,8 @@
     "by": "by",
     "for": "for",
     "with": "with",
-    "without": "without"
+    "without": "without",
+    "reply": "Reply"
   },
   "errors": {
     "whoops": "Whoops! Something has gone wrong...",
@@ -528,7 +529,10 @@
       "title": "Conditions",
       "subtitle": "in our rates"
     },
-    "card_more_info_list_html": "<p class='mb-3'>These rates do not include VAT (21%)</p><p class='mb-3'>In all plans you have one month to add teams to the club for free .</p><p class='mb-3'>Adding a device later will incur a one-time cost of €10/equipment VAT included.</p><p class='my-5'>On the website. Easy Liga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) your orders or subscriptions are managed through the STRIPE payment gateway, applying security protocols.</p> <div class='my-5'><p class='mb-1'>For any questions or clarifications about your order or subscription, you can contact our customer service:</p><p>< a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
+    "card_more_info_list_html": "<p class='mb-3'>These rates do not include VAT (21%)</p><p class='mb-3'>In all plans you have one month to add teams to the club for free .</p><p class='mb-3'>Adding a device later will incur a one-time cost of €10/equipment VAT included.</p><p class='my-5'>On the website. Easy Liga (<a class='text-primary' href='https://easyliga.com'>https://easyliga.com</a>) your orders or subscriptions are managed through the STRIPE payment gateway, applying security protocols.</p> <div class='my-5'><p class='mb-1'>For any questions or clarifications about your order or subscription, you can contact our customer service:</p><p>< a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>",
+    "plan": "Plan | \nPlans",
+    "pricing_plan": "Pricing plan | \nPricing plans",
+    "interest": "Interest"
   },
   "features": {
     "reports": {
@@ -1159,7 +1163,8 @@
     "loading": "Loading clubs...",
     "no_managed": "You don't manage any club",
     "list": "List of clubs",
-    "add": "Add club"
+    "add": "Add club",
+    "not_allowed_to_manage": "You do not have permissions to manage this club"
   },
   "responsibles": {
     "responsible": "Responsible | Responsible",
@@ -1605,5 +1610,9 @@
     "json_required": "You must enter a JSON object to translate",
     "translate": "Translate",
     "translation": "Translation"
+  },
+  "info_requests": {
+    "register_request": "Registration application | \nRegistration requests",
+    "no_message": "{name} has not left any messages"
   }
 }

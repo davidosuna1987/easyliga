@@ -9,6 +9,10 @@ const props = defineProps({
     type: Array as PropType<Array<InvitedRole | 'user'>>,
     default: ['user'],
   },
+  email: {
+    type: String,
+    required: false,
+  },
   invitedToType: {
     type: String as PropType<InvitedToType>,
     required: false,
@@ -37,7 +41,7 @@ const userService = new UserService()
 
 const errors = ref<ApiErrorObject>()
 const form = ref<ApiInviteRequest>({
-  email: '',
+  email: props.email ?? '',
   roles: [...props.roles],
   invited_to_type: props.invitedToType ?? null,
   invited_to_id: props.invitedToId ?? null,
@@ -84,9 +88,7 @@ onUnmounted(() => {
   <form class="easy-user-invite-form-component" @submit.prevent="handleSubmit">
     <p v-if="!hideMessage" class="mt-3">{{ t('users.invite_dialog') }}</p>
 
-    <div v-if="!hideRoles" class="mt-2 flex gap-2">
-      <Tag v-for="role in form.roles" :value="t(`roles.type.${role}`)" />
-    </div>
+    <RoleTags v-if="!hideRoles" class="mt-2" :roles="form.roles" />
 
     <FormLabel
       class="mt-6"

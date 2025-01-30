@@ -23,7 +23,15 @@ export const INFO_REQUEST_STATUS_MAP = {
   replied: 'replied',
 } as const
 
+export const INFO_REQUEST_STATUS_COLOR_MAP = {
+  new: 'primary-color',
+  read: 'warning-color',
+  replied: 'hero-purple',
+} as const
+
 export type InfoRequestStatus = keyof typeof INFO_REQUEST_STATUS_MAP
+
+export type InfoRequestDialogType = 'status' | 'reply' | 'invite'
 
 export type InfoRequest = {
   id: number
@@ -34,6 +42,7 @@ export type InfoRequest = {
   temporality?: PricingPlanTemporality
   message?: string
   status: InfoRequestStatus
+  infoOnly: boolean
   createdAt?: string
 }
 
@@ -68,6 +77,7 @@ export const mapApiInfoRequestToInfoRequest = (
   temporality: apiInfoRequest.temporality ?? undefined,
   message: apiInfoRequest.message ?? undefined,
   status: apiInfoRequest.status,
+  infoOnly: apiInfoRequest.info_only,
   createdAt: apiInfoRequest.created_at ?? undefined,
 })
 

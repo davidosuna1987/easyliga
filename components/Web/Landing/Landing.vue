@@ -2,11 +2,18 @@
 import { useAuthStore } from '@/stores/useAuthStore'
 import { EasyEventInfoRequestDialogShow } from '@/domain/event'
 import { PricingPlan, PricingPlanTemporality } from '@/domain/pricing-plan'
+import { getFullName } from '@/domain/player'
 
 const auth = useAuthStore()
 
 const showInfoRequestFormDialog = ref<boolean>(false)
 const showInfoRequestFormDialogEmail = ref<string | undefined>(auth.user?.email)
+const showInfoRequestFormDialogName = ref<string | undefined>(
+  auth.profile ? getFullName(auth.profile) : undefined,
+)
+const showInfoRequestFormDialogPhone = ref<string | undefined>(
+  auth.profile?.phone,
+)
 const showInfoRequestFormDialogPricingPlan = ref<PricingPlan>()
 const showInfoRequestFormDialogTemporality = ref<PricingPlanTemporality>()
 const showInfoRequestFormDialogInfoOnly = ref<boolean>()
@@ -22,6 +29,11 @@ onMounted(() => {
 
       if (!auth.user?.email) {
         showInfoRequestFormDialogEmail.value = data.email
+      }
+
+      if (!auth.profile) {
+        showInfoRequestFormDialogName.value = data.name
+        showInfoRequestFormDialogPhone.value = data.phone
       }
     },
   )
@@ -44,6 +56,8 @@ onMounted(() => {
     <InfoRequestStoreFormDialog
       :visible="showInfoRequestFormDialog"
       :email="showInfoRequestFormDialogEmail"
+      :name="showInfoRequestFormDialogName"
+      :phone="showInfoRequestFormDialogPhone"
       :pricingPlan="showInfoRequestFormDialogPricingPlan"
       :temporality="showInfoRequestFormDialogTemporality"
       :infoOnly="showInfoRequestFormDialogInfoOnly"

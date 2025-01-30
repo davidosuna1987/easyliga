@@ -14,6 +14,14 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  name: {
+    type: String,
+    required: false,
+  },
+  phone: {
+    type: String,
+    required: false,
+  },
   pricingPlan: {
     type: Object as PropType<PricingPlan>,
     required: false,
@@ -74,6 +82,8 @@ onMounted(() => {
       ref="infoRequestFormRef"
       class="mt-6"
       :email="email"
+      :name="name"
+      :phone="phone"
       :pricingPlan="pricingPlan"
       :temporality="temporality"
       :infoOnly="props.infoOnly"

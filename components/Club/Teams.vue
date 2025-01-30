@@ -71,8 +71,8 @@ onMounted(getAuthuserClubWithSedesAndTeams)
       <Loading v-else />
     </template>
     <template v-else>
-      <EasyGrid v-if="clubManagesAnyTeam">
-        <div class="club" v-for="club in clubsWithTeams">
+      <EasyGrid v-if="clubs?.length">
+        <div class="club" v-for="club in clubs">
           <header class="header flex justify-between items-start">
             <Heading tag="h5">{{ club.name }}</Heading>
             <ListActionButton
@@ -133,7 +133,11 @@ onMounted(getAuthuserClubWithSedesAndTeams)
           </div>
         </div>
       </EasyGrid>
-      <p v-else class="text-center">{{ t('clubs.no_managed') }}</p>
+      <!-- <p v-else class="text-center">{{ t('clubs.no_managed') }}</p> -->
+      <template v-else>
+        <Heading tag="h3" class="mb-5">{{ t('clubs.create') }}</Heading>
+        <ClubForm reduced @created="goToEditClub" />
+      </template>
     </template>
   </div>
 </template>

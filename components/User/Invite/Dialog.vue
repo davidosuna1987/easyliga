@@ -10,6 +10,10 @@ const props = defineProps({
     type: Array as PropType<Array<InvitedRole | 'user'>>,
     default: ['user'],
   },
+  email: {
+    type: String,
+    required: false,
+  },
   invitedToType: {
     type: String as PropType<InvitedToType>,
     required: false,
@@ -50,6 +54,7 @@ watch(
       :invitedToType="invitedToType"
       :invitedToId="invitedToId"
       :roles="roles"
+      :email="email"
     />
 
     <template #stickyFooter>

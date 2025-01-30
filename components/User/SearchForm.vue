@@ -24,6 +24,10 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  invitedToModel: {
+    type: String,
+    required: false,
+  },
   showInvite: {
     type: Boolean,
     default: true,
@@ -193,24 +197,37 @@ onBeforeMount(() => {
         </template>
 
         <template #empty>
-          <div v-if="invite" class="py-4 px-7 text-center">
-            <p>
+          <div class="py-4 px-7 text-center">
+            <template v-if="invite">
+              <p>
+                {{
+                  props.whereRole
+                    ? t('users.not_found_role', {
+                        role: t(`roles.type.${props.whereRole}`),
+                      })
+                    : t('users.not_found')
+                }}
+              </p>
+              <div
+                v-if="showInvite"
+                class="m-3 flex flex-col gap-3 items-center"
+              >
+                <p>{{ t('users.invite_long') }}</p>
+                <Button
+                  class="mt-5"
+                  :label="t('forms.invite')"
+                  @click="showUserInviteDialog = true"
+                />
+              </div>
+            </template>
+            <p v-else>
               {{
-                props.whereRole
-                  ? t('users.not_found_role', {
-                      role: t(`roles.type.${props.whereRole}`),
-                    })
-                  : t('users.not_found')
+                t('invites.create_before_invite', {
+                  role: t(`roles.type.${whereRole}`),
+                  model: t(`${invitedToModel}s.${invitedToModel}`),
+                })
               }}
             </p>
-            <div v-if="showInvite" class="m-3 flex flex-col gap-3 items-center">
-              <p>{{ t('users.invite_long') }}</p>
-              <Button
-                class="mt-5"
-                :label="t('forms.invite')"
-                @click="showUserInviteDialog = true"
-              />
-            </div>
           </div>
         </template>
       </AutoComplete>

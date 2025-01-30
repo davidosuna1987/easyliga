@@ -135,6 +135,10 @@ onMounted(() => {
       </Message>
     </template>
 
+    <div class="flex justify-center">
+      <RoleTags :roles="invite?.roles ?? []" />
+    </div>
+
     <FormLabel
       for="first_name"
       :label="t('forms.name')"

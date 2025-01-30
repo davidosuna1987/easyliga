@@ -17,6 +17,10 @@ const props = defineProps({
     type: Number,
     required: false,
   },
+  invitedToModel: {
+    type: String,
+    required: false,
+  },
   whereRole: {
     type: String as PropType<InvitedRole>,
     required: true,
@@ -164,7 +168,8 @@ defineExpose({
           class="flex-1"
           :whereRole="whereRole"
           :showLabel="false"
-          :invitedToId="invitedToId ?? undefined"
+          :invitedToId="invitedToId"
+          :invitedToModel="invitedToModel"
           :showInvite="showInvite"
           full
           @selected="handleSelected"

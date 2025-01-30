@@ -31,6 +31,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  reduced: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -159,9 +163,9 @@ const handleFederationsFetch = (federations: Federation[]) => {
   }
 }
 
-const handleFederationSelected = (federation: Federation) => {
+const handleFederationSelected = (federation?: Federation) => {
   selectedFederation.value = federation
-  form.value.federation_id = federation.id
+  form.value.federation_id = federation?.id ?? null
 }
 
 const stopEditingResponsible = (cancel = false) => {
@@ -241,7 +245,7 @@ defineExpose({
       />
     </div>
 
-    <div v-if="showSedes" class="mt-10">
+    <div v-if="!reduced && showSedes" class="mt-10">
       <SedeList
         :sedes="clubSedes"
         :clubId="club?.id"
@@ -250,7 +254,7 @@ defineExpose({
     </div>
 
     <div
-      v-if="showLicenses"
+      v-if="!reduced && showLicenses"
       class="mt-10"
       @mouseenter="stopEditingResponsible()"
     >
@@ -262,7 +266,7 @@ defineExpose({
       />
     </div>
 
-    <div v-if="showResponsible" class="mt-10">
+    <div v-if="!reduced && showResponsible" class="mt-10">
       <UserSearchFormInput
         ref="userSearchFormInputRef"
         :userOriginal="props.club?.responsible"

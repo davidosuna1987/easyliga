@@ -150,7 +150,7 @@
     "auto_generate_email": "Sortu posta elektronikoa automatikoki",
     "auto_generated": "Automatikoki sortutakoa",
     "generate_easyliga_email": "Sortu Easy Liga posta elektronikoa",
-    "admin_options": "admin aukerak",
+    "admin_options": "Admin aukerak",
     "month": "Hilabetea | \nHilabeteak",
     "second": "Bigarrena | \nSegundoak",
     "minute": "Minutu | \nMinutuak",
@@ -166,7 +166,8 @@
     "by": "arabera",
     "for": "rentzat",
     "with": "rekin",
-    "without": "gabe"
+    "without": "gabe",
+    "reply": "Erantzun"
   },
   "errors": {
     "whoops": "Aupa! Zerbait gaizki joan da...",
@@ -528,7 +529,10 @@
       "title": "Baldintzak",
       "subtitle": "gure tarifetan"
     },
-    "card_more_info_list_html": "<p class='mb-3'>Tasa hauek ez dute BEZa (% 21) barne</p><p class='mb-3'>Plan guztietan hilabete bat duzu klubean taldeak doan gehitzeko. </p><p class='mb-3'>Gailu bat geroago gehitzeak 10 €ko kostu bakarra ekarriko du ekipoaren BEZa barne.</p><p class='my-5'>Webgunean Liga Erraza (<a class='text-primary') href='https://easyliga.com'>https://easyliga.com</a>) zure eskaerak edo harpidetzak STRIPE ordainketa-pasabidearen bidez kudeatzen dira, segurtasun-protokoloak aplikatuz.</p> <div class='my -5'><p class='mb-1'>Zure eskaerari edo harpidetzari buruzko edozein zalantza edo argipenetarako, gure bezeroarentzako zerbitzuarekin harremanetan jar zaitezke:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>"
+    "card_more_info_list_html": "<p class='mb-3'>Tasa hauek ez dute BEZa (% 21) barne</p><p class='mb-3'>Plan guztietan hilabete bat duzu klubean taldeak doan gehitzeko. </p><p class='mb-3'>Gailu bat geroago gehitzeak 10 €ko kostu bakarra ekarriko du ekipoaren BEZa barne.</p><p class='my-5'>Webgunean Liga Erraza (<a class='text-primary') href='https://easyliga.com'>https://easyliga.com</a>) zure eskaerak edo harpidetzak STRIPE ordainketa-pasabidearen bidez kudeatzen dira, segurtasun-protokoloak aplikatuz.</p> <div class='my -5'><p class='mb-1'>Zure eskaerari edo harpidetzari buruzko edozein zalantza edo argipenetarako, gure bezeroarentzako zerbitzuarekin harremanetan jar zaitezke:</p><p><a class='text-primary underline' href='info.easyliga{'@'}gmail.com'>info.easyliga{'@'}gmail.com</a></p></div>",
+    "plan": "Plana | \nPlanoak",
+    "pricing_plan": "Prezioen plana | \nPrezioen planak",
+    "interest": "Interesa"
   },
   "features": {
     "reports": {
@@ -1159,7 +1163,8 @@
     "loading": "Klubak kargatzen...",
     "no_managed": "Ez duzu inolako klubik kudeatzen",
     "list": "Kluben zerrenda",
-    "add": "Gehitu kluba"
+    "add": "Gehitu kluba",
+    "not_allowed_to_manage": "Ez duzu klub hau kudeatzeko baimenik"
   },
   "responsibles": {
     "responsible": "Arduraduna | Arduraduna",
@@ -1605,5 +1610,9 @@
     "json_required": "JSON objektu bat sartu behar duzu itzultzeko",
     "translate": "Itzuli",
     "translation": "Itzulpena"
+  },
+  "info_requests": {
+    "register_request": "Izena emateko eskaera | \nIzena emateko eskaerak",
+    "no_message": "{name}-k ez du mezurik utzi"
   }
 }

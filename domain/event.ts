@@ -3,6 +3,8 @@ import { PricingPlan, PricingPlanTemporality } from '@/domain/pricing-plan'
 
 export type EasyEventInfoRequestDialogShow = {
   email?: string
+  name?: string
+  phone?: string
   pricingPlan?: PricingPlan
   temporality?: PricingPlanTemporality
   infoOnly?: boolean

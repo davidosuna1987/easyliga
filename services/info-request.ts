@@ -1,4 +1,7 @@
-import { ApiInfoRequestResponse } from '@/types/api/info-request'
+import {
+  ApiInfoRequestResponse,
+  ApiInfoRequestsResponse,
+} from '@/types/api/info-request'
 import {
   InfoRequestStoreRequest,
   InfoRequestUpdateRequest,
@@ -10,7 +13,7 @@ const PREFIX = 'info-request'
 
 export default class InfoRequestService {
   fetch(params?: Record<string, string>) {
-    return useApi<ApiInfoRequestResponse>(`${PREFIX}/fetch`, { params })
+    return useApi<ApiInfoRequestsResponse>(`${PREFIX}/fetch`, { params })
   }
 
   get(id: number) {
@@ -28,8 +31,8 @@ export default class InfoRequestService {
     })
   }
 
-  update(data: InfoRequestUpdateRequest) {
-    return useApi<ApiInfoRequestResponse>(`${PREFIX}`, {
+  update(id: number, data: InfoRequestUpdateRequest) {
+    return useApi<ApiInfoRequestResponse>(`${PREFIX}/${id}`, {
       method: 'PUT',
       body: mapInfoRequestUpdateRequestToApiInfoRequestUpdateRequest(data),
     })

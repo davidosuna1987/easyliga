@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TeamService from '@/services/team'
+import { useAuthStore } from '@/stores/useAuthStore'
 import {
   TeamFormRequest,
   Team,
@@ -16,7 +18,6 @@ import {
 } from '@/domain/player'
 import { Profile, mapApiProfileToProfile } from '@/domain/profile'
 import { ApiProfile } from '@/types/api/profile'
-import TeamService from '@/services/team'
 import { Sede } from '@/domain/sede'
 import { Division } from '@/domain/division'
 import { Category, Gender } from '@/domain/game'
@@ -48,6 +49,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 const route = useRoute()
+const auth = useAuthStore()
 const toast = useEasyToast()
 const teamService = new TeamService()
 
@@ -335,14 +337,14 @@ const handleDivisionSelected = (division: Division) => {
   form.value.divisionId = division.id
 }
 
-const handleCategorySelected = (category: Category) => {
+const handleCategorySelected = (category?: Category) => {
   selectedCategory.value = category
-  form.value.categoryId = category.id
+  form.value.categoryId = category?.id
 }
 
-const handleGenderSelected = (gender: Gender) => {
+const handleGenderSelected = (gender?: Gender) => {
   selectedGender.value = gender
-  form.value.genderId = gender.id
+  form.value.genderId = gender?.id
 }
 
 const handleCoachSelected = (coach: User) => {
@@ -482,6 +484,7 @@ watch(
           :userOriginal="props.team?.coach"
           :userSelected="selectedCoach"
           :invitedToId="props.team?.id"
+          invitedToModel="team"
           :whereRole="ROLE_MAPPER.coach"
           :label="coachSearchFormInputLabel"
           :breakpoints="{ sm: 2, lg: 3 }"
