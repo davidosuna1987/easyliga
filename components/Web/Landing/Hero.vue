@@ -28,6 +28,10 @@ const handleDialogHide = () => {
   easyEmit('info-request:dialog:hide')
   email.value = undefined
 }
+
+const sendEmail = () => {
+  window.location.href = 'mailto:info.easyliga@gmail.com'
+}
 </script>
 
 <template>
@@ -51,10 +55,20 @@ const handleDialogHide = () => {
       {{ t('pages.landing.hero.text') }}
     </p>
 
-    <InfoRequestReducedForm
+    <!-- <InfoRequestReducedForm
       @email:valid="setEmailValid"
       :showInput="showEmailInput"
-    />
+    /> -->
+
+    <Button
+      class="w-fit mx-auto mt-8"
+      type="submit"
+      size="large"
+      raised
+      @click.prevent="sendEmail"
+    >
+      {{ t('pages.landing.hero.button') }}
+    </Button>
 
     <InfoRequestStoreFormDialog
       :visible="showInfoRequestFormDialog"

@@ -2,6 +2,10 @@
 const { t } = useI18n()
 
 const showInfoRequestFormDialog = ref(false)
+
+const sendEmail = () => {
+  window.location.href = 'mailto:info.easyliga@gmail.com'
+}
 </script>
 
 <template>
@@ -17,12 +21,15 @@ const showInfoRequestFormDialog = ref(false)
         {{ t('pages.landing.ready.subtitle_2') }}
       </WebHeroTitle>
       <div class="mt-8">
-        <Button
+        <!-- <Button
           type="submit"
           size="large"
           raised
           @click.prevent="showInfoRequestFormDialog = true"
         >
+          {{ t('pages.landing.hero.button') }}
+        </Button> -->
+        <Button type="submit" size="large" raised @click.prevent="sendEmail">
           {{ t('pages.landing.hero.button') }}
         </Button>
       </div>
