@@ -10,7 +10,7 @@ useEasyHead('pages.league.index.title')
 <template>
   <NuxtLayout name="default">
     <div class="easy-referee-admin-league-show-page">
-      <LeagueShow />
+      <LeagueShow showActions />
     </div>
   </NuxtLayout>
 </template>

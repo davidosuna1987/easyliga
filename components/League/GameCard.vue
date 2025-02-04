@@ -147,6 +147,9 @@ const toggleMenu = (event: Event) => {
                     )}`
                   }}
                 </small>
+                <small v-else class="opacity-60 block">
+                  {{ t('games.referee.not_assigned') }}
+                </small>
               </p>
             </template>
           </div>
@@ -187,8 +190,9 @@ const toggleMenu = (event: Event) => {
             <span
               v-if="item.shortcut"
               class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
-              >{{ item.shortcut }}</span
             >
+              {{ item.shortcut }}
+            </span>
             <div
               v-if="item.badge"
               class="bg-[var(--text-danger)] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full"
