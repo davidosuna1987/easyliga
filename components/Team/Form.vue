@@ -25,6 +25,7 @@ import { User, UserSearchFormInputRef } from '@/domain/user'
 import { LICENSABLE_TYPE_MAPPER } from '@/domain/licensable'
 import { License } from '@/domain/license'
 import { ROLE_MAPPER } from '@/domain/role'
+import InputText from 'primevue/inputtext'
 
 const props = defineProps({
   sedes: {
@@ -437,6 +438,7 @@ watch(
 
         <SedeSelector
           v-model="selectedSede"
+          :selected="selectedSede"
           :sedes="sedes"
           :clubId="clubId"
           :label="t('sedes.sede')"
@@ -449,9 +451,11 @@ watch(
 
         <FormLabel :label="t('divisions.division')">
           <DivisionSelector
+            v-if="auth.hasAnyRole(['admin', 'staff', 'federation'])"
             v-model="selectedDivision"
             @division:selected="handleDivisionSelected"
           />
+          <InputText v-else :value="selectedDivision?.name" readonly />
         </FormLabel>
 
         <FormLabel :label="t('categories.category')">

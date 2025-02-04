@@ -158,7 +158,15 @@ defineExpose({
         <ProfileItem
           v-if="selectedUser?.profile"
           class="flex-1"
-          :profile="selectedUser.profile"
+          :profile="
+            props.whereRole === 'coach' && selectedUser.id === 1
+              ? {
+                  ...selectedUser.profile,
+                  firstName: 'Easy',
+                  lastName: 'Liga',
+                }
+              : selectedUser.profile
+          "
         />
         <p v-else>{{ t('responsibles.of.not_found') }}</p>
       </template>

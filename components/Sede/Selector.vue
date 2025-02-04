@@ -3,6 +3,10 @@ import { Sede } from '@/domain/sede'
 import { IconNames } from '@/domain/icon'
 
 const props = defineProps({
+  selected: {
+    type: Object as PropType<Sede>,
+    required: false,
+  },
   sedes: {
     type: Array as PropType<Sede[]>,
     required: true,
@@ -27,7 +31,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const selectedSede = ref<Sede>()
+const selectedSede = ref<Sede | undefined>(props.selected)
 const sedes = ref<Sede[]>(props.sedes)
 const showSedeDialogForm = ref<boolean>(false)
 
@@ -37,6 +41,14 @@ const handleSedeAdded = (sede: Sede) => {
   showSedeDialogForm.value = false
   emit('sede:selected', sede)
 }
+
+watch(
+  () => props.selected,
+  newSelected => {
+    console.log({ newSelected })
+    selectedSede.value = newSelected
+  },
+)
 </script>
 
 <template>

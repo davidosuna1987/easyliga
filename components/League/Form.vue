@@ -124,14 +124,14 @@ const handleDivisionSelected = (division: Division) => {
   form.value.division_id = division.id
 }
 
-const handleCategorySelected = (category: Category) => {
+const handleCategorySelected = (category: Category | undefined) => {
   selectedCategory.value = category
-  form.value.category_id = category.id
+  form.value.category_id = category?.id ?? null
 }
 
-const handleGenderSelected = (gender: Gender) => {
+const handleGenderSelected = (gender: Gender | undefined) => {
   selectedGender.value = gender
-  form.value.gender_id = gender.id
+  form.value.gender_id = gender?.id ?? null
 }
 
 watch(
