@@ -92,7 +92,7 @@ const loadingTimeout = ref<boolean>(false)
 const loadingObservations = ref<boolean>(false)
 const errors = ref<ApiErrorObject | null>(null)
 
-const disablePointTimeout = ref<boolean>(true)
+const disablePointTimeout = ref<boolean>(false)
 
 const pointTimeout = ref<NodeJS.Timeout>()
 const pointInterval = ref<NodeJS.Timeout>()
@@ -1248,17 +1248,16 @@ onMounted(() => {
       @hide="hideDenyDialog"
     />
 
-    <!-- TODO: remove in production -->
-    <div v-if="auth.isAdminOrHasRole('staff')" class="flex items-center mt-5">
+    <!-- <div v-if="auth.isAdminOrHasRole('staff')" class="flex items-center mt-5">
       <label for="disablePointTimeout" class="mr-2 cursor-pointer">
-        Deshabilitar tiempo de deshabilitar punto:
+        Deshabilitar tiempo de cancelar punto:
       </label>
       <Checkbox
         v-model="disablePointTimeout"
         binary
         inputId="disablePointTimeout"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 

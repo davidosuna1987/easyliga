@@ -244,7 +244,7 @@ onMounted(getFederations)
       />
     </EasyGrid>
 
-    <p v-if="selectInputMessage" class="select-input-message mt-5">
+    <p v-if="selectInputMessage" class="select-input-message mt-5 text-black">
       {{ selectInputMessage }}
     </p>
   </div>
@@ -262,7 +262,6 @@ onMounted(getFederations)
     .select-input-message {
       position: absolute;
       top: 100%;
-      color: white;
     }
   }
 }

@@ -528,45 +528,45 @@ const setRotationPlayersFromRtotation = () => {
   }
 }
 
-const handleAutoRotation = () => {
-  if (!props.call.playersData.length) return
+// const handleAutoRotation = () => {
+//   if (!props.call.playersData.length) return
 
-  const players = props.call.playersData.filter(player => !player.libero)
+//   const players = props.call.playersData.filter(player => !player.libero)
 
-  for (let i = 0; i < 6; i++) {
-    const player = players[i]
+//   for (let i = 0; i < 6; i++) {
+//     const player = players[i]
 
-    if (!player) return
+//     if (!player) return
 
-    rotationPlayers.value.push({
-      id: 0,
-      rotationId: 0,
-      profileId: player.profileId,
-      replacementProfileId: undefined,
-      inCourtProfileId: player.profileId,
-      currentPosition: POSITIONS[i],
-      position: POSITIONS[i],
-      status: ROTATION_PLAYER_STATUS.approved,
-      libero: false,
-      injured: false,
-      injuredProfileId: undefined,
-      injuryDescription: undefined,
-      changeWindows: [],
-    })
-  }
+//     rotationPlayers.value.push({
+//       id: 0,
+//       rotationId: 0,
+//       profileId: player.profileId,
+//       replacementProfileId: undefined,
+//       inCourtProfileId: player.profileId,
+//       currentPosition: POSITIONS[i],
+//       position: POSITIONS[i],
+//       status: ROTATION_PLAYER_STATUS.approved,
+//       libero: false,
+//       injured: false,
+//       injuredProfileId: undefined,
+//       injuryDescription: undefined,
+//       changeWindows: [],
+//     })
+//   }
 
-  const rotationPlayerCaptain = rotationPlayers.value.find(
-    rp => rp.inCourtProfileId === callCaptain.value?.profileId,
-  )
+//   const rotationPlayerCaptain = rotationPlayers.value.find(
+//     rp => rp.inCourtProfileId === callCaptain.value?.profileId,
+//   )
 
-  if (rotationPlayerCaptain) {
-    setRotationCaptain(rotationPlayerCaptain.inCourtProfileId)
-  } else {
-    setRotationCaptain(rotationPlayers.value[0].inCourtProfileId)
-  }
+//   if (rotationPlayerCaptain) {
+//     setRotationCaptain(rotationPlayerCaptain.inCourtProfileId)
+//   } else {
+//     setRotationCaptain(rotationPlayers.value[0].inCourtProfileId)
+//   }
 
-  emit('update:players', rotationPlayers.value)
-}
+//   emit('update:players', rotationPlayers.value)
+// }
 
 const handleHideCoachRotationPlayersDialog = () => {
   selectedPosition.value = undefined
@@ -1530,7 +1530,7 @@ onUpdated(() => {
       </div>
     </div>
 
-    <Button
+    <!-- <Button
       v-if="isInitialRotationAssignment && !rotationPlayers.length"
       :class="[
         {
@@ -1541,7 +1541,7 @@ onUpdated(() => {
       ]"
       label="AUTO ROTACIÓN"
       @click="handleAutoRotation"
-    />
+    /> -->
   </EasyGrid>
 
   <DialogBottom
