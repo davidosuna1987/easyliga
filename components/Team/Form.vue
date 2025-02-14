@@ -535,6 +535,7 @@ watch(
       <header class="header flex justify-between items-center mb-3">
         <FormLabel :label="t('players.player', 2)" />
         <Button
+          v-if="props.isResponsible"
           :label="t('players.add')"
           size="small"
           class="action"
@@ -550,8 +551,8 @@ watch(
           :setCaptain="setCaptain"
           :setLibero="setLibero"
           :setShirtNumberUpdatePlayer="setShirtNumberUpdatePlayer"
-          :removePlayer="removePlayerAlert"
-          editable
+          :removePlayer="props.isResponsible ? removePlayerAlert : undefined"
+          :editable="props.isResponsible"
           @profile:edit="setProfileToEdit"
         />
       </EasyGrid>
