@@ -32,6 +32,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'game:set-partials', value: Game | LeagueShowGame): void
+  (e: 'game:change-date', value: Game | LeagueShowGame): void
   (e: 'referee:assign', value: Game | LeagueShowGame): void
   (e: 'referee:assigned', value: User): void
 }>()
@@ -53,6 +54,12 @@ const commonMenuItems = [
         badge: hasDefaultReferee(props.game) ? EXCLAMATION : undefined,
         command: () => {
           emit('referee:assign', props.game)
+        },
+      },
+      {
+        label: t('forms.change_date'),
+        command: () => {
+          emit('game:change-date', props.game)
         },
       },
       {

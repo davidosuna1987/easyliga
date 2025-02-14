@@ -169,7 +169,8 @@
     "without": "sense",
     "reply": "Respondre",
     "install_app": "Descarrega la nostra aplicació per a una millor experiència",
-    "install": "Instal·lar"
+    "install": "Instal·lar",
+    "change_date": "Canviar data"
   },
   "errors": {
     "whoops": "Whoops! Alguna cosa ha anat malament...",
@@ -743,7 +744,8 @@
       "approve": "Aprovar data proposada",
       "approve_alert": "Segur que vols aprovar la data proposada? En cas afirmatiu, el partit es jugarà a la següent data:",
       "approved": "La data proposada ha estat aprovada",
-      "change": "Canviar data i hora"
+      "change": "Canviar data i hora",
+      "changed": "La data i l'hora del partit s'han canviat correctament"
     },
     "no_games_for_date": "No hi ha cap partit a la data seleccionada",
     "unlock": "Desbloquejar partit",

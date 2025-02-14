@@ -117,6 +117,7 @@
     "request": "Solicitar",
     "token": "Token",
     "date": "Fecha",
+    "change_date": "Cambiar fecha",
     "time": "Hora",
     "second": "Segundo | Segundos",
     "minute": "Minuto | Minutos",
@@ -761,7 +762,8 @@
       "approve": "Aprobar fecha propuesta",
       "approve_alert": "¿Seguro que quieres aprobar la fecha propuesta? En caso afirmativo, el partido se jugará en la siguiente fecha:",
       "approved": "La fecha propuesta ha sido aprobada",
-      "change": "Cambiar fecha y hora"
+      "change": "Cambiar fecha y hora",
+      "changed": "La fecha y hora del partido se han cambiado correctamente"
     },
     "no_games_for_date": "No hay ningún partido en la fecha seleccionada",
     "unlock": "Desbloquear partido",

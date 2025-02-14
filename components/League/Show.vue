@@ -44,6 +44,7 @@ const showAddTeamDialogForm = ref<boolean>(false)
 const showRemoveTeamAlertDialog = ref<boolean>(false)
 const showRefereeSelectorDialogForm = ref<LeagueShowGame>()
 const showGameSetPartialsDialogForm = ref<LeagueShowGame>()
+const showGameChangeDateDialogForm = ref<LeagueShowGame>()
 const teamToRemove = ref<LeagueShowTeam>()
 const filter = ref<'classification' | 'matchdays'>('classification')
 const loadingApi = ref<boolean>(true)
@@ -264,6 +265,14 @@ const handleRefereeAssigned = (referee: User) => {
   showRefereeSelectorDialogForm.value = undefined
 }
 
+const handleDateChanged = () => {
+  if (!showGameChangeDateDialogForm.value) return
+
+  getLeagueGame(showGameChangeDateDialogForm.value.id)
+
+  showGameChangeDateDialogForm.value = undefined
+}
+
 const handlePartialsAssigned = () => {
   if (!showGameSetPartialsDialogForm.value) return
   // getLeague()
@@ -355,6 +364,9 @@ onMounted(() => {
                   @game:set-partials="
                     showGameSetPartialsDialogForm = $event as LeagueShowGame
                   "
+                  @game:change-date="
+                    showGameChangeDateDialogForm = $event as LeagueShowGame
+                  "
                 />
               </template>
             </EasyGrid>
@@ -395,6 +407,14 @@ onMounted(() => {
         :game="showGameSetPartialsDialogForm"
         @partials:assigned="handlePartialsAssigned"
         @hide="showGameSetPartialsDialogForm = undefined"
+      />
+
+      <GameChangeDateDialogForm
+        v-if="!!showGameChangeDateDialogForm"
+        :visible="!!showGameChangeDateDialogForm"
+        :game="showGameChangeDateDialogForm"
+        @success="handleDateChanged"
+        @hide="showGameChangeDateDialogForm = undefined"
       />
 
       <AlertDialog

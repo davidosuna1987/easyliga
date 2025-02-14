@@ -169,7 +169,8 @@
     "without": "without",
     "reply": "Reply",
     "install_app": "Download our application for better experience",
-    "install": "Install"
+    "install": "Install",
+    "change_date": "Change date"
   },
   "errors": {
     "whoops": "Whoops! Something has gone wrong...",
@@ -743,7 +744,8 @@
       "approve": "Approve proposed date",
       "approve_alert": "Are you sure you want to approve the proposed date? If so, the match will be played on the following date:",
       "approved": "The proposed date has been approved",
-      "change": "Change date and time"
+      "change": "Change date and time",
+      "changed": "The date and time of the game have changed correctly"
     },
     "no_games_for_date": "There are no matches on the selected date",
     "unlock": "Unlock match",

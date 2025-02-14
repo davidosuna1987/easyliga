@@ -20,6 +20,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'game:set-partials', value: Game | LeagueShowGame): void
+  (e: 'game:change-date', value: Game | LeagueShowGame): void
   (e: 'referee:assign', value: Game | LeagueShowGame): void
 }>()
 
@@ -47,6 +48,7 @@ const orderMatchdayGamesByBye = (games: Game[] | LeagueShowGame[]) => {
         :showActions="showActions"
         @referee:assign="emit('referee:assign', game)"
         @game:set-partials="emit('game:set-partials', game)"
+        @game:change-date="emit('game:change-date', game)"
       />
     </EasyGrid>
   </div>

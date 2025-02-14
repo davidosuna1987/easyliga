@@ -169,7 +169,8 @@
     "without": "gabe",
     "reply": "Erantzun",
     "install_app": "Deskargatu gure eskaera esperientzia hobea lortzeko",
-    "install": "Jarri"
+    "install": "Jarri",
+    "change_date": "Aldatu data"
   },
   "errors": {
     "whoops": "Aupa! Zerbait gaizki joan da...",
@@ -743,7 +744,8 @@
       "approve": "Proposatutako data onartzea",
       "approve_alert": "Ziur proposatutako data onartu nahi duzula? Hala bada, partida hurrengo datan jokatuko da:",
       "approved": "Proposatutako data onartu da",
-      "change": "Aldatu data eta ordua"
+      "change": "Aldatu data eta ordua",
+      "changed": "Festaren data eta ordua behar bezala aldatu dira"
     },
     "no_games_for_date": "Ez dago partidarik hautatutako datan",
     "unlock": "Desblokeatu partida",

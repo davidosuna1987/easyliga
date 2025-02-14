@@ -120,6 +120,12 @@ export type GameRefereeAssignFormRef = {
   selectedReferee: User | undefined
 }
 
+export type GameChangeDateFormRef = {
+  handleSubmit: () => void
+  loadingApi: boolean
+  selectedDate: Date | undefined
+}
+
 export type GamePartialsAssignFormRef = {
   handleSubmit: () => void
   loadingApi: boolean
@@ -494,14 +500,15 @@ export const getLocalVisitorTimeouts = (
   return { localTeamTimeouts, visitorTeamTimeouts }
 }
 
+export const mapDateToApiGameRequestChangeDateRequest = (
+  date: Date,
+): ApiGameRequestChangeDateRequest => ({
+  requested_date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
+})
+
 export const mapGameRequestChangeDateRequestToApiGameRequestChangeDateRequest =
-  (request: GameRequestChangeDateRequest): ApiGameRequestChangeDateRequest => {
-    return {
-      requested_date: moment(request.requestedDate).format(
-        'YYYY-MM-DD HH:mm:ss',
-      ),
-    }
-  }
+  (request: GameRequestChangeDateRequest): ApiGameRequestChangeDateRequest =>
+    mapDateToApiGameRequestChangeDateRequest(request.requestedDate)
 
 export const mapApiTeamNamesToTeamNames = (
   apiTeamNames: ApiGameTeamNames,
