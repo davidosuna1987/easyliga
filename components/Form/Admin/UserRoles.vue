@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import UserService from '@/services/user'
 import { User } from '@/domain/user'
 import { Role, ROLES } from '@/domain/role'
 import { useAuthStore } from '@/stores/useAuthStore'
-import { ApiLoginAsRequest } from '@/types/api/auth'
 
 const auth = useAuthStore()
 const toast = useEasyToast()
+
+const userService = new UserService()
 
 const loadingApi = ref(false)
 const selectedUser = ref<User>()
@@ -14,6 +16,11 @@ const selectedRoles = ref<Role[]>([])
 const handleUserSelected = (user: User) => {
   selectedUser.value = user
   selectedRoles.value = user.roles || []
+}
+
+const handleOnCleared = () => {
+  selectedUser.value = undefined
+  selectedRoles.value = []
 }
 
 const toggleRole = (role: Role) => {
@@ -25,14 +32,41 @@ const toggleRole = (role: Role) => {
     selectedRoles.value = [...selectedRoles.value, role]
   }
 }
+
+const handleToggleRole = async (role: Role) => {
+  if (loadingApi.value || !selectedUser.value) return
+
+  loadingApi.value = true
+
+  const { data, error } = await userService.toggleRole(
+    selectedUser.value.id,
+    role,
+  )
+
+  if (error.value) {
+    toast.mapError(Object.values(error.value?.data?.errors), false)
+  } else if (data.value) {
+    toast.success('User roles updated')
+    toggleRole(role)
+  }
+
+  loadingApi.value = false
+}
 </script>
 
 <template>
   <div
     v-if="auth.isAdminOrHasRole('staff')"
-    class="easy-form-admin-user-roles-component"
+    class="easy-form-admin-user-roles-component relative"
   >
-    <UserSearchForm @selected="handleUserSelected" :with="['roles']" full />
+    <Loading :fullscreen="false" v-if="loadingApi" />
+
+    <UserSearchForm
+      @selected="handleUserSelected"
+      :with="['roles']"
+      full
+      @cleared="handleOnCleared"
+    />
     <div v-if="selectedUser" class="mt-4 flex flex-wrap gap-1">
       <Badge
         v-for="role of ROLES"
@@ -44,7 +78,7 @@ const toggleRole = (role: Role) => {
           { 'is-selected': selectedRoles.includes(role) },
         ]"
         :value="role"
-        @click="toggleRole(role)"
+        @click="handleToggleRole(role)"
       />
     </div>
   </div>

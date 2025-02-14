@@ -49,6 +49,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'selected', value: User): void
   (e: 'invited', value: boolean): void
+  (e: 'cleared'): void
 }>()
 
 const { t } = useI18n()
@@ -129,9 +130,10 @@ const searchUsers = async () => {
   loadingApi.value = false
 }
 
-const handleRemoveUser = () => {
+const handleOnRemove = () => {
   selectedUser.value = undefined
   search.value = ''
+  emit('cleared')
 }
 
 const handleUserSelected = (event: AutoCompleteItemSelectEvent) => {
@@ -171,7 +173,7 @@ onBeforeMount(() => {
         :profile="selectedUser.profile"
         :selectable="false"
         remove-icon="times"
-        :removeUser="handleRemoveUser"
+        :onRemove="handleOnRemove"
       />
     </template>
     <template v-else>
