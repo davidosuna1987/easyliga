@@ -167,7 +167,9 @@
     "for": "rentzat",
     "with": "rekin",
     "without": "gabe",
-    "reply": "Erantzun"
+    "reply": "Erantzun",
+    "install_app": "Deskargatu gure eskaera esperientzia hobea lortzeko",
+    "install": "Jarri"
   },
   "errors": {
     "whoops": "Aupa! Zerbait gaizki joan da...",

@@ -3,6 +3,7 @@
     <NavbarApp />
 
     <EasyLayoutMain>
+      <EasyInstallPrompt />
       <div v-if="$slots.hero" class="easy-hero relative z-10">
         <slot name="hero" />
       </div>

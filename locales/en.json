@@ -167,7 +167,9 @@
     "for": "for",
     "with": "with",
     "without": "without",
-    "reply": "Reply"
+    "reply": "Reply",
+    "install_app": "Download our application for better experience",
+    "install": "Install"
   },
   "errors": {
     "whoops": "Whoops! Something has gone wrong...",

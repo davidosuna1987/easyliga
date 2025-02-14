@@ -48,6 +48,7 @@ export default defineNuxtConfig({
       description: process.env.APP_DESCRIPTION,
       theme_color: '#ffffff',
       lang: 'es',
+      display: 'standalone',
     },
   },
 })

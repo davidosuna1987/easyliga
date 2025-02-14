@@ -167,7 +167,9 @@
     "auto_generated": "Generado automáticamente",
     "generate_easyliga_email": "Generar email de Easy Liga",
     "admin_options": "Opciones de admin",
-    "reply": "Responder"
+    "reply": "Responder",
+    "install_app": "Descarga nuestra aplicación para una mejor experiencia",
+    "install": "Instalar"
   },
   "errors": {
     "whoops": "¡Whoops! Algo ha ido mal...",

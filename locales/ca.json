@@ -167,7 +167,9 @@
     "for": "per",
     "with": "amb",
     "without": "sense",
-    "reply": "Respondre"
+    "reply": "Respondre",
+    "install_app": "Descarrega la nostra aplicació per a una millor experiència",
+    "install": "Instal·lar"
   },
   "errors": {
     "whoops": "Whoops! Alguna cosa ha anat malament...",
