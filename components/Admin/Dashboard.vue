@@ -8,6 +8,10 @@ const { t } = useI18n()
       <FormAdminLoginAs />
     </QuickAside>
 
+    <QuickAside class="mb-10" :title="t('roles.quick_assign')">
+      <FormAdminUserRoles />
+    </QuickAside>
+
     <QuickAside class="mb-10" :title="t('emails.custom_quick')">
       <EmailForm />
     </QuickAside>

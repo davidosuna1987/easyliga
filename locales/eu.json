@@ -627,7 +627,8 @@
       "player": "Jokalari",
       "user": "Erabiltzailea",
       "guest": "Gonbidatua"
-    }
+    },
+    "quick_assign": "Rol azkarrak esleitzea"
   },
   "referees": {
     "admin": "Administratzaile arbitroa | Administratzaile arbitroak",

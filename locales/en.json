@@ -627,7 +627,8 @@
       "player": "Player",
       "user": "User",
       "guest": "Guest"
-    }
+    },
+    "quick_assign": "Fast roles allocation"
   },
   "referees": {
     "admin": "Admin referee | Administrator referees",

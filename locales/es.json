@@ -645,7 +645,8 @@
       "player": "Jugador",
       "user": "Usuario",
       "guest": "Invitado"
-    }
+    },
+    "quick_assign": "Asignación de roles rápida"
   },
   "referees": {
     "admin": "Árbitro administrador | Árbitros administradores",

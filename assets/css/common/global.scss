@@ -94,7 +94,9 @@ html {
   .easy-container {
     @extend %container;
     height: 100%;
-    ovx &.is-reduced {
+    overflow-x: hidden;
+
+    &.is-reduced {
       max-width: var(--main-max-width-reduced);
       margin-inline: auto;
     }
