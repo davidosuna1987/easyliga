@@ -88,7 +88,7 @@ watch(
 
 <template>
   <div
-    class="easy-lang-item-selector-component lang-item flex gap-3 mb-4 w-full overflow-x-scroll"
+    class="easy-lang-item-selector-component lang-item flex flex-col sm:flex-row gap-3 mb-4 w-full overflow-x-scroll"
   >
     <LangItem
       v-for="locale of notExcludedLocales"

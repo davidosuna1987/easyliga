@@ -94,7 +94,6 @@ html {
   .easy-container {
     @extend %container;
     height: 100%;
-    overflow-x: hidden;
 
     &.is-reduced {
       max-width: var(--main-max-width-reduced);
