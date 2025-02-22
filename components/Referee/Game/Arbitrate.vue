@@ -259,12 +259,14 @@ const rightSideTeamTimeouts = computed((): Timeout[] | undefined =>
   ),
 )
 
-const timeoutRunning = computed(
-  (): boolean =>
-    !!loadingTimeout.value ||
-    !!gameInitialData.value?.game.currentSet?.timeouts?.some(
-      timeout => timeout.status === TimeoutStatusEnum.running,
-    ),
+const timeoutRunning = computed((): Timeout | undefined =>
+  // !!loadingTimeout.value ||
+  // !!gameInitialData.value?.game.currentSet?.timeouts?.some(
+  //   timeout => timeout.status === TimeoutStatusEnum.running,
+  // ),
+  gameInitialData.value?.game.currentSet?.timeouts?.find(
+    timeout => timeout.status === TimeoutStatusEnum.running,
+  ),
 )
 
 const gameSanctions = computed(
@@ -653,6 +655,19 @@ const startTimeout = async (timeout: Timeout) => {
 const addTimeout = (timeout: Timeout) => {
   if (!gameInitialData.value?.game.currentSet?.timeouts) return
   gameInitialData.value.game.currentSet.timeouts.push(timeout)
+}
+
+const stopTimeout = (timeout: Timeout) => {
+  if (!gameInitialData.value?.game.currentSet?.timeouts) return
+  const index = gameInitialData.value.game.currentSet.timeouts.findIndex(
+    t => t.id === timeout.id,
+  )
+
+  if (index !== -1) {
+    toast.info(t('timeouts.stopped'))
+    gameInitialData.value.game.currentSet.timeouts[index].status =
+      TimeoutStatusEnum.finished
+  }
 }
 
 const showTimeoutStatusUpdatedToast = (
@@ -1097,6 +1112,7 @@ onMounted(() => {
       @timeout:start="startTimeout"
       @observations:dialog="showObservationsDialog = true"
       @timeout:init="addTimeout"
+      @timeout:stop="stopTimeout"
       @sanction:stored="getGameInitialData"
       @pendingPlayerChange:show="handlePendingPlayerChangeShow"
     />

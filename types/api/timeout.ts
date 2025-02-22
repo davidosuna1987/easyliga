@@ -14,6 +14,7 @@ export type ApiTimeout = {
   set_id: number
   team_id: number
   status: TimeoutStatus
+  created_at: string
 } & ApiTimeoutRelations
 
 export type ApiTimeoutStoreRequest = {

@@ -116,8 +116,8 @@ const props = defineProps({
     required: false,
   },
   timeoutRunning: {
-    type: Boolean,
-    default: false,
+    type: Object as PropType<Timeout>,
+    required: false,
   },
   gameEndedAt: {
     type: String,
@@ -158,6 +158,7 @@ const emit = defineEmits([
   'observations:dialog',
   'countdown:ended',
   'timeout:init',
+  'timeout:stop',
   'sanction:stored',
   'sidebar:toggle',
   'pendingPlayerChange:show',
@@ -170,6 +171,7 @@ const showCountdown = ref<boolean>(false)
 const sideTeamToSanction = ref<TeamSide>()
 const memberToSanction = ref<TeamMember>()
 const pendingGameSignatures = computed(() => props.gameSignatures.length < 5)
+const showTimeoutDialog = ref<boolean>(false)
 
 // const waitingForPlayerChanges = computed(() =>
 //   props.rotations.some(rotation => !rotation.locked),
@@ -254,6 +256,39 @@ const playersToBeReplacedForSanction = computed((): CallPlayerData[] => {
         player.profileId,
       ),
   )
+})
+
+const timeoutRunningDuration = computed(() => {
+  const updateLabel = () => {
+    const timeoutDate = moment(props.timeoutRunning?.date)
+    const now = moment()
+    const diff = moment.duration(timeoutDate.diff(now))
+
+    const humanDiff = `${Math.abs(diff.minutes())
+      .toString()
+      .padStart(2, '0')}:${Math.abs(diff.seconds())
+      .toString()
+      .padStart(2, '0')}:${Math.abs(diff.milliseconds())
+      .toString()
+      .padStart(3, '0')
+      .slice(0, 2)}`
+
+    return humanDiff
+  }
+
+  const label = ref(updateLabel())
+
+  if (props.timeoutRunning) {
+    const interval = setInterval(() => {
+      label.value = updateLabel()
+    }, 10)
+
+    onUnmounted(() => {
+      clearInterval(interval)
+    })
+  }
+
+  return label.value
 })
 
 const sumPoint = (type: TeamType) => {
@@ -397,6 +432,16 @@ const getPlayerSanction = (
   )
 }
 
+const handleTimeoutInit = (timeout: Timeout) => {
+  showTimeoutDialog.value = false
+  emit('timeout:init', timeout)
+}
+
+const handleTimeoutStopped = (timeout: Timeout) => {
+  showTimeoutDialog.value = false
+  emit('timeout:stop', timeout)
+}
+
 onMounted(setInitialShowCountdown)
 </script>
 
@@ -470,7 +515,7 @@ onMounted(setInitialShowCountdown)
           v-if="
             playersToBeReplacedForSanction.length ||
             // waitingForPlayerChanges ||
-            timeoutRunning
+            !!timeoutRunning
           "
         >
           <EasyGrid
@@ -495,15 +540,18 @@ onMounted(setInitialShowCountdown)
               :disabled="true"
             />
           </EasyGrid> -->
-          <EasyGrid v-if="timeoutRunning" class="actions" center>
+          <EasyGrid v-if="!!timeoutRunning" class="actions" center>
             <Button
-              class="px-12 mb-3"
-              :label="t('timeouts.running')"
+              class="px-12 mb-3 w-fit"
               severity="danger"
               outlined
-              :loading="true"
-              :disabled="true"
-            />
+              @click.prevent="showTimeoutDialog = true"
+            >
+              <div class="flex justify-center items-center text-center">
+                <span>{{ t('timeouts.running') }}</span>
+                <pre class="pl-3">{{ timeoutRunningDuration }}</pre>
+              </div>
+            </Button>
           </EasyGrid>
         </template>
         <template v-else>
@@ -559,7 +607,7 @@ onMounted(setInitialShowCountdown)
               :currentSet="currentSet"
               :gameSanctions="props.gameSanctions"
               :gameStatus="gameStatus"
-              @timeout:init="emit('timeout:init', $event)"
+              @timeout:init="handleTimeoutInit"
               @sanction:stored="emit('sanction:stored', $event)"
               @sidebar:toggle="emit('sidebar:toggle', $event)"
             />
@@ -617,6 +665,23 @@ onMounted(setInitialShowCountdown)
         :members="teamMembersToSanction"
         @sanction:stored="emit('sanction:stored', $event)"
         @hide="sideTeamToSanction = undefined"
+      />
+
+      <TimeoutDialog
+        v-if="timeoutRunning"
+        :visible="!!timeoutRunning"
+        :closable="false"
+        :team="
+          props.leftSideTeam.id === timeoutRunning.teamId
+            ? props.leftSideTeam
+            : props.rightSideTeam
+        "
+        :timeouts="[]"
+        :currentSet="props.currentSet"
+        :timeoutToStop="timeoutRunning"
+        :timeoutRunningDuration="timeoutRunningDuration"
+        @timeout:stop="handleTimeoutStopped"
+        @hide="showTimeoutDialog = false"
       />
     </template>
   </div>

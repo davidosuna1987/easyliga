@@ -1264,7 +1264,10 @@
     "init": "Iniciar tiempo muerto",
     "init_alert": "¿Seguro que quieres iniciar el tiempo muerto?",
     "running": "Tiempo muerto en curso",
-    "started": "El tiempo muerto ha comenzado"
+    "started": "El tiempo muerto ha comenzado",
+    "stop": "Finalizar tiempo muerto",
+    "stop_alert": "¿Seguro que quieres finalizar el tiempo muerto?",
+    "stopped": "El tiempo muerto ha finalizado"
   },
   "observations": {
     "observation": "Observación | Observaciones",

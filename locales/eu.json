@@ -1246,7 +1246,10 @@
     "init": "Hasi denbora-muga",
     "init_alert": "Ziur denbora-muga hasi nahi duzula?",
     "running": "Denbora-muga abian da",
-    "started": "Geldialdia hasi da"
+    "started": "Geldialdia hasi da",
+    "stop_alert": "Ziur hilda amaitu nahi duzula?",
+    "stop": "Amaitu Hildako Denbora",
+    "stopped": "Hildako garaia amaitu da"
   },
   "observations": {
     "observation": "Behaketa | Behaketak",

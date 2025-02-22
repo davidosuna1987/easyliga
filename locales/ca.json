@@ -1246,7 +1246,10 @@
     "init": "Iniciar temps mort",
     "init_alert": "Segur que vols iniciar el temps mort?",
     "running": "Temps mort en curs",
-    "started": "El temps mort ha començat"
+    "started": "El temps mort ha començat",
+    "stop_alert": "Esteu segur que voleu acabar el temps mort?",
+    "stop": "Acaba el temps mort",
+    "stopped": "El temps mort ha acabat"
   },
   "observations": {
     "observation": "Observació | Observacions",

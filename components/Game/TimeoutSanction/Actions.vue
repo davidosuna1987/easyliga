@@ -55,6 +55,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'timeout:init', value: Timeout): void
+  (e: 'timeout:stop', value: Timeout): void
   (e: 'sanction:stored', value: Sanction): void
   (e: 'sidebar:toggle', value: TeamSide): void
 }>()
@@ -203,6 +204,7 @@ const setSideTeamToTimeout = (side: TeamSide) => {
       :timeouts="teamToTimeoutTimeouts"
       :currentSet="props.currentSet"
       @timeout:init="emit('timeout:init', $event)"
+      @timeout:stop="emit('timeout:stop', $event)"
       @hide="sideTeamToTimeout = undefined"
     />
   </div>

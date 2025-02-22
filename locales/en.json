@@ -1246,7 +1246,10 @@
     "init": "Start timeout",
     "init_alert": "Are you sure you want to start the timeout?",
     "running": "Timeout in progress",
-    "started": "The downtime has begun"
+    "started": "The downtime has begun",
+    "stop_alert": "Are you sure you want to finish timeout?",
+    "stop": "Stop timeout",
+    "stopped": "Timeout has ended"
   },
   "observations": {
     "observation": "Observation | Observations",

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import RotationService from '@/services/rotation'
-import { MAX_ROTATION_PLAYER_CHANGES, Rotation } from '@/domain/rotation'
+import { Rotation } from '@/domain/rotation'
 import { Timeout } from '@/domain/timeout'
 import { GameStatus } from '@/domain/game'
 

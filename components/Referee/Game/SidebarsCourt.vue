@@ -24,6 +24,7 @@ import { Player } from '@/domain/player'
 import { GameSignature } from '@/domain/game-signature'
 import { User } from '@/domain/user'
 import { Injury } from '@/domain/injury'
+import { PropType } from 'vue'
 
 const props = defineProps({
   game: {
@@ -119,8 +120,8 @@ const props = defineProps({
     required: false,
   },
   timeoutRunning: {
-    type: Boolean,
-    default: false,
+    type: Object as PropType<Timeout>,
+    required: false,
   },
   gameSignatures: {
     type: Array as PropType<GameSignature[]>,
@@ -147,6 +148,7 @@ const emit = defineEmits([
   'observations:dialog',
   'countdown:ended',
   'timeout:init',
+  'timeout:stop',
   'sanction:stored',
   'pendingPlayerChange:show',
 ])
@@ -437,6 +439,7 @@ onUnmounted(() => {
         @observations:dialog="emit('observations:dialog')"
         @countdown:ended="emit('countdown:ended')"
         @timeout:init="emit('timeout:init', $event)"
+        @timeout:stop="emit('timeout:stop', $event)"
         @sanction:stored="emit('sanction:stored', $event)"
         @sidebar:toggle="toggleSidebars($event)"
         @pendingPlayerChange:show="emit('pendingPlayerChange:show', $event)"

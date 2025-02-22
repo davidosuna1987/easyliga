@@ -28,6 +28,7 @@ export type Timeout = {
   setId: number
   teamId: number
   status: TimeoutStatus
+  date: Date
 } & TimeoutRelations
 
 export type TimeoutStoreRequest = {
@@ -45,6 +46,7 @@ export const mapApiTimeoutToTimeout = (apiTimeout: ApiTimeout): Timeout => ({
   setId: apiTimeout.set_id,
   teamId: apiTimeout.team_id,
   status: apiTimeout.status,
+  date: new Date(apiTimeout.created_at),
   set: apiTimeout.set ? mapApiSetToSet(apiTimeout.set) : undefined,
   team: apiTimeout.team ? mapApiTeamToTeam(apiTimeout.team) : undefined,
   game: apiTimeout.game ? mapApiGameToGame(apiTimeout.game) : undefined,
